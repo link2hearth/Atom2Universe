@@ -8,6 +8,7 @@ import com.Atom2Universe.app.studio.engine.Lane
 import com.Atom2Universe.app.studio.engine.Note
 import com.Atom2Universe.app.studio.engine.StepPattern
 import com.Atom2Universe.app.studio.engine.StudioEngine
+import com.Atom2Universe.app.studio.engine.TrackKind
 import com.Atom2Universe.app.studio.engine.TrackMix
 import com.Atom2Universe.app.studio.music.Style
 import com.Atom2Universe.app.studio.music.Styles
@@ -19,30 +20,21 @@ import kotlin.math.abs
 /**
  * Le morceau en cours d'édition. **Immuable** : chaque modification fabrique un nouveau projet (comme le
  * modèle de l'éditeur audio), ce qui rend l'annulation et la sauvegarde triviales plus tard.
- * [pattern] a toujours une ligne par instrument rythmique, dans l'ordre de [Inst] ; le synthé joue les
- * notes de [StepPattern.notes], dans la tonalité [keyPc] et la gamme [scaleId].
+ * [tracks] est la liste libre des pistes, dans l'ordre d'affichage ; chaque motif a une ligne par piste rythmique
+ * (même cachée), et ses notes portent le numéro de leur piste mélodique. Les notes se jouent dans la tonalité [keyPc]
+ * et la gamme [scaleId].
  */
 class StudioProject(
     val styleId: String,
     val bpm: Int,
     val swing: Float,
-    val synth: SynthPatch,
-    /** « Ambiance » du synthé : part envoyée à la réverbération et à l'écho. */
-    /** Mixage de chaque piste, dans l'ordre de [Inst] : volume, panoramique, envois, effets de piste. */
-    val mix: List<TrackMix>,
+    val tracks: List<Track>,
     val space: Float,
     val echo: Float,
-    val muted: Set<Int>,
     val keyPc: Int,
     val scaleId: String,
     /** Les quatre emplacements de motif (A à D), tous de la même longueur. */
     val patterns: List<StepPattern>,
-    /** Arpégiateur : mode (voir [com.Atom2Universe.app.studio.engine.Arp]), vitesse (0 = croche, 1 = double-croche, 2 = triple), octaves. */
-    val arpMode: Int = 0,
-    val arpRate: Int = 1,
-    val arpOctaves: Int = 1,
-    /** Pistes en solo : si au moins une l'est, seules celles-là s'entendent. */
-    val solo: Set<Int> = emptySet(),
     /** Emplacement en cours d'édition. */
     val current: Int = 0,
     /** Le morceau : les emplacements joués l'un après l'autre quand [songMode] est vrai. */
@@ -54,37 +46,43 @@ class StudioProject(
 
     val stepCount: Int get() = patterns[0].stepCount
 
-    /** « Ambiance » du synthé : sa part envoyée à la réverbération (l'écho en reçoit les sept dixièmes). */
-    val synthSpace: Float get() = mix[Inst.SYNTH].reverbSend
+    /** La piste de numéro [id], s'il y en a une. */
+    fun trackOrNull(id: Int): Track? {
+        for (t in tracks) if (t.id == id) return t
+        return null
+    }
+
+    fun track(id: Int): Track = trackOrNull(id) ?: throw NoSuchElementException("piste $id")
+
+    /** Les pistes muettes et celles en solo (si au moins une l'est, seules celles-là s'entendent). */
+    val muted: Set<Int> get() = tracks.filter { it.muted }.map { it.id }.toSet()
+    val solo: Set<Int> get() = tracks.filter { it.solo }.map { it.id }.toSet()
+
+    /** La première piste qui joue des notes (celle du clavier au départ), de préférence visible. */
+    val firstMelodic: Track? get() = tracks.firstOrNull { it.melodic && !it.hidden } ?: tracks.firstOrNull { it.melodic }
 
     fun copy(
         styleId: String = this.styleId,
         bpm: Int = this.bpm,
         swing: Float = this.swing,
-        synth: SynthPatch = this.synth,
-        mix: List<TrackMix> = this.mix,
+        tracks: List<Track> = this.tracks,
         space: Float = this.space,
         echo: Float = this.echo,
-        muted: Set<Int> = this.muted,
         keyPc: Int = this.keyPc,
         scaleId: String = this.scaleId,
         /** Remplace le motif en cours d'édition. */
         pattern: StepPattern? = null,
         patterns: List<StepPattern> = this.patterns,
-        arpMode: Int = this.arpMode,
-        arpRate: Int = this.arpRate,
-        arpOctaves: Int = this.arpOctaves,
-        solo: Set<Int> = this.solo,
         current: Int = this.current,
         chain: List<Int> = this.chain,
         songMode: Boolean = this.songMode,
     ): StudioProject {
         val all = if (pattern != null) patterns.toMutableList().also { it[current] = pattern } else patterns
-        return StudioProject(
-            styleId, bpm, swing, synth, mix, space, echo, muted, keyPc, scaleId, all, arpMode, arpRate, arpOctaves, solo,
-            current, chain, songMode,
-        )
+        return StudioProject(styleId, bpm, swing, tracks, space, echo, keyPc, scaleId, all, current, chain, songMode)
     }
+
+    /** Remplace une piste (même numéro). */
+    fun withTrack(t: Track): StudioProject = copy(tracks = tracks.map { if (it.id == t.id) t else it })
 
     companion object {
         /** Nombre d'emplacements de motif. */
@@ -93,20 +91,13 @@ class StudioProject(
         /** Longueur maximale du morceau. */
         const val MAX_CHAIN = 16
 
-        /** Réglages de mixage d'origine, l'« ambiance » du synthé valant [synthSpace]. */
-        fun defaultMix(synthSpace: Float = 0.25f): List<TrackMix> = TrackMix.defaults().toMutableList().also {
-            it[Inst.SYNTH] = it[Inst.SYNTH].copy(reverbSend = synthSpace, delaySend = synthSpace * 0.7f)
-        }
-
         fun fromStyle(style: Style, stepCount: Int = 16, seed: Long = style.id.hashCode().toLong()) = StudioProject(
             styleId = style.id,
             bpm = style.bpm,
             swing = style.swing,
-            synth = SynthPresets.byId(style.patchId),
-            mix = defaultMix(style.space.coerceIn(0.1f, 0.6f)),
+            tracks = Track.defaults(SynthPresets.byId(style.patchId), style.space.coerceIn(0.1f, 0.6f)),
             space = style.space,
             echo = style.echo,
-            muted = emptySet(),
             keyPc = style.keyPc,
             scaleId = style.scaleId,
             patterns = listOf(Styles.generate(style, stepCount, seed)) + List(SLOTS - 1) { Styles.emptyPattern(stepCount) },
@@ -118,7 +109,7 @@ class StudioProject(
 object StudioProjectCodec {
 
     /** Pas de lecture des anciennes versions : un seul testeur, on repart d'un projet neuf. */
-    private const val VERSION = 2
+    private const val VERSION = 3
 
     private fun encodePattern(pattern: StepPattern): JSONObject {
         val lanes = JSONArray()
@@ -132,7 +123,7 @@ object StudioProjectCodec {
         val notes = JSONArray()
         for (n in pattern.notes) {
             notes.put(
-                JSONArray().put(n.step).put(n.pitch).put(n.length).put(n.velocity.toDouble()),
+                JSONArray().put(n.step).put(n.pitch).put(n.length).put(n.velocity.toDouble()).put(n.track),
             )
         }
         return JSONObject().put("lanes", lanes).put("notes", notes).also { o ->
@@ -142,81 +133,147 @@ object StudioProjectCodec {
         }
     }
 
-    /** Lit un motif de [steps] pas ; `null` si sa forme est mauvaise. */
-    private fun decodePattern(o: JSONObject, steps: Int): StepPattern? {
+    /**
+     * Lit un motif de [steps] pas pour les pistes [tracks] ; `null` si sa forme est mauvaise. Une piste rythmique sans ligne
+     * reçoit une ligne vide ; une note d'une piste inconnue est ignorée.
+     */
+    private fun decodePattern(o: JSONObject, steps: Int, tracks: List<Track>): StepPattern? {
         val laneArray = o.getJSONArray("lanes")
-        if (laneArray.length() != Inst.DRUM_COUNT) return null
-        val lanes = ArrayList<Lane>(Inst.DRUM_COUNT)
-        for (k in 0 until Inst.DRUM_COUNT) {
+        val byId = HashMap<Int, FloatArray>()
+        for (k in 0 until laneArray.length()) {
             val l = laneArray.getJSONObject(k)
-            if (l.getInt("i") != k) return null
             val v = l.getJSONArray("v")
             if (v.length() != steps) return null
-            lanes += Lane(k, FloatArray(steps) { v.getDouble(it).toFloat().coerceIn(0f, 1f) })
+            byId[l.getInt("i")] = FloatArray(steps) { v.getDouble(it).toFloat().coerceIn(0f, 1f) }
         }
+        val lanes = ArrayList<Lane>()
+        for (t in tracks) if (!t.melodic) lanes += Lane(t.id, byId[t.id] ?: FloatArray(steps))
+        val melodic = tracks.filter { it.melodic }.map { it.id }.toSet()
         val notes = ArrayList<Note>()
         val na = o.getJSONArray("notes")
         for (k in 0 until na.length()) {
             val n = na.getJSONArray(k)
             val step = n.getInt(0)
             if (step !in 0 until steps) return null
+            val track = n.getInt(4)
+            if (track !in melodic) continue
             val length = n.getInt(2).coerceIn(1, steps - step)
-            notes += Note(step, n.getInt(1).coerceIn(0, 127), length, n.getDouble(3).toFloat().coerceIn(0f, 1f))
+            notes += Note(step, n.getInt(1).coerceIn(0, 127), length, n.getDouble(3).toFloat().coerceIn(0f, 1f), track)
         }
         return StepPattern(steps, lanes, notes, readAuto(o.optJSONArray("autoFilter"), steps), readAuto(o.optJSONArray("autoSpace"), steps))
     }
 
-    fun encode(p: StudioProject): String {
-        val s = p.synth
-        val synth = JSONObject()
-            .put("id", s.id)
-            .put("wave", s.wave)
-            .put("detune", s.detuneCents.toDouble())
-            .put("sub", s.subLevel.toDouble())
-            .put("cutoff", s.cutoffHz.toDouble())
-            .put("res", s.resonance.toDouble())
-            .put("envOct", s.envOctaves.toDouble())
-            .put("fDecay", s.filterDecay.toDouble())
-            .put("a", s.attack.toDouble())
-            .put("d", s.decay.toDouble())
-            .put("s", s.sustain.toDouble())
-            .put("r", s.release.toDouble())
-            .put("key", s.keyTrack.toDouble())
-            .put("lfoRate", s.lfoRate.toDouble())
-            .put("lfoFilter", s.lfoFilter.toDouble())
-            .put("drive", s.drive.toDouble())
-            .put("vol", s.volume.toDouble())
-            .put("interval", s.interval)
+    private fun encodeSynth(s: SynthPatch): JSONObject = JSONObject()
+        .put("id", s.id)
+        .put("wave", s.wave)
+        .put("detune", s.detuneCents.toDouble())
+        .put("sub", s.subLevel.toDouble())
+        .put("cutoff", s.cutoffHz.toDouble())
+        .put("res", s.resonance.toDouble())
+        .put("envOct", s.envOctaves.toDouble())
+        .put("fDecay", s.filterDecay.toDouble())
+        .put("a", s.attack.toDouble())
+        .put("d", s.decay.toDouble())
+        .put("s", s.sustain.toDouble())
+        .put("r", s.release.toDouble())
+        .put("key", s.keyTrack.toDouble())
+        .put("lfoRate", s.lfoRate.toDouble())
+        .put("lfoFilter", s.lfoFilter.toDouble())
+        .put("drive", s.drive.toDouble())
+        .put("vol", s.volume.toDouble())
+        .put("interval", s.interval)
+
+    private fun decodeSynth(sy: JSONObject) = SynthPatch(
+        id = sy.getString("id"),
+        wave = sy.getInt("wave").coerceIn(0, 3),
+        detuneCents = sy.getDouble("detune").toFloat().coerceIn(0f, 1200f),
+        subLevel = sy.getDouble("sub").toFloat().coerceIn(0f, 1f),
+        cutoffHz = sy.getDouble("cutoff").toFloat().coerceIn(40f, 16000f),
+        resonance = sy.getDouble("res").toFloat().coerceIn(0.3f, 12f),
+        envOctaves = sy.getDouble("envOct").toFloat().coerceIn(0f, 6f),
+        filterDecay = sy.getDouble("fDecay").toFloat().coerceIn(0.01f, 5f),
+        attack = sy.getDouble("a").toFloat().coerceIn(0.002f, 5f),
+        decay = sy.getDouble("d").toFloat().coerceIn(0.01f, 5f),
+        sustain = sy.getDouble("s").toFloat().coerceIn(0f, 1f),
+        release = sy.getDouble("r").toFloat().coerceIn(0.005f, 8f),
+        keyTrack = sy.getDouble("key").toFloat().coerceIn(0f, 1f),
+        lfoRate = sy.getDouble("lfoRate").toFloat().coerceIn(0f, 20f),
+        lfoFilter = sy.getDouble("lfoFilter").toFloat().coerceIn(0f, 4f),
+        drive = sy.getDouble("drive").toFloat().coerceIn(0f, 1f),
+        volume = sy.getDouble("vol").toFloat().coerceIn(0.1f, 3f),
+        interval = sy.optInt("interval", 0).coerceIn(0, 24),
+    )
+
+    private fun encodeTrack(t: Track): JSONObject {
+        val m = t.mix
         return JSONObject()
-            .put("version", VERSION)
-            .put("style", p.styleId)
-            .put("bpm", p.bpm)
-            .put("swing", p.swing.toDouble())
-            .put("synth", synth)
-            .put("mix", JSONArray().also { a ->
-                for (m in p.mix) {
-                    a.put(
-                        JSONArray().put(m.level.toDouble()).put(m.pan.toDouble()).put(m.reverbSend.toDouble())
-                            .put(m.delaySend.toDouble()).put(m.drive.toDouble()).put(m.crush.toDouble()).put(m.filter.toDouble()),
-                    )
-                }
-            })
-            .put("solo", JSONArray(p.solo.sorted()))
-            .put("space", p.space.toDouble())
-            .put("echo", p.echo.toDouble())
-            .put("muted", JSONArray(p.muted.sorted()))
-            .put("key", p.keyPc)
-            .put("scale", p.scaleId)
-            .put("steps", p.stepCount)
-            .put("arpMode", p.arpMode)
-            .put("arpRate", p.arpRate)
-            .put("arpOctaves", p.arpOctaves)
-            .put("patterns", JSONArray().also { a -> p.patterns.forEach { a.put(encodePattern(it)) } })
-            .put("current", p.current)
-            .put("chain", JSONArray(p.chain))
-            .put("songMode", p.songMode)
-            .toString()
+            .put("id", t.id)
+            .put("kind", t.kind)
+            .put("voice", t.voice)
+            .put("hidden", t.hidden)
+            .put("muted", t.muted)
+            .put("solo", t.solo)
+            .put("bank", t.bank)
+            .put("program", t.program)
+            .put("arp", JSONArray().put(t.arpMode).put(t.arpRate).put(t.arpOctaves))
+            .put(
+                "mix",
+                JSONArray().put(m.level.toDouble()).put(m.pan.toDouble()).put(m.reverbSend.toDouble())
+                    .put(m.delaySend.toDouble()).put(m.drive.toDouble()).put(m.crush.toDouble()).put(m.filter.toDouble()),
+            )
+            .also { o -> if (t.kind == TrackKind.SYNTH) o.put("synth", encodeSynth(t.synth)) }
     }
+
+    private fun decodeTrack(o: JSONObject): Track? {
+        val id = o.getInt("id")
+        if (id !in 0 until StudioEngine.MAX_TRACKS) return null
+        val kind = o.getInt("kind")
+        if (kind != TrackKind.DRUM && kind != TrackKind.SYNTH && kind != TrackKind.SF2) return null
+        val voice = o.getInt("voice")
+        if (kind == TrackKind.DRUM && voice !in 0 until Inst.DRUM_COUNT) return null
+        val a = o.getJSONArray("mix")
+        val arp = o.getJSONArray("arp")
+        return Track(
+            id = id,
+            kind = kind,
+            voice = if (kind == TrackKind.DRUM) voice else 0,
+            mix = TrackMix(
+                level = a.getDouble(0).toFloat().coerceIn(0f, 1.5f),
+                pan = a.getDouble(1).toFloat().coerceIn(-1f, 1f),
+                reverbSend = a.getDouble(2).toFloat().coerceIn(0f, 1f),
+                delaySend = a.getDouble(3).toFloat().coerceIn(0f, 1f),
+                drive = a.getDouble(4).toFloat().coerceIn(0f, 1f),
+                crush = a.getDouble(5).toFloat().coerceIn(0f, 1f),
+                filter = a.getDouble(6).toFloat().coerceIn(-1f, 1f),
+            ),
+            hidden = o.optBoolean("hidden", false),
+            muted = o.optBoolean("muted", false),
+            solo = o.optBoolean("solo", false) && !o.optBoolean("hidden", false),
+            synth = if (kind == TrackKind.SYNTH) decodeSynth(o.getJSONObject("synth")) else SynthPresets.BASS,
+            bank = o.optInt("bank", 0).coerceIn(0, 16383),
+            program = o.optInt("program", 0).coerceIn(0, 127),
+            arpMode = arp.getInt(0).coerceIn(0, 4),
+            arpRate = arp.getInt(1).coerceIn(0, 2),
+            arpOctaves = arp.getInt(2).coerceIn(1, 3),
+        )
+    }
+
+    fun encode(p: StudioProject): String = JSONObject()
+        .put("version", VERSION)
+        .put("style", p.styleId)
+        .put("bpm", p.bpm)
+        .put("swing", p.swing.toDouble())
+        .put("tracks", JSONArray().also { a -> p.tracks.forEach { a.put(encodeTrack(it)) } })
+        .put("space", p.space.toDouble())
+        .put("echo", p.echo.toDouble())
+        .put("key", p.keyPc)
+        .put("scale", p.scaleId)
+        .put("steps", p.stepCount)
+        .put("patterns", JSONArray().also { a -> p.patterns.forEach { a.put(encodePattern(it)) } })
+        .put("current", p.current)
+        .put("chain", JSONArray(p.chain))
+        .put("songMode", p.songMode)
+        .toString()
 
     private fun readAuto(a: JSONArray?, steps: Int): FloatArray? {
         if (a == null || a.length() != steps * StepPattern.AUTO_RES) return null
@@ -230,84 +287,34 @@ object StudioProjectCodec {
             if (o.getInt("version") != VERSION) return null
             val steps = o.getInt("steps")
             if (steps != 16 && steps != 32) return null
-            // Les quatre motifs ; un projet d'avant les motifs multiples n'avait que celui du dessus (devenu A).
-            val patterns = ArrayList<StepPattern>(StudioProject.SLOTS)
-            val pa = o.optJSONArray("patterns")
-            if (pa != null) {
-                if (pa.length() != StudioProject.SLOTS) return null
-                for (k in 0 until StudioProject.SLOTS) patterns += decodePattern(pa.getJSONObject(k), steps) ?: return null
-            } else {
-                patterns += decodePattern(o, steps) ?: return null
-                repeat(StudioProject.SLOTS - 1) { patterns += Styles.emptyPattern(steps) }
+            val tracks = ArrayList<Track>()
+            val ta = o.getJSONArray("tracks")
+            if (ta.length() > StudioEngine.MAX_TRACKS) return null
+            for (k in 0 until ta.length()) {
+                val t = decodeTrack(ta.getJSONObject(k)) ?: return null
+                if (tracks.any { it.id == t.id }) return null
+                tracks += t
             }
+            val pa = o.getJSONArray("patterns")
+            if (pa.length() != StudioProject.SLOTS) return null
+            val patterns = ArrayList<StepPattern>(StudioProject.SLOTS)
+            for (k in 0 until StudioProject.SLOTS) patterns += decodePattern(pa.getJSONObject(k), steps, tracks) ?: return null
             val chain = ArrayList<Int>()
             o.optJSONArray("chain")?.let { ca ->
                 for (k in 0 until minOf(ca.length(), StudioProject.MAX_CHAIN)) {
                     ca.getInt(k).takeIf { it in 0 until StudioProject.SLOTS }?.let { chain += it }
                 }
             }
-            val sy = o.getJSONObject("synth")
-            val synth = SynthPatch(
-                id = sy.getString("id"),
-                wave = sy.getInt("wave").coerceIn(0, 3),
-                detuneCents = sy.getDouble("detune").toFloat().coerceIn(0f, 1200f),
-                subLevel = sy.getDouble("sub").toFloat().coerceIn(0f, 1f),
-                cutoffHz = sy.getDouble("cutoff").toFloat().coerceIn(40f, 16000f),
-                resonance = sy.getDouble("res").toFloat().coerceIn(0.3f, 12f),
-                envOctaves = sy.getDouble("envOct").toFloat().coerceIn(0f, 6f),
-                filterDecay = sy.getDouble("fDecay").toFloat().coerceIn(0.01f, 5f),
-                attack = sy.getDouble("a").toFloat().coerceIn(0.002f, 5f),
-                decay = sy.getDouble("d").toFloat().coerceIn(0.01f, 5f),
-                sustain = sy.getDouble("s").toFloat().coerceIn(0f, 1f),
-                release = sy.getDouble("r").toFloat().coerceIn(0.005f, 8f),
-                keyTrack = sy.getDouble("key").toFloat().coerceIn(0f, 1f),
-                lfoRate = sy.getDouble("lfoRate").toFloat().coerceIn(0f, 20f),
-                lfoFilter = sy.getDouble("lfoFilter").toFloat().coerceIn(0f, 4f),
-                drive = sy.getDouble("drive").toFloat().coerceIn(0f, 1f),
-                volume = sy.getDouble("vol").toFloat().coerceIn(0.1f, 3f),
-                interval = sy.optInt("interval", 0).coerceIn(0, 24),
-            )
-            // Mixage : à défaut (projet d'avant le mixeur), les réglages d'origine, avec l'ambiance du synthé d'alors.
-            val mixArray = o.optJSONArray("mix")
-            val mix: List<TrackMix> = if (mixArray != null && mixArray.length() == Inst.COUNT) {
-                List(Inst.COUNT) { k ->
-                    val a = mixArray.getJSONArray(k)
-                    TrackMix(
-                        level = a.getDouble(0).toFloat().coerceIn(0f, 1.5f),
-                        pan = a.getDouble(1).toFloat().coerceIn(-1f, 1f),
-                        reverbSend = a.getDouble(2).toFloat().coerceIn(0f, 1f),
-                        delaySend = a.getDouble(3).toFloat().coerceIn(0f, 1f),
-                        drive = a.getDouble(4).toFloat().coerceIn(0f, 1f),
-                        crush = a.getDouble(5).toFloat().coerceIn(0f, 1f),
-                        filter = a.getDouble(6).toFloat().coerceIn(-1f, 1f),
-                    )
-                }
-            } else {
-                StudioProject.defaultMix(o.optDouble("synthSpace", 0.25).toFloat().coerceIn(0f, 1f))
-            }
-            val solo = HashSet<Int>()
-            o.optJSONArray("solo")?.let { sa ->
-                for (k in 0 until sa.length()) sa.getInt(k).takeIf { it in 0 until Inst.COUNT }?.let { solo += it }
-            }
-            val muted = HashSet<Int>()
-            val m = o.getJSONArray("muted")
-            for (k in 0 until m.length()) m.getInt(k).takeIf { it in 0 until Inst.COUNT }?.let { muted += it }
             StudioProject(
                 styleId = o.getString("style"),
                 bpm = o.getInt("bpm").coerceIn(40, 220),
                 swing = o.getDouble("swing").toFloat().coerceIn(0f, 0.5f),
-                synth = synth,
-                mix = mix,
+                tracks = tracks,
                 space = o.getDouble("space").toFloat().coerceIn(0f, 1f),
                 echo = o.getDouble("echo").toFloat().coerceIn(0f, 1f),
-                muted = muted,
                 keyPc = o.getInt("key").coerceIn(0, 11),
                 scaleId = o.getString("scale"),
                 patterns = patterns,
-                arpMode = o.optInt("arpMode", 0).coerceIn(0, 4),
-                arpRate = o.optInt("arpRate", 1).coerceIn(0, 2),
-                arpOctaves = o.optInt("arpOctaves", 1).coerceIn(1, 3),
-                solo = solo,
                 current = o.optInt("current", 0).coerceIn(0, StudioProject.SLOTS - 1),
                 chain = chain,
                 songMode = o.optBoolean("songMode", false) && chain.isNotEmpty(),
@@ -335,14 +342,15 @@ class StudioProjectStore(context: Context) {
 
 /**
  * Les modifications du projet, appliquées au moteur au fur et à mesure. Tout se passe sur le fil de
- * l'interface ; le moteur reçoit chaque nouveau motif d'un coup (référence @Volatile).
+ * l'interface ; le moteur reçoit chaque nouveau motif d'un coup (référence @Volatile). Les pistes sont désignées par
+ * leur numéro ([Track.id]) ; les fonctions de notes et de son prennent, à défaut, la piste du synthé d'origine.
  */
 class StudioSession(private val engine: StudioEngine, initial: StudioProject) {
 
     var project: StudioProject = initial
         private set
 
-    /** Le projet d'avant le dernier remplacement en bloc (style, hasard, effacer) : un seul pas en arrière pour l'instant. */
+    /** Le projet d'avant le dernier remplacement en bloc (style, hasard, effacer, piste retirée) : un seul pas en arrière pour l'instant. */
     private var undoSnapshot: StudioProject? = null
 
     val canUndo: Boolean get() = undoSnapshot != null
@@ -360,65 +368,123 @@ class StudioSession(private val engine: StudioEngine, initial: StudioProject) {
 
     private fun pushAll() {
         val p = project
+        engine.setTracks(p.tracks.map { it.spec })
         engine.pattern = p.pattern
         pushSong()
         engine.bpm = p.bpm.toFloat()
         engine.swing = p.swing
         engine.spaceAmount = p.space
         engine.echoAmount = p.echo
-        engine.synth.patch = p.synth
-        engine.applyMix(p.mix)
-        pushArp()
+        for (t in p.tracks) pushTrack(t)
         pushMute()
     }
 
-    /** Muet = demandé par l'utilisateur ; en plus, quand une piste est en solo, toutes les autres se taisent. */
+    private fun pushTrack(t: Track) {
+        engine.applyMix(t.id, t.mix)
+        engine.synthOf(t.id)?.patch = t.synth
+        engine.setArp(t.id, t.arpMode, ARP_DIVISIONS[t.arpRate.coerceIn(0, 2)], t.arpOctaves)
+    }
+
+    /** Muet = demandé par l'utilisateur ; en plus, une piste cachée se tait, et quand une piste est en solo, toutes les autres aussi. */
     private fun pushMute() {
         val p = project
-        for (i in 0 until Inst.COUNT) {
-            engine.instruments[i].muted = i in p.muted || (p.solo.isNotEmpty() && i !in p.solo)
+        val anySolo = p.tracks.any { it.solo }
+        for (t in p.tracks) engine.setMuted(t.id, t.muted || t.hidden || (anySolo && !t.solo))
+    }
+
+    private fun changeTrack(id: Int, change: (Track) -> Track) {
+        val t = project.trackOrNull(id) ?: return
+        val n = change(t)
+        project = project.withTrack(n)
+        pushTrack(n)
+    }
+
+    // ---- Les pistes ---------------------------------------------------------------------------------------------
+
+    /**
+     * Ajoute une piste de [kind] ([TrackKind]) à la fin de la liste et rend son numéro (-1 : plus de place). [voice] est le
+     * son de batterie d'une piste rythmique ; [bank] et [program] l'instrument d'une piste soundfont.
+     */
+    fun addTrack(kind: Int, voice: Int = 0, bank: Int = 0, program: Int = 0): Int {
+        val id = Track.freeId(project.tracks.map { it.id })
+        if (id < 0) return -1
+        val t = when (kind) {
+            TrackKind.DRUM -> Track.drum(id, voice.coerceIn(0, Inst.DRUM_COUNT - 1))
+            TrackKind.SYNTH -> Track.synth(id, space = 0.25f)
+            else -> Track.sf2(id, bank, program)
         }
+        // Une piste rythmique reçoit une ligne vide dans chacun des motifs
+        val patterns = if (t.melodic) project.patterns
+        else project.patterns.map { it.copy(lanes = it.lanes + Lane(id, FloatArray(it.stepCount))) }
+        project = project.copy(tracks = project.tracks + t, patterns = patterns)
+        pushAll()
+        return id
     }
 
-    private fun pushArp() {
-        engine.arpMode = project.arpMode
-        engine.arpDivision = ARP_DIVISIONS[project.arpRate.coerceIn(0, 2)]
-        engine.arpOctaves = project.arpOctaves
+    /** Retire une piste, ses pas et ses notes (un pas en arrière les rend). */
+    fun removeTrack(id: Int) {
+        if (project.trackOrNull(id) == null) return
+        undoSnapshot = project
+        val patterns = project.patterns.map { p ->
+            p.copy(lanes = p.lanes.filter { it.instrument != id }, notes = p.notes.filter { it.track != id })
+        }
+        project = project.copy(tracks = project.tracks.filter { it.id != id }, patterns = patterns)
+        pushAll()
     }
 
-    fun setArpMode(mode: Int) {
-        project = project.copy(arpMode = mode.coerceIn(0, 4))
-        pushArp()
+    /** Cache ou montre une piste : cachée, elle ne s'affiche plus et ne s'entend plus, mais garde ses pas et ses notes. */
+    fun setHidden(id: Int, hidden: Boolean) {
+        changeTrack(id) { it.copy(hidden = hidden, solo = it.solo && !hidden) }
+        pushMute()
     }
 
-    fun setArpRate(rate: Int) {
-        project = project.copy(arpRate = rate.coerceIn(0, 2))
-        pushArp()
+    fun isHidden(id: Int): Boolean = project.trackOrNull(id)?.hidden == true
+
+    /** Place la piste [id] au rang [to] de la liste (glisser pour la ranger). */
+    fun moveTrack(id: Int, to: Int) {
+        val list = project.tracks.toMutableList()
+        val from = list.indexOfFirst { it.id == id }
+        if (from < 0) return
+        val t = list.removeAt(from)
+        list.add(to.coerceIn(0, list.size), t)
+        project = project.copy(tracks = list)
     }
 
-    fun setArpOctaves(octaves: Int) {
-        project = project.copy(arpOctaves = octaves.coerceIn(1, 3))
-        pushArp()
+    /** Choisit l'instrument d'une piste soundfont. */
+    fun setSf2Program(id: Int, bank: Int, program: Int) {
+        if (project.trackOrNull(id)?.kind != TrackKind.SF2) return
+        changeTrack(id) { it.copy(bank = bank.coerceIn(0, 16383), program = program.coerceIn(0, 127)) }
+        engine.setTracks(project.tracks.map { it.spec })
     }
+
+    // ---- Arpégiateur d'une piste ---------------------------------------------------------------------------------
+
+    fun setArpMode(mode: Int, track: Int = Inst.SYNTH) = changeTrack(track) { it.copy(arpMode = mode.coerceIn(0, 4)) }
+
+    fun setArpRate(rate: Int, track: Int = Inst.SYNTH) = changeTrack(track) { it.copy(arpRate = rate.coerceIn(0, 2)) }
+
+    fun setArpOctaves(octaves: Int, track: Int = Inst.SYNTH) = changeTrack(track) { it.copy(arpOctaves = octaves.coerceIn(1, 3)) }
 
     // ---- Mixeur ----------------------------------------------------------------------------------------------
 
-    fun track(lane: Int): TrackMix = project.mix[lane]
+    fun mixOf(id: Int): TrackMix = project.track(id).mix
 
     /** Change les réglages de mixage d'une piste (volume, panoramique, envois, effets). */
-    fun updateTrack(lane: Int, change: (TrackMix) -> TrackMix) {
-        val mix = project.mix.toMutableList()
-        mix[lane] = change(mix[lane])
-        project = project.copy(mix = mix)
-        engine.applyMix(project.mix)
-    }
+    fun updateTrack(id: Int, change: (TrackMix) -> TrackMix) = changeTrack(id) { it.copy(mix = change(it.mix)) }
 
-    fun toggleSolo(lane: Int) {
-        project = project.copy(solo = if (lane in project.solo) project.solo - lane else project.solo + lane)
+    fun toggleSolo(id: Int) {
+        changeTrack(id) { it.copy(solo = !it.solo) }
         pushMute()
     }
 
-    fun isSolo(lane: Int): Boolean = lane in project.solo
+    fun isSolo(id: Int): Boolean = project.trackOrNull(id)?.solo == true
+
+    fun setMuted(id: Int, muted: Boolean) {
+        changeTrack(id) { it.copy(muted = muted) }
+        pushMute()
+    }
+
+    fun isMuted(id: Int): Boolean = project.trackOrNull(id)?.muted == true
 
     /** Remplace le motif en cours d'édition. */
     private fun setPattern(pattern: StepPattern) {
@@ -480,9 +546,8 @@ class StudioSession(private val engine: StudioEngine, initial: StudioProject) {
         pushSong()
     }
 
-    private fun withLane(lane: Int, change: (Lane) -> Lane) {
-        val lanes = project.pattern.lanes.toMutableList()
-        lanes[lane] = change(lanes[lane])
+    private fun withLane(track: Int, change: (Lane) -> Lane) {
+        val lanes = project.pattern.lanes.map { if (it.instrument == track) change(it) else it }
         setPattern(project.pattern.copy(lanes = lanes))
     }
 
@@ -537,47 +602,52 @@ class StudioSession(private val engine: StudioEngine, initial: StudioProject) {
         setPattern(project.pattern.copy(autoFilter = null, autoSpace = null))
     }
 
-    // ---- Grille rythmique (la ligne du synthé en est un résumé : un pas est allumé si une note y commence) ----------
+    // ---- Grille rythmique (la ligne d'une piste mélodique en est un résumé : un pas est allumé si une note y commence) --
 
-    fun isOn(lane: Int, step: Int): Boolean =
-        if (lane == Inst.SYNTH) project.pattern.notes.any { it.step == step }
-        else project.pattern.lanes[lane].velocity[step] > 0f
+    private fun isMelodic(track: Int): Boolean = project.trackOrNull(track)?.melodic == true
 
-    /** Vélocité d'un pas (0 = éteint) ; pour le synthé, la plus forte des notes qui y commencent. */
-    fun velocity(lane: Int, step: Int): Float =
-        if (lane == Inst.SYNTH) project.pattern.notes.filter { it.step == step }.maxOfOrNull { it.velocity } ?: 0f
-        else project.pattern.lanes[lane].velocity[step]
+    private fun notesOf(track: Int): List<Note> = project.pattern.notes.filter { it.track == track }
 
-    fun setStep(lane: Int, step: Int, on: Boolean) {
-        if (isOn(lane, step) == on) return
-        if (lane == Inst.SYNTH) {
+    fun isOn(track: Int, step: Int): Boolean =
+        if (isMelodic(track)) project.pattern.notes.any { it.track == track && it.step == step }
+        else (project.pattern.lane(track)?.velocity?.getOrNull(step) ?: 0f) > 0f
+
+    /** Vélocité d'un pas (0 = éteint) ; pour une piste mélodique, la plus forte des notes qui y commencent. */
+    fun velocity(track: Int, step: Int): Float =
+        if (isMelodic(track)) project.pattern.notes.filter { it.track == track && it.step == step }.maxOfOrNull { it.velocity } ?: 0f
+        else project.pattern.lane(track)?.velocity?.getOrNull(step) ?: 0f
+
+    fun setStep(track: Int, step: Int, on: Boolean) {
+        if (project.trackOrNull(track) == null || step !in 0 until project.stepCount) return
+        if (isOn(track, step) == on) return
+        if (isMelodic(track)) {
             if (on) {
-                withNotes(project.pattern.notes + Note(step, defaultPitch(), 1, LEVELS[0]))
+                withNotes(project.pattern.notes + Note(step, defaultPitch(track), 1, LEVELS[0], track))
             } else {
-                withNotes(project.pattern.notes.filter { it.step != step })
+                withNotes(project.pattern.notes.filter { !(it.track == track && it.step == step) })
             }
             return
         }
-        withLane(lane) { l ->
+        withLane(track) { l ->
             val v = l.velocity.copyOf()
             v[step] = if (on) LEVELS[0] else 0f
             Lane(l.instrument, v, l.note, l.gate)
         }
     }
 
-    fun toggleStep(lane: Int, step: Int) = setStep(lane, step, !isOn(lane, step))
+    fun toggleStep(track: Int, step: Int) = setStep(track, step, !isOn(track, step))
 
     /** Fort → moyen → doux → fort… sur un pas allumé ; rend la nouvelle vélocité (0 si le pas est éteint). */
-    fun cycleVelocity(lane: Int, step: Int): Float {
-        val current = velocity(lane, step)
+    fun cycleVelocity(track: Int, step: Int): Float {
+        val current = velocity(track, step)
         if (current <= 0f) return 0f
         var idx = 0
         for (k in LEVELS.indices) if (abs(LEVELS[k] - current) < abs(LEVELS[idx] - current)) idx = k
         val next = LEVELS[(idx + 1) % LEVELS.size]
-        if (lane == Inst.SYNTH) {
-            withNotes(project.pattern.notes.map { if (it.step == step) Note(it.step, it.pitch, it.length, next) else it })
+        if (isMelodic(track)) {
+            withNotes(project.pattern.notes.map { if (it.track == track && it.step == step) Note(it.step, it.pitch, it.length, next, it.track) else it })
         } else {
-            withLane(lane) { l ->
+            withLane(track) { l ->
                 val v = l.velocity.copyOf()
                 v[step] = next
                 Lane(l.instrument, v, l.note, l.gate)
@@ -587,26 +657,26 @@ class StudioSession(private val engine: StudioEngine, initial: StudioProject) {
     }
 
     /** Hauteur d'une nouvelle note posée depuis la grille rythmique : la tonique, dans l'octave des notes déjà là. */
-    private fun defaultPitch(): Int {
-        val notes = project.pattern.notes
+    private fun defaultPitch(track: Int): Int {
+        val notes = notesOf(track)
         val octave = if (notes.isEmpty()) 24 else notes.minOf { it.pitch } / 12 * 12
         return octave + project.keyPc
     }
 
-    // ---- Notes du synthé -------------------------------------------------------------------------------------
+    // ---- Notes d'une piste mélodique ---------------------------------------------------------------------------
 
-    /** La note qui couvre la case ([step], [pitch]), s'il y en a une. */
-    fun noteAt(step: Int, pitch: Int): Note? =
-        project.pattern.notes.firstOrNull { it.pitch == pitch && step >= it.step && step < it.step + it.length }
+    /** La note de la piste [track] qui couvre la case ([step], [pitch]), s'il y en a une. */
+    fun noteAt(step: Int, pitch: Int, track: Int = Inst.SYNTH): Note? =
+        project.pattern.notes.firstOrNull { it.track == track && it.pitch == pitch && step >= it.step && step < it.step + it.length }
 
-    /** Pose une note ; ce qu'elle recouvre à la même hauteur disparaît (le moteur relâche une note par sa hauteur). */
-    fun addNote(step: Int, pitch: Int, length: Int, velocity: Float = LEVELS[0]) {
-        if (step !in 0 until project.stepCount) return
+    /** Pose une note ; ce qu'elle recouvre à la même hauteur sur la même piste disparaît (le moteur relâche une note par sa hauteur). */
+    fun addNote(step: Int, pitch: Int, length: Int, velocity: Float = LEVELS[0], track: Int = Inst.SYNTH) {
+        if (step !in 0 until project.stepCount || !isMelodic(track)) return
         val len = length.coerceIn(1, project.stepCount - step)
         val kept = project.pattern.notes.filter { n ->
-            !(n.pitch == pitch && n.step < step + len && n.step + n.length > step)
+            !(n.track == track && n.pitch == pitch && n.step < step + len && n.step + n.length > step)
         }
-        withNotes(kept + Note(step, pitch.coerceIn(0, 127), len, velocity))
+        withNotes(kept + Note(step, pitch.coerceIn(0, 127), len, velocity, track))
     }
 
     fun removeNote(note: Note) = withNotes(project.pattern.notes.filter { it !== note })
@@ -615,9 +685,9 @@ class StudioSession(private val engine: StudioEngine, initial: StudioProject) {
         val len = length.coerceIn(1, project.stepCount - note.step)
         val others = project.pattern.notes.filter { it !== note }
         val kept = others.filter { n ->
-            !(n.pitch == note.pitch && n.step < note.step + len && n.step + n.length > note.step)
+            !(n.track == note.track && n.pitch == note.pitch && n.step < note.step + len && n.step + n.length > note.step)
         }
-        withNotes(kept + Note(note.step, note.pitch, len, note.velocity))
+        withNotes(kept + Note(note.step, note.pitch, len, note.velocity, note.track))
     }
 
     /** Change de tonalité : les notes se transposent par le plus court chemin (de −5 à +6 demi-tons). */
@@ -626,7 +696,7 @@ class StudioSession(private val engine: StudioEngine, initial: StudioProject) {
         var delta = k - project.keyPc
         if (delta > 6) delta -= 12
         if (delta < -5) delta += 12
-        val moved = project.pattern.notes.map { Note(it.step, (it.pitch + delta).coerceIn(0, 127), it.length, it.velocity) }
+        val moved = project.pattern.notes.map { Note(it.step, (it.pitch + delta).coerceIn(0, 127), it.length, it.velocity, it.track) }
         project = project.copy(keyPc = k)
         withNotes(moved)
     }
@@ -635,21 +705,17 @@ class StudioSession(private val engine: StudioEngine, initial: StudioProject) {
         project = project.copy(scaleId = id)
     }
 
-    // ---- Son du synthé -----------------------------------------------------------------------------------------
+    // ---- Son d'une piste de synthé ---------------------------------------------------------------------------
 
-    fun setPreset(id: String) {
-        project = project.copy(synth = SynthPresets.byId(id))
-        engine.synth.patch = project.synth
-    }
+    fun setPreset(id: String, track: Int = Inst.SYNTH) = changeTrack(track) { if (it.kind == TrackKind.SYNTH) it.copy(synth = SynthPresets.byId(id)) else it }
 
-    fun updateSynth(change: (SynthPatch) -> SynthPatch) {
-        project = project.copy(synth = change(project.synth))
-        engine.synth.patch = project.synth
-    }
+    fun updateSynth(track: Int = Inst.SYNTH, change: (SynthPatch) -> SynthPatch) =
+        changeTrack(track) { if (it.kind == TrackKind.SYNTH) it.copy(synth = change(it.synth)) else it }
 
-    fun setSynthSpace(v: Float) {
+    /** L'« ambiance » d'une piste : sa part envoyée à la réverbération (l'écho en reçoit les sept dixièmes). */
+    fun setSynthSpace(v: Float, track: Int = Inst.SYNTH) {
         val space = v.coerceIn(0f, 1f)
-        updateTrack(Inst.SYNTH) { it.copy(reverbSend = space, delaySend = space * 0.7f) }
+        updateTrack(track) { it.copy(reverbSend = space, delaySend = space * 0.7f) }
     }
 
     // ---- Ensemble du morceau -----------------------------------------------------------------------------------
@@ -673,11 +739,11 @@ class StudioSession(private val engine: StudioEngine, initial: StudioProject) {
         if (count > old) {
             for (n in source.notes) {
                 notes += n
-                notes += Note(n.step + old, n.pitch, n.length, n.velocity)
+                notes += Note(n.step + old, n.pitch, n.length, n.velocity, n.track)
             }
         } else {
             for (n in source.notes) if (n.step < count) {
-                notes += Note(n.step, n.pitch, minOf(n.length, count - n.step), n.velocity)
+                notes += Note(n.step, n.pitch, minOf(n.length, count - n.step), n.velocity, n.track)
             }
         }
         fun resizeAuto(a: FloatArray?): FloatArray? =
@@ -685,21 +751,47 @@ class StudioSession(private val engine: StudioEngine, initial: StudioProject) {
         return StepPattern(count, lanes, notes, resizeAuto(source.autoFilter), resizeAuto(source.autoSpace))
     }
 
+    /** Un motif vide, avec une ligne pour chaque piste rythmique du projet. */
+    private fun emptyPattern(): StepPattern =
+        StepPattern(project.stepCount, project.tracks.filter { !it.melodic }.map { Lane(it.id, FloatArray(project.stepCount)) })
+
+    /**
+     * Fait entrer un motif fabriqué par un style (sept sons de batterie, notes du synthé d'origine) dans les pistes du
+     * projet : chaque son de batterie va à la première piste de ce son, les notes à la première piste mélodique ; les
+     * autres pistes gardent ce qu'elles avaient dans [base].
+     */
+    private fun adapt(generated: StepPattern, base: StepPattern): StepPattern {
+        val tracks = project.tracks
+        val firstOfVoice = HashSet<Int>()
+        val lanes = ArrayList<Lane>()
+        for (t in tracks) {
+            if (t.melodic) continue
+            val fresh = if (firstOfVoice.add(t.voice)) generated.lane(t.voice) else null
+            lanes += if (fresh != null) Lane(t.id, fresh.velocity, fresh.note, fresh.gate)
+            else base.lane(t.id) ?: Lane(t.id, FloatArray(project.stepCount))
+        }
+        val target = project.firstMelodic?.id
+        val notes = ArrayList<Note>()
+        for (n in base.notes) if (n.track != target) notes += n
+        if (target != null) for (n in generated.notes) notes += Note(n.step, n.pitch, n.length, n.velocity, target)
+        return generated.copy(lanes = lanes, notes = notes)
+    }
+
     /** Charge un style de départ : tempo, swing, son, tonalité, effets et motif. */
     fun applyStyle(style: Style, seed: Long = style.id.hashCode().toLong()) {
         undoSnapshot = project
-        // L'arpégiateur est un réglage de jeu, pas de style : il reste comme il était.
-        project = StudioProject.fromStyle(style, project.stepCount, seed)
-            // Le mixage et le jeu (arpège, solo) sont à l'utilisateur, pas au style : ils restent comme ils étaient.
-            .let { fresh ->
-                // Le style remplace seulement le motif en cours : les autres motifs et le morceau restent.
-                fresh.copy(
-                    patterns = project.patterns.toMutableList().also { it[project.current] = fresh.pattern },
-                    current = project.current, chain = project.chain, songMode = project.songMode,
-                    arpMode = project.arpMode, arpRate = project.arpRate, arpOctaves = project.arpOctaves,
-                    mix = project.mix, solo = project.solo, muted = project.muted,
-                )
-            }
+        val fresh = StudioProject.fromStyle(style, project.stepCount, seed)
+        val target = project.firstMelodic
+        // Le style remplace seulement le motif en cours et le son du premier synthé : les autres motifs, le morceau, le
+        // mixage et le jeu (arpège, solo) sont à l'utilisateur, pas au style.
+        val tracks = project.tracks.map { t ->
+            if (t.id == target?.id && t.kind == TrackKind.SYNTH) t.copy(synth = SynthPresets.byId(style.patchId)) else t
+        }
+        project = fresh.copy(
+            tracks = tracks,
+            patterns = project.patterns.toMutableList().also { it[project.current] = adapt(fresh.pattern, project.pattern) },
+            current = project.current, chain = project.chain, songMode = project.songMode,
+        )
         pushAll()
     }
 
@@ -716,20 +808,13 @@ class StudioSession(private val engine: StudioEngine, initial: StudioProject) {
             project.stepCount, seed,
         )
         // Le geste enregistré reste : c'est un réglage de jeu, comme le mixage.
-        setPattern(generated.copy(autoFilter = project.pattern.autoFilter, autoSpace = project.pattern.autoSpace))
+        setPattern(adapt(generated, project.pattern).copy(autoFilter = project.pattern.autoFilter, autoSpace = project.pattern.autoSpace))
     }
 
     fun clear() {
         undoSnapshot = project
-        setPattern(Styles.emptyPattern(project.stepCount))
+        setPattern(emptyPattern())
     }
-
-    fun setMuted(lane: Int, muted: Boolean) {
-        project = project.copy(muted = if (muted) project.muted + lane else project.muted - lane)
-        pushMute()
-    }
-
-    fun isMuted(lane: Int): Boolean = lane in project.muted
 
     fun setBpm(bpm: Int) {
         project = project.copy(bpm = bpm.coerceIn(40, 220))
@@ -769,6 +854,8 @@ class LiveRecorder(
     private val session: StudioSession,
     private val isPlaying: () -> Boolean,
     private val position: () -> Double,
+    /** La piste mélodique qui reçoit les notes jouées. */
+    private val track: () -> Int = { Inst.SYNTH },
 ) {
     var armed = false
 
@@ -784,7 +871,7 @@ class LiveRecorder(
         val steps = session.project.stepCount
         val step = Math.floorMod(Math.round(start).toInt(), steps)
         val held = (at - start).coerceAtLeast(0.0)
-        session.addNote(step, pitch, Math.round(held).toInt().coerceAtLeast(1))
+        session.addNote(step, pitch, Math.round(held).toInt().coerceAtLeast(1), track = track())
     }
 
     /** Les notes encore tenues quand l'enregistrement s'arrête sont terminées là. */

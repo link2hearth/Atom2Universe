@@ -57,7 +57,7 @@ class StudioSampleTest {
     private fun percEngine(): StudioEngine = StudioEngine(rate).also {
         it.spaceAmount = 0f
         it.echoAmount = 0f
-        for (inst in it.instruments) {
+        for (inst in it.allInstruments) {
             inst.reverbSend = 0f
             inst.delaySend = 0f
         }
@@ -74,7 +74,7 @@ class StudioSampleTest {
         for (i in 0 until 4_800) peak = maxOf(peak, abs(out[i]))
         assertTrue("on entend l'enregistrement ($peak)", peak > 0.1f)
         for (i in 6_000 until 20_000) assertEquals("il s'arrête avec l'enregistrement", 0f, out[i], 1e-6f)
-        assertEquals(0, engine.instruments[Inst.PERC].activeVoices)
+        assertEquals(0, engine.instrument(Inst.PERC)!!.activeVoices)
     }
 
     @Test

@@ -42,9 +42,7 @@ class StudioLiveTest {
     /** Joue les notes tenues [pitches] avec l'arpège et rend les notes réellement parties vers le synthé : (hauteur, échantillon). */
     private fun arpRun(mode: Int, pitches: List<Int>, octaves: Int = 1, division: Float = 1f, seconds: Int = 2): List<Pair<Int, Long>> {
         val e = quiet()
-        e.arpMode = mode
-        e.arpOctaves = octaves
-        e.arpDivision = division
+        e.setArp(Inst.SYNTH, mode, division, octaves)
         val out = ArrayList<Pair<Int, Long>>()
         e.onSynthNote = { p, f -> out += p to f }
         render(e, 256) // le mode est pris en compte au premier bloc
@@ -91,7 +89,7 @@ class StudioLiveTest {
     @Test
     fun releasingTheKeysStopsTheArp() {
         val e = quiet()
-        e.arpMode = Arp.UP
+        e.setArp(Inst.SYNTH, Arp.UP, 1f, 1)
         val notes = ArrayList<Pair<Int, Long>>()
         e.onSynthNote = { p, f -> notes += p to f }
         render(e, 256)
@@ -109,7 +107,7 @@ class StudioLiveTest {
     @Test
     fun arpNoteIsReleasedBeforeTheNextOneStarts() {
         val e = quiet()
-        e.arpMode = Arp.UP
+        e.setArp(Inst.SYNTH, Arp.UP, 1f, 1)
         render(e, 256)
         e.trigger(Inst.SYNTH, 45, 0.8f)
         e.trigger(Inst.SYNTH, 48, 0.8f)
@@ -120,7 +118,7 @@ class StudioLiveTest {
     @Test
     fun patternChordsFeedTheArp() {
         val e = quiet()
-        e.arpMode = Arp.UP
+        e.setArp(Inst.SYNTH, Arp.UP, 1f, 1)
         e.pattern = StepPattern(16, emptyList(), listOf(Note(0, 45, 8), Note(0, 48, 8), Note(0, 52, 8)))
         val notes = ArrayList<Pair<Int, Long>>()
         e.onSynthNote = { p, f -> notes += p to f }
@@ -143,7 +141,7 @@ class StudioLiveTest {
         for (bpm in listOf(120f, 124f, 97f, 133.3f, 151.7f, 68f)) {
             val e = quiet()
             e.bpm = bpm
-            e.arpMode = Arp.UP
+            e.setArp(Inst.SYNTH, Arp.UP, 1f, 1)
             e.pattern = StepPattern(16, emptyList(), steps.map { Note(it, 45, 1) })
             val notes = ArrayList<Long>()
             e.onSynthNote = { _, f -> notes += f }
@@ -162,11 +160,11 @@ class StudioLiveTest {
     @Test
     fun turningTheArpOffReleasesEverything() {
         val e = quiet()
-        e.arpMode = Arp.UP
+        e.setArp(Inst.SYNTH, Arp.UP, 1f, 1)
         render(e, 256)
         e.trigger(Inst.SYNTH, 45, 0.8f)
         render(e, rate / 4)
-        e.arpMode = Arp.OFF
+        e.setArp(Inst.SYNTH, Arp.OFF, 1f, 1)
         render(e, rate * 2)
         assertEquals(0, e.synth.activeVoices)
         // et le synthé rejoue directement
@@ -291,17 +289,17 @@ class StudioLiveTest {
         s.setArpMode(Arp.UP_DOWN)
         s.setArpRate(2)
         s.setArpOctaves(3)
-        assertEquals(Arp.UP_DOWN, engine.arpMode)
-        assertEquals(0.5f, engine.arpDivision, 0f)
-        assertEquals(3, engine.arpOctaves)
+        assertEquals(Arp.UP_DOWN, s.project.track(Inst.SYNTH).arpMode)
+        assertEquals(0.5f, StudioSession.ARP_DIVISIONS[s.project.track(Inst.SYNTH).arpRate], 0f)
+        assertEquals(3, s.project.track(Inst.SYNTH).arpOctaves)
         val back = StudioProjectCodec.decode(StudioProjectCodec.encode(s.project))
         assertNotNull(back)
-        assertEquals(Arp.UP_DOWN, back!!.arpMode)
-        assertEquals(2, back.arpRate)
-        assertEquals(3, back.arpOctaves)
+        assertEquals(Arp.UP_DOWN, back!!.track(Inst.SYNTH).arpMode)
+        assertEquals(2, back.track(Inst.SYNTH).arpRate)
+        assertEquals(3, back.track(Inst.SYNTH).arpOctaves)
         s.applyStyle(Styles.TECHNO)
-        assertEquals(Arp.UP_DOWN, s.project.arpMode)
-        assertEquals(3, s.project.arpOctaves)
+        assertEquals(Arp.UP_DOWN, s.project.track(Inst.SYNTH).arpMode)
+        assertEquals(3, s.project.track(Inst.SYNTH).arpOctaves)
         assertFalse(s.project.styleId == "house")
     }
 }

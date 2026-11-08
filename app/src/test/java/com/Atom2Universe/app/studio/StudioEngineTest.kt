@@ -284,8 +284,8 @@ class StudioEngineTest {
         engine.spaceAmount = 0f
         engine.echoAmount = 1f
         engine.bpm = 120f
-        engine.instruments[Inst.PERC].delaySend = 1f
-        engine.instruments[Inst.PERC].level = 1f
+        engine.instrument(Inst.PERC)!!.delaySend = 1f
+        engine.instrument(Inst.PERC)!!.level = 1f
         engine.trigger(Inst.PERC)
         val (l, r) = renderAll(engine, rate * 2, 256)
         fun energy(a: FloatArray, from: Int, to: Int): Double {
@@ -307,7 +307,7 @@ class StudioEngineTest {
         val engine = StudioEngine(rate)
         engine.spaceAmount = 0f
         engine.echoAmount = 0f
-        engine.instruments[Inst.KICK].muted = true
+        engine.instrument(Inst.KICK)!!.muted = true
         engine.trigger(Inst.KICK)
         val (l, _) = renderAll(engine, rate / 4, 256)
         var peak = 0f

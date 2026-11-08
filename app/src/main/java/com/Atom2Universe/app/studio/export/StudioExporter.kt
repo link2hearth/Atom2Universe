@@ -2,16 +2,19 @@ package com.Atom2Universe.app.studio.export
 
 import com.Atom2Universe.app.studio.data.StudioProject
 import com.Atom2Universe.app.studio.data.StudioSession
+import com.Atom2Universe.app.studio.data.Track
+import com.Atom2Universe.app.studio.dsp.ExternalSynth
 import com.Atom2Universe.app.studio.engine.Inst
 import com.Atom2Universe.app.studio.engine.StepPattern
 import com.Atom2Universe.app.studio.engine.StudioEngine
+import com.Atom2Universe.app.studio.engine.TrackKind
 import java.io.ByteArrayOutputStream
 import java.io.OutputStream
 import kotlin.math.roundToInt
 
 /**
  * Sortie du Studio vers des fichiers : un enregistrement audio (WAV) rendu hors ligne par le même moteur que celui qu'on
- * entend, et un fichier MIDI (batterie sur le canal 10, synthé sur le canal 1). Rien d'Android ici : testable sur le PC.
+ * entend, et un fichier MIDI (batterie sur le canal 10, une piste par instrument mélodique). Rien d'Android ici : testable sur le PC.
  *
  * Ce qui est exporté : le morceau s'il est activé, sinon le motif en cours répété [LOOPS_WITHOUT_SONG] fois.
  */
@@ -41,8 +44,16 @@ object StudioExporter {
      * Rend le projet en WAV 16 bits stéréo dans [out]. [onProgress] reçoit une valeur de 0 à 1 ; rendre `false` annule
      * (le rendu s'arrête et la fonction rend `false`).
      */
-    fun renderWav(project: StudioProject, sampleRate: Int, out: OutputStream, onProgress: (Float) -> Boolean = { true }): Boolean {
+    fun renderWav(
+        project: StudioProject,
+        sampleRate: Int,
+        out: OutputStream,
+        /** Fabrique le synthé des pistes soundfont (sans lui, ces pistes restent muettes). */
+        sf2Factory: ((sampleRate: Int, bank: Int, program: Int) -> ExternalSynth?)? = null,
+        onProgress: (Float) -> Boolean = { true },
+    ): Boolean {
         val engine = StudioEngine(sampleRate)
+        engine.sf2Factory = sf2Factory
         StudioSession(engine, project) // pousse tout le projet (sons, mixage, morceau) dans le moteur
         val total = frameCount(project, sampleRate)
         val music = total - (TAIL_SECONDS * sampleRate).toLong()
@@ -101,22 +112,37 @@ object StudioExporter {
     private const val TICKS_PER_QUARTER = 480
     private const val TICKS_PER_STEP = TICKS_PER_QUARTER / 4
 
-    /** Notes GM de la batterie, dans l'ordre des pistes rythmiques : grosse caisse, caisse claire, clap, charleston, charleston ouvert, tom, percussion. */
+    /** Notes GM de la batterie, dans l'ordre des sons : grosse caisse, caisse claire, clap, charleston, charleston ouvert, tom, percussion. */
     private val DRUM_NOTES = intArrayOf(36, 38, 39, 42, 46, 47, 56)
+
+    /** Programme GM donné aux pistes du synthé maison (« lead scie »). */
+    private const val SYNTH_PROGRAM = 81
 
     private class Ev(val tick: Int, val order: Int, val bytes: ByteArray)
 
-    /** Le projet en fichier MIDI (format 1 : tempo, batterie, synthé). */
+    /** Une piste s'entend : ni cachée, ni muette, et en solo si une autre l'est. */
+    private fun audible(project: StudioProject, t: Track): Boolean =
+        !t.hidden && !t.muted && (project.tracks.none { it.solo } || t.solo)
+
+    /** Le canal MIDI de la n-ième piste mélodique : de 1 à 16 sans le canal 10 (la batterie). */
+    private fun channelOf(index: Int): Int {
+        val c = if (index < 9) index else index + 1
+        return c.coerceAtMost(15)
+    }
+
+    /** Le projet en fichier MIDI (format 1 : tempo, batterie, puis une piste par instrument mélodique audible). */
     fun midiBytes(project: StudioProject): ByteArray {
         val drums = ArrayList<Ev>()
-        val synth = ArrayList<Ev>()
+        val melodic = project.tracks.filter { it.melodic && audible(project, it) }
+        val melodies = List(melodic.size) { ArrayList<Ev>() }
         val swingTicks = (project.swing.coerceIn(0f, 0.5f) * TICKS_PER_STEP).roundToInt()
         var offset = 0
         for (pattern in plan(project)) {
             fun tickOf(step: Int) = offset + step * TICKS_PER_STEP + if (step % 2 == 1) swingTicks else 0
             for (lane in pattern.lanes) {
-                if (lane.instrument >= DRUM_NOTES.size) continue
-                val note = DRUM_NOTES[lane.instrument]
+                val track = project.trackOrNull(lane.instrument) ?: continue
+                if (track.melodic || !audible(project, track)) continue
+                val note = DRUM_NOTES[track.voice.coerceIn(0, DRUM_NOTES.size - 1)]
                 for (s in 0 until pattern.stepCount) {
                     val v = lane.velocity[s]
                     if (v <= 0f) continue
@@ -126,12 +152,25 @@ object StudioExporter {
                 }
             }
             for (n in pattern.notes) {
+                val index = melodic.indexOfFirst { it.id == n.track }
+                if (index < 0) continue
+                val ch = channelOf(index)
                 val t = tickOf(n.step)
                 val off = t + (n.length * TICKS_PER_STEP * 0.95f).roundToInt().coerceAtLeast(1)
-                synth += Ev(t, 1, byteArrayOf(0x90.toByte(), n.pitch.coerceIn(0, 127).toByte(), (n.velocity * 127f).roundToInt().coerceIn(1, 127).toByte()))
-                synth += Ev(off, 0, byteArrayOf(0x80.toByte(), n.pitch.coerceIn(0, 127).toByte(), 0))
+                melodies[index] += Ev(t, 1, byteArrayOf((0x90 or ch).toByte(), n.pitch.coerceIn(0, 127).toByte(), (n.velocity * 127f).roundToInt().coerceIn(1, 127).toByte()))
+                melodies[index] += Ev(off, 0, byteArrayOf((0x80 or ch).toByte(), n.pitch.coerceIn(0, 127).toByte(), 0))
             }
             offset += pattern.stepCount * TICKS_PER_STEP
+        }
+        // Au début de chaque piste mélodique : l'instrument (banque puis programme)
+        for ((index, track) in melodic.withIndex()) {
+            val ch = channelOf(index)
+            val program = if (track.kind == TrackKind.SF2) track.program else SYNTH_PROGRAM
+            if (track.kind == TrackKind.SF2) {
+                melodies[index] += Ev(0, -3, byteArrayOf((0xB0 or ch).toByte(), 0, ((track.bank shr 7) and 0x7F).toByte()))
+                melodies[index] += Ev(0, -2, byteArrayOf((0xB0 or ch).toByte(), 32, (track.bank and 0x7F).toByte()))
+            }
+            melodies[index] += Ev(0, -1, byteArrayOf((0xC0 or ch).toByte(), program.coerceIn(0, 127).toByte()))
         }
 
         val tempoMicros = (60_000_000.0 / project.bpm).roundToInt()
@@ -140,12 +179,13 @@ object StudioExporter {
             vlq(t, 0); t.write(byteArrayOf(0xFF.toByte(), 0x58, 0x04, 4, 2, 24, 8))
             vlq(t, 0); t.write(byteArrayOf(0xFF.toByte(), 0x2F, 0x00))
         }
+        val trackCount = 2 + melodic.size
         val file = ByteArrayOutputStream()
-        file.write(byteArrayOf('M'.code.toByte(), 'T'.code.toByte(), 'h'.code.toByte(), 'd'.code.toByte(), 0, 0, 0, 6, 0, 1, 0, 3))
+        file.write(byteArrayOf('M'.code.toByte(), 'T'.code.toByte(), 'h'.code.toByte(), 'd'.code.toByte(), 0, 0, 0, 6, 0, 1, (trackCount shr 8).toByte(), trackCount.toByte()))
         file.write(byteArrayOf((TICKS_PER_QUARTER shr 8).toByte(), TICKS_PER_QUARTER.toByte()))
         chunk(file, conductor.toByteArray())
         chunk(file, trackBytes(drums))
-        chunk(file, trackBytes(synth))
+        for (m in melodies) chunk(file, trackBytes(m))
         return file.toByteArray()
     }
 

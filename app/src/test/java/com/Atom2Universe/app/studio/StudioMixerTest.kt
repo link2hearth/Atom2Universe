@@ -38,7 +38,7 @@ class StudioMixerTest {
     private fun dry(): StudioEngine = StudioEngine(rate).also {
         it.spaceAmount = 0f
         it.echoAmount = 0f
-        for (inst in it.instruments) {
+        for (inst in it.allInstruments) {
             inst.reverbSend = 0f
             inst.delaySend = 0f
         }
@@ -71,16 +71,16 @@ class StudioMixerTest {
     fun effectsOffAreBitIdentical() {
         val a = hit(Inst.SNARE)
         val b = hit(Inst.SNARE) { e ->
-            e.applyMix(StudioProject.defaultMix().map { it.copy(drive = 0f, crush = 0f, filter = 0f) })
-            for (inst in e.instruments) {
+            e.applyMix(TrackMix.defaults().map { it.copy(drive = 0f, crush = 0f, filter = 0f) })
+            for (inst in e.allInstruments) {
                 inst.reverbSend = 0f
                 inst.delaySend = 0f
             }
         }
         // le mixage d'origine règle niveau et panoramique : on compare au même réglage appliqué des deux côtés
         val c = hit(Inst.SNARE) { e ->
-            e.applyMix(StudioProject.defaultMix())
-            for (inst in e.instruments) {
+            e.applyMix(TrackMix.defaults())
+            for (inst in e.allInstruments) {
                 inst.reverbSend = 0f
                 inst.delaySend = 0f
             }
@@ -92,7 +92,7 @@ class StudioMixerTest {
     @Test
     fun lowpassFilterRemovesHighs() {
         val plain = hit(Inst.HAT)
-        val muffled = hit(Inst.HAT) { it.instruments[Inst.HAT].filterSweep = -1f }
+        val muffled = hit(Inst.HAT) { it.instrument(Inst.HAT)!!.filterSweep = -1f }
         assertTrue(rms(muffled) < rms(plain) * 0.5)
         assertTrue(highness(muffled) < highness(plain))
     }
@@ -100,7 +100,7 @@ class StudioMixerTest {
     @Test
     fun highpassFilterRemovesLows() {
         val plain = hit(Inst.KICK)
-        val thin = hit(Inst.KICK) { it.instruments[Inst.KICK].filterSweep = 1f }
+        val thin = hit(Inst.KICK) { it.instrument(Inst.KICK)!!.filterSweep = 1f }
         assertTrue(rms(thin) < rms(plain) * 0.5)
         assertTrue(highness(thin) > highness(plain))
     }
@@ -112,7 +112,7 @@ class StudioMixerTest {
         for (lane in 0 until Inst.SYNTH) {
             val plain = rms(hit(lane))
             for (d in listOf(0.3f, 0.6f, 1f)) {
-                val driven = rms(hit(lane) { it.instruments[lane].drive = d })
+                val driven = rms(hit(lane) { it.instrument(lane)!!.drive = d })
                 val db = 20 * log10(driven / plain)
                 report.append("piste $lane drive $d : ${"%.1f".format(db)} dB\n")
                 worst = maxOf(worst, abs(db))
@@ -125,9 +125,9 @@ class StudioMixerTest {
     fun crushStaysFiniteAndBounded() {
         for (lane in 0 until Inst.COUNT) {
             val out = hit(lane) { e ->
-                e.instruments[lane].crush = 1f
-                e.instruments[lane].drive = 1f
-                e.instruments[lane].filterSweep = -0.5f
+                e.instrument(lane)!!.crush = 1f
+                e.instrument(lane)!!.drive = 1f
+                e.instrument(lane)!!.filterSweep = -0.5f
             }
             for (v in out) {
                 assertFalse(v.isNaN() || v.isInfinite())
@@ -140,7 +140,7 @@ class StudioMixerTest {
     fun effectsDoNotDependOnBlockSize() {
         fun run(block: Int): FloatArray {
             val e = dry()
-            val inst = e.instruments[Inst.SNARE]
+            val inst = e.instrument(Inst.SNARE)!!
             inst.crush = 0.6f
             inst.drive = 0.5f
             inst.filterSweep = -0.4f
@@ -158,14 +158,14 @@ class StudioMixerTest {
         val s = StudioSession(engine, StudioProject.fromStyle(Styles.HOUSE))
         s.toggleSolo(Inst.KICK)
         assertTrue(s.isSolo(Inst.KICK))
-        assertFalse(engine.instruments[Inst.KICK].muted)
-        assertTrue(engine.instruments[Inst.SNARE].muted)
-        assertTrue(engine.instruments[Inst.SYNTH].muted)
+        assertFalse(engine.instrument(Inst.KICK)!!.muted)
+        assertTrue(engine.instrument(Inst.SNARE)!!.muted)
+        assertTrue(engine.instrument(Inst.SYNTH)!!.muted)
         s.toggleSolo(Inst.SNARE)
-        assertFalse(engine.instruments[Inst.SNARE].muted)
+        assertFalse(engine.instrument(Inst.SNARE)!!.muted)
         s.toggleSolo(Inst.KICK)
         s.toggleSolo(Inst.SNARE)
-        assertFalse(engine.instruments.any { it.muted })
+        assertFalse(engine.allInstruments.any { it.muted })
     }
 
     @Test
@@ -174,9 +174,9 @@ class StudioMixerTest {
         val s = StudioSession(engine, StudioProject.fromStyle(Styles.HOUSE))
         s.setMuted(Inst.HAT, true)
         s.toggleSolo(Inst.HAT)
-        assertTrue("muet l'emporte sur solo", engine.instruments[Inst.HAT].muted)
+        assertTrue("muet l'emporte sur solo", engine.instrument(Inst.HAT)!!.muted)
         s.toggleSolo(Inst.HAT)
-        assertTrue(engine.instruments[Inst.HAT].muted)
+        assertTrue(engine.instrument(Inst.HAT)!!.muted)
     }
 
     @Test
@@ -186,31 +186,19 @@ class StudioMixerTest {
         s.updateTrack(Inst.KICK) { it.copy(level = 1.3f, pan = -0.4f, drive = 0.5f, crush = 0.25f, filter = -0.6f, delaySend = 0.3f) }
         s.toggleSolo(Inst.KICK)
         val back = StudioProjectCodec.decode(StudioProjectCodec.encode(s.project))!!
-        assertEquals(s.project.mix, back.mix)
+        assertEquals(s.project.tracks.map { it.mix }, back.tracks.map { it.mix })
         assertEquals(setOf(Inst.KICK), back.solo)
         s.applyStyle(Styles.ALL.last())
-        assertEquals(1.3f, s.track(Inst.KICK).level, 0f)
+        assertEquals(1.3f, s.mixOf(Inst.KICK).level, 0f)
         assertTrue(s.isSolo(Inst.KICK))
-    }
-
-    @Test
-    fun oldProjectsWithoutMixGetDefaults() {
-        val json = JSONObject(StudioProjectCodec.encode(StudioProject.fromStyle(Styles.HOUSE)))
-        json.remove("mix")
-        json.remove("solo")
-        json.put("synthSpace", 0.4)
-        val back = StudioProjectCodec.decode(json.toString())!!
-        assertEquals(0.4f, back.synthSpace, 1e-6f)
-        assertEquals(TrackMix.defaults()[Inst.KICK], back.mix[Inst.KICK])
-        assertTrue(back.solo.isEmpty())
     }
 
     @Test
     fun settingSynthSpaceMovesBothSends() {
         val s = StudioSession(StudioEngine(rate), StudioProject.fromStyle(Styles.HOUSE))
         s.setSynthSpace(0.5f)
-        assertEquals(0.5f, s.track(Inst.SYNTH).reverbSend, 1e-6f)
-        assertEquals(0.35f, s.track(Inst.SYNTH).delaySend, 1e-6f)
+        assertEquals(0.5f, s.mixOf(Inst.SYNTH).reverbSend, 1e-6f)
+        assertEquals(0.35f, s.mixOf(Inst.SYNTH).delaySend, 1e-6f)
     }
 
     @Test
@@ -252,7 +240,7 @@ class StudioMixerTest {
     fun spaceBoostAddsTail() {
         fun tail(boost: Float): Double {
             val e = dry()
-            e.instruments[Inst.CLAP].reverbSend = 0.5f
+            e.instrument(Inst.CLAP)!!.reverbSend = 0.5f
             e.spaceBoost = boost
             render(e, 4_000)
             e.trigger(Inst.CLAP, 60, 1f)

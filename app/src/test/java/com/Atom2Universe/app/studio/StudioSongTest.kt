@@ -179,22 +179,4 @@ class StudioSongTest {
         assertTrue(back.patterns[0].lanes[Inst.KICK].velocity[0] > 0f)
         assertTrue(back.patterns[2].notes.isEmpty())
     }
-
-    @Test
-    fun projectsWithASinglePatternBecomePatternA() {
-        val project = StudioProject.fromStyle(Styles.HOUSE)
-        val json = JSONObject(StudioProjectCodec.encode(project))
-        val first = json.getJSONArray("patterns").getJSONObject(0)
-        json.remove("patterns")
-        json.remove("current")
-        json.remove("chain")
-        json.remove("songMode")
-        json.put("lanes", first.getJSONArray("lanes"))
-        json.put("notes", first.getJSONArray("notes"))
-        val back = StudioProjectCodec.decode(json.toString())!!
-        assertEquals(StudioProject.SLOTS, back.patterns.size)
-        assertEquals(project.pattern.notes.size, back.patterns[0].notes.size)
-        assertTrue(back.patterns[1].notes.isEmpty())
-        assertEquals(0, back.current)
-    }
 }

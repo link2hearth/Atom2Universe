@@ -60,7 +60,7 @@ class StudioProjectTest {
 
     @Test
     fun projectSurvivesJsonRoundTrip() {
-        val original = StudioProject.fromStyle(Styles.LOFI, 32, 7L).copy(muted = setOf(3, 5), bpm = 91, swing = 0.17f)
+        val original = StudioProject.fromStyle(Styles.LOFI, 32, 7L).let { p -> p.copy(tracks = p.tracks.map { t -> t.copy(muted = t.id in setOf(3, 5)) }, bpm = 91, swing = 0.17f) }
         val back = StudioProjectCodec.decode(StudioProjectCodec.encode(original))
         assertNotNull(back)
         back!!
@@ -81,10 +81,11 @@ class StudioProjectTest {
             assertEquals(a.length, b.length)
             assertEquals(a.velocity, b.velocity, 1e-6f)
         }
-        assertEquals(original.synth, back.synth)
+        assertEquals(original.track(Inst.SYNTH).synth, back.track(Inst.SYNTH).synth)
+        assertEquals(original.muted, back.muted)
         assertEquals(original.keyPc, back.keyPc)
         assertEquals(original.scaleId, back.scaleId)
-        assertEquals(original.synthSpace, back.synthSpace, 1e-6f)
+        assertEquals(original.track(Inst.SYNTH).mix, back.track(Inst.SYNTH).mix)
     }
 
     @Test
@@ -160,10 +161,10 @@ class StudioProjectTest {
         val engine = StudioEngine(48_000)
         val session = StudioSession(engine, StudioProject.fromStyle(Styles.HOUSE))
         session.setMuted(Inst.SNARE, true)
-        assertTrue(engine.instruments[Inst.SNARE].muted)
+        assertTrue(engine.instrument(Inst.SNARE)!!.muted)
         assertTrue(session.isMuted(Inst.SNARE))
         session.setMuted(Inst.SNARE, false)
-        assertFalse(engine.instruments[Inst.SNARE].muted)
+        assertFalse(engine.instrument(Inst.SNARE)!!.muted)
         session.setSpace(0.7f)
         session.setEcho(0.3f)
         assertEquals(0.7f, engine.spaceAmount, 0f)

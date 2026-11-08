@@ -41,6 +41,8 @@ import android.widget.FrameLayout
 import com.Atom2Universe.app.midi.input.MidiConnectionStatus
 import com.Atom2Universe.app.midi.input.MidiInputController
 import com.Atom2Universe.app.studio.engine.Inst
+import com.Atom2Universe.app.studio.engine.TrackKind
+import com.Atom2Universe.app.studio.data.Track
 import com.Atom2Universe.app.studio.engine.Note
 import com.Atom2Universe.app.studio.engine.StudioAudioOutput
 import com.Atom2Universe.app.studio.engine.StudioEngine
@@ -75,6 +77,22 @@ class StudioActivity : AudioThemedActivity() {
     private lateinit var output: StudioAudioOutput
     private lateinit var session: StudioSession
     private lateinit var store: StudioProjectStore
+
+    /** Le soundfont de l'appli, quand il est ouvert (la première piste soundfont l'ouvre). */
+    private var sf2: Sf2Bridge? = null
+
+    /** La piste mélodique que montrent l'onglet Notes et le clavier (-1 : aucune). */
+    private var selectedTrack = -1
+
+    /** Les pistes visibles, dans l'ordre de la grille ; [trackSignature] dit à quoi elles ressemblaient au dernier dessin. */
+    private var gridIds: List<Int> = emptyList()
+    private var trackSignature = ""
+    private lateinit var mixerStrips: LinearLayout
+    private lateinit var notesContent: LinearLayout
+    private lateinit var notesEmpty: TextView
+    private lateinit var trackButton: MaterialButton
+    private val synthOnly = ArrayList<View>()
+    private val mixerIds = ArrayList<Int>()
 
     // Commun
     private lateinit var playButton: MaterialButton
@@ -184,9 +202,16 @@ class StudioActivity : AudioThemedActivity() {
         engine = StudioEngine(StudioAudioOutput.preferredSampleRate(this))
         store = StudioProjectStore(this)
         SampleTools.load(this)?.let { (data, rate) -> engine.setPercSample(data, rate) }
-        session = StudioSession(engine, store.load() ?: StudioProject.fromStyle(Styles.HOUSE))
+        val loaded = store.load() ?: StudioProject.fromStyle(Styles.HOUSE)
+        // Un projet qui a des pistes soundfont ouvre le soundfont avant que le moteur fabrique leurs instruments
+        if (loaded.tracks.any { it.kind == TrackKind.SF2 }) {
+            sf2 = Sf2Bridge.open(this)
+            engine.sf2Factory = sf2?.factory
+        }
+        session = StudioSession(engine, loaded)
         output = StudioAudioOutput(engine)
-        recorder = LiveRecorder(session, { engine.playing }, { engine.playPosition })
+        recorder = LiveRecorder(session, { engine.playing }, { engine.playPosition }, { selectedTrack })
+        ensureSelected()
         rollBase = autoBase()
 
         setContentView(buildContent())
@@ -382,6 +407,7 @@ class StudioActivity : AudioThemedActivity() {
         val row = flowRow(topMargin = dp(2))
         styleButton = outlined(null).also { it.setOnClickListener { v -> pickStyle(v) } }
         row.addView(styleButton, wrap())
+        row.addView(outlined(R.string.studio_tracks).also { it.setOnClickListener { v -> showTracksPanel(v) } }, wrap())
         row.addView(square(R.string.studio_more).also { it.setOnClickListener { v -> showEditMenu(v) } })
         spaceBar = slider(max = 100) { v -> session.setSpace(v / 100f); scheduleSave() }
         row.addView(labeled(R.string.studio_space, spaceBar, 120), wrap())
@@ -390,31 +416,27 @@ class StudioActivity : AudioThemedActivity() {
         pane.addView(row)
 
         grid = StepGridView(this).apply {
-            laneNames = listOf(
-                R.string.studio_lane_kick, R.string.studio_lane_snare, R.string.studio_lane_clap,
-                R.string.studio_lane_hat, R.string.studio_lane_open_hat, R.string.studio_lane_tom,
-                R.string.studio_lane_perc, R.string.studio_lane_synth,
-            ).map { getString(it) }
-            laneColors = LANE_COLORS
             stepCount = session.project.stepCount
-            isOn = { lane, step -> session.isOn(lane, step) }
-            velocity = { lane, step -> session.velocity(lane, step) }
-            isMuted = { lane -> session.isMuted(lane) }
+            isOn = { lane, step -> gridIds.getOrNull(lane)?.let { session.isOn(it, step) } ?: false }
+            velocity = { lane, step -> gridIds.getOrNull(lane)?.let { session.velocity(it, step) } ?: 0f }
+            isMuted = { lane -> gridIds.getOrNull(lane)?.let { session.isMuted(it) } ?: false }
             listener = object : StepGridView.Listener {
                 override fun onStepSet(lane: Int, step: Int, on: Boolean) {
-                    session.setStep(lane, step, on)
+                    gridIds.getOrNull(lane)?.let { session.setStep(it, step, on) }
                     scheduleSave()
                 }
 
                 override fun onVelocityCycle(lane: Int, step: Int) {
-                    session.cycleVelocity(lane, step)
+                    gridIds.getOrNull(lane)?.let { session.cycleVelocity(it, step) }
                     scheduleSave()
                 }
 
-                override fun onPreview(lane: Int, step: Int) = previewLane(lane, step)
+                override fun onPreview(lane: Int, step: Int) {
+                    gridIds.getOrNull(lane)?.let { previewLane(it, step) }
+                }
 
                 override fun onMuteToggle(lane: Int) {
-                    session.setMuted(lane, !session.isMuted(lane))
+                    gridIds.getOrNull(lane)?.let { session.setMuted(it, !session.isMuted(it)) }
                     scheduleSave()
                 }
             }
@@ -427,84 +449,7 @@ class StudioActivity : AudioThemedActivity() {
     private fun buildMixerPane(): LinearLayout {
         val pane = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
         val strips = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
-        val names = laneTitles()
-        for (lane in 0 until Inst.COUNT) {
-            val strip = LinearLayout(this).apply {
-                orientation = LinearLayout.VERTICAL
-                gravity = Gravity.CENTER_HORIZONTAL
-            }
-            strip.addView(TextView(this).apply {
-                text = names[lane]
-                textSize = 12f
-                gravity = Gravity.CENTER
-                maxLines = 2
-                setTextColor(0xFFFFFFFF.toInt())
-                setTypeface(typeface, Typeface.BOLD)
-                setPadding(dp(4), dp(6), dp(4), dp(6))
-                background = android.graphics.drawable.GradientDrawable().apply {
-                    cornerRadius = dp(8).toFloat()
-                    setColor(LANE_COLORS[lane])
-                }
-            }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(48)))
-
-            val level = FaderView(this, vertical = true).apply {
-                accent = LANE_COLORS[lane]
-                defaultValue = TrackMix.defaults()[lane].level / LEVEL_MAX
-                snapToDefault = true
-                onChange = { v ->
-                    session.updateTrack(lane) { it.copy(level = v * LEVEL_MAX) }
-                    scheduleSave()
-                }
-            }
-            levelFaders += level
-            strip.addView(level, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f))
-
-            val pan = FaderView(this, vertical = false).apply {
-                accent = LANE_COLORS[lane]
-                defaultValue = 0.5f
-                snapToDefault = true
-                fillFromDefault = true
-                onChange = { v ->
-                    session.updateTrack(lane) { it.copy(pan = v * 2f - 1f) }
-                    scheduleSave()
-                }
-            }
-            panFaders += pan
-            strip.addView(pan, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(40)))
-
-            val buttons = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
-            val mute = square(R.string.studio_mute_letter).apply {
-                layoutParams = LinearLayout.LayoutParams(0, dp(44), 1f)
-                textSize = 14f
-                setOnClickListener {
-                    session.setMuted(lane, !session.isMuted(lane))
-                    refreshMixer()
-                    grid.invalidate()
-                    scheduleSave()
-                }
-            }
-            val solo = square(R.string.studio_solo_letter).apply {
-                layoutParams = LinearLayout.LayoutParams(0, dp(44), 1f)
-                textSize = 14f
-                setOnClickListener {
-                    session.toggleSolo(lane)
-                    refreshMixer()
-                    scheduleSave()
-                }
-            }
-            muteButtons += mute
-            soloButtons += solo
-            buttons.addView(mute)
-            buttons.addView(solo)
-            strip.addView(buttons, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
-            strip.addView(outlined(R.string.studio_fx).apply {
-                textSize = 13f
-                setPadding(dp(4), 0, dp(4), 0)
-                setOnClickListener { showFxPanel(it, lane, names[lane]) }
-            }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(44)))
-
-            strips.addView(strip, LinearLayout.LayoutParams(dp(92), ViewGroup.LayoutParams.MATCH_PARENT).apply { marginEnd = dp(6) })
-        }
+        mixerStrips = strips
         pane.addView(HorizontalScrollView(this).apply {
             isHorizontalScrollBarEnabled = true
             addView(strips, FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT))
@@ -584,11 +529,97 @@ class StudioActivity : AudioThemedActivity() {
         return pane
     }
 
-    private fun laneTitles(): List<String> = listOf(
-        R.string.studio_lane_kick, R.string.studio_lane_snare, R.string.studio_lane_clap,
-        R.string.studio_lane_hat, R.string.studio_lane_open_hat, R.string.studio_lane_tom,
-        R.string.studio_lane_perc, R.string.studio_lane_synth,
-    ).map { getString(it) }
+    /** Les tranches du mixeur : une par piste visible (nom, volume, panoramique, muet, solo, effets). */
+    private fun rebuildMixer() {
+        mixerStrips.removeAllViews()
+        levelFaders.clear()
+        panFaders.clear()
+        muteButtons.clear()
+        soloButtons.clear()
+        mixerIds.clear()
+        for (t in visibleTracks()) {
+            val lane = t.id
+            val color = trackColor(t)
+            val title = trackName(t)
+            val strip = LinearLayout(this).apply {
+                orientation = LinearLayout.VERTICAL
+                gravity = Gravity.CENTER_HORIZONTAL
+            }
+            strip.addView(TextView(this).apply {
+                text = title
+                textSize = 12f
+                gravity = Gravity.CENTER
+                maxLines = 2
+                setTextColor(0xFFFFFFFF.toInt())
+                setTypeface(typeface, Typeface.BOLD)
+                setPadding(dp(4), dp(6), dp(4), dp(6))
+                background = android.graphics.drawable.GradientDrawable().apply {
+                    cornerRadius = dp(8).toFloat()
+                    setColor(color)
+                }
+            }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(48)))
+
+            val level = FaderView(this, vertical = true).apply {
+                accent = color
+                defaultValue = defaultMix(t).level / LEVEL_MAX
+                snapToDefault = true
+                onChange = { v ->
+                    session.updateTrack(lane) { it.copy(level = v * LEVEL_MAX) }
+                    scheduleSave()
+                }
+            }
+            levelFaders += level
+            strip.addView(level, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f))
+
+            val pan = FaderView(this, vertical = false).apply {
+                accent = color
+                defaultValue = 0.5f
+                snapToDefault = true
+                fillFromDefault = true
+                onChange = { v ->
+                    session.updateTrack(lane) { it.copy(pan = v * 2f - 1f) }
+                    scheduleSave()
+                }
+            }
+            panFaders += pan
+            strip.addView(pan, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(40)))
+
+            val buttons = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+            val mute = square(R.string.studio_mute_letter).apply {
+                layoutParams = LinearLayout.LayoutParams(0, dp(44), 1f)
+                textSize = 14f
+                setOnClickListener {
+                    session.setMuted(lane, !session.isMuted(lane))
+                    refreshMixer()
+                    grid.invalidate()
+                    scheduleSave()
+                }
+            }
+            val solo = square(R.string.studio_solo_letter).apply {
+                layoutParams = LinearLayout.LayoutParams(0, dp(44), 1f)
+                textSize = 14f
+                setOnClickListener {
+                    session.toggleSolo(lane)
+                    refreshMixer()
+                    scheduleSave()
+                }
+            }
+            muteButtons += mute
+            soloButtons += solo
+            mixerIds += lane
+            buttons.addView(mute)
+            buttons.addView(solo)
+            strip.addView(buttons, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+            strip.addView(outlined(R.string.studio_fx).apply {
+                textSize = 13f
+                setPadding(dp(4), 0, dp(4), 0)
+                setOnClickListener { showFxPanel(it, lane, title) }
+            }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(44)))
+
+            mixerStrips.addView(strip, LinearLayout.LayoutParams(dp(92), ViewGroup.LayoutParams.MATCH_PARENT).apply { marginEnd = dp(6) })
+        }
+        refreshMixer()
+    }
 
     /** Les effets d'une piste : distorsion, lo-fi, filtre et envois vers la réverbération et l'écho. */
     private fun showFxPanel(anchor: View, lane: Int, title: String) {
@@ -600,7 +631,7 @@ class StudioActivity : AudioThemedActivity() {
             box.addView(TextView(this).apply { setText(labelRes); textSize = 13f; alpha = 0.75f; setPadding(0, dp(10), 0, 0) })
             val bar = SeekBar(this).apply {
                 max = 1000
-                progress = (toT(read(session.track(lane))).coerceIn(0f, 1f) * 1000).roundToInt()
+                progress = (toT(read(session.mixOf(lane))).coerceIn(0f, 1f) * 1000).roundToInt()
                 setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                     override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                         if (!fromUser) return
@@ -612,7 +643,7 @@ class StudioActivity : AudioThemedActivity() {
                     override fun onStartTrackingTouch(seekBar: SeekBar) {}
                     override fun onStopTrackingTouch(seekBar: SeekBar) {
                         // Une note d'essai : on entend l'effet tout de suite
-                        if (lane == Inst.SYNTH) previewKeyNote() else engine.trigger(lane, 60, 1f)
+                        previewTrack(lane)
                     }
                 })
             }
@@ -639,17 +670,35 @@ class StudioActivity : AudioThemedActivity() {
 
     private fun refreshMixer() {
         refreshGestureButtons()
-        for (lane in 0 until levelFaders.size) {
-            val m = session.track(lane)
-            levelFaders[lane].value = m.level / LEVEL_MAX
-            panFaders[lane].value = (m.pan + 1f) / 2f
-            muteButtons[lane].setBackgroundColor(if (session.isMuted(lane)) 0x88E74C3C.toInt() else android.graphics.Color.TRANSPARENT)
-            soloButtons[lane].setBackgroundColor(if (session.isSolo(lane)) 0x88F1C40F.toInt() else android.graphics.Color.TRANSPARENT)
+        for (i in 0 until mixerIds.size) {
+            val id = mixerIds[i]
+            val m = session.project.trackOrNull(id)?.mix ?: continue
+            levelFaders[i].value = m.level / LEVEL_MAX
+            panFaders[i].value = (m.pan + 1f) / 2f
+            muteButtons[i].setBackgroundColor(if (session.isMuted(id)) 0x88E74C3C.toInt() else android.graphics.Color.TRANSPARENT)
+            soloButtons[i].setBackgroundColor(if (session.isSolo(id)) 0x88F1C40F.toInt() else android.graphics.Color.TRANSPARENT)
         }
     }
 
     private fun buildNotesPane(): LinearLayout {
+        val outer = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
         val pane = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
+        notesContent = pane
+
+        // Quelle piste mélodique on joue et on dessine
+        val trackRow = flowRow(topMargin = dp(2))
+        trackRow.addView(caption(R.string.studio_track_caption), wrap())
+        trackButton = outlined(null).also { it.setOnClickListener { v -> pickTrack(v) } }
+        trackRow.addView(trackButton, wrap())
+        outer.addView(trackRow)
+        notesEmpty = TextView(this).apply {
+            setText(R.string.studio_no_melody)
+            textSize = 15f
+            alpha = 0.75f
+            setPadding(dp(8), dp(24), dp(8), 0)
+            visibility = View.GONE
+        }
+        outer.addView(notesEmpty)
 
         // Tonalité, gamme, verrouillage, octave
         val row1 = flowRow(topMargin = dp(2))
@@ -681,30 +730,36 @@ class StudioActivity : AudioThemedActivity() {
         // Son : choix + trois réglages « macro » + avancé
         val row2 = flowRow(topMargin = dp(2))
         row2.addView(caption(R.string.studio_sound_caption), wrap())
-        soundButton = outlined(null).also { it.setOnClickListener { pickSound() } }
+        soundButton = outlined(null).also {
+            it.setOnClickListener { if (curTrack()?.kind == TrackKind.SF2) pickSf2Program(selectedTrack) else pickSound() }
+        }
         row2.addView(soundButton, wrap(end = dp(8)))
         val bright = SoundParam(
             R.string.studio_macro_bright,
-            { session.project.synth.cutoffHz },
+            { curSynth().cutoffHz },
             { hz -> ln(hz.coerceIn(100f, 10000f) / 100f) / ln(100f) },
             { t -> 100f * exp(t * ln(100f)) },
-            { v -> session.updateSynth { it.copy(cutoffHz = v) } },
+            { v -> session.updateSynth(selectedTrack) { it.copy(cutoffHz = v) } },
         )
         val drive = SoundParam(
             R.string.studio_macro_drive,
-            { session.project.synth.drive },
+            { curSynth().drive },
             { it }, { it },
-            { v -> session.updateSynth { it.copy(drive = v) } },
+            { v -> session.updateSynth(selectedTrack) { it.copy(drive = v) } },
         )
         val ambience = SoundParam(
             R.string.studio_macro_ambience,
-            { session.project.synthSpace },
+            { curTrack()?.mix?.reverbSend ?: 0f },
             { it }, { it },
-            { v -> session.setSynthSpace(v) },
+            { v -> session.setSynthSpace(v, selectedTrack) },
         )
-        for (p in listOf(bright, drive, ambience)) addSoundParam(row2, p)
-        row2.addView(outlined(R.string.studio_advanced).also {
-            it.setOnClickListener {
+        for (p in listOf(bright, drive, ambience)) {
+            val v = addSoundParam(row2, p)
+            if (p !== ambience) synthOnly += v // le soundfont n'a ni filtre ni distorsion de synthé
+        }
+        row2.addView(outlined(R.string.studio_advanced).also { b ->
+            synthOnly += b
+            b.setOnClickListener {
                 advancedPanel.visibility = if (advancedPanel.visibility == View.VISIBLE) View.GONE else View.VISIBLE
             }
         }, wrap())
@@ -720,7 +775,7 @@ class StudioActivity : AudioThemedActivity() {
             addOnButtonCheckedListener { _, id, checked ->
                 if (checked && !building) {
                     val wave = waveIds.indexOf(id)
-                    session.updateSynth { it.copy(wave = wave) }
+                    session.updateSynth(selectedTrack) { it.copy(wave = wave) }
                     scheduleSave()
                     previewKeyNote()
                 }
@@ -729,29 +784,29 @@ class StudioActivity : AudioThemedActivity() {
         advancedPanel.addView(waveGroup, wrap())
         val advanced = listOf(
             SoundParam(R.string.studio_adv_resonance,
-                { session.project.synth.resonance }, { (it - 0.5f) / 9.5f }, { 0.5f + it * 9.5f },
-                { v -> session.updateSynth { it.copy(resonance = v) } }),
+                { curSynth().resonance }, { (it - 0.5f) / 9.5f }, { 0.5f + it * 9.5f },
+                { v -> session.updateSynth(selectedTrack) { it.copy(resonance = v) } }),
             SoundParam(R.string.studio_adv_detune,
-                { session.project.synth.detuneCents }, { (it / 1200f).coerceIn(0f, 1f).pow(1f / 3f) }, { it * it * it * 1200f },
-                { v -> session.updateSynth { it.copy(detuneCents = v) } }),
+                { curSynth().detuneCents }, { (it / 1200f).coerceIn(0f, 1f).pow(1f / 3f) }, { it * it * it * 1200f },
+                { v -> session.updateSynth(selectedTrack) { it.copy(detuneCents = v) } }),
             SoundParam(R.string.studio_adv_sub,
-                { session.project.synth.subLevel }, { it }, { it },
-                { v -> session.updateSynth { it.copy(subLevel = v) } }),
+                { curSynth().subLevel }, { it }, { it },
+                { v -> session.updateSynth(selectedTrack) { it.copy(subLevel = v) } }),
             SoundParam(R.string.studio_adv_sweep,
-                { session.project.synth.envOctaves }, { it / 5f }, { it * 5f },
-                { v -> session.updateSynth { it.copy(envOctaves = v) } }),
+                { curSynth().envOctaves }, { it / 5f }, { it * 5f },
+                { v -> session.updateSynth(selectedTrack) { it.copy(envOctaves = v) } }),
             SoundParam(R.string.studio_adv_attack,
-                { session.project.synth.attack }, { ln(it.coerceIn(0.002f, 3f) / 0.002f) / ln(1500f) }, { 0.002f * exp(it * ln(1500f)) },
-                { v -> session.updateSynth { it.copy(attack = v) } }),
+                { curSynth().attack }, { ln(it.coerceIn(0.002f, 3f) / 0.002f) / ln(1500f) }, { 0.002f * exp(it * ln(1500f)) },
+                { v -> session.updateSynth(selectedTrack) { it.copy(attack = v) } }),
             SoundParam(R.string.studio_adv_release,
-                { session.project.synth.release }, { ln(it.coerceIn(0.005f, 4f) / 0.005f) / ln(800f) }, { 0.005f * exp(it * ln(800f)) },
-                { v -> session.updateSynth { it.copy(release = v) } }),
+                { curSynth().release }, { ln(it.coerceIn(0.005f, 4f) / 0.005f) / ln(800f) }, { 0.005f * exp(it * ln(800f)) },
+                { v -> session.updateSynth(selectedTrack) { it.copy(release = v) } }),
             SoundParam(R.string.studio_adv_move_speed,
-                { session.project.synth.lfoRate }, { (it / 12f).coerceIn(0f, 1f).pow(0.5f) }, { it * it * 12f },
-                { v -> session.updateSynth { it.copy(lfoRate = v) } }),
+                { curSynth().lfoRate }, { (it / 12f).coerceIn(0f, 1f).pow(0.5f) }, { it * it * 12f },
+                { v -> session.updateSynth(selectedTrack) { it.copy(lfoRate = v) } }),
             SoundParam(R.string.studio_adv_move_depth,
-                { session.project.synth.lfoFilter }, { it / 3f }, { it * 3f },
-                { v -> session.updateSynth { it.copy(lfoFilter = v) } }),
+                { curSynth().lfoFilter }, { it / 3f }, { it * 3f },
+                { v -> session.updateSynth(selectedTrack) { it.copy(lfoFilter = v) } }),
         )
         for (p in advanced) addSoundParam(advancedPanel, p)
         pane.addView(advancedPanel)
@@ -768,7 +823,7 @@ class StudioActivity : AudioThemedActivity() {
             for (i in 0 until 3) addView(outlined(null).apply { id = arpRateIds[i]; text = labels[i] })
             addOnButtonCheckedListener { _, id, checked ->
                 if (checked && !building) {
-                    session.setArpRate(arpRateIds.indexOf(id))
+                    session.setArpRate(arpRateIds.indexOf(id), selectedTrack)
                     scheduleSave()
                 }
             }
@@ -781,7 +836,7 @@ class StudioActivity : AudioThemedActivity() {
             for (i in 0 until 3) addView(outlined(null).apply { id = arpOctaveIds[i]; text = (i + 1).toString() })
             addOnButtonCheckedListener { _, id, checked ->
                 if (checked && !building) {
-                    session.setArpOctaves(arpOctaveIds.indexOf(id) + 1)
+                    session.setArpOctaves(arpOctaveIds.indexOf(id) + 1, selectedTrack)
                     scheduleSave()
                 }
             }
@@ -793,10 +848,10 @@ class StudioActivity : AudioThemedActivity() {
             accent = LANE_COLORS[Inst.SYNTH]
             noteNames = resources.getStringArray(R.array.studio_key_names).toList()
             stepCount = session.project.stepCount
-            notes = { session.project.pattern.notes }
+            notes = { session.project.pattern.notes.filter { it.track == selectedTrack } }
             listener = object : PianoRollView.Listener {
                 override fun onAddNote(step: Int, pitch: Int, length: Int) {
-                    session.addNote(step, pitch, length)
+                    session.addNote(step, pitch, length, track = selectedTrack)
                     scheduleSave()
                     invalidate()
                 }
@@ -835,10 +890,11 @@ class StudioActivity : AudioThemedActivity() {
             }
         }
         pane.addView(keyboard, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(96)).apply { topMargin = dp(4) })
-        return pane
+        outer.addView(pane, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f))
+        return outer
     }
 
-    private fun addSoundParam(row: ViewGroup, p: SoundParam) {
+    private fun addSoundParam(row: ViewGroup, p: SoundParam): View {
         soundParams += p
         p.bar = SeekBar(this).apply {
             max = 1000
@@ -854,7 +910,9 @@ class StudioActivity : AudioThemedActivity() {
                 override fun onStopTrackingTouch(seekBar: SeekBar) = previewKeyNote()
             })
         }
-        row.addView(labeled(p.labelRes, p.bar, 130), wrap())
+        val v = labeled(p.labelRes, p.bar, 130)
+        row.addView(v, wrap())
+        return v
     }
 
     // ---- Actions ---------------------------------------------------------------------------------
@@ -873,31 +931,40 @@ class StudioActivity : AudioThemedActivity() {
         mixerPane.visibility = if (id == tabMixerId) View.VISIBLE else View.GONE
         if (id == tabMixerId) refreshMixer()
         if (notes) {
+            ensureSelected()
             rollBase = autoBase()
             refreshRoll()
             refreshNotesControls()
         }
     }
 
-    private fun previewLane(lane: Int, step: Int) {
-        if (session.isMuted(lane)) return
-        val v = session.velocity(lane, step).takeIf { it > 0f } ?: 1f
-        if (lane == Inst.SYNTH) {
-            val pitch = session.project.pattern.notes.firstOrNull { it.step == step }?.pitch ?: (24 + session.project.keyPc)
-            previewPitch(pitch, v)
+    private fun previewLane(trackId: Int, step: Int) {
+        val t = session.project.trackOrNull(trackId) ?: return
+        if (t.muted) return
+        val v = session.velocity(trackId, step).takeIf { it > 0f } ?: 1f
+        if (t.melodic) {
+            val pitch = session.project.pattern.notes.firstOrNull { it.track == trackId && it.step == step }?.pitch
+                ?: (24 + session.project.keyPc)
+            previewPitch(pitch, v, track = trackId)
         } else {
-            engine.trigger(lane, 60, v)
+            engine.trigger(trackId, 60, v)
         }
     }
 
-    private fun previewPitch(pitch: Int, velocity: Float = 0.9f, holdMs: Long = 250) {
-        if (session.isMuted(Inst.SYNTH)) return
-        engine.trigger(Inst.SYNTH, pitch, velocity)
-        handler.postDelayed({ engine.release(Inst.SYNTH, pitch) }, holdMs)
+    private fun previewPitch(pitch: Int, velocity: Float = 0.9f, holdMs: Long = 250, track: Int = selectedTrack) {
+        if (track < 0 || session.isMuted(track)) return
+        engine.trigger(track, pitch, velocity)
+        handler.postDelayed({ engine.release(track, pitch) }, holdMs)
     }
 
     /** Une note d'essai après un réglage du son : la tonique, dans l'octave du piano roll. */
     private fun previewKeyNote() = previewPitch(rollBase + 12 + session.project.keyPc, 0.9f, 450)
+
+    /** Une note d'essai sur la piste [id] (une frappe pour la batterie). */
+    private fun previewTrack(id: Int) {
+        val t = session.project.trackOrNull(id) ?: return
+        if (t.melodic) previewPitch(rollBase + 12 + session.project.keyPc, 0.9f, 450, track = id) else engine.trigger(id, 60, 1f)
+    }
 
     private fun pickStyle(anchor: View) {
         dropdown(anchor, Styles.ALL.map { getString(styleName(it.id)) }) { which ->
@@ -924,7 +991,7 @@ class StudioActivity : AudioThemedActivity() {
     private fun pickArp(anchor: View) {
         val modes = listOf(Arp.OFF, Arp.UP, Arp.DOWN, Arp.UP_DOWN, Arp.RANDOM)
         dropdown(anchor, modes.map { getString(arpName(it)) }) { which ->
-            session.setArpMode(modes[which])
+            session.setArpMode(modes[which], selectedTrack)
             refreshNotesControls()
             scheduleSave()
         }
@@ -986,13 +1053,13 @@ class StudioActivity : AudioThemedActivity() {
 
     /** Une touche (écran ou clavier MIDI) : le son part tout de suite ; l'enregistreur note l'instant. */
     private fun liveNoteOn(pitch: Int, velocity: Float, position: Double) {
-        if (session.isMuted(Inst.SYNTH)) return
-        engine.trigger(Inst.SYNTH, pitch, velocity)
+        if (selectedTrack < 0 || session.isMuted(selectedTrack)) return
+        engine.trigger(selectedTrack, pitch, velocity)
         recorder.press(pitch, position)
     }
 
     private fun liveNoteOff(pitch: Int, position: Double) {
-        engine.release(Inst.SYNTH, pitch)
+        if (selectedTrack >= 0) engine.release(selectedTrack, pitch)
         recorder.release(pitch, position)
         roll.invalidate()
     }
@@ -1003,14 +1070,15 @@ class StudioActivity : AudioThemedActivity() {
             { bytes ->
                 // Fil MIDI : le son et l'instant partent tout de suite, le reste (projet, écran) passe par le fil principal.
                 val position = engine.playPosition
+                val track = selectedTrack
                 MidiNotes.handle(
                     bytes,
                     { note, velocity ->
-                        if (!session.isMuted(Inst.SYNTH)) engine.trigger(Inst.SYNTH, note, velocity)
+                        if (track >= 0 && !session.isMuted(track)) engine.trigger(track, note, velocity)
                         handler.post { recorder.press(note, position) }
                     },
                     { note ->
-                        engine.release(Inst.SYNTH, note)
+                        if (track >= 0) engine.release(track, note)
                         handler.post { recorder.release(note, position); roll.invalidate() }
                     },
                 )
@@ -1033,7 +1101,7 @@ class StudioActivity : AudioThemedActivity() {
         MaterialAlertDialogBuilder(this)
             .setTitle(R.string.studio_sound_pick)
             .setItems(names) { _, which ->
-                session.setPreset(SynthPresets.ALL[which].id)
+                session.setPreset(SynthPresets.ALL[which].id, selectedTrack)
                 changed()
                 previewKeyNote()
             }
@@ -1056,7 +1124,7 @@ class StudioActivity : AudioThemedActivity() {
 
     /** La fenêtre du piano roll (deux octaves) part de l'octave de la note la plus grave et monte si besoin. */
     private fun autoBase(): Int {
-        val notes = session.project.pattern.notes
+        val notes = session.project.pattern.notes.filter { it.track == selectedTrack }
         if (notes.isEmpty()) return 24
         var base = notes.minOf { it.pitch } / 12 * 12
         val top = notes.maxOf { it.pitch }
@@ -1091,13 +1159,12 @@ class StudioActivity : AudioThemedActivity() {
     }
 
     private fun showSamplePanel(anchor: View) {
-        val perc = engine.instruments[Inst.PERC] as com.Atom2Universe.app.studio.dsp.Perc
         val box = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(dp(16), dp(12), dp(16), dp(12))
         }
         val status = TextView(this).apply { textSize = 15f }
-        fun showDefaultStatus() = status.setText(if (perc.hasSample) R.string.studio_sample_mine else R.string.studio_sample_default)
+        fun showDefaultStatus() = status.setText(if (engine.hasPercSample) R.string.studio_sample_mine else R.string.studio_sample_default)
         showDefaultStatus()
         box.addView(status)
         val row = FlowRow(this)
@@ -1114,7 +1181,7 @@ class StudioActivity : AudioThemedActivity() {
                         record.isEnabled = true
                         if (clean != null) {
                             engine.setPercSample(clean, SampleTools.RATE)
-                            engine.trigger(Inst.PERC, 60, 1f)
+                            triggerPerc()
                             showDefaultStatus()
                         } else {
                             status.setText(if (pcm == null) R.string.studio_sample_failed else R.string.studio_sample_nothing)
@@ -1124,7 +1191,7 @@ class StudioActivity : AudioThemedActivity() {
             }
         }
         row.addView(record)
-        row.addView(outlined(R.string.studio_sample_play).apply { setOnClickListener { engine.trigger(Inst.PERC, 60, 1f) } })
+        row.addView(outlined(R.string.studio_sample_play).apply { setOnClickListener { triggerPerc() } })
         row.addView(outlined(R.string.studio_sample_remove).apply {
             setOnClickListener {
                 engine.setPercSample(null, SampleTools.RATE)
@@ -1164,7 +1231,7 @@ class StudioActivity : AudioThemedActivity() {
         Thread {
             val saved = when (kind) {
                 EXPORT_MIDI -> StudioFiles.saveMidi(this, project)
-                else -> StudioFiles.saveWav(this, project) { f ->
+                else -> StudioFiles.saveWav(this, project, sf2?.factory) { f ->
                     runOnUiThread { bar.progress = (f * 1000).toInt() }
                     !cancelled
                 }
@@ -1261,6 +1328,7 @@ class StudioActivity : AudioThemedActivity() {
 
     private fun refreshAll() {
         val p = session.project
+        refreshTracks()
         refreshTransport()
         refreshTempo()
         swingBar.progress = (p.swing * 100).roundToInt()
@@ -1295,27 +1363,235 @@ class StudioActivity : AudioThemedActivity() {
 
     private fun refreshNotesControls() {
         val p = session.project
+        val t = curTrack()
+        notesContent.visibility = if (t != null) View.VISIBLE else View.GONE
+        notesEmpty.visibility = if (t == null) View.VISIBLE else View.GONE
+        trackButton.text = if (t != null) trackName(t) else getString(R.string.studio_no_track)
         val keyNames = resources.getStringArray(R.array.studio_key_names)
         keyButton.text = keyNames[p.keyPc]
         scaleButton.text = getString(scaleName(p.scaleId))
         if (lockSwitch.isChecked != scaleLocked) lockSwitch.isChecked = scaleLocked
-        soundButton.text = getString(presetName(p.synth.id))
-        for (sp in soundParams) sp.bar.progress = (sp.toSlider(sp.read()).coerceIn(0f, 1f) * 1000).roundToInt()
-        arpButton.text = getString(arpName(p.arpMode))
         recordButton.setText(if (recorder.armed) R.string.studio_record_on else R.string.studio_record_off)
         recordButton.setBackgroundColor(if (recorder.armed) 0x66E74C3C else android.graphics.Color.TRANSPARENT)
+        if (t == null) return
+        val synthKind = t.kind == TrackKind.SYNTH
+        soundButton.text = if (synthKind) getString(presetName(t.synth.id)) else sf2ProgramName(t)
+        for (v in synthOnly) v.visibility = if (synthKind) View.VISIBLE else View.GONE
+        if (!synthKind) advancedPanel.visibility = View.GONE
+        for (sp in soundParams) sp.bar.progress = (sp.toSlider(sp.read()).coerceIn(0f, 1f) * 1000).roundToInt()
+        arpButton.text = getString(arpName(t.arpMode))
+        roll.accent = trackColor(t)
+        keyboard.accent = trackColor(t)
+        keyboard.invalidate()
         val was2 = building
         building = true
-        if (arpRateGroup.checkedButtonId != arpRateIds[p.arpRate]) arpRateGroup.check(arpRateIds[p.arpRate])
-        if (arpOctaveGroup.checkedButtonId != arpOctaveIds[p.arpOctaves - 1]) arpOctaveGroup.check(arpOctaveIds[p.arpOctaves - 1])
+        if (arpRateGroup.checkedButtonId != arpRateIds[t.arpRate]) arpRateGroup.check(arpRateIds[t.arpRate])
+        if (arpOctaveGroup.checkedButtonId != arpOctaveIds[t.arpOctaves - 1]) arpOctaveGroup.check(arpOctaveIds[t.arpOctaves - 1])
         building = was2
-        val wanted = waveIds[p.synth.wave.coerceIn(0, 3)]
+        val wanted = waveIds[t.synth.wave.coerceIn(0, 3)]
         if (waveGroup.checkedButtonId != wanted) {
             val was = building
             building = true
             waveGroup.check(wanted)
             building = was
         }
+    }
+
+    // ---- Les pistes -------------------------------------------------------------------------------------------------
+
+    private fun curTrack(): Track? = session.project.trackOrNull(selectedTrack)
+
+    private fun curSynth() = curTrack()?.synth ?: SynthPresets.BASS
+
+    private fun visibleTracks(): List<Track> = session.project.tracks.filter { !it.hidden }
+
+    private fun defaultMix(t: Track): TrackMix = when (t.kind) {
+        TrackKind.DRUM -> TrackMix.defaults()[t.voice.coerceIn(0, Inst.DRUM_COUNT - 1)]
+        TrackKind.SYNTH -> TrackMix.defaults()[Inst.SYNTH]
+        else -> Track.SF2_MIX
+    }
+
+    private fun trackColor(t: Track): Int = when {
+        t.kind == TrackKind.DRUM -> LANE_COLORS[t.voice.coerceIn(0, Inst.DRUM_COUNT - 1)]
+        t.id == Inst.SYNTH -> LANE_COLORS[Inst.SYNTH]
+        else -> EXTRA_COLORS[t.id % EXTRA_COLORS.size]
+    }
+
+    private fun sf2ProgramName(t: Track): String =
+        sf2?.programs?.firstOrNull { it.bank == t.bank && it.program == t.program }?.name?.trim()?.takeIf { it.isNotEmpty() }
+            ?: getString(R.string.studio_sf2_default_name)
+
+    private fun baseName(t: Track): String = when (t.kind) {
+        TrackKind.DRUM -> getString(DRUM_NAMES[t.voice.coerceIn(0, Inst.DRUM_COUNT - 1)])
+        TrackKind.SYNTH -> getString(R.string.studio_lane_synth)
+        else -> sf2ProgramName(t)
+    }
+
+    /** Le nom d'une piste ; deux pistes du même nom se numérotent (« Synthé 1 », « Synthé 2 »). */
+    private fun trackName(t: Track): String {
+        val base = baseName(t)
+        val same = session.project.tracks.filter { baseName(it) == base }
+        return if (same.size > 1) "$base ${same.indexOfFirst { it.id == t.id } + 1}" else base
+    }
+
+    /** La piste montrée par l'onglet Notes doit exister, jouer des notes et être visible ; sinon la première qui convient. */
+    private fun ensureSelected() {
+        val p = session.project
+        val t = p.trackOrNull(selectedTrack)
+        if (t == null || !t.melodic || t.hidden) selectedTrack = p.tracks.firstOrNull { it.melodic && !it.hidden }?.id ?: -1
+    }
+
+    /** Redessine la grille et le mixeur seulement si la liste des pistes a changé. */
+    private fun refreshTracks() {
+        ensureSelected()
+        val sig = session.project.tracks.joinToString(",") { "${it.id}:${it.kind}:${it.voice}:${it.hidden}:${it.bank}:${it.program}" }
+        if (sig == trackSignature) return
+        trackSignature = sig
+        val visible = visibleTracks()
+        gridIds = visible.map { it.id }
+        grid.laneColors = visible.map { trackColor(it) }.toIntArray()
+        grid.laneNames = visible.map { trackName(it) }
+        rebuildMixer()
+    }
+
+    private fun triggerPerc() {
+        session.project.tracks.firstOrNull { it.kind == TrackKind.DRUM && it.voice == Inst.PERC }?.let { engine.trigger(it.id, 60, 1f) }
+    }
+
+    private fun pickTrack(anchor: View) {
+        val list = session.project.tracks.filter { it.melodic && !it.hidden }
+        dropdown(anchor, list.map { trackName(it) }) { which ->
+            selectedTrack = list[which].id
+            rollBase = autoBase()
+            refreshRoll()
+            refreshNotesControls()
+        }
+    }
+
+    /** Ouvre le soundfont de l'appli (hors du fil de l'écran) puis fait [action] ; sans soundfont, le dit. */
+    private fun withSf2(action: (Sf2Bridge) -> Unit) {
+        sf2?.let {
+            action(it)
+            return
+        }
+        Thread {
+            val bridge = Sf2Bridge.open(this)
+            runOnUiThread {
+                if (isFinishing || isDestroyed) return@runOnUiThread
+                if (bridge == null) {
+                    MaterialAlertDialogBuilder(this).setMessage(R.string.studio_no_soundfont).setPositiveButton(android.R.string.ok, null).show()
+                    return@runOnUiThread
+                }
+                sf2 = bridge
+                engine.sf2Factory = bridge.factory
+                trackSignature = ""
+                action(bridge)
+            }
+        }.start()
+    }
+
+    /** La liste des instruments du soundfont, dans une fenêtre qu'on fait défiler. */
+    private fun pickProgram(bridge: Sf2Bridge, onPick: (bank: Int, program: Int) -> Unit) {
+        val list = bridge.programs
+        val names = list.map { it.name.trim().ifEmpty { "${it.bank}:${it.program}" } }.toTypedArray()
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.studio_sf2_pick)
+            .setItems(names) { _, which -> onPick(list[which].bank, list[which].program) }
+            .show()
+    }
+
+    private fun pickSf2Program(trackId: Int) {
+        withSf2 { bridge ->
+            pickProgram(bridge) { bank, program ->
+                session.setSf2Program(trackId, bank, program)
+                changed()
+                previewKeyNote()
+            }
+        }
+    }
+
+    /** Ajoute une piste, la choisit si elle joue des notes, et met tout à jour. */
+    private fun addTrack(kind: Int, voice: Int = 0, bank: Int = 0, program: Int = 0) {
+        val id = session.addTrack(kind, voice, bank, program)
+        if (id < 0) return
+        if (kind != TrackKind.DRUM) {
+            selectedTrack = id
+            rollBase = autoBase()
+        }
+        changed()
+    }
+
+    /** Le panneau des pistes : montrer ou cacher chacune, la retirer, en ajouter une. */
+    private fun showTracksPanel(anchor: View) {
+        val box = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dp(16), dp(12), dp(16), dp(12))
+        }
+        val list = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
+        fun fill() {
+            list.removeAllViews()
+            for (t in session.project.tracks) {
+                val row = LinearLayout(this).apply {
+                    orientation = LinearLayout.HORIZONTAL
+                    gravity = Gravity.CENTER_VERTICAL
+                }
+                row.addView(View(this).apply {
+                    background = android.graphics.drawable.GradientDrawable().apply {
+                        shape = android.graphics.drawable.GradientDrawable.OVAL
+                        setColor(trackColor(t))
+                    }
+                }, LinearLayout.LayoutParams(dp(14), dp(14)).apply { marginEnd = dp(10) })
+                val name = TextView(this).apply {
+                    text = trackName(t)
+                    textSize = 16f
+                    alpha = if (t.hidden) 0.5f else 1f
+                }
+                row.addView(name, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
+                row.addView(SwitchCompat(this).apply {
+                    isChecked = !t.hidden
+                    setOnCheckedChangeListener { _, on ->
+                        session.setHidden(t.id, !on)
+                        name.alpha = if (on) 1f else 0.5f
+                        changed()
+                    }
+                })
+                row.addView(TextView(this).apply {
+                    text = getString(R.string.studio_track_remove_glyph)
+                    contentDescription = getString(R.string.studio_track_remove)
+                    textSize = 18f
+                    setPadding(dp(16), dp(8), dp(4), dp(8))
+                    setOnClickListener {
+                        session.removeTrack(t.id)
+                        changed()
+                        fill()
+                    }
+                })
+                list.addView(row, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(44)))
+            }
+        }
+        fill()
+        box.addView(list)
+        box.addView(outlined(R.string.studio_tracks_add).apply {
+            setOnClickListener { v ->
+                val kinds = listOf(getString(R.string.studio_add_drum), getString(R.string.studio_add_synth), getString(R.string.studio_add_sf2))
+                dropdown(v, kinds) { which ->
+                    when (which) {
+                        0 -> dropdown(v, DRUM_NAMES.map { getString(it) }) { voice -> addTrack(TrackKind.DRUM, voice); fill() }
+                        1 -> { addTrack(TrackKind.SYNTH); fill() }
+                        else -> withSf2 { bridge ->
+                            pickProgram(bridge) { bank, program -> addTrack(TrackKind.SF2, bank = bank, program = program); fill() }
+                        }
+                    }
+                }
+            }
+        }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(8) })
+        box.addView(TextView(this).apply {
+            setText(R.string.studio_tracks)
+            textSize = 16f
+            setTypeface(typeface, Typeface.BOLD)
+            setPadding(0, 0, 0, dp(8))
+        }, 0)
+        panel(anchor, box, 340)
     }
 
     private fun refreshStats() {
@@ -1500,6 +1776,19 @@ class StudioActivity : AudioThemedActivity() {
 
         /** Volume maximal d'une piste : le haut du fader. */
         const val LEVEL_MAX = 1.5f
+
+        /** Les noms des sept sons de batterie, dans l'ordre de [Inst]. */
+        val DRUM_NAMES = intArrayOf(
+            R.string.studio_lane_kick, R.string.studio_lane_snare, R.string.studio_lane_clap,
+            R.string.studio_lane_hat, R.string.studio_lane_open_hat, R.string.studio_lane_tom,
+            R.string.studio_lane_perc,
+        )
+
+        /** Couleurs des pistes ajoutées (synthés et instruments de soundfont). */
+        val EXTRA_COLORS = intArrayOf(
+            0xFF8E44AD.toInt(), 0xFFD35400.toInt(), 0xFF16A085.toInt(), 0xFF2980B9.toInt(),
+            0xFFC0392B.toInt(), 0xFF27AE60.toInt(), 0xFFB7950B.toInt(), 0xFF7F8C8D.toInt(),
+        )
 
         /** Une couleur par ligne : grosse caisse verte, caisse claire rouge, clap orange, charleston jaune, etc. */
         val LANE_COLORS = intArrayOf(

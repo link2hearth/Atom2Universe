@@ -143,7 +143,9 @@
     <string name="studio_export_failed">L\'export n\'a pas marché.</string>
     <string name="studio_help_button">?</string>
     <string name="studio_help_title">Comment ça marche</string>
-    <string name="studio_help_text">Rythme : touche les carrés pour poser des coups de batterie ; touche encore pour changer leur force. Choisis un Style pour partir d’une base, Hasard pour des idées.\n\nNotes : dessine des notes sur la grille, ou joue au clavier et appuie sur Enregistrer pendant que ça tourne. La gamme garde chaque note juste.\n\nMixeur : une tranche par piste. M coupe le son, S ne garde que cette piste, Effets ajoute distorsion, lo-fi et filtre. Le pad filtre ou ajoute de la réverbération tant que ton doigt y est ; « Enregistrer mon geste » garde le mouvement dans la boucle.\n\nMotifs A à D : quatre boucles différentes. Morceau : les joue l’une après l’autre. Exporter : fichier audio, fichier MIDI, ou envoi à l’éditeur audio.\n\nMon son : enregistre deux secondes au micro ; il remplace le son de la piste Perc.</string>
+    <string name="studio_help_text">Rythme : touche les carrés pour poser des coups de batterie ; touche encore pour changer leur force. Choisis un Style pour partir d’une base, Hasard pour des idées.\n\nNotes : dessine des notes sur la grille, ou joue au clavier et appuie sur Enregistrer pendant que ça tourne. La gamme garde chaque note juste.\n\nMixeur : une tranche par piste. M coupe le son, S ne garde que cette piste, Effets ajoute distorsion, lo-fi et filtre. Le pad filtre ou ajoute de la réverbération tant que ton doigt y est ; « Enregistrer mon geste » garde le mouvement dans la boucle.\n\nPistes : ajoute, cache ou retire des pistes (sons de batterie, synthés, instruments du soundfont).
+
+Motifs A à D : quatre boucles différentes. Morceau : les joue l’une après l’autre. Exporter : fichier audio, fichier MIDI, ou envoi à l’éditeur audio.\n\nMon son : enregistre deux secondes au micro ; il remplace le son de la piste Perc.</string>
     <string name="studio_sample">Mon son</string>
     <string name="studio_sample_title">Mon son (piste Perc.)</string>
     <string name="studio_sample_default">La piste Perc. joue sa cloche d’origine.</string>
@@ -158,4 +160,17 @@
     <string name="studio_more">⋯</string>
     <string name="studio_output">Sortie</string>
     <string name="studio_export_wav_duration">Fichier audio WAV · %1$d s</string>
+    <string name="studio_tracks">Pistes</string>
+    <string name="studio_tracks_add">+ Ajouter une piste</string>
+    <string name="studio_add_drum">Son de batterie</string>
+    <string name="studio_add_synth">Synthé</string>
+    <string name="studio_add_sf2">Instrument du soundfont</string>
+    <string name="studio_track_remove">Retirer</string>
+    <string name="studio_track_remove_glyph">✕</string>
+    <string name="studio_track_caption">Piste</string>
+    <string name="studio_no_track">Aucune</string>
+    <string name="studio_no_melody">Pas encore de piste avec des notes. Ajoute un synthé ou un instrument du soundfont depuis Pistes.</string>
+    <string name="studio_no_soundfont">Importe d’abord un soundfont (SF2) dans le lecteur MIDI.</string>
+    <string name="studio_sf2_pick">Choisir un instrument</string>
+    <string name="studio_sf2_default_name">Soundfont</string>
 </resources>

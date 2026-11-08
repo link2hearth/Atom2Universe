@@ -143,7 +143,9 @@
     <string name="studio_export_failed">The export did not work.</string>
     <string name="studio_help_button">?</string>
     <string name="studio_help_title">How it works</string>
-    <string name="studio_help_text">Rhythm: tap the squares to place drum hits; tap again to change their strength. Pick a Style to start from a base, Random for ideas.\n\nNotes: draw notes on the grid, or play the keyboard and press Record while the music runs. The scale keeps every note in tune.\n\nMixer: one strip per track. M mutes, S keeps only that track, Effects adds distortion, lo-fi and a filter. The pad filters or adds reverb while your finger is on it; Record my gesture keeps the move in the loop.\n\nPatterns A to D hold four different loops. Song plays them one after another. Export saves an audio file, a MIDI file, or sends the sound to the audio editor.\n\nMy sound: record two seconds with the microphone; it replaces the sound of the Perc. track.</string>
+    <string name="studio_help_text">Rhythm: tap the squares to place drum hits; tap again to change their strength. Pick a Style to start from a base, Random for ideas.\n\nNotes: draw notes on the grid, or play the keyboard and press Record while the music runs. The scale keeps every note in tune.\n\nMixer: one strip per track. M mutes, S keeps only that track, Effects adds distortion, lo-fi and a filter. The pad filters or adds reverb while your finger is on it; Record my gesture keeps the move in the loop.\n\nTracks: add, hide or remove tracks (drum sounds, synths, soundfont instruments).
+
+Patterns A to D hold four different loops. Song plays them one after another. Export saves an audio file, a MIDI file, or sends the sound to the audio editor.\n\nMy sound: record two seconds with the microphone; it replaces the sound of the Perc. track.</string>
     <string name="studio_sample">My sound</string>
     <string name="studio_sample_title">My sound (Perc. track)</string>
     <string name="studio_sample_default">The Perc. track plays its original bell.</string>
@@ -158,4 +160,17 @@
     <string name="studio_more">⋯</string>
     <string name="studio_output">Output</string>
     <string name="studio_export_wav_duration">WAV audio file · %1$d s</string>
+    <string name="studio_tracks">Tracks</string>
+    <string name="studio_tracks_add">+ Add a track</string>
+    <string name="studio_add_drum">Drum sound</string>
+    <string name="studio_add_synth">Synth</string>
+    <string name="studio_add_sf2">Soundfont instrument</string>
+    <string name="studio_track_remove">Remove</string>
+    <string name="studio_track_remove_glyph">✕</string>
+    <string name="studio_track_caption">Track</string>
+    <string name="studio_no_track">None</string>
+    <string name="studio_no_melody">No track with notes yet. Add a synth or a soundfont instrument from Tracks.</string>
+    <string name="studio_no_soundfont">Import a soundfont (SF2) in the MIDI player first.</string>
+    <string name="studio_sf2_pick">Choose an instrument</string>
+    <string name="studio_sf2_default_name">Soundfont</string>
 </resources>

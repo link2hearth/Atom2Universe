@@ -64,8 +64,8 @@ class StudioNotesTest {
         it.spaceAmount = 0f
         it.echoAmount = 0f
         it.masterGain = 1f
-        it.instruments[Inst.SYNTH].reverbSend = 0f
-        it.instruments[Inst.SYNTH].delaySend = 0f
+        it.instrument(Inst.SYNTH)!!.reverbSend = 0f
+        it.instrument(Inst.SYNTH)!!.delaySend = 0f
     }
 
     @Test
@@ -313,8 +313,8 @@ class StudioNotesTest {
         s.setPreset("pad")
         assertEquals("pad", engine.synth.patch.id)
         s.setSynthSpace(0.5f)
-        assertEquals(0.5f, engine.instruments[Inst.SYNTH].reverbSend, 0f)
-        assertEquals(0.35f, engine.instruments[Inst.SYNTH].delaySend, 1e-6f)
+        assertEquals(0.5f, engine.instrument(Inst.SYNTH)!!.reverbSend, 0f)
+        assertEquals(0.35f, engine.instrument(Inst.SYNTH)!!.delaySend, 1e-6f)
     }
 
     @Test

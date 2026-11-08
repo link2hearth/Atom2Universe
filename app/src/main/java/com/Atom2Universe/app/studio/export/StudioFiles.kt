@@ -23,9 +23,15 @@ object StudioFiles {
     private fun baseName(project: StudioProject): String =
         "Studio_${project.styleId}_" + SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())
 
-    fun saveWav(context: Context, project: StudioProject, sampleRate: Int = 48_000, onProgress: (Float) -> Boolean): Saved? =
+    fun saveWav(
+        context: Context,
+        project: StudioProject,
+        sf2Factory: ((sampleRate: Int, bank: Int, program: Int) -> com.Atom2Universe.app.studio.dsp.ExternalSynth?)? = null,
+        sampleRate: Int = 48_000,
+        onProgress: (Float) -> Boolean,
+    ): Saved? =
         save(context, baseName(project) + ".wav", "audio/wav") { out ->
-            StudioExporter.renderWav(project, sampleRate, out, onProgress)
+            StudioExporter.renderWav(project, sampleRate, out, sf2Factory, onProgress)
         }
 
     fun saveMidi(context: Context, project: StudioProject): Saved? =

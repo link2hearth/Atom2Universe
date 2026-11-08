@@ -105,9 +105,10 @@ class StudioExportTest {
                     i += l
                 } else {
                     val ch = status and 0x0F
-                    val vel = b[i + 1].toInt() and 0xFF
+                    val oneByte = status and 0xF0 == 0xC0 || status and 0xF0 == 0xD0 // changement de programme
+                    val vel = if (oneByte) 0 else b[i + 1].toInt() and 0xFF
                     if (status and 0xF0 == 0x90 && vel > 0) ons[ch] = (ons[ch] ?: 0) + 1
-                    i += 2
+                    i += if (oneByte) 1 else 2
                     lastTick = maxOf(lastTick, tick)
                 }
             }
