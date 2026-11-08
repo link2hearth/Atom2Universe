@@ -22,7 +22,7 @@ interface ExternalSynth {
  * Une piste « soundfont » : le mixeur du Studio (volume, panoramique, envois, effets) s'applique au son d'un
  * [ExternalSynth]. Sans source (soundfont absent), la piste est simplement silencieuse.
  */
-class Sf2Instrument(sampleRate: Int, private val source: ExternalSynth?) : Instrument(sampleRate) {
+open class Sf2Instrument(sampleRate: Int, private val source: ExternalSynth?) : Instrument(sampleRate) {
 
     private val left = FloatArray(MAX_CHUNK)
     private val right = FloatArray(MAX_CHUNK)
@@ -56,3 +56,14 @@ class Sf2Instrument(sampleRate: Int, private val source: ExternalSynth?) : Instr
         return true
     }
 }
+
+/**
+ * Un instrument de batterie joué par un kit du soundfont : chaque frappe de la piste joue toujours la même touche de batterie
+ * ([gmNote], la norme GM : 36 grosse caisse, 38 caisse claire…), quelle que soit la note demandée.
+ */
+class Sf2DrumInstrument(sampleRate: Int, source: ExternalSynth?, private val gmNote: Int) : Sf2Instrument(sampleRate, source) {
+    override fun noteOn(note: Int, velocity: Float) = super.noteOn(gmNote, velocity)
+
+    override fun noteOff(note: Int) = super.noteOff(gmNote)
+}
+

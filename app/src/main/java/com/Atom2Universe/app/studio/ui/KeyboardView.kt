@@ -75,6 +75,15 @@ class KeyboardView(context: Context) : View(context) {
 
     private fun dp(v: Float) = v * resources.displayMetrics.density
 
+    /** Prend la place qu'on lui laisse (touches plus hautes en portrait), entre 150 et 300 dp : jamais plus long qu'un vrai clavier. */
+    override fun onMeasure(widthSpec: Int, heightSpec: Int) {
+        val w = MeasureSpec.getSize(widthSpec)
+        val offered = MeasureSpec.getSize(heightSpec)
+        val h = if (MeasureSpec.getMode(heightSpec) == MeasureSpec.UNSPECIFIED) dp(150f).toInt()
+        else offered.coerceIn(dp(150f).toInt().coerceAtMost(offered), dp(300f).toInt())
+        setMeasuredDimension(w, h)
+    }
+
     // ---- Géométrie : touches blanches de largeur fixe, centrées ------------------------------------------------
 
     private fun octaves(): Int = (((width / dp(WHITE_MIN_DP)).toInt() - 1) / 7).coerceIn(1, 4)

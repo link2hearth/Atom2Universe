@@ -145,6 +145,12 @@ abstract class Instrument(protected val sampleRate: Int) {
     /** Coupe court (le charleston fermé coupe le charleston ouvert). */
     open fun choke() {}
 
+    /**
+     * Le caractère d'un instrument de batterie : [kit] (une des variantes du son, 0 = celle d'origine), [tune] en demi-tons
+     * (−12 à +12) et [length] en pour cent de la durée d'origine (50 à 200). Sans effet sur les autres instruments.
+     */
+    open fun setVoice(kit: Int, tune: Int, length: Int) {}
+
     /** Libère tout ce qui est tenu. */
     abstract fun allOff()
 

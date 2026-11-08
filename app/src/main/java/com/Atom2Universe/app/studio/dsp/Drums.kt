@@ -13,6 +13,12 @@ import kotlin.math.sin
 private const val TWO_PI = (2.0 * PI).toFloat()
 private const val SILENT = 1e-4f
 
+/** Le rapport de fréquence d'un décalage de [tune] demi-tons. */
+private fun semitoneRatio(tune: Int): Float = Math.pow(2.0, tune.coerceIn(-12, 12) / 12.0).toFloat()
+
+/** Le coefficient de durée : 100 % = la durée d'origine. */
+private fun lengthMul(length: Int): Float = length.coerceIn(50, 200) / 100f
+
 /**
  * Grosse caisse : un sinus dont la hauteur chute vite (« pouf »), poussé dans un écrêtage doux qui lui ajoute
  * des harmoniques (le corps reste audible sur un petit haut-parleur qui ne rend rien sous 150 Hz), plus un
@@ -22,11 +28,13 @@ private const val SILENT = 1e-4f
  * échantillon) ; et reprendre la phase en cours quand la frappe précédente sonne encore fait sauter l'onde
  * (la phase repart donc toujours de zéro, et l'écart avec la queue précédente s'éteint en quelques ms).
  */
-open class Kick(sampleRate: Int, private val p: KickParams = KickParams()) : Instrument(sampleRate) {
+open class Kick(sampleRate: Int, private val variants: List<KickParams> = KICK_VARIANTS) : Instrument(sampleRate) {
 
+    private var p: KickParams = variants[0]
+    private var ratio = 1f
     private val noise = Noise(11)
-    private val ampCoef = Fast.decayCoef(p.ampT60, sampleRate)
-    private val pitchCoef = Fast.decayCoef(p.pitchT60, sampleRate)
+    private var ampCoef = Fast.decayCoef(p.ampT60, sampleRate)
+    private var pitchCoef = Fast.decayCoef(p.pitchT60, sampleRate)
     private val clickCoef = Fast.decayCoef(0.008f, sampleRate)
     private val clickLp = (1.0 - exp(-2.0 * PI * 2500.0 / sampleRate)).toFloat()
     private val declickCoef = Fast.decayCoef(0.03f, sampleRate)
@@ -41,6 +49,15 @@ open class Kick(sampleRate: Int, private val p: KickParams = KickParams()) : Ins
     private var offset = 0f
 
     override val activeVoices get() = if (amp > SILENT) 1 else 0
+
+    override fun setVoice(kit: Int, tune: Int, length: Int) {
+        val v = variants[kit.coerceIn(0, variants.size - 1)]
+        val m = lengthMul(length)
+        ratio = semitoneRatio(tune)
+        ampCoef = Fast.decayCoef(v.ampT60 * m, sampleRate)
+        pitchCoef = Fast.decayCoef(v.pitchT60, sampleRate)
+        p = v
+    }
 
     override fun noteOn(note: Int, velocity: Float) {
         offset = lastOut
@@ -57,8 +74,9 @@ open class Kick(sampleRate: Int, private val p: KickParams = KickParams()) : Ins
 
     override fun renderMono(out: FloatArray, count: Int): Boolean {
         if (amp <= SILENT) return false
-        val lo = p.endHz
-        val span = p.startHz - p.endHz
+        val p = p
+        val lo = p.endHz * ratio
+        val span = (p.startHz - p.endHz) * ratio
         for (i in 0 until count) {
             if (amp <= SILENT) {
                 out[i] = 0f
@@ -93,17 +111,33 @@ class KickParams(
     val gain: Float = 0.8f,
 )
 
-/** Tom : la même mécanique que la grosse caisse, plus aigu et plus court (mesuré sur le tom moyen d'une TR-808 : ~150 Hz). */
-class Tom(sampleRate: Int) : Kick(sampleRate, KickParams(startHz = 200f, endHz = 130f, ampT60 = 0.3f, pitchT60 = 0.05f, drive = 1.4f, click = 0.02f))
+/** Les trois grosses caisses : celle d'origine, une longue et grave (le « boum »), une sèche et dure. */
+val KICK_VARIANTS = listOf(
+    KickParams(),
+    KickParams(startHz = 130f, endHz = 40f, ampT60 = 0.85f, pitchT60 = 0.12f, drive = 1.3f, click = 0.02f, gain = 0.85f),
+    KickParams(startHz = 240f, endHz = 58f, ampT60 = 0.22f, pitchT60 = 0.04f, drive = 3.5f, click = 0.12f, gain = 0.75f),
+)
+
+/** Les trois toms : celui d'origine (mesuré sur le tom moyen d'une TR-808 : ~150 Hz), un grave, un aigu. */
+val TOM_VARIANTS = listOf(
+    KickParams(startHz = 200f, endHz = 130f, ampT60 = 0.3f, pitchT60 = 0.05f, drive = 1.4f, click = 0.02f),
+    KickParams(startHz = 150f, endHz = 90f, ampT60 = 0.4f, pitchT60 = 0.06f, drive = 1.4f, click = 0.02f),
+    KickParams(startHz = 320f, endHz = 220f, ampT60 = 0.25f, pitchT60 = 0.04f, drive = 1.2f, click = 0.03f),
+)
+
+/** Tom : la même mécanique que la grosse caisse, plus aigu et plus court. */
+class Tom(sampleRate: Int) : Kick(sampleRate, TOM_VARIANTS)
 
 /** Caisse claire : bruit passé au passe-haut (le « timbre ») plus un ton de fût qui descend. */
 class Snare(sampleRate: Int) : Instrument(sampleRate) {
 
     private val noise = Noise(23)
     private val filter = Svf(sampleRate).apply { set(1400f, 0.8f) }
-    private val noiseCoef = Fast.decayCoef(0.2f, sampleRate)
-    private val toneCoef = Fast.decayCoef(0.1f, sampleRate)
+    private var noiseCoef = Fast.decayCoef(0.2f, sampleRate)
+    private var toneCoef = Fast.decayCoef(0.1f, sampleRate)
     private val pitchCoef = Fast.decayCoef(0.05f, sampleRate)
+    private var bodyHz = 180f
+    private var ratio = 1f
 
     private var noiseEnv = 0f
     private var toneEnv = 0f
@@ -112,6 +146,16 @@ class Snare(sampleRate: Int) : Instrument(sampleRate) {
     private var vel = 0f
 
     override val activeVoices get() = if (noiseEnv > SILENT || toneEnv > SILENT) 1 else 0
+
+    override fun setVoice(kit: Int, tune: Int, length: Int) {
+        val v = SNARE_VARIANTS[kit.coerceIn(0, SNARE_VARIANTS.size - 1)]
+        val m = lengthMul(length)
+        ratio = semitoneRatio(tune)
+        bodyHz = v.bodyHz
+        noiseCoef = Fast.decayCoef(v.noiseT60 * m, sampleRate)
+        toneCoef = Fast.decayCoef(v.toneT60 * m, sampleRate)
+        filter.set(v.highPassHz * ratio, 0.8f)
+    }
 
     override fun noteOn(note: Int, velocity: Float) {
         noiseEnv = 1f
@@ -133,7 +177,7 @@ class Snare(sampleRate: Int) : Instrument(sampleRate) {
                 out[i] = 0f
                 continue
             }
-            phase += (180f + 60f * pitchEnv) / sampleRate
+            phase += (bodyHz + 60f * pitchEnv) * ratio / sampleRate
             if (phase >= 1f) phase -= 1f
             filter.tick(noise.next())
             val tone = sin(phase * TWO_PI) * toneEnv * 0.7f
@@ -146,13 +190,26 @@ class Snare(sampleRate: Int) : Instrument(sampleRate) {
     }
 }
 
+/** Une caisse claire : où le bruit commence (passe-haut), la durée du bruit et du fût, la hauteur du fût. */
+class SnareParams(val highPassHz: Float, val noiseT60: Float, val toneT60: Float, val bodyHz: Float)
+
+/** Les trois caisses claires : d'origine, courte et sèche, ample et longue. */
+val SNARE_VARIANTS = listOf(
+    SnareParams(1400f, 0.2f, 0.1f, 180f),
+    SnareParams(2100f, 0.09f, 0.05f, 230f),
+    SnareParams(900f, 0.4f, 0.14f, 150f),
+)
+
+/** Les trois claps (durée de la queue, hauteur du filtre) : d'origine, court et aigu, long et plus grave. */
+private val CLAP_VARIANTS = listOf(0.16f to 1300f, 0.07f to 1700f, 0.32f to 1050f)
+
 /** Clap : trois courtes rafales de bruit, puis une queue plus longue, le tout passé au passe-bande. */
 class Clap(sampleRate: Int) : Instrument(sampleRate) {
 
     private val noise = Noise(37)
     private val filter = Svf(sampleRate).apply { set(1300f, 1.5f) }
     private val burstCoef = Fast.decayCoef(0.014f, sampleRate)
-    private val tailCoef = Fast.decayCoef(0.16f, sampleRate)
+    private var tailCoef = Fast.decayCoef(0.16f, sampleRate)
     private val b1 = (0.009f * sampleRate).toInt()
     private val b2 = (0.019f * sampleRate).toInt()
     private val b3 = (0.029f * sampleRate).toInt()
@@ -163,6 +220,12 @@ class Clap(sampleRate: Int) : Instrument(sampleRate) {
     private var vel = 0f
 
     override val activeVoices get() = if (env > SILENT || t <= b3) 1 else 0
+
+    override fun setVoice(kit: Int, tune: Int, length: Int) {
+        val v = CLAP_VARIANTS[kit.coerceIn(0, CLAP_VARIANTS.size - 1)]
+        tailCoef = Fast.decayCoef(v.first * lengthMul(length), sampleRate)
+        filter.set(v.second * semitoneRatio(tune), 1.5f)
+    }
 
     override fun noteOn(note: Int, velocity: Float) {
         t = 0
@@ -209,7 +272,8 @@ class Hat(sampleRate: Int, private val open: Boolean) : Instrument(sampleRate) {
     private val noise = Noise(if (open) 53 else 47)
     private val highPass = Svf(sampleRate).apply { set(5500f, 0.7f) }
     private val lowPass = Svf(sampleRate).apply { set(9000f, 0.7f) }
-    private val normalCoef = Fast.decayCoef(if (open) 0.45f else 0.09f, sampleRate)
+    private var normalCoef = Fast.decayCoef(if (open) 0.45f else 0.09f, sampleRate)
+    private var ratio = 1f
     private val chokeCoef = Fast.decayCoef(0.01f, sampleRate)
     private val phases = FloatArray(6)
 
@@ -229,6 +293,14 @@ class Hat(sampleRate: Int, private val open: Boolean) : Instrument(sampleRate) {
         coef = chokeCoef
     }
 
+    override fun setVoice(kit: Int, tune: Int, length: Int) {
+        val v = (if (open) OPEN_HAT_VARIANTS else HAT_VARIANTS)[kit.coerceIn(0, 2)]
+        ratio = semitoneRatio(tune)
+        normalCoef = Fast.decayCoef(v.decay * lengthMul(length), sampleRate)
+        highPass.set(v.highPassHz * ratio, 0.7f)
+        lowPass.set(v.lowPassHz * ratio, 0.7f)
+    }
+
     override fun allOff() {
         env = 0f
     }
@@ -242,7 +314,7 @@ class Hat(sampleRate: Int, private val open: Boolean) : Instrument(sampleRate) {
             }
             var sum = 0f
             for (j in 0 until 6) {
-                var p = phases[j] + FREQS[j] / sampleRate
+                var p = phases[j] + FREQS[j] * ratio / sampleRate
                 if (p >= 1f) p -= 1f
                 phases[j] = p
                 sum += if (p < 0.5f) 1f else -1f
@@ -261,6 +333,15 @@ class Hat(sampleRate: Int, private val open: Boolean) : Instrument(sampleRate) {
     }
 }
 
+/** Un charleston : les deux filtres qui dessinent son brillant et la durée de sa queue. */
+class HatParams(val highPassHz: Float, val lowPassHz: Float, val decay: Float)
+
+/** Les trois charlestons fermés : d'origine, serré et brillant, lourd et plus sourd. */
+val HAT_VARIANTS = listOf(HatParams(5500f, 9000f, 0.09f), HatParams(7000f, 10500f, 0.045f), HatParams(4200f, 8000f, 0.15f))
+
+/** Les trois charlestons ouverts : d'origine, court, long. */
+val OPEN_HAT_VARIANTS = listOf(HatParams(5500f, 9000f, 0.45f), HatParams(5500f, 9000f, 0.25f), HatParams(5000f, 9000f, 0.9f))
+
 /**
  * Percussion métallique « cloche » : deux carrés désaccordés (540 et 800 Hz, la recette de la TR-808) passés au
  * passe-bande autour de 830 Hz. Mesuré sur une vraie cloche de TR-808 : pics à ~560 et ~840 Hz, éteinte à −30 dB en 0,18 s.
@@ -268,7 +349,10 @@ class Hat(sampleRate: Int, private val open: Boolean) : Instrument(sampleRate) {
 class Perc(sampleRate: Int) : Instrument(sampleRate) {
 
     private val filter = Svf(sampleRate).apply { set(830f, 1.1f) }
-    private val coef = Fast.decayCoef(0.35f, sampleRate)
+    private var coef = Fast.decayCoef(0.35f, sampleRate)
+    private var freqA = 540f
+    private var freqB = 800f
+    private var ratio = 1f
 
     private var phaseA = 0f
     private var phaseB = 0f
@@ -289,6 +373,15 @@ class Perc(sampleRate: Int) : Instrument(sampleRate) {
 
     val hasSample: Boolean get() = sample != null
 
+    override fun setVoice(kit: Int, tune: Int, length: Int) {
+        val v = PERC_VARIANTS[kit.coerceIn(0, PERC_VARIANTS.size - 1)]
+        ratio = semitoneRatio(tune)
+        freqA = v.freqA
+        freqB = v.freqB
+        coef = Fast.decayCoef(v.t60 * lengthMul(length), sampleRate)
+        filter.set(v.filterHz * ratio, 1.1f)
+    }
+
     override val activeVoices get() = if (env > SILENT || playing != null) 1 else 0
 
     override fun noteOn(note: Int, velocity: Float) {
@@ -297,7 +390,7 @@ class Perc(sampleRate: Int) : Instrument(sampleRate) {
             // On rejoue l'enregistrement, plus aigu ou plus grave selon la note (60 = tel quel)
             playing = s
             samplePos = 0.0
-            sampleStep = sampleSourceRate.toDouble() / sampleRate * Math.pow(2.0, (note - 60) / 12.0)
+            sampleStep = sampleSourceRate.toDouble() / sampleRate * Math.pow(2.0, (note - 60) / 12.0) * ratio
             vel = velocity
             return
         }
@@ -333,9 +426,9 @@ class Perc(sampleRate: Int) : Instrument(sampleRate) {
                 out[i] = 0f
                 continue
             }
-            phaseA += 540f / sampleRate
+            phaseA += freqA * ratio / sampleRate
             if (phaseA >= 1f) phaseA -= 1f
-            phaseB += 800f / sampleRate
+            phaseB += freqB * ratio / sampleRate
             if (phaseB >= 1f) phaseB -= 1f
             val sq = (if (phaseA < 0.5f) 1f else -1f) + (if (phaseB < 0.5f) 1f else -1f)
             filter.tick(sq * 0.5f)
@@ -345,3 +438,13 @@ class Perc(sampleRate: Int) : Instrument(sampleRate) {
         return true
     }
 }
+
+/** Une percussion métallique : ses deux fréquences, le centre de son filtre et sa durée. */
+class PercParams(val freqA: Float, val freqB: Float, val filterHz: Float, val t60: Float)
+
+/** Les trois percussions : la cloche d'origine, un bloc de bois (bref), une cloche aiguë. */
+val PERC_VARIANTS = listOf(
+    PercParams(540f, 800f, 830f, 0.35f),
+    PercParams(880f, 1320f, 1200f, 0.07f),
+    PercParams(1080f, 1600f, 1650f, 0.2f),
+)

@@ -2,6 +2,7 @@ package com.Atom2Universe.app.studio.data
 
 import com.Atom2Universe.app.studio.dsp.SynthPatch
 import com.Atom2Universe.app.studio.dsp.SynthPresets
+import com.Atom2Universe.app.studio.engine.DRUM_KIT_BANK
 import com.Atom2Universe.app.studio.engine.Inst
 import com.Atom2Universe.app.studio.engine.StudioEngine
 import com.Atom2Universe.app.studio.engine.TrackKind
@@ -33,12 +34,23 @@ data class Track(
     val arpMode: Int = 0,
     val arpRate: Int = 1,
     val arpOctaves: Int = 1,
+    /** Le caractère d'une piste de batterie : variante du son (0 = d'origine), hauteur en demi-tons, durée en pour cent. */
+    val kit: Int = 0,
+    val tune: Int = 0,
+    val length: Int = 100,
+    /** Le kit de batterie du soundfont (numéro de programme de la banque 128) qui remplace le son fabriqué ; -1 : aucun. */
+    val sfKit: Int = -1,
 ) {
     val melodic: Boolean get() = kind != TrackKind.DRUM
 
-    val spec: TrackSpec get() = TrackSpec(id, kind, voice, bank, program)
+    val spec: TrackSpec
+        get() = if (kind == TrackKind.DRUM && sfKit >= 0) TrackSpec(id, kind, voice, DRUM_KIT_BANK, sfKit)
+        else TrackSpec(id, kind, voice, bank, program)
 
     companion object {
+        /** Le nombre de variantes du son de chaque instrument de batterie. */
+        const val KIT_COUNT = 3
+
         /** Mixage d'origine d'une piste soundfont. */
         val SF2_MIX = TrackMix(level = 0.7f, pan = 0f, reverbSend = 0.2f, delaySend = 0.1f)
 

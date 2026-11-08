@@ -8,8 +8,6 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.os.Handler
 import android.os.Looper
-import android.text.Layout
-import android.text.StaticLayout
 import android.text.TextPaint
 import android.util.TypedValue
 import android.view.HapticFeedbackConstants
@@ -56,11 +54,16 @@ class StepGridView(context: Context) : View(context) {
     var laneNames: List<String> = emptyList()
         set(value) {
             field = value
-            layouts = emptyList()
             clampScroll()
             invalidate()
         }
     var laneColors: IntArray = IntArray(0)
+
+    /** Le dessin de l'instrument de chaque piste ([InstrumentIcons]) : il tient lieu de nom sur la plaque colorée. */
+    var laneIcons: IntArray = IntArray(0)
+
+    /** Un petit chiffre dans le coin de la plaque (« 2 » pour le deuxième synthé) ; vide : rien. Une entrée par piste. */
+    var laneBadges: List<String> = emptyList()
 
     /** Le texte de la rangée vide posée sous les pistes (ajouter une piste) ; `null` : pas de rangée. */
     var addLabel: String? = null
@@ -108,6 +111,11 @@ class StepGridView(context: Context) : View(context) {
         color = Color.WHITE
         isFakeBoldText = true
     }
+    private val badgePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        textSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 11f, resources.displayMetrics)
+        textAlign = Paint.Align.RIGHT
+        isFakeBoldText = true
+    }
     private val numberPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         textSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12f, resources.displayMetrics)
         color = numberColor
@@ -115,7 +123,6 @@ class StepGridView(context: Context) : View(context) {
     }
 
     private val rect = RectF()
-    private var layouts: List<StaticLayout> = emptyList()
 
     // Mesures fixes (en pixels, calculées une fois par dessin)
     private var headerW = 0f
@@ -156,7 +163,6 @@ class StepGridView(context: Context) : View(context) {
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
-        layouts = emptyList()
         clampScroll()
     }
 
@@ -183,19 +189,6 @@ class StepGridView(context: Context) : View(context) {
         else if (left + stride > scrollX + viewW) scrollX = (left + stride - viewW).coerceIn(0f, maxScrollX())
     }
 
-    private fun computeLayouts() {
-        if (layouts.size != laneNames.size && laneNames.isNotEmpty()) {
-            val inner = (headerW - dp(30f)).toInt().coerceAtLeast(10)
-            layouts = laneNames.map { name ->
-                StaticLayout.Builder.obtain(name, 0, name.length, text, inner)
-                    .setAlignment(Layout.Alignment.ALIGN_NORMAL)
-                    .setMaxLines(2)
-                    .setEllipsize(android.text.TextUtils.TruncateAt.END)
-                    .build()
-            }
-        }
-    }
-
     private fun cellLeft(step: Int): Float = gridLeft + step * stride + (step / 4) * groupGap - scrollX
 
     // ---- Dessin -------------------------------------------------------------------------------------------
@@ -204,7 +197,6 @@ class StepGridView(context: Context) : View(context) {
         if (laneNames.isEmpty() || width == 0) return
         measures()
         clampScroll()
-        computeLayouts()
 
         drawTopBar(canvas)
 
@@ -240,7 +232,7 @@ class StepGridView(context: Context) : View(context) {
         ring.pathEffect = null
         val w = text.measureText(label)
         text.color = numberColor
-        canvas.drawText(label, (headerW - w) / 2f + dp(8f), top + rowH / 2f + text.textSize / 3f, text)
+        canvas.drawText(label, dp(16f), top + rowH / 2f + text.textSize / 3f, text)
     }
 
     /** Barre du haut : numéros des pas, repère de lecture, et une petite jauge qui dit où l'on est dans la grille. */
@@ -279,26 +271,16 @@ class StepGridView(context: Context) : View(context) {
         val color = laneColors.getOrElse(lane) { Color.GRAY }
         val muted = isMuted(lane)
 
-        // En-tête fixe : plaque colorée, pastille de sourdine, nom
+        // En-tête fixe : plaque colorée (grise si la piste est coupée) et, au centre, le dessin de l'instrument
         rect.set(0f, top + pad, headerW, top + rowH - pad)
         fill.color = withAlpha(if (muted) padOffB else color, alpha)
         canvas.drawRoundRect(rect, dp(10f), dp(10f), fill)
-        val dotX = dp(14f)
-        val dotY = top + rowH / 2f
-        if (muted) {
-            ring.color = numberColor
-            canvas.drawCircle(dotX, dotY, dp(5f), ring)
-        } else {
-            fill.color = Color.WHITE
-            canvas.drawCircle(dotX, dotY, dp(5f), fill)
-        }
-        val layout = layouts.getOrNull(lane)
-        if (layout != null) {
-            text.color = if (muted) numberColor else Color.WHITE
-            canvas.save()
-            canvas.translate(dp(26f), dotY - layout.height / 2f)
-            layout.draw(canvas)
-            canvas.restore()
+        val icon = withAlpha(if (muted) numberColor else Color.WHITE, alpha)
+        InstrumentIcons.draw(canvas, laneIcons.getOrElse(lane) { 0 }, headerW / 2f, top + rowH / 2f, rowH * 0.5f, icon)
+        val badge = laneBadges.getOrNull(lane).orEmpty()
+        if (badge.isNotEmpty()) {
+            badgePaint.color = icon
+            canvas.drawText(badge, headerW - dp(7f), top + pad + dp(15f), badgePaint)
         }
 
         // Dominos : seulement ceux qui sont à l'écran, sous la plaque des noms
@@ -644,7 +626,7 @@ class StepGridView(context: Context) : View(context) {
 
     private companion object {
         /** Mesures fixes en dp : plaque des noms, barre des numéros, hauteur d'une ligne, largeur d'un pas (domino debout). */
-        const val HEADER_DP = 120f
+        const val HEADER_DP = 60f
         const val TOPBAR_DP = 36f
         const val ROW_DP = 72f
         const val CELL_DP = 44f

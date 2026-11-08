@@ -13,6 +13,7 @@ import android.widget.LinearLayout
 import android.widget.SeekBar
 import android.widget.TextView
 import androidx.appcompat.widget.SwitchCompat
+import androidx.core.content.ContextCompat
 import com.Atom2Universe.app.LocaleHelper
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.audio.AudioThemedActivity
@@ -21,6 +22,7 @@ import com.Atom2Universe.app.studio.data.StudioLibrary
 import com.Atom2Universe.app.pixelart.ui.SheetItem
 import com.Atom2Universe.app.pixelart.ui.actionSheet
 import com.Atom2Universe.app.pixelart.ui.bottomSheet
+import com.Atom2Universe.app.pixelart.ui.chip
 import com.Atom2Universe.app.pixelart.ui.promptText
 import java.io.File
 import com.Atom2Universe.app.studio.data.StudioSession
@@ -55,6 +57,7 @@ import com.Atom2Universe.app.studio.engine.TrackMix
 import com.Atom2Universe.app.studio.music.Scales
 import com.Atom2Universe.app.studio.music.Styles
 import com.Atom2Universe.app.studio.ui.FlowRow
+import com.Atom2Universe.app.studio.ui.InstrumentIcons
 import com.Atom2Universe.app.studio.ui.PianoRollView
 import com.Atom2Universe.app.studio.ui.StepGridView
 import com.Atom2Universe.app.util.enableImmersiveMode
@@ -104,7 +107,18 @@ class StudioActivity : AudioThemedActivity() {
     private lateinit var mixerPadBox: View
     private lateinit var notesContent: LinearLayout
     private lateinit var notesEmpty: TextView
-    private lateinit var trackButton: MaterialButton
+    private lateinit var trackStrip: LinearLayout
+    private lateinit var notesHeader: View
+
+    /** La piste de batterie dont l'onglet Notes montre le son (-1 : on montre les notes de la piste mélodique choisie). */
+    private var editedDrum = -1
+    private lateinit var drumPanel: LinearLayout
+    private lateinit var drumKitRow: FlowRow
+    private lateinit var drumSliders: LinearLayout
+    private lateinit var drumTuneBar: SeekBar
+    private lateinit var drumLengthBar: SeekBar
+    private lateinit var drumTuneText: TextView
+    private lateinit var drumLengthText: TextView
     /** Les commandes de Notes qui n'ont de sens que s'il y a une piste mélodique. */
     private val trackDependent = ArrayList<View>()
     private val mixerIds = ArrayList<Int>()
@@ -129,7 +143,6 @@ class StudioActivity : AudioThemedActivity() {
     private var gestureArmed = false
     private var gestureTaking = false
     private val levelFaders = ArrayList<FaderView>()
-    private val panFaders = ArrayList<FaderView>()
     private val muteButtons = ArrayList<MaterialButton>()
     private val soloButtons = ArrayList<MaterialButton>()
     private val tabMixerId = View.generateViewId()
@@ -212,7 +225,7 @@ class StudioActivity : AudioThemedActivity() {
         SampleTools.load(this)?.let { (data, rate) -> engine.setPercSample(data, rate) }
         val loaded = entry.project
         // Un projet qui a des pistes soundfont ouvre le soundfont avant que le moteur fabrique leurs instruments
-        if (loaded.tracks.any { it.kind == TrackKind.SF2 }) {
+        if (loaded.tracks.any { it.kind == TrackKind.SF2 || it.sfKit >= 0 }) {
             sf2 = Sf2Bridge.open(this)
             engine.sf2Factory = sf2?.factory
         }
@@ -315,7 +328,7 @@ class StudioActivity : AudioThemedActivity() {
             setOnClickListener {
                 MaterialAlertDialogBuilder(this@StudioActivity)
                     .setTitle(R.string.studio_help_title)
-                    .setMessage(R.string.studio_help_text)
+                    .setMessage(helpText())
                     .setPositiveButton(android.R.string.ok, null)
                     .show()
             }
@@ -371,6 +384,7 @@ class StudioActivity : AudioThemedActivity() {
         songButton = outlined(R.string.studio_song).apply { setOnClickListener { showSongPanel(it) } }
         transport.addView(songButton, wrap(end = dp(8)))
         songDefaultColor = songButton.textColors.defaultColor
+        transport.addView(outlined(R.string.studio_edit_menu).also { it.setOnClickListener { v -> showEditMenu(v) } }, wrap(end = dp(8)))
         transport.addView(square(R.string.studio_more).also {
             it.contentDescription = getString(R.string.studio_settings)
             it.setOnClickListener { v -> showSettingsPanel(v) }
@@ -412,10 +426,6 @@ class StudioActivity : AudioThemedActivity() {
 
     private fun buildRhythmPane(): LinearLayout {
         val pane = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
-
-        val row = flowRow(topMargin = dp(2))
-        row.addView(outlined(R.string.studio_edit_menu).also { it.setOnClickListener { v -> showEditMenu(v) } }, wrap())
-        pane.addView(row)
 
         grid = StepGridView(this).apply {
             stepCount = session.project.stepCount
@@ -572,7 +582,6 @@ class StudioActivity : AudioThemedActivity() {
     private fun rebuildMixer() {
         mixerStrips.removeAllViews()
         levelFaders.clear()
-        panFaders.clear()
         muteButtons.clear()
         soloButtons.clear()
         mixerIds.clear()
@@ -598,6 +607,13 @@ class StudioActivity : AudioThemedActivity() {
                 }
             }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(48)))
 
+            strip.addView(TextView(this).apply {
+                setText(R.string.studio_volume)
+                textSize = 11f
+                alpha = 0.6f
+                gravity = Gravity.CENTER
+                setPadding(0, dp(6), 0, dp(2))
+            }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
             val level = FaderView(this, vertical = true).apply {
                 accent = color
                 defaultValue = defaultMix(t).level / LEVEL_MAX
@@ -610,23 +626,11 @@ class StudioActivity : AudioThemedActivity() {
             levelFaders += level
             strip.addView(level, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(230)))
 
-            val pan = FaderView(this, vertical = false).apply {
-                accent = color
-                defaultValue = 0.5f
-                snapToDefault = true
-                fillFromDefault = true
-                onChange = { v ->
-                    session.updateTrack(lane) { it.copy(pan = v * 2f - 1f) }
-                    scheduleSave()
-                }
-            }
-            panFaders += pan
-            strip.addView(pan, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(40)))
-
+            strip.addView(View(this), LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(10)))
             val buttons = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
             val mute = square(R.string.studio_mute_letter).apply {
                 layoutParams = LinearLayout.LayoutParams(0, dp(44), 1f)
-                textSize = 14f
+                textSize = 11f
                 setOnClickListener {
                     session.setMuted(lane, !session.isMuted(lane))
                     refreshMixer()
@@ -636,7 +640,7 @@ class StudioActivity : AudioThemedActivity() {
             }
             val solo = square(R.string.studio_solo_letter).apply {
                 layoutParams = LinearLayout.LayoutParams(0, dp(44), 1f)
-                textSize = 14f
+                textSize = 11f
                 setOnClickListener {
                     session.toggleSolo(lane)
                     refreshMixer()
@@ -667,7 +671,11 @@ class StudioActivity : AudioThemedActivity() {
             setPadding(dp(16), dp(12), dp(16), dp(12))
         }
         fun add(labelRes: Int, read: (TrackMix) -> Float, toT: (Float) -> Float, fromT: (Float) -> Float, write: (TrackMix, Float) -> TrackMix) {
-            box.addView(TextView(this).apply { setText(labelRes); textSize = 13f; alpha = 0.75f; setPadding(0, dp(10), 0, 0) })
+            val row = LinearLayout(this).apply {
+                orientation = LinearLayout.HORIZONTAL
+                gravity = Gravity.CENTER_VERTICAL
+            }
+            row.addView(TextView(this).apply { setText(labelRes); textSize = 14f }, LinearLayout.LayoutParams(dp(96), ViewGroup.LayoutParams.WRAP_CONTENT))
             val bar = SeekBar(this).apply {
                 max = 1000
                 progress = (toT(read(session.mixOf(lane))).coerceIn(0f, 1f) * 1000).roundToInt()
@@ -686,19 +694,21 @@ class StudioActivity : AudioThemedActivity() {
                     }
                 })
             }
-            box.addView(bar, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+            row.addView(bar, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
+            box.addView(row, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(8) })
         }
-        add(R.string.studio_fx_drive, { it.drive }, { it }, { it }, { m, v -> m.copy(drive = v) })
-        add(R.string.studio_fx_crush, { it.crush }, { it }, { it }, { m, v -> m.copy(crush = v) })
-        add(R.string.studio_fx_filter, { it.filter }, { (it + 1f) / 2f }, { it * 2f - 1f }, { m, v -> m.copy(filter = if (kotlin.math.abs(v) < 0.04f) 0f else v) })
+        add(R.string.studio_fx_pan, { it.pan }, { (it + 1f) / 2f }, { it * 2f - 1f }, { m, v -> m.copy(pan = if (kotlin.math.abs(v) < 0.04f) 0f else v) })
         add(R.string.studio_fx_reverb, { it.reverbSend }, { it }, { it }, { m, v -> m.copy(reverbSend = v) })
         add(R.string.studio_fx_echo, { it.delaySend }, { it }, { it }, { m, v -> m.copy(delaySend = v) })
+        add(R.string.studio_fx_filter, { it.filter }, { (it + 1f) / 2f }, { it * 2f - 1f }, { m, v -> m.copy(filter = if (kotlin.math.abs(v) < 0.04f) 0f else v) })
+        add(R.string.studio_fx_drive, { it.drive }, { it }, { it }, { m, v -> m.copy(drive = v) })
+        add(R.string.studio_fx_crush, { it.crush }, { it }, { it }, { m, v -> m.copy(crush = v) })
         box.addView(TextView(this).apply {
             text = title
             textSize = 16f
             setTypeface(typeface, Typeface.BOLD)
         }, 0)
-        panel(anchor, box, 340).setOnDismissListener { refreshNotesControls() }
+        panel(anchor, box, 400).setOnDismissListener { refreshNotesControls() }
     }
 
     private fun refreshGestureButtons() {
@@ -713,7 +723,6 @@ class StudioActivity : AudioThemedActivity() {
             val id = mixerIds[i]
             val m = session.project.trackOrNull(id)?.mix ?: continue
             levelFaders[i].value = m.level / LEVEL_MAX
-            panFaders[i].value = (m.pan + 1f) / 2f
             muteButtons[i].setBackgroundColor(if (session.isMuted(id)) 0x88E74C3C.toInt() else android.graphics.Color.TRANSPARENT)
             soloButtons[i].setBackgroundColor(if (session.isSolo(id)) 0x88F1C40F.toInt() else android.graphics.Color.TRANSPARENT)
         }
@@ -723,9 +732,18 @@ class StudioActivity : AudioThemedActivity() {
         val outer = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
 
         // Une seule rangée de boutons (elle passe à la ligne si la place manque) ; les réglages fins sont dans des panneaux
-        val header = flowRow(topMargin = dp(2))
-        trackButton = outlined(null).also { it.setOnClickListener { v -> pickTrack(v) } }
-        header.addView(trackButton, wrap(end = dp(8)))
+        // Une pastille par piste à notes, dans une ligne discrète qui défile s'il y en a beaucoup : on passe d'une piste à l'autre d'un toucher
+        trackStrip = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+        }
+        outer.addView(HorizontalScrollView(this).apply {
+            isHorizontalScrollBarEnabled = false
+            addView(trackStrip)
+        }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(2) })
+
+        val header = flowRow(topMargin = dp(6))
+        notesHeader = header
         keyButton = outlined(null).also { it.setOnClickListener { v -> pickKey(v) } }
         header.addView(keyButton, wrap(end = dp(8)))
         scaleButton = outlined(null).also { it.setOnClickListener { v -> pickScale(v) } }
@@ -809,13 +827,175 @@ class StudioActivity : AudioThemedActivity() {
             accent = LANE_COLORS[Inst.SYNTH]
             noteNames = resources.getStringArray(R.array.studio_key_names).toList()
             listener = object : KeyboardView.Listener {
-                override fun onKeyDown(pitch: Int) = liveNoteOn(pitch, 0.9f, engine.playPosition)
-                override fun onKeyUp(pitch: Int) = liveNoteOff(pitch, engine.playPosition)
+                override fun onKeyDown(pitch: Int) {
+                    roll.setLit(pitch, true)
+                    liveNoteOn(pitch, 0.9f, engine.playPosition)
+                }
+
+                override fun onKeyUp(pitch: Int) {
+                    roll.setLit(pitch, false)
+                    liveNoteOff(pitch, engine.playPosition)
+                }
             }
         }
-        pane.addView(keyboard, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(150)).apply { topMargin = dp(8) })
+        // Le clavier occupe tout le bas : il prend la place restante (au plus 300 dp), collé en bas, sans bande vide dessous
+        val keyboardZone = FrameLayout(this).apply { minimumHeight = dp(150 + 8) }
+        keyboardZone.addView(keyboard, FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.BOTTOM).apply { topMargin = dp(8) })
+        pane.addView(keyboardZone, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f))
         outer.addView(pane, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f))
+        drumPanel = buildDrumPanel()
+        outer.addView(drumPanel, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
         return outer
+    }
+
+    /**
+     * Le son d'une piste de batterie : trois variantes à toucher, deux curseurs (hauteur, durée) et « Réinitialiser » qui remet
+     * tout d'origine. Chaque changement se fait entendre ; rien ici ne peut dérégler le reste du morceau.
+     */
+    private fun buildDrumPanel(): LinearLayout {
+        val box = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dp(4), dp(8), dp(4), 0)
+            visibility = View.GONE
+        }
+        fun section(textRes: Int) = caption(textRes).apply { setPadding(0, dp(18), 0, dp(6)) }
+
+        box.addView(section(R.string.studio_drum_kit))
+        drumKitRow = FlowRow(this).apply {
+            hGap = dp(8)
+            vGap = dp(8)
+        }
+        box.addView(drumKitRow)
+
+        fun sliderRow(max: Int, text: TextView, onValue: (Int) -> Unit): Pair<SeekBar, LinearLayout> {
+            val bar = SeekBar(this).apply {
+                this.max = max
+                setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                    override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                        if (fromUser) onValue(progress)
+                    }
+
+                    override fun onStartTrackingTouch(seekBar: SeekBar) {}
+                    override fun onStopTrackingTouch(seekBar: SeekBar) = listenDrum()
+                })
+            }
+            val row = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL }
+            row.addView(bar, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
+            row.addView(text, LinearLayout.LayoutParams(dp(72), ViewGroup.LayoutParams.WRAP_CONTENT))
+            return bar to row
+        }
+
+        // Hauteur et durée ne concernent que les sons fabriqués : un kit du soundfont les masque
+        drumSliders = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
+        box.addView(drumSliders)
+        drumTuneText = TextView(this).apply {
+            textSize = 14f
+            gravity = Gravity.END
+        }
+        val tune = sliderRow(24, drumTuneText) { editDrum(tune = it - 12) }
+        drumTuneBar = tune.first
+        drumSliders.addView(section(R.string.studio_drum_tune))
+        drumSliders.addView(tune.second, LinearLayout.LayoutParams(dp(520), ViewGroup.LayoutParams.WRAP_CONTENT))
+
+        drumLengthText = TextView(this).apply {
+            textSize = 14f
+            gravity = Gravity.END
+        }
+        val length = sliderRow(150, drumLengthText) { editDrum(length = it + 50) }
+        drumLengthBar = length.first
+        drumSliders.addView(section(R.string.studio_drum_length))
+        drumSliders.addView(length.second, LinearLayout.LayoutParams(dp(520), ViewGroup.LayoutParams.WRAP_CONTENT))
+
+        val buttons = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+        buttons.addView(outlined(R.string.studio_drum_listen).also { it.setOnClickListener { listenDrum() } }, wrap(end = dp(8)))
+        buttons.addView(outlined(R.string.studio_drum_reset).also {
+            it.setOnClickListener {
+                session.setDrumSoundfont(editedDrum, -1)
+                editDrum(kit = 0, tune = 0, length = 100)
+                refreshDrumPanel()
+                listenDrum()
+            }
+        }, wrap())
+        box.addView(buttons, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(22) })
+        return box
+    }
+
+    /** Change le son de la piste de batterie ouverte (ce qu'on ne donne pas reste comme avant) et le note. */
+    private fun editDrum(kit: Int? = null, tune: Int? = null, length: Int? = null) {
+        val t = session.project.trackOrNull(editedDrum) ?: return
+        session.setDrumVoice(t.id, kit ?: t.kit, tune ?: t.tune, length ?: t.length)
+        scheduleSave()
+        val n = session.project.trackOrNull(editedDrum) ?: return
+        drumTuneText.text = getString(R.string.studio_signed, n.tune)
+        drumLengthText.text = getString(R.string.studio_percent, n.length)
+    }
+
+    /** La liste des kits de batterie du soundfont ; le choix remplace le son fabriqué de la piste. */
+    private fun pickDrumKit(trackId: Int) {
+        withSf2 { bridge ->
+            val kits = bridge.drumKits
+            if (kits.isEmpty()) {
+                MaterialAlertDialogBuilder(this).setMessage(R.string.studio_no_drum_kit).setPositiveButton(android.R.string.ok, null).show()
+                return@withSf2
+            }
+            val names = kits.map { it.name.trim().ifEmpty { it.program.toString() } }.toTypedArray()
+            MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.studio_drum_kit_pick)
+                .setItems(names) { _, which ->
+                    session.setDrumSoundfont(trackId, kits[which].program)
+                    scheduleSave()
+                    refreshDrumPanel()
+                    listenDrum()
+                }
+                .show()
+        }
+    }
+
+    private fun listenDrum() {
+        if (editedDrum >= 0) engine.trigger(editedDrum, 60, 1f)
+    }
+
+    /** Remet le panneau d'accord avec la piste de batterie ouverte. */
+    private fun refreshDrumPanel() {
+        val t = session.project.trackOrNull(editedDrum)?.takeIf { it.kind == TrackKind.DRUM } ?: return
+        drumKitRow.removeAllViews()
+        resources.getStringArray(KIT_NAMES[t.voice.coerceIn(0, Inst.DRUM_COUNT - 1)]).forEachIndexed { i, name ->
+            val c = chip(name) {
+                session.setDrumSoundfont(t.id, -1)
+                editDrum(kit = i)
+                refreshDrumPanel()
+                listenDrum()
+            }
+            c.isSelected = t.sfKit < 0 && i == t.kit
+            drumKitRow.addView(c)
+        }
+        // Les vrais échantillons du soundfont de l'appli
+        val sfName = if (t.sfKit >= 0) sf2?.drumKits?.firstOrNull { it.program == t.sfKit }?.name?.trim()?.takeIf { it.isNotEmpty() } else null
+        drumKitRow.addView(chip(sfName ?: getString(R.string.studio_drum_soundfont)) { pickDrumKit(t.id) }.also { it.isSelected = t.sfKit >= 0 })
+        drumSliders.visibility = if (t.sfKit >= 0) View.GONE else View.VISIBLE
+        drumTuneBar.progress = t.tune + 12
+        drumLengthBar.progress = t.length - 50
+        drumTuneText.text = getString(R.string.studio_signed, t.tune)
+        drumLengthText.text = getString(R.string.studio_percent, t.length)
+    }
+
+    /** Le texte du bouton « ? » : comment ça marche, puis le lexique (chaque mot en gras, sa phrase à côté). */
+    private fun helpText(): CharSequence {
+        val b = android.text.SpannableStringBuilder(getString(R.string.studio_help_text))
+        fun bold(start: Int, end: Int) = b.setSpan(android.text.style.StyleSpan(Typeface.BOLD), start, end, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        b.append("\n\n")
+        val titleStart = b.length
+        b.append(getString(R.string.studio_lexicon_title))
+        bold(titleStart, b.length)
+        val terms = resources.getStringArray(R.array.studio_lexicon_terms)
+        val defs = resources.getStringArray(R.array.studio_lexicon_defs)
+        for (i in terms.indices) {
+            b.append("\n")
+            val start = b.length
+            b.append(getString(R.string.studio_lexicon_line, terms[i], defs.getOrElse(i) { "" }))
+            bold(start, start + terms[i].length)
+        }
+        return b
     }
 
     /** Un curseur de réglage du son, avec son nom au-dessus, dans un panneau. */
@@ -1463,10 +1643,14 @@ class StudioActivity : AudioThemedActivity() {
     private fun refreshNotesControls() {
         val p = session.project
         val t = curTrack()
-        notesContent.visibility = if (t != null) View.VISIBLE else View.GONE
-        notesEmpty.visibility = if (t == null) View.VISIBLE else View.GONE
+        val drumMode = editedDrum >= 0
+        notesHeader.visibility = if (drumMode) View.GONE else View.VISIBLE
+        notesContent.visibility = if (t != null && !drumMode) View.VISIBLE else View.GONE
+        notesEmpty.visibility = if (t == null && !drumMode) View.VISIBLE else View.GONE
         for (v in trackDependent) v.visibility = if (t != null) View.VISIBLE else View.GONE
-        trackButton.text = getString(R.string.studio_track_label, if (t != null) trackName(t) else getString(R.string.studio_no_track))
+        drumPanel.visibility = if (drumMode) View.VISIBLE else View.GONE
+        if (drumMode) refreshDrumPanel()
+        refreshTrackStrip()
         val keyNames = resources.getStringArray(R.array.studio_key_names)
         keyButton.text = getString(R.string.studio_key_label, keyNames[p.keyPc])
         scaleButton.text = getString(R.string.studio_scale_label, getString(scaleName(p.scaleId)))
@@ -1508,6 +1692,13 @@ class StudioActivity : AudioThemedActivity() {
         else -> sf2ProgramName(t)
     }
 
+    /** Le petit chiffre d'une piste de synthé ou de soundfont quand il y en a plusieurs du même genre (« 2 » : le deuxième) ; sinon rien. */
+    private fun trackBadge(t: Track): String {
+        if (t.kind == TrackKind.DRUM) return ""
+        val same = session.project.tracks.filter { it.kind == t.kind }
+        return if (same.size > 1) (same.indexOfFirst { it.id == t.id } + 1).toString() else ""
+    }
+
     /** Le nom d'une piste ; deux pistes du même nom se numérotent (« Synthé 1 », « Synthé 2 »). */
     private fun trackName(t: Track): String {
         val base = baseName(t)
@@ -1520,6 +1711,8 @@ class StudioActivity : AudioThemedActivity() {
         val p = session.project
         val t = p.trackOrNull(selectedTrack)
         if (t == null || !t.melodic || t.hidden) selectedTrack = p.tracks.firstOrNull { it.melodic && !it.hidden }?.id ?: -1
+        // Une piste de batterie ouverte qui a disparu (ou qu'on a cachée) : retour aux notes
+        if (editedDrum >= 0 && p.trackOrNull(editedDrum)?.let { it.kind == TrackKind.DRUM && !it.hidden } != true) editedDrum = -1
     }
 
     /** Redessine la grille et le mixeur seulement si la liste des pistes a changé. */
@@ -1531,6 +1724,8 @@ class StudioActivity : AudioThemedActivity() {
         val visible = visibleTracks()
         gridIds = visible.map { it.id }
         grid.laneColors = visible.map { trackColor(it) }.toIntArray()
+        grid.laneIcons = visible.map { InstrumentIcons.of(it) }.toIntArray()
+        grid.laneBadges = visible.map { trackBadge(it) }
         grid.laneNames = visible.map { trackName(it) }
         rebuildMixer()
     }
@@ -1539,14 +1734,38 @@ class StudioActivity : AudioThemedActivity() {
         session.project.tracks.firstOrNull { it.kind == TrackKind.DRUM && it.voice == Inst.PERC }?.let { engine.trigger(it.id, 60, 1f) }
     }
 
-    private fun pickTrack(anchor: View) {
-        val list = session.project.tracks.filter { it.melodic && !it.hidden }
-        dropdown(anchor, list.map { trackName(it) }) { which ->
-            selectedTrack = list[which].id
-            rollBase = autoBase()
-            refreshRoll()
-            refreshNotesControls()
+    /** La ligne de pastilles de l'onglet Notes : une par piste à notes (sa couleur, son nom), et « + » pour en ajouter. */
+    private fun refreshTrackStrip() {
+        trackStrip.removeAllViews()
+        for (t in session.project.tracks.filter { !it.hidden }) {
+            val c = chip(trackName(t)) {
+                if (t.melodic) {
+                    editedDrum = -1
+                    if (selectedTrack != t.id) {
+                        selectedTrack = t.id
+                        rollBase = autoBase()
+                    }
+                } else {
+                    editedDrum = t.id
+                }
+                refreshRoll()
+                refreshNotesControls()
+            }
+            // Le contour porte la couleur de la piste ; la piste ouverte a un trait plus épais et un fond teinté
+            val on = if (editedDrum >= 0) t.id == editedDrum else t.id == selectedTrack
+            val color = trackColor(t)
+            val raised = ContextCompat.getColor(this, R.color.audio_surface_raised)
+            val shape = android.graphics.drawable.GradientDrawable().apply {
+                cornerRadius = dp(17).toFloat()
+                setColor(if (on) androidx.core.graphics.ColorUtils.compositeColors((color and 0x00FFFFFF) or 0x40000000, raised) else raised)
+                setStroke(dp(if (on) 3 else 2), color)
+            }
+            c.background = android.graphics.drawable.RippleDrawable(
+                android.content.res.ColorStateList.valueOf(ContextCompat.getColor(this, R.color.audio_ripple)), shape, null,
+            )
+            trackStrip.addView(c)
         }
+        trackStrip.addView(chip(null, R.drawable.ic_px_add) { showAddTrackSheet() })
     }
 
     /** Ouvre le soundfont de l'appli (hors du fil de l'écran) puis fait [action] ; sans soundfont, le dit. */
@@ -1860,6 +2079,12 @@ class StudioActivity : AudioThemedActivity() {
         const val LEVEL_MAX = 1.5f
 
         /** Les noms des sept sons de batterie, dans l'ordre de [Inst]. */
+        /** Les noms des trois variantes du son de chaque instrument de batterie, dans l'ordre de [Inst]. */
+        val KIT_NAMES = intArrayOf(
+            R.array.studio_kits_kick, R.array.studio_kits_snare, R.array.studio_kits_clap, R.array.studio_kits_hat,
+            R.array.studio_kits_open_hat, R.array.studio_kits_tom, R.array.studio_kits_perc,
+        )
+
         val DRUM_NAMES = intArrayOf(
             R.string.studio_lane_kick, R.string.studio_lane_snare, R.string.studio_lane_clap,
             R.string.studio_lane_hat, R.string.studio_lane_open_hat, R.string.studio_lane_tom,

@@ -231,6 +231,7 @@ object StudioProjectCodec {
             .put("bank", t.bank)
             .put("program", t.program)
             .put("arp", JSONArray().put(t.arpMode).put(t.arpRate).put(t.arpOctaves))
+            .put("drum", JSONArray().put(t.kit).put(t.tune).put(t.length).put(t.sfKit))
             .put(
                 "mix",
                 JSONArray().put(m.level.toDouble()).put(m.pan.toDouble()).put(m.reverbSend.toDouble())
@@ -248,6 +249,7 @@ object StudioProjectCodec {
         if (kind == TrackKind.DRUM && voice !in 0 until Inst.DRUM_COUNT) return null
         val a = o.getJSONArray("mix")
         val arp = o.getJSONArray("arp")
+        val drum = o.optJSONArray("drum")
         return Track(
             id = id,
             kind = kind,
@@ -270,6 +272,10 @@ object StudioProjectCodec {
             arpMode = arp.getInt(0).coerceIn(0, 4),
             arpRate = arp.getInt(1).coerceIn(0, 2),
             arpOctaves = arp.getInt(2).coerceIn(1, 3),
+            kit = (drum?.optInt(0, 0) ?: 0).coerceIn(0, Track.KIT_COUNT - 1),
+            tune = (drum?.optInt(1, 0) ?: 0).coerceIn(-12, 12),
+            length = (drum?.optInt(2, 100) ?: 100).coerceIn(50, 200),
+            sfKit = if (kind == TrackKind.DRUM) (drum?.optInt(3, -1) ?: -1).coerceIn(-1, 127) else -1,
         )
     }
 
@@ -383,6 +389,7 @@ class StudioSession(private val engine: StudioEngine, initial: StudioProject) {
         engine.applyMix(t.id, t.mix)
         engine.synthOf(t.id)?.patch = t.synth
         engine.setArp(t.id, t.arpMode, ARP_DIVISIONS[t.arpRate.coerceIn(0, 2)], t.arpOctaves)
+        engine.setVoice(t.id, t.kit, t.tune, t.length)
     }
 
     /** Muet = demandé par l'utilisateur ; en plus, une piste cachée se tait, et quand une piste est en solo, toutes les autres aussi. */
@@ -455,6 +462,22 @@ class StudioSession(private val engine: StudioEngine, initial: StudioProject) {
         if (project.trackOrNull(id)?.kind != TrackKind.SF2) return
         changeTrack(id) { it.copy(bank = bank.coerceIn(0, 16383), program = program.coerceIn(0, 127)) }
         engine.setTracks(project.tracks.map { it.spec })
+    }
+
+    /** Règle le son d'une piste de batterie : variante [kit], hauteur [tune] (demi-tons) et durée [length] (pour cent). */
+    fun setDrumVoice(id: Int, kit: Int, tune: Int, length: Int) {
+        if (project.trackOrNull(id)?.kind != TrackKind.DRUM) return
+        changeTrack(id) {
+            it.copy(kit = kit.coerceIn(0, Track.KIT_COUNT - 1), tune = tune.coerceIn(-12, 12), length = length.coerceIn(50, 200))
+        }
+    }
+
+    /** Fait jouer une piste de batterie par un kit du soundfont ([program] : numéro du kit, banque 128) ; -1 rend le son fabriqué. */
+    fun setDrumSoundfont(id: Int, program: Int) {
+        if (project.trackOrNull(id)?.kind != TrackKind.DRUM) return
+        changeTrack(id) { it.copy(sfKit = program.coerceIn(-1, 127)) }
+        engine.setTracks(project.tracks.map { it.spec })
+        pushTrack(project.track(id))
     }
 
     // ---- Arpégiateur d'une piste ---------------------------------------------------------------------------------

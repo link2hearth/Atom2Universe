@@ -9,6 +9,7 @@ import com.Atom2Universe.app.studio.dsp.Kick
 import com.Atom2Universe.app.studio.dsp.Perc
 import com.Atom2Universe.app.studio.dsp.PingPongDelay
 import com.Atom2Universe.app.studio.dsp.PolySynth
+import com.Atom2Universe.app.studio.dsp.Sf2DrumInstrument
 import com.Atom2Universe.app.studio.dsp.Sf2Instrument
 import com.Atom2Universe.app.studio.dsp.Snare
 import com.Atom2Universe.app.studio.dsp.StereoReverb
@@ -45,6 +46,12 @@ object Inst {
     /** Pistes d'un projet neuf. */
     const val COUNT = 8
 }
+
+/** La banque des kits de batterie d'un soundfont : une piste de batterie qui la porte joue un kit au lieu du son fabriqué. */
+const val DRUM_KIT_BANK = 128
+
+/** La touche de batterie GM de chaque instrument ([Inst]) : grosse caisse, caisse claire, clap, charleston, ouvert, tom, cloche. */
+val GM_DRUM_NOTES = intArrayOf(36, 38, 39, 42, 46, 45, 56)
 
 /** Le genre d'une piste : un son de batterie (une ligne de pas), le synthé maison, ou un instrument de soundfont (des notes). */
 object TrackKind {
@@ -182,7 +189,9 @@ class StudioEngine(val sampleRate: Int) {
         for (spec in specs) {
             if (spec.id !in 0 until MAX_TRACKS || next[spec.id] != null) continue
             val prev = old[spec.id]
-            next[spec.id] = if (prev != null && prev.spec.kind == spec.kind && prev.spec.voice == spec.voice) {
+            // Une piste de batterie change d'instrument quand elle passe d'un son fabriqué à un kit du soundfont (banque 128), ou l'inverse
+            val sameDrumSource = spec.kind != TrackKind.DRUM || (prev?.spec?.bank == DRUM_KIT_BANK) == (spec.bank == DRUM_KIT_BANK)
+            next[spec.id] = if (prev != null && prev.spec.kind == spec.kind && prev.spec.voice == spec.voice && sameDrumSource) {
                 val ins = prev.instrument
                 if (ins is Sf2Instrument && (prev.spec.bank != spec.bank || prev.spec.program != spec.program)) {
                     ins.setProgram(spec.bank, spec.program)
@@ -203,7 +212,12 @@ class StudioEngine(val sampleRate: Int) {
             ins.setProgram(spec.bank, spec.program)
             Slot(spec, ins, Melody(ins))
         }
-        else -> Slot(spec, drum(spec.voice), null)
+        else -> if (spec.bank == DRUM_KIT_BANK) {
+            val source = sf2Factory?.invoke(sampleRate, DRUM_KIT_BANK, spec.program)
+            Slot(spec, Sf2DrumInstrument(sampleRate, source, GM_DRUM_NOTES[spec.voice.coerceIn(0, Inst.DRUM_COUNT - 1)]), null)
+        } else {
+            Slot(spec, drum(spec.voice), null)
+        }
     }
 
     private fun drum(voice: Int): Instrument = when (voice) {
@@ -244,6 +258,12 @@ class StudioEngine(val sampleRate: Int) {
         ins.drive = m.drive
         ins.crush = m.crush
         ins.filterSweep = m.filter
+    }
+
+    /** Le caractère (variante, hauteur, durée) d'une piste de batterie ; sans effet sur une piste qui joue des notes. */
+    fun setVoice(id: Int, kit: Int, tune: Int, length: Int) {
+        val slot = table.getOrNull(id) ?: return
+        if (slot.spec.kind == TrackKind.DRUM) slot.instrument.setVoice(kit, tune, length)
     }
 
     /** Muet ou non, pour la piste [id]. */

@@ -6,14 +6,14 @@
     <string name="studio_tab_rhythm">Rythme</string>
     <string name="studio_tab_notes">Notes</string>
     <string name="studio_tab_mixer">Mixeur</string>
-    <string name="studio_mute_letter">M</string>
-    <string name="studio_solo_letter">S</string>
+    <string name="studio_mute_letter">Muet</string>
+    <string name="studio_solo_letter">Solo</string>
     <string name="studio_fx">Effets</string>
     <string name="studio_fx_drive">Distorsion</string>
-    <string name="studio_fx_crush">Grain lo-fi</string>
-    <string name="studio_fx_filter">Filtre (étouffé ◂ ▸ mince)</string>
-    <string name="studio_fx_reverb">Envoi réverbération</string>
-    <string name="studio_fx_echo">Envoi écho</string>
+    <string name="studio_fx_crush">Lo-fi</string>
+    <string name="studio_fx_filter">Filtre</string>
+    <string name="studio_fx_reverb">Réverb</string>
+    <string name="studio_fx_echo">Écho</string>
     <string name="studio_xy_title">Pad de jeu</string>
     <string name="studio_gesture_record">Enregistrer mon geste</string>
     <string name="studio_gesture_clear">Effacer le geste</string>
@@ -139,9 +139,7 @@
     <string name="studio_export_failed">L\'export n\'a pas marché.</string>
     <string name="studio_help_button">?</string>
     <string name="studio_help_title">Comment ça marche</string>
-    <string name="studio_help_text">Rythme : touche les carrés pour poser des coups de batterie ; touche encore pour changer leur force. Choisis un Style pour partir d’une base, Hasard pour des idées.\n\nNotes : dessine des notes sur la grille, ou joue au clavier et appuie sur Enregistrer pendant que ça tourne. La gamme garde chaque note juste.\n\nMixeur : une tranche par piste. M coupe le son, S ne garde que cette piste, Effets ajoute distorsion, lo-fi et filtre. Le pad filtre ou ajoute de la réverbération tant que ton doigt y est ; « Enregistrer mon geste » garde le mouvement dans la boucle.\n\nPistes : ajoute, cache ou retire des pistes (sons de batterie, synthés, instruments du soundfont).
-
-Motifs A à D : quatre boucles différentes. Morceau : les joue l’une après l’autre. Exporter : fichier audio, fichier MIDI, ou envoi à l’éditeur audio.\n\nMon son : enregistre deux secondes au micro ; il remplace le son de la piste Perc.</string>
+    <string name="studio_help_text">Rythme : touche les carrés pour poser des coups de batterie ; touche encore pour changer leur force. Motif > Hasard donne des idées.\n\nNotes : choisis une piste dans la ligne du haut. Une piste à notes montre la grille et le clavier : dessine des notes, ou joue et appuie sur Enregistrer pendant que ça tourne. Une piste de batterie montre son son : trois versions, hauteur, durée, ou un kit de ton soundfont.\n\nMixeur : une tranche par piste, avec son volume. Muet coupe la piste, Solo ne garde qu’elle, Effets ouvre balance, réverb, écho, filtre, distorsion et lo-fi. Le pad change le filtre et la réverb tant que ton doigt y est ; « Enregistrer mon geste » garde le mouvement dans la boucle.\n\nMotifs A à D : quatre boucles différentes. Morceau : les joue l’une après l’autre. Exporter : fichier audio, fichier MIDI, ou envoi à l’éditeur audio.\n\nMon son : enregistre deux secondes au micro ; il remplace le son de la piste Perc.</string>
     <string name="studio_sample">Mon son</string>
     <string name="studio_sample_title">Mon son (piste Perc.)</string>
     <string name="studio_sample_default">La piste Perc. joue sa cloche d’origine.</string>
@@ -194,4 +192,27 @@ Motifs A à D : quatre boucles différentes. Morceau : les joue l’une après l
     <string name="studio_style_trap">Trap</string>
     <string name="studio_just_now">À l’instant</string>
     <string name="studio_manage_tracks">Cacher ou retirer des pistes</string>
+    <string name="studio_drum_kit">Son</string>
+    <string name="studio_drum_tune">Hauteur</string>
+    <string name="studio_drum_length">Durée</string>
+    <string name="studio_drum_listen">Écouter</string>
+    <string name="studio_drum_soundfont">Soundfont</string>
+    <string name="studio_no_drum_kit">Ce soundfont n’a pas de kit de batterie.</string>
+    <string name="studio_drum_kit_pick">Choisir un kit de batterie</string>
+    <string name="studio_drum_reset">Réinitialiser</string>
+    <string name="studio_signed">%1$d</string>
+    <string name="studio_percent">%1$d %%</string>
+    <string-array name="studio_kits_kick"><item>Classique</item><item>Long et grave</item><item>Sec et dur</item></string-array>
+    <string-array name="studio_kits_snare"><item>Classique</item><item>Courte</item><item>Ample</item></string-array>
+    <string-array name="studio_kits_clap"><item>Classique</item><item>Court</item><item>Long</item></string-array>
+    <string-array name="studio_kits_hat"><item>Classique</item><item>Serré</item><item>Lourd</item></string-array>
+    <string-array name="studio_kits_open_hat"><item>Classique</item><item>Court</item><item>Long</item></string-array>
+    <string-array name="studio_kits_tom"><item>Classique</item><item>Grave</item><item>Aigu</item></string-array>
+    <string-array name="studio_kits_perc"><item>Cloche</item><item>Bloc</item><item>Cloche aiguë</item></string-array>
+    <string name="studio_fx_pan">Balance</string>
+    <string name="studio_volume">Volume</string>
+    <string name="studio_lexicon_line">%1$s : %2$s</string>
+    <string name="studio_lexicon_title">Lexique</string>
+    <string-array name="studio_lexicon_terms"><item>Volume</item><item>Balance</item><item>Muet</item><item>Solo</item><item>Réverb</item><item>Écho</item><item>Filtre</item><item>Distorsion</item><item>Lo-fi</item><item>Pad de jeu</item><item>Hauteur</item><item>Durée</item><item>Gamme</item><item>Tonalité</item><item>Arpège</item><item>Motif</item><item>BPM</item><item>Soundfont</item></string-array>
+    <string-array name="studio_lexicon_defs"><item>La force du son de la piste.</item><item>Place le son plus à gauche ou plus à droite.</item><item>Coupe le son de la piste.</item><item>Ne garde que cette piste.</item><item>Le son résonne comme dans une grande salle.</item><item>Le son se répète en s’éloignant.</item><item>Étouffe le son (vers la gauche) ou l’amincit (vers la droite).</item><item>Rend le son plus rugueux et plus fort.</item><item>Un grain d’ancienne machine, comme une vieille cassette.</item><item>Tant que ton doigt y est, le filtre (de gauche à droite) et la réverb (de bas en haut) changent pour tout le morceau.</item><item>Rend un son de batterie plus grave ou plus aigu.</item><item>La longueur du son avant qu’il s’éteigne.</item><item>Les notes qui vont bien ensemble. Avec « Sur la gamme », impossible de jouer faux.</item><item>La note d’où part la gamme.</item><item>Joue les notes d’un accord l’une après l’autre.</item><item>Une des quatre boucles, de A à D.</item><item>La vitesse, en battements par minute.</item><item>Un fichier d’instruments enregistrés (piano, guitare, batterie…).</item></string-array>
 </resources>
