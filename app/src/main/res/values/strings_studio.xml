@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="studio_title">Studio</string>
+    <string name="studio_hub_desc">Beats and synths</string>
+
+    <string name="studio_tab_rhythm">Rhythm</string>
+    <string name="studio_tab_notes">Notes</string>
+    <string name="studio_tab_mixer">Mixer</string>
+    <string name="studio_mute_letter">M</string>
+    <string name="studio_solo_letter">S</string>
+    <string name="studio_fx">Effects</string>
+    <string name="studio_fx_drive">Distortion</string>
+    <string name="studio_fx_crush">Lo-fi grain</string>
+    <string name="studio_fx_filter">Filter (muffled ◂ ▸ thin)</string>
+    <string name="studio_fx_reverb">Reverb send</string>
+    <string name="studio_fx_echo">Echo send</string>
+    <string name="studio_xy_title">Performance pad</string>
+    <string name="studio_xy_hint">Slide left to muffle the whole mix, up to add reverb. Let go and it comes back.</string>
+    <string name="studio_gesture_record">Record my gesture</string>
+    <string name="studio_gesture_clear">Clear gesture</string>
+
+    <string name="studio_play">Play</string>
+    <string name="studio_stop">Stop</string>
+    <string name="studio_tempo_format">%1$d BPM</string>
+    <string name="studio_tempo_less">−</string>
+    <string name="studio_tempo_more">+</string>
+    <string name="studio_swing">Swing</string>
+    <string name="studio_space">Space</string>
+    <string name="studio_echo">Echo</string>
+
+    <string name="studio_style_label">Style: %1$s</string>
+    <string name="studio_style_pick">Choose a style</string>
+    <string name="studio_style_house">House</string>
+    <string name="studio_style_techno">Techno</string>
+    <string name="studio_style_hiphop">Hip-hop</string>
+    <string name="studio_style_lofi">Lo-fi</string>
+    <string name="studio_style_electro">Electro</string>
+    <string name="studio_style_ambient">Ambient</string>
+
+    <string name="studio_random">Random</string>
+    <string name="studio_clear">Clear</string>
+    <string name="studio_undo">Undo</string>
+
+    <string name="studio_lane_kick">Kick</string>
+    <string name="studio_lane_snare">Snare</string>
+    <string name="studio_lane_clap">Clap</string>
+    <string name="studio_lane_hat">Hi-hat</string>
+    <string name="studio_lane_open_hat">Open hat</string>
+    <string name="studio_lane_tom">Tom</string>
+    <string name="studio_lane_perc">Perc</string>
+    <string name="studio_lane_synth">Synth</string>
+
+    <string-array name="studio_key_names">
+        <item>C</item>
+        <item>C#</item>
+        <item>D</item>
+        <item>D#</item>
+        <item>E</item>
+        <item>F</item>
+        <item>F#</item>
+        <item>G</item>
+        <item>G#</item>
+        <item>A</item>
+        <item>A#</item>
+        <item>B</item>
+    </string-array>
+    <string name="studio_key_caption">Key</string>
+    <string name="studio_scale_caption">Scale</string>
+    <string name="studio_lock">Locked to scale</string>
+    <string name="studio_octave">Octave</string>
+    <string name="studio_key_pick">Choose a key</string>
+    <string name="studio_scale_pick">Choose a scale</string>
+    <string name="studio_scale_minor_pent">Minor pentatonic</string>
+    <string name="studio_scale_major_pent">Major pentatonic</string>
+    <string name="studio_scale_minor">Minor</string>
+    <string name="studio_scale_major">Major</string>
+    <string name="studio_scale_dorian">Dorian</string>
+    <string name="studio_scale_blues">Blues</string>
+    <string name="studio_scale_chromatic">All notes</string>
+
+    <string name="studio_sound_caption">Sound</string>
+    <string name="studio_sound_pick">Choose a sound</string>
+    <string name="studio_preset_bass">Bass</string>
+    <string name="studio_preset_sub">Deep sub</string>
+    <string name="studio_preset_acid">Acid</string>
+    <string name="studio_preset_dist_bass">Distorted bass</string>
+    <string name="studio_preset_wobble">Wobble</string>
+    <string name="studio_preset_pad">Pad</string>
+    <string name="studio_preset_strings">Strings</string>
+    <string name="studio_preset_drone">Drone</string>
+    <string name="studio_preset_lead">Lead</string>
+    <string name="studio_preset_arp">Arp</string>
+    <string name="studio_preset_pluck">Pluck</string>
+    <string name="studio_preset_bell">Bell</string>
+    <string name="studio_advanced">Advanced</string>
+    <string name="studio_macro_bright">Brightness</string>
+    <string name="studio_macro_drive">Distortion</string>
+    <string name="studio_macro_ambience">Ambience</string>
+    <string name="studio_adv_resonance">Resonance</string>
+    <string name="studio_adv_detune">Detune</string>
+    <string name="studio_adv_sub">Low layer</string>
+    <string name="studio_adv_attack">Attack</string>
+    <string name="studio_adv_release">Release</string>
+    <string name="studio_adv_sweep">Filter sweep</string>
+    <string name="studio_adv_move_speed">Movement speed</string>
+    <string name="studio_adv_move_depth">Movement depth</string>
+    <string name="studio_wave_saw">Saw</string>
+    <string name="studio_wave_square">Square</string>
+    <string name="studio_wave_triangle">Triangle</string>
+    <string name="studio_wave_sine">Sine</string>
+
+    <string name="studio_arp_caption">Arpeggio</string>
+    <string name="studio_arp_pick">Choose an arpeggio</string>
+    <string name="studio_arp_off">Off</string>
+    <string name="studio_arp_up">Up</string>
+    <string name="studio_arp_down">Down</string>
+    <string name="studio_arp_updown">Up and down</string>
+    <string name="studio_arp_random">Random</string>
+    <string name="studio_arp_octaves">Octaves</string>
+    <string name="studio_record_off">● Record</string>
+    <string name="studio_record_on">● Recording…</string>
+    <string name="studio_midi_connected">MIDI keyboard connected</string>
+    <string name="studio_buffer_label">Buffer: %1$d</string>
+    <string name="studio_yes">yes</string>
+    <string name="studio_no">no</string>
+    <string name="studio_stats">%1$d Hz · buffer %2$.1f ms (minimum block %3$d)\nCPU load %4$d%% (worst %5$d%%) · glitches %6$d\nPeak %7$.2f · voices %8$d · low latency: %9$s</string>
+    <string name="studio_audio_failed">Audio output unavailable</string>
+    <string-array name="studio_pattern_names">
+        <item>A</item>
+        <item>B</item>
+        <item>C</item>
+        <item>D</item>
+    </string-array>
+    <string name="studio_pattern_copy">Copy to…</string>
+    <string name="studio_copy_to_title">Copy this pattern to</string>
+    <string name="studio_song">Song</string>
+    <string name="studio_song_title">Song: patterns played one after another</string>
+    <string name="studio_song_empty">Add patterns below</string>
+    <string name="studio_song_add">+ %1$s</string>
+    <string name="studio_song_remove">Remove last</string>
+    <string name="studio_song_clear">Clear</string>
+    <string name="studio_song_play">Play the song</string>
+    <string name="studio_chain_join">" → "</string>
+    <string name="studio_export">Export</string>
+    <string name="studio_export_title">Export (about %1$d s)</string>
+    <string name="studio_export_wav">Audio file (WAV)</string>
+    <string name="studio_export_midi">MIDI file</string>
+    <string name="studio_export_editor">Send to the audio editor</string>
+    <string name="studio_export_working">Exporting…</string>
+    <string name="studio_export_done">Saved in Music/%1$s\n%2$s</string>
+    <string name="studio_export_failed">The export did not work.</string>
+    <string name="studio_help_button">?</string>
+    <string name="studio_help_title">How it works</string>
+    <string name="studio_help_text">Rhythm: tap the squares to place drum hits; tap again to change their strength. Pick a Style to start from a base, Random for ideas.\n\nNotes: draw notes on the grid, or play the keyboard and press Record while the music runs. The scale keeps every note in tune.\n\nMixer: one strip per track. M mutes, S keeps only that track, Effects adds distortion, lo-fi and a filter. The pad filters or adds reverb while your finger is on it; Record my gesture keeps the move in the loop.\n\nPatterns A to D hold four different loops. Song plays them one after another. Export saves an audio file, a MIDI file, or sends the sound to the audio editor.\n\nMy sound: record two seconds with the microphone; it replaces the sound of the Perc. track.</string>
+    <string name="studio_sample">My sound</string>
+    <string name="studio_sample_title">My sound (Perc. track)</string>
+    <string name="studio_sample_default">The Perc. track plays its original bell.</string>
+    <string name="studio_sample_mine">The Perc. track plays your recording.</string>
+    <string name="studio_sample_listening">Listening… speak or tap something!</string>
+    <string name="studio_sample_nothing">Nothing was heard. Try again, a bit louder.</string>
+    <string name="studio_sample_failed">The microphone is not available.</string>
+    <string name="studio_sample_record">Record (2 s)</string>
+    <string name="studio_sample_play">Listen</string>
+    <string name="studio_sample_remove">Remove</string>
+</resources>

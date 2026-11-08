@@ -1,0 +1,94 @@
+package com.Atom2Universe.app.studio.ui
+
+import android.content.Context
+import android.content.res.Configuration
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.RectF
+import android.view.MotionEvent
+import android.view.View
+
+/**
+ * Un pad à deux axes pour jouer des effets du doigt. [onMove] reçoit x (0 à gauche, 1 à droite) et y (0 en bas, 1 en
+ * haut) tant que le doigt est posé ; [onRelease] quand il se lève (le pad revient alors à sa position de repos : à droite,
+ * en bas).
+ */
+class XyPadView(context: Context) : View(context) {
+
+    var onMove: ((x: Float, y: Float) -> Unit)? = null
+    var onRelease: (() -> Unit)? = null
+    var accent: Int = 0xFF7C8CFF.toInt()
+
+    private var x = 1f
+    private var y = 0f
+    private var touching = false
+
+    /** Vrai tant qu'un doigt est posé. */
+    val isTouching: Boolean get() = touching
+
+    /** Appelé quand le doigt se pose, avant le premier [onMove]. */
+    var onPress: (() -> Unit)? = null
+
+    /** Rouge discret quand le geste est en cours d'enregistrement. */
+    var recording = false
+        set(v) {
+            field = v
+            invalidate()
+        }
+
+    /** Montre où en est le geste enregistré (le pad le joue tout seul) : sans doigt, juste un repère qui bouge. */
+    fun showAt(fx: Float, fy: Float) {
+        if (touching) return
+        x = fx.coerceIn(0f, 1f)
+        y = fy.coerceIn(0f, 1f)
+        invalidate()
+    }
+
+    private val dark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+    private val bg = if (dark) 0xFF2A2A31.toInt() else 0xFFDADAE2.toInt()
+    private val lineColor = if (dark) 0xFF4A4A54.toInt() else 0xFFB8B8C4.toInt()
+    private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val rect = RectF()
+
+    private fun dp(v: Float) = v * resources.displayMetrics.density
+
+    override fun onDraw(canvas: Canvas) {
+        rect.set(0f, 0f, width.toFloat(), height.toFloat())
+        paint.color = if (recording) 0xFF4A2A2E.toInt() else bg
+        canvas.drawRoundRect(rect, dp(14f), dp(14f), paint)
+
+        val px = x * width
+        val py = (1f - y) * height
+        paint.color = lineColor
+        paint.strokeWidth = dp(1.5f)
+        canvas.drawLine(px, 0f, px, height.toFloat(), paint)
+        canvas.drawLine(0f, py, width.toFloat(), py, paint)
+
+        paint.color = accent
+        paint.alpha = if (touching) 255 else 140
+        canvas.drawCircle(px.coerceIn(dp(14f), width - dp(14f)), py.coerceIn(dp(14f), height - dp(14f)), if (touching) dp(18f) else dp(12f), paint)
+        paint.alpha = 255
+    }
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        when (event.actionMasked) {
+            MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE -> {
+                parent?.requestDisallowInterceptTouchEvent(true)
+                if (!touching) onPress?.invoke()
+                touching = true
+                x = (event.x / width).coerceIn(0f, 1f)
+                y = (1f - event.y / height).coerceIn(0f, 1f)
+                onMove?.invoke(x, y)
+                invalidate()
+            }
+            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                touching = false
+                x = 1f
+                y = 0f
+                onRelease?.invoke()
+                invalidate()
+            }
+        }
+        return true
+    }
+}

@@ -211,6 +211,13 @@
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
             android:theme="@style/Theme.A2U" />
 
+        <!-- Studio : création musicale électro (banc d'essai du moteur pour l'instant) -->
+        <activity
+            android:name=".studio.StudioActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
+            android:theme="@style/Theme.A2U" />
+
         <!-- Audio Editor : galerie de projets (l'entrée du module) -->
         <!-- Pas de recréation à la rotation : un import ou une conversion en cours garde sa boîte de progression -->
         <activity

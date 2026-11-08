@@ -1,0 +1,688 @@
+package com.Atom2Universe.app.studio.engine
+
+import com.Atom2Universe.app.studio.dsp.Clap
+import com.Atom2Universe.app.studio.dsp.Fast
+import com.Atom2Universe.app.studio.dsp.Hat
+import com.Atom2Universe.app.studio.dsp.Instrument
+import com.Atom2Universe.app.studio.dsp.Kick
+import com.Atom2Universe.app.studio.dsp.Perc
+import com.Atom2Universe.app.studio.dsp.PingPongDelay
+import com.Atom2Universe.app.studio.dsp.PolySynth
+import com.Atom2Universe.app.studio.dsp.Snare
+import com.Atom2Universe.app.studio.dsp.StereoReverb
+import com.Atom2Universe.app.studio.dsp.Tom
+import kotlin.math.abs
+import kotlin.math.ceil
+import kotlin.math.max
+import kotlin.math.min
+import kotlin.math.roundToLong
+
+/** Modes de l'arpégiateur : il joue une à une, en boucle, les notes tenues. */
+object Arp {
+    const val OFF = 0
+    const val UP = 1
+    const val DOWN = 2
+    const val UP_DOWN = 3
+    const val RANDOM = 4
+}
+
+/** Identifiants des instruments du moteur. */
+object Inst {
+    const val KICK = 0
+    const val SNARE = 1
+    const val CLAP = 2
+    const val HAT = 3
+    const val OPEN_HAT = 4
+    const val TOM = 5
+    const val PERC = 6
+    const val SYNTH = 7
+
+    /** Les sept instruments rythmiques, qui ont chacun une ligne de pas (le synthé joue des notes, pas des pas). */
+    const val DRUM_COUNT = 7
+    const val COUNT = 8
+}
+
+/**
+ * Une ligne rythmique : pour chaque pas, une vélocité (0 = silence). Le tableau [note] ne sert qu'aux
+ * instruments qui jouent une hauteur (aucun pour l'instant) ; [gate] est gardé pour les évolutions.
+ */
+class Lane(
+    val instrument: Int,
+    val velocity: FloatArray,
+    val note: IntArray = IntArray(velocity.size) { 60 },
+    val gate: Float = 0.9f,
+)
+
+/**
+ * Une note du synthé : elle commence au pas [step], dure [length] pas, à la hauteur MIDI [pitch]. Plusieurs notes
+ * peuvent commencer au même pas (accord).
+ */
+class Note(val step: Int, val pitch: Int, val length: Int = 1, val velocity: Float = 1f)
+
+/**
+ * Un motif de [stepCount] doubles-croches (seize pas = une mesure en 4/4) : [lanes] pour les instruments rythmiques,
+ * [notes] pour le synthé. Immuable : on en fabrique un nouveau pour le modifier.
+ */
+class StepPattern(
+    val stepCount: Int,
+    val lanes: List<Lane>,
+    val notes: List<Note> = emptyList(),
+    /** Geste du pad enregistré dans la boucle : [AUTO_RES] valeurs par pas, de 0 à 1 (null = rien d'enregistré). */
+    val autoFilter: FloatArray? = null,
+    val autoSpace: FloatArray? = null,
+) {
+    fun copy(
+        lanes: List<Lane> = this.lanes,
+        notes: List<Note> = this.notes,
+        autoFilter: FloatArray? = this.autoFilter,
+        autoSpace: FloatArray? = this.autoSpace,
+    ) = StepPattern(stepCount, lanes, notes, autoFilter, autoSpace)
+
+    val hasAutomation: Boolean get() = autoFilter != null || autoSpace != null
+
+    /** Filtre maître enregistré à la position [pos] (en pas), ou rien. */
+    fun filterAt(pos: Double): Float? = sample(autoFilter, pos)
+
+    /** Réverbération en plus enregistrée à la position [pos] (en pas), ou rien. */
+    fun spaceAt(pos: Double): Float? = sample(autoSpace, pos)
+
+    private fun sample(a: FloatArray?, pos: Double): Float? {
+        if (a == null || a.size != stepCount * AUTO_RES) return null
+        val p = ((pos % stepCount) + stepCount) % stepCount * AUTO_RES
+        val i0 = p.toInt().coerceIn(0, a.size - 1)
+        val f = (p - i0).toFloat()
+        return a[i0] * (1f - f) + a[(i0 + 1) % a.size] * f
+    }
+
+    companion object {
+        /** Points d'automation par pas. */
+        const val AUTO_RES = 4
+    }
+}
+
+/**
+ * Le moteur du Studio : séquenceur sample-accurate + instruments + mixage + limiteur.
+ *
+ * Tout se passe dans [render], appelé par le fil audio. L'horloge compte des **échantillons**, pas des
+ * millisecondes : une frappe tombe au même échantillon quelle que soit la taille des blocs. Le bloc est
+ * coupé en morceaux aux instants des événements (pas de séquenceur, fin de note), ce qui donne un
+ * rythme exact, swing compris.
+ *
+ * Les autres fils ne touchent au moteur que par les champs @Volatile et par la file de commandes.
+ */
+class StudioEngine(val sampleRate: Int) {
+
+    val instruments: Array<Instrument> = arrayOf(
+        Kick(sampleRate),
+        Snare(sampleRate),
+        Clap(sampleRate),
+        Hat(sampleRate, open = false),
+        Hat(sampleRate, open = true),
+        Tom(sampleRate),
+        Perc(sampleRate),
+        PolySynth(sampleRate),
+    )
+
+    private val reverb = StereoReverb(sampleRate)
+    private val delay = PingPongDelay(sampleRate)
+    private val masterL = com.Atom2Universe.app.studio.dsp.Svf(sampleRate)
+    private val masterR = com.Atom2Universe.app.studio.dsp.Svf(sampleRate)
+    private var masterFilterNow = 0f
+    private var spaceBoostNow = 0f
+    private val reverbBus = FloatArray(MAX_BLOCK)
+    private val delayBus = FloatArray(MAX_BLOCK)
+
+    val synth: PolySynth get() = instruments[Inst.SYNTH] as PolySynth
+
+    /** Le son enregistré au micro pour la piste de percussion (`null` : retour à la cloche d'origine). */
+    fun setPercSample(data: FloatArray?, sourceRate: Int) = (instruments[Inst.PERC] as Perc).setSample(data, sourceRate)
+
+    @Volatile var pattern: StepPattern = StepPattern(16, emptyList())
+
+    /**
+     * Le morceau : une suite de motifs de même longueur, joués l'un après l'autre (à chaque tour de boucle), puis on
+     * recommence. `null` : on boucle simplement sur [pattern].
+     */
+    @Volatile var song: Array<StepPattern>? = null
+
+    /** Rang, dans [song], du motif en cours (pour l'affichage). */
+    @Volatile var songPosition: Int = 0
+        private set
+    @Volatile var bpm: Float = 120f
+    @Volatile var swing: Float = 0f
+    @Volatile var masterGain: Float = 0.8f
+
+    /** Quantité de réverbération et d'écho renvoyée dans le mixage (0 à 1). */
+    @Volatile var spaceAmount: Float = 0.25f
+    @Volatile var echoAmount: Float = 0.2f
+
+    // Gestes de jeu (pad XY) : ni sauvegardés ni mémorisés, le moteur les lisse pour ne produire aucun « zip ».
+    /** 0 = filtre maître ouvert, 1 = très fermé (son étouffé). */
+    @Volatile var masterFilter: Float = 0f
+
+    /** Réverbération en plus de [spaceAmount], de 0 à 1. */
+    @Volatile var spaceBoost: Float = 0f
+
+    /** Vrai tant qu'un doigt tient le pad : ses valeurs priment alors sur le geste enregistré. */
+    @Volatile var padActive: Boolean = false
+
+    /** Pas en cours de lecture (pour l'affichage). */
+    @Volatile var currentStep: Int = -1
+        private set
+
+    @Volatile var playing: Boolean = false
+        private set
+
+    /** Plus haut niveau de sortie depuis la dernière lecture de [takePeak]. */
+    @Volatile private var peak = 0f
+
+    /** Échantillons dont le niveau avant limiteur a dépassé 1 (le limiteur les a adoucis). */
+    @Volatile var limitedSamples = 0L
+        private set
+
+    /** Pour les tests : appelé à chaque pas joué avec son numéro et l'échantillon exact. */
+    var onStep: ((step: Int, frame: Long) -> Unit)? = null
+
+    /** Pour les tests : appelé à chaque note qui part réellement vers le synthé (après l'arpégiateur), avec son échantillon. */
+    var onSynthNote: ((pitch: Int, frame: Long) -> Unit)? = null
+
+    // ---- Arpégiateur : quand il est actif, les notes (du motif, du clavier, du MIDI) sont seulement « tenues » ;
+    // c'est lui qui les joue une à une sur la grille du tempo.
+    @Volatile var arpMode: Int = Arp.OFF
+
+    /** Durée d'un coup d'arpège en pas : 2 = croche, 1 = double-croche, 0,5 = triple-croche. */
+    @Volatile var arpDivision: Float = 1f
+    @Volatile var arpOctaves: Int = 1
+    @Volatile var arpGate: Float = 0.55f
+
+    /** Position de lecture en pas, avec décimales (0 à l'arrêt) : sert à placer les notes jouées en direct. */
+    @Volatile var playPosition: Double = 0.0
+        private set
+
+    val activeVoices: Int
+        get() {
+            var n = 0
+            for (i in instruments) n += i.activeVoices
+            return n
+        }
+
+    fun takePeak(): Float {
+        val p = peak
+        peak = 0f
+        return p
+    }
+
+    // ---- Commandes venant des autres fils (une file à un producteur, un consommateur) ------------
+
+    private val queue = LongArray(QUEUE_SIZE)
+    @Volatile private var head = 0
+    @Volatile private var tail = 0
+
+    private val pushLock = Any()
+
+    /** Plusieurs fils peuvent envoyer (interface, entrée MIDI) : un verrou entre eux ; le fil audio, lui, ne verrouille jamais. */
+    private fun push(kind: Int, a: Int, b: Int, f: Float) {
+        synchronized(pushLock) {
+            val t = tail
+            val next = (t + 1) % QUEUE_SIZE
+            if (next == head) return // pleine : on perd la commande plutôt que de bloquer
+            queue[t] = kind.toLong() or (a.toLong() shl 8) or (b.toLong() shl 24) or
+                (java.lang.Float.floatToRawIntBits(f).toLong() shl 32)
+            tail = next
+        }
+    }
+
+    fun play() = push(CMD_PLAY, 0, 0, 0f)
+    fun stop() = push(CMD_STOP, 0, 0, 0f)
+
+    /** Joue un instrument tout de suite (au début du prochain bloc) : pads tactiles, clavier. */
+    fun trigger(instrument: Int, note: Int = 60, velocity: Float = 1f) = push(CMD_TRIGGER, instrument, note, velocity)
+
+    fun release(instrument: Int, note: Int) = push(CMD_RELEASE, instrument, note, 0f)
+
+    // ---- État du séquenceur (fil audio seulement) ----------------------------------------------
+
+    private var framesRendered = 0L
+    private var running = false
+    private var stepIndex = 0
+    private var straightTime = 0.0
+    private var nextStepTime = 0.0
+
+    private var playOrigin = 0L
+    private var lastFireFrame = 0L
+
+    private val held = IntArray(MAX_HELD)
+    private val heldVel = FloatArray(MAX_HELD)
+    private var heldCount = 0
+    private val arpBase = IntArray(MAX_HELD * 3)
+    private var arpIndex = 0
+    private var arpNextTime = 0.0
+    private var arpSounding = -1
+    private var arpOffFrame = Long.MAX_VALUE
+    private var arpRandom = 0x2545F491
+    private var lastArpMode = Arp.OFF
+
+    private val offFrame = LongArray(MAX_PENDING_OFFS)
+    private val offNote = IntArray(MAX_PENDING_OFFS)
+    private var offCount = 0
+
+    init {
+        // Réglages d'origine du mixage (la quantité globale d'effets se règle avec spaceAmount / echoAmount).
+        applyMix(TrackMix.defaults())
+    }
+
+    /** Applique les réglages de mixage de chaque piste, dans l'ordre de [Inst]. */
+    fun applyMix(mix: List<TrackMix>) {
+        for (i in 0 until minOf(Inst.COUNT, mix.size)) {
+            val m = mix[i]
+            val ins = instruments[i]
+            ins.level = m.level
+            ins.pan = m.pan
+            ins.reverbSend = m.reverbSend
+            ins.delaySend = m.delaySend
+            ins.drive = m.drive
+            ins.crush = m.crush
+            ins.filterSweep = m.filter
+        }
+    }
+
+    /**
+     * Remplit [left] et [right] avec [n] trames (n ≤ taille des tableaux). Pas d'allocation, pas de verrou.
+     */
+    fun render(left: FloatArray, right: FloatArray, n: Int) {
+        // Les bus d'envoi ont une taille fixe : un très grand bloc est traité en tranches (même résultat).
+        var done = 0
+        while (done < n) {
+            val c = min(MAX_BLOCK, n - done)
+            if (done == 0 && c == n) {
+                renderBlock(left, right, n)
+            } else {
+                // renderBlock écrit en tête de tableau : on passe par des vues de travail réutilisées
+                System.arraycopy(left, done, tmpL, 0, c)
+                System.arraycopy(right, done, tmpR, 0, c)
+                renderBlock(tmpL, tmpR, c)
+                System.arraycopy(tmpL, 0, left, done, c)
+                System.arraycopy(tmpR, 0, right, done, c)
+            }
+            done += c
+        }
+    }
+
+    private val tmpL = FloatArray(MAX_BLOCK)
+    private val tmpR = FloatArray(MAX_BLOCK)
+
+    private fun renderBlock(left: FloatArray, right: FloatArray, n: Int) {
+        val blockStart = framesRendered
+        drainCommands(blockStart)
+        val mode = arpMode
+        if (mode != lastArpMode) onArpModeChanged(mode)
+        java.util.Arrays.fill(left, 0, n, 0f)
+        java.util.Arrays.fill(right, 0, n, 0f)
+        java.util.Arrays.fill(reverbBus, 0, n, 0f)
+        java.util.Arrays.fill(delayBus, 0, n, 0f)
+
+        var pos = 0
+        while (true) {
+            val ev = nextEventRelative(blockStart, pos, n)
+            if (ev >= n) {
+                renderInstruments(left, right, pos, n)
+                break
+            }
+            if (ev > pos) {
+                renderInstruments(left, right, pos, ev)
+                pos = ev
+            }
+            fireDue(blockStart + pos)
+        }
+
+        // Retours d'effets (l'écho suit le tempo : une croche pointée), puis mixage final.
+        // Le doigt sur le pad l'emporte ; sinon, pendant la lecture, c'est le geste enregistré dans le motif.
+        var filterTarget = masterFilter
+        var boostTarget = spaceBoost
+        if (!padActive && running) {
+            val pat = activePattern()
+            pat.filterAt(playPosition)?.let { filterTarget = it }
+            pat.spaceAt(playPosition)?.let { boostTarget = it }
+        }
+        spaceBoostNow += (boostTarget.coerceIn(0f, 1f) - spaceBoostNow) * 0.2f
+        val space = (spaceAmount.coerceIn(0f, 1f) + spaceBoostNow * 0.8f).coerceAtMost(1f)
+        reverb.process(reverbBus, left, right, 0, n, space * REVERB_RETURN)
+        delay.delaySeconds = 60f / max(bpm, 20f) * 0.75f
+        delay.process(delayBus, left, right, 0, n, echoAmount.coerceIn(0f, 1f) * DELAY_RETURN)
+
+        // Filtre maître (geste du pad XY) : passe-bas qui se ferme, lissé d'un bloc à l'autre
+        masterFilterNow += (filterTarget.coerceIn(0f, 1f) - masterFilterNow) * 0.2f
+        if (masterFilterNow > 0.004f) {
+            val cutoff = (18000.0 * Math.pow(150.0 / 18000.0, masterFilterNow.toDouble())).toFloat()
+            masterL.set(cutoff, 1.1f)
+            masterR.set(cutoff, 1.1f)
+            for (i in 0 until n) {
+                masterL.tick(left[i])
+                masterR.tick(right[i])
+                left[i] = masterL.lp
+                right[i] = masterR.lp
+            }
+        } else {
+            masterL.reset()
+            masterR.reset()
+        }
+
+        // Mixage final : gain maître puis limiteur doux (jamais de plat dur, jamais au-dessus de 1).
+        val gain = masterGain
+        var blockPeak = 0f
+        var limited = 0
+        for (i in 0 until n) {
+            val l = left[i] * gain
+            val r = right[i] * gain
+            if (abs(l) > 1f || abs(r) > 1f) limited++
+            val ol = Fast.softLimit(l)
+            val outR = Fast.softLimit(r)
+            left[i] = ol
+            right[i] = outR
+            val a = max(abs(ol), abs(outR))
+            if (a > blockPeak) blockPeak = a
+        }
+        if (blockPeak > peak) peak = blockPeak
+        if (limited > 0) limitedSamples += limited
+        framesRendered = blockStart + n
+        playPosition = if (running && stepIndex > 0) {
+            val stepFrames = sampleRate * 60.0 / max(bpm, 20f) / 4.0
+            (stepIndex - 1) + ((blockStart + n - lastFireFrame) / stepFrames).coerceIn(0.0, 1.0)
+        } else 0.0
+    }
+
+    private fun renderInstruments(left: FloatArray, right: FloatArray, from: Int, to: Int) {
+        if (to <= from) return
+        for (i in instruments) i.render(left, right, reverbBus, delayBus, from, to)
+    }
+
+    private fun drainCommands(blockStart: Long) {
+        var h = head
+        while (h != tail) {
+            val v = queue[h]
+            h = (h + 1) % QUEUE_SIZE
+            val kind = (v and 0xFF).toInt()
+            val a = ((v ushr 8) and 0xFFFF).toInt()
+            val b = ((v ushr 24) and 0xFF).toInt()
+            val f = java.lang.Float.intBitsToFloat((v ushr 32).toInt())
+            when (kind) {
+                CMD_PLAY -> startSequencer(blockStart)
+                CMD_STOP -> stopSequencer()
+                CMD_TRIGGER -> if (a == Inst.SYNTH) synthOn(b, f, blockStart) else if (a in 0 until Inst.COUNT) fire(a, b, f)
+                CMD_RELEASE -> if (a == Inst.SYNTH) synthOff(b) else if (a in 0 until Inst.COUNT) instruments[a].noteOff(b)
+            }
+        }
+        head = h
+    }
+
+    /** Le motif qui joue en ce moment : celui du morceau, ou le motif unique en boucle. */
+    private fun activePattern(): StepPattern {
+        val sg = song
+        return if (sg != null && sg.isNotEmpty()) sg[songPosition.coerceIn(0, sg.size - 1)] else pattern
+    }
+
+    private fun startSequencer(blockStart: Long) {
+        songPosition = 0
+        running = true
+        playing = true
+        stepIndex = 0
+        playOrigin = blockStart
+        straightTime = blockStart.toDouble()
+        nextStepTime = straightTime
+    }
+
+    private fun stopSequencer() {
+        running = false
+        playing = false
+        currentStep = -1
+        // Les notes tenues se relâchent, la batterie finit de sonner d'elle-même.
+        for (i in 0 until offCount) synthOff(offNote[i])
+        offCount = 0
+    }
+
+    /** Position, relative au bloc, du prochain événement à partir de [pos] ; [n] s'il n'y en a pas dans ce bloc. */
+    private fun nextEventRelative(blockStart: Long, pos: Int, n: Int): Int {
+        var t = Long.MAX_VALUE
+        if (running) t = frameOf(nextStepTime)
+        for (i in 0 until offCount) if (offFrame[i] < t) t = offFrame[i]
+        if (arpOffFrame < t) t = arpOffFrame
+        if (arpMode != Arp.OFF && heldCount > 0) {
+            val a = frameOf(arpNextTime)
+            if (a < t) t = a
+        }
+        if (t == Long.MAX_VALUE) return n
+        val rel = t - blockStart
+        return if (rel >= n) n else max(rel.toInt(), pos)
+    }
+
+    /** Premier échantillon entier à partir de l'instant [t] ; la marge d un millième d échantillon évite qu un 7200,00002 (swing 0,2 en Float) devienne 7201. */
+    private fun frameOf(t: Double): Long = ceil(t - 1e-3).toLong()
+
+    private fun fireDue(frame: Long) {
+        if (arpSounding >= 0 && arpOffFrame <= frame) {
+            instruments[Inst.SYNTH].noteOff(arpSounding)
+            arpSounding = -1
+            arpOffFrame = Long.MAX_VALUE
+        }
+        var i = 0
+        while (i < offCount) {
+            if (offFrame[i] <= frame) {
+                synthOff(offNote[i])
+                offCount--
+                offFrame[i] = offFrame[offCount]
+                offNote[i] = offNote[offCount]
+            } else {
+                i++
+            }
+        }
+        if (running && frameOf(nextStepTime) <= frame) fireStep(frame)
+        // Après le pas : une note du motif qui commence à cet instant doit déjà compter dans l'arpège.
+        if (arpMode != Arp.OFF && heldCount > 0 && frameOf(arpNextTime) <= frame) arpTick(frame)
+    }
+
+    private fun fireStep(frame: Long) {
+        val step = stepIndex
+        val sg = song
+        if (sg != null && sg.isNotEmpty()) {
+            // Au début de chaque tour, on passe au motif suivant du morceau
+            if (step > 0 && step % max(sg[0].stepCount, 1) == 0) songPosition = (songPosition + 1) % sg.size
+        } else {
+            songPosition = 0
+        }
+        val p = activePattern()
+        val s = step % max(p.stepCount, 1)
+        val stepFrames = sampleRate * 60.0 / max(bpm, 20f) / 4.0
+
+        onStep?.invoke(step, frame)
+        currentStep = s
+        lastFireFrame = frame
+
+        // Boucles à indices : aucune allocation d'itérateur dans le fil audio.
+        val lanes = p.lanes
+        for (i in 0 until lanes.size) {
+            val lane = lanes[i]
+            if (s >= lane.velocity.size) continue
+            val v = lane.velocity[s]
+            if (v <= 0f) continue
+            fire(lane.instrument, lane.note[s], v)
+        }
+        val notes = p.notes
+        for (i in 0 until notes.size) {
+            val n = notes[i]
+            if (n.step != s) continue
+            synthOn(n.pitch, n.velocity, frame)
+            // La note est relâchée juste avant la fin de sa durée : deux notes de même hauteur collées se séparent.
+            val held = (stepFrames * n.length * NOTE_GATE).roundToLong()
+            scheduleOff(frame + max(1L, held), n.pitch)
+        }
+
+        straightTime += stepFrames
+        stepIndex = step + 1
+        val swingOffset = if (stepIndex % 2 == 1) min(max(swing, 0f), 0.5f) * stepFrames else 0.0
+        nextStepTime = straightTime + swingOffset
+    }
+
+    // ---- Notes du synthé et arpégiateur ----------------------------------------------------------------
+
+    /** Une note du synthé démarre : directement, ou seulement « tenue » si l'arpégiateur la jouera. */
+    private fun synthOn(pitch: Int, velocity: Float, frame: Long) {
+        if (arpMode == Arp.OFF) {
+            instruments[Inst.SYNTH].noteOn(pitch, velocity)
+            onSynthNote?.invoke(pitch, frame)
+            return
+        }
+        for (i in 0 until heldCount) if (held[i] == pitch) {
+            heldVel[i] = velocity
+            return
+        }
+        if (heldCount >= MAX_HELD) return
+        if (heldCount == 0) {
+            arpIndex = 0
+            arpNextTime = if (running) alignedArpTime(frame) else frame.toDouble()
+        }
+        held[heldCount] = pitch
+        heldVel[heldCount] = velocity
+        heldCount++
+    }
+
+    private fun synthOff(pitch: Int) {
+        if (arpMode == Arp.OFF) {
+            instruments[Inst.SYNTH].noteOff(pitch)
+            return
+        }
+        for (i in 0 until heldCount) if (held[i] == pitch) {
+            heldCount--
+            held[i] = held[heldCount]
+            heldVel[i] = heldVel[heldCount]
+            return
+        }
+    }
+
+    private fun arpFrames(): Double = sampleRate * 60.0 / max(bpm, 20f) / 4.0 * max(arpDivision, 0.25f)
+
+    /** Le prochain instant de la grille d'arpège (calée sur le début de la lecture) à partir de [now]. */
+    private fun alignedArpTime(now: Long): Double {
+        val d = arpFrames()
+        // Un instant de la grille est « dû » à l'échantillon ceil(t) : l'instant de grille d'un pas qui vient de démarrer à
+        // l'échantillon [now] peut donc être jusqu'à un échantillon AVANT [now]. On le garde (sinon, quand la durée d'un
+        // pas n'est pas un nombre entier d'échantillons, comme à 124 bpm, l'arpège sautait au pas suivant, où la note
+        // du motif n'était déjà plus tenue : le synthé se taisait).
+        val k = kotlin.math.floor((now - 1.0 + 1e-3 - playOrigin) / d) + 1.0
+        return playOrigin + k * d
+    }
+
+    private fun onArpModeChanged(mode: Int) {
+        // On change de régime : tout ce qui sonne est relâché, rien de coincé de l'ancien mode.
+        instruments[Inst.SYNTH].allOff()
+        if (arpSounding >= 0) instruments[Inst.SYNTH].noteOff(arpSounding)
+        arpSounding = -1
+        arpOffFrame = Long.MAX_VALUE
+        heldCount = 0
+        lastArpMode = mode
+    }
+
+    /** Joue le coup d'arpège suivant et prépare le suivant. */
+    private fun arpTick(frame: Long) {
+        // Les notes tenues, de la plus grave à la plus aiguë, répétées sur [arpOctaves] octaves.
+        for (i in 1 until heldCount) {
+            var j = i
+            while (j > 0 && held[j - 1] > held[j]) {
+                val tp = held[j]; held[j] = held[j - 1]; held[j - 1] = tp
+                val tv = heldVel[j]; heldVel[j] = heldVel[j - 1]; heldVel[j - 1] = tv
+                j--
+            }
+        }
+        val octaves = arpOctaves.coerceIn(1, 3)
+        var n = 0
+        for (o in 0 until octaves) for (i in 0 until heldCount) arpBase[n++] = held[i] + 12 * o
+        val cycle = when (arpMode) {
+            Arp.UP_DOWN -> if (n <= 1) n else 2 * n - 2
+            else -> n
+        }
+        arpIndex = if (cycle > 0) arpIndex % cycle else 0
+        val i = arpIndex
+        val pitch = when (arpMode) {
+            Arp.DOWN -> arpBase[n - 1 - i]
+            Arp.UP_DOWN -> if (i < n) arpBase[i] else arpBase[2 * n - 2 - i]
+            Arp.RANDOM -> {
+                var x = arpRandom
+                x = x xor (x shl 13); x = x xor (x ushr 17); x = x xor (x shl 5)
+                arpRandom = x
+                arpBase[(x ushr 1) % n]
+            }
+            else -> arpBase[i]
+        }
+        arpIndex++
+
+        var vel = 0f
+        for (k in 0 until heldCount) if (heldVel[k] > vel) vel = heldVel[k]
+        if (arpSounding >= 0) instruments[Inst.SYNTH].noteOff(arpSounding)
+        instruments[Inst.SYNTH].noteOn(pitch, vel)
+        onSynthNote?.invoke(pitch, frame)
+        arpSounding = pitch
+        val frames = arpFrames()
+        arpOffFrame = frame + max(1L, (frames * arpGate.coerceIn(0.1f, 0.95f)).roundToLong())
+        arpNextTime += frames
+    }
+
+    private fun fire(instrument: Int, note: Int, velocity: Float) {
+        // Un charleston fermé coupe le charleston ouvert.
+        if (instrument == Inst.HAT) instruments[Inst.OPEN_HAT].choke()
+        instruments[instrument].noteOn(note, velocity)
+    }
+
+    private fun scheduleOff(frame: Long, note: Int) {
+        if (offCount >= MAX_PENDING_OFFS) {
+            synthOff(note)
+            return
+        }
+        offFrame[offCount] = frame
+        offNote[offCount] = note
+        offCount++
+    }
+
+    private companion object {
+        const val MAX_BLOCK = 4096
+        const val REVERB_RETURN = 1.0f
+        const val DELAY_RETURN = 0.8f
+        const val QUEUE_SIZE = 256
+        const val MAX_PENDING_OFFS = 128
+        const val MAX_HELD = 16
+        const val NOTE_GATE = 0.96
+        const val CMD_PLAY = 1
+        const val CMD_STOP = 2
+        const val CMD_TRIGGER = 3
+        const val CMD_RELEASE = 4
+    }
+}
+
+/** Les motifs de départ du banc d'essai. */
+object DemoPatterns {
+
+    /** Une mesure de house : grosse caisse sur chaque temps, clap sur 2 et 4, charlestons, ligne de basse. */
+    fun house(): StepPattern {
+        fun lane(instrument: Int, vararg steps: Int, velocity: Float = 1f): Lane {
+            val v = FloatArray(16)
+            for (s in steps) v[s] = velocity
+            return Lane(instrument, v)
+        }
+
+        // Pas de charleston fermé là où le charleston ouvert joue (il le couperait).
+        val hat = FloatArray(16) { if (it % 4 == 2) 0f else if (it % 2 == 0) 0.45f else 0.7f }
+        // La, La, Do, La, Ré, La, Mi : une basse qui roule sous les temps.
+        val bass = listOf(0 to 33, 3 to 33, 6 to 36, 8 to 33, 10 to 38, 13 to 33, 14 to 40)
+            .map { (step, pitch) -> Note(step, pitch, 1, 0.9f) }
+
+        return StepPattern(
+            16,
+            listOf(
+                lane(Inst.KICK, 0, 4, 8, 12),
+                lane(Inst.CLAP, 4, 12, velocity = 0.9f),
+                lane(Inst.SNARE, 7, 15, velocity = 0.35f),
+                Lane(Inst.HAT, hat),
+                lane(Inst.OPEN_HAT, 2, 6, 10, 14, velocity = 0.6f),
+            ),
+            bass,
+        )
+    }
+}

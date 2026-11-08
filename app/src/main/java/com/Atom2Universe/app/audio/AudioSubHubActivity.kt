@@ -12,6 +12,7 @@ import com.Atom2Universe.app.midi.ui.MidiPlayerActivity
 import com.Atom2Universe.app.music.MusicPlayerActivity
 import com.Atom2Universe.app.radio.RadioActivity
 import com.Atom2Universe.app.sf2creator.Sf2LibraryActivity
+import com.Atom2Universe.app.studio.StudioActivity
 
 class AudioSubHubActivity : BaseHubActivity() {
 
@@ -96,6 +97,14 @@ class AudioSubHubActivity : BaseHubActivity() {
             iconRes = R.drawable.ic_mic,
             defaultColorRes = R.color.audio_hub_tile_dictaphone,
             activityClass = DictaphoneActivity::class.java
+        ),
+        HubTile(
+            id = "studio",
+            titleRes = R.string.studio_title,
+            descriptionRes = R.string.studio_hub_desc,
+            iconRes = R.drawable.ic_midi,
+            defaultColorRes = R.color.audio_hub_tile_studio,
+            activityClass = StudioActivity::class.java
         )
     )
 

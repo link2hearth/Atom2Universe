@@ -54,6 +54,10 @@ import kotlinx.coroutines.withContext
 import java.util.concurrent.CancellationException
 import java.util.concurrent.atomic.AtomicBoolean
 
+/** Adresse du fichier audio à importer, et nom du projet à créer, quand un autre module ouvre l'éditeur. */
+const val EXTRA_IMPORT_URI = "import_uri"
+const val EXTRA_IMPORT_NAME = "import_name"
+
 /**
  * La galerie des projets audio : chaque projet est une carte (vignette = forme d'onde du mixage). C'est
  * l'entrée du module : on y crée un projet, on importe des fichiers audio ou un projet partagé, et on
@@ -61,6 +65,8 @@ import java.util.concurrent.atomic.AtomicBoolean
  *
  * Pas de recréation à la rotation (voir le manifeste) : un import ou une migration en cours garde sa
  * boîte de progression.
+ *
+ * Un autre module peut lui envoyer un fichier audio ([EXTRA_IMPORT_URI], [EXTRA_IMPORT_NAME]) : il devient un projet.
  */
 class AudioEditorLibraryActivity : ThemedActivity() {
 
@@ -104,6 +110,11 @@ class AudioEditorLibraryActivity : ThemedActivity() {
         findViewById<View>(R.id.lib_fab_new).setOnClickListener { newProject() }
 
         migrateLegacyProject()
+
+        // Un autre module (le Studio) envoie un fichier audio : il devient un projet qui s'ouvre tout de suite.
+        if (savedInstanceState == null) {
+            intent.getStringExtra(EXTRA_IMPORT_URI)?.let { importAudioAsProject(listOf(Uri.parse(it)), intent.getStringExtra(EXTRA_IMPORT_NAME), 48000) }
+        }
     }
 
     override fun onResume() {
