@@ -90,7 +90,7 @@ class StudioTracksTest {
         return out
     }
 
-    private fun session(): StudioSession = StudioSession(quiet(), StudioProject.fromStyle(Styles.HOUSE))
+    private fun session(): StudioSession = StudioSession(quiet(), StudioProject.fromStyle(Styles.HOUSE)).apply { coalesceMs = 0 }
 
     @Test
     fun newProjectHasTheEightStartingTracks() {

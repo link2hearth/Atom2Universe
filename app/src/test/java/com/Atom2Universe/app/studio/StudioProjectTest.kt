@@ -132,7 +132,7 @@ class StudioProjectTest {
     @Test
     fun styleRandomClearAndUndo() {
         val engine = StudioEngine(48_000)
-        val session = StudioSession(engine, StudioProject.fromStyle(Styles.HOUSE))
+        val session = StudioSession(engine, StudioProject.fromStyle(Styles.HOUSE)).apply { coalesceMs = 0 }
         assertFalse(session.canUndo)
         val house = session.project.pattern.lanes[Inst.KICK].velocity.copyOf()
 

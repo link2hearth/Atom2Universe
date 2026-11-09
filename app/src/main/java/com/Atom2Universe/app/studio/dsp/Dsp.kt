@@ -115,6 +115,9 @@ abstract class Instrument(protected val sampleRate: Int) {
     @Volatile var level = 1f
     @Volatile var pan = 0f
 
+    /** La durée du coup qui va partir (batterie) : 1 = celle du son, 2 = deux fois plus long. Posée par le moteur avant chaque frappe. */
+    @Volatile var hold = 1f
+
     /** Part envoyée à la réverbération et à l'écho (0 = rien, 1 = autant que le son sec). */
     @Volatile var reverbSend = 0f
     @Volatile var delaySend = 0f

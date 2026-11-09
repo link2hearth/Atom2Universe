@@ -38,7 +38,16 @@ class StepGridView(context: Context) : View(context) {
 
     interface Listener {
         fun onStepSet(lane: Int, step: Int, on: Boolean)
-        fun onVelocityCycle(lane: Int, step: Int)
+
+        /** Le cadre de sélection vient d'être tracé (ou effacé) : l'écran met à jour ses boutons. */
+        fun onSelectionChanged()
+
+        /** Un toucher en mode « coller » : on colle à partir de ce pas, sur cette piste (rang d'affichage). */
+        fun onPasteAt(lane: Int, step: Int)
+
+        /** Appui long sur un pas allumé : l'écran ouvre sa bulle de réglages, près du doigt (position à l'écran). */
+        fun onStepEdit(lane: Int, step: Int, screenX: Float, screenY: Float)
+
         fun onPreview(lane: Int, step: Int)
         fun onMuteToggle(lane: Int)
 
@@ -62,6 +71,10 @@ class StepGridView(context: Context) : View(context) {
     /** Le dessin de l'instrument de chaque piste ([InstrumentIcons]) : il tient lieu de nom sur la plaque colorée. */
     var laneIcons: IntArray = IntArray(0)
 
+    /** Quand plusieurs motifs sont affichés à la suite : leur longueur et leur lettre (A à D). Les numéros repartent de 1 à chaque motif. */
+    var sectionLen: Int = Int.MAX_VALUE
+    var sectionLabels: List<String> = emptyList()
+
     /** Un petit chiffre dans le coin de la plaque (« 2 » pour le deuxième synthé) ; vide : rien. Une entrée par piste. */
     var laneBadges: List<String> = emptyList()
 
@@ -83,6 +96,136 @@ class StepGridView(context: Context) : View(context) {
     var isOn: (lane: Int, step: Int) -> Boolean = { _, _ -> false }
     var velocity: (lane: Int, step: Int) -> Float = { _, _ -> 0f }
     var isMuted: (lane: Int) -> Boolean = { false }
+
+    /** Vrai pour un pas qui prolonge une note commencée avant (longueur d'une note) : il se dessine en teinte douce. */
+    var isTail: (lane: Int, step: Int) -> Boolean = { _, _ -> false }
+
+    // ---- Sélection : un cadre de pistes et de pas ---------------------------------------------------------------
+
+    /** Un cadre : les pistes (rang d'affichage) de [laneFrom] à [laneTo] et les pas de [stepFrom] à [stepTo], bornes comprises. */
+    class Frame(val laneFrom: Int, val laneTo: Int, val stepFrom: Int, val stepTo: Int)
+
+    /** Vrai : un glissé sur les pas trace un cadre de sélection au lieu de peindre des pas. */
+    var selectMode = false
+        set(value) {
+            field = value
+            if (!value) {
+                selection = null
+                selecting = false
+            }
+            invalidate()
+        }
+
+    /** Vrai : on place ce qu'on a copié ; un toucher ou un glissé déplace l'aperçu, c'est le bouton « Coller ici » qui colle. */
+    var pasteArmed = false
+        set(value) {
+            field = value
+            if (!value) {
+                pasteStep = -1
+                placing = false
+            }
+            invalidate()
+        }
+
+    /** La forme à coller, montrée en fantôme : pour chaque case, le rang d'affichage de la piste et le pas relatif. */
+    var pasteCells: List<IntArray> = emptyList()
+        set(value) {
+            field = value
+            invalidate()
+        }
+
+    /** Le pas où la forme se posera (-1 : pas encore placée). */
+    var pasteStep = -1
+        private set
+    private var placing = false
+
+    fun placePaste(step: Int) {
+        pasteStep = step.coerceIn(0, max(0, stepCount - 1))
+        invalidate()
+    }
+
+    private fun updatePlacementEnd() {
+        val step = stepAt(selX).let { if (it >= 0) it else if (selX < gridLeft) 0 else stepCount - 1 }
+        placePaste(step)
+    }
+
+    private fun drawPaste(canvas: Canvas) {
+        if (!pasteArmed || pasteStep < 0 || pasteCells.isEmpty()) return
+        canvas.save()
+        canvas.clipRect(gridLeft - dp(2f), 0f, width.toFloat(), height.toFloat() + scrollY)
+        for (c in pasteCells) {
+            val s = pasteStep + c[1]
+            if (c[0] !in laneNames.indices || s >= stepCount) continue
+            val left = cellLeft(s)
+            val top = topBar + c[0] * rowH
+            rect.set(left + dp(2f), top + pad, left + stride - dp(2f), top + rowH - pad)
+            fill.color = Color.argb(90, 255, 255, 255)
+            canvas.drawRoundRect(rect, dp(8f), dp(8f), fill)
+            ring.color = Color.WHITE
+            ring.strokeWidth = dp(2f)
+            canvas.drawRoundRect(rect, dp(8f), dp(8f), ring)
+        }
+        canvas.restore()
+    }
+
+    var selection: Frame? = null
+        private set
+    private var selecting = false
+    private var anchorLane = 0
+    private var anchorStep = 0
+    private var selX = 0f
+    private var selY = 0f
+
+    fun setSelection(laneFrom: Int, laneTo: Int, stepFrom: Int, stepTo: Int) {
+        selection = Frame(minOf(laneFrom, laneTo), maxOf(laneFrom, laneTo), minOf(stepFrom, stepTo), maxOf(stepFrom, stepTo))
+        invalidate()
+    }
+
+    fun clearSelection() {
+        selection = null
+        invalidate()
+    }
+
+    /** Étire le cadre jusqu'au doigt ; hors de la grille, le bord le plus proche. */
+    private fun updateSelectionEnd() {
+        val lane = laneAt(selY).let { if (it >= 0) it else if (selY < topBar) 0 else laneNames.size - 1 }.coerceIn(0, laneNames.size - 1)
+        val step = stepAt(selX).let { if (it >= 0) it else if (selX < gridLeft) 0 else stepCount - 1 }
+        setSelection(anchorLane, lane, anchorStep, step)
+    }
+
+    /** Pendant qu'on trace un cadre, le bord de l'écran fait défiler la grille de gauche à droite. */
+    private val selScroll = object : Runnable {
+        override fun run() {
+            if (!selecting && !placing) return
+            val dx = when {
+                selX > width - dp(48f) -> dp(14f)
+                selX < gridLeft + dp(40f) -> -dp(14f)
+                else -> 0f
+            }
+            if (dx != 0f) {
+                scrollX = (scrollX + dx).coerceIn(0f, maxScrollX())
+                if (placing) updatePlacementEnd() else updateSelectionEnd()
+            }
+            handler.postDelayed(this, 16)
+        }
+    }
+
+    private fun drawSelection(canvas: Canvas) {
+        val f = selection ?: return
+        val left = cellLeft(f.stepFrom) - dp(1f)
+        val right = cellLeft(f.stepTo) + stride + dp(1f)
+        val top = topBar + f.laneFrom * rowH + pad - dp(2f)
+        val bottom = topBar + (f.laneTo + 1) * rowH - pad + dp(2f)
+        canvas.save()
+        canvas.clipRect(gridLeft - dp(2f), 0f, width.toFloat(), height.toFloat() + scrollY)
+        rect.set(left, top, right, bottom)
+        fill.color = Color.argb(46, 255, 255, 255)
+        canvas.drawRoundRect(rect, dp(10f), dp(10f), fill)
+        ring.color = Color.WHITE
+        ring.strokeWidth = dp(2f)
+        canvas.drawRoundRect(rect, dp(10f), dp(10f), ring)
+        canvas.restore()
+    }
 
     /** Pas en cours de lecture (-1 = arrêté). La grille le suit quand il sort de l'écran. */
     var playhead: Int = -1
@@ -180,7 +323,7 @@ class StepGridView(context: Context) : View(context) {
     }
 
     /** Fait défiler la grille pour que le pas [step] soit à l'écran. */
-    private fun ensureVisible(step: Int) {
+    fun ensureVisible(step: Int) {
         if (width == 0) return
         measures()
         val left = step * stride + (step / 4) * groupGap
@@ -211,6 +354,8 @@ class StepGridView(context: Context) : View(context) {
             drawLane(canvas, lane, top, 1f)
         }
         addLabel?.let { drawAddRow(canvas, topBar + laneNames.size * rowH, it) }
+        drawSelection(canvas)
+        drawPaste(canvas)
         if (dragged >= 0) {
             // La ligne soulevée suit le doigt, par-dessus les autres
             val top = dragY + scrollY - rowH / 2f
@@ -242,7 +387,11 @@ class StepGridView(context: Context) : View(context) {
         for (s in 0 until stepCount) {
             val left = cellLeft(s)
             if (left + stride < gridLeft - dp(4f) || left > width) continue
-            if (s % 4 == 0) canvas.drawText((s + 1).toString(), left + stride / 2f, topBar - dp(12f), numberPaint)
+            if (s % 4 == 0) {
+                val local = s % sectionLen
+                val letter = if (local == 0) sectionLabels.getOrNull(s / sectionLen) else null
+                canvas.drawText(if (letter != null) "$letter ${local + 1}" else (local + 1).toString(), left + stride / 2f, topBar - dp(12f), numberPaint)
+            }
             if (s == playhead) {
                 fill.color = 0xFFFFC857.toInt()
                 rect.set(left + dp(4f), topBar - dp(7f), left + stride - dp(4f), topBar - dp(3f))
@@ -292,7 +441,15 @@ class StepGridView(context: Context) : View(context) {
             rect.set(left + dp(2f), top + pad, left + stride - dp(2f), top + rowH - pad)
             val off = if ((step / 4) % 2 == 0) padOffA else padOffB
             val v = velocity(lane, step)
-            fill.color = withAlpha(if (v > 0f) blend(off, color, if (muted) 0.25f else 0.35f + 0.65f * v) else off, alpha)
+            val tail = v <= 0f && isTail(lane, step)
+            fill.color = withAlpha(
+                when {
+                    v > 0f -> blend(off, color, if (muted) 0.25f else 0.35f + 0.65f * v)
+                    tail -> blend(off, color, if (muted) 0.12f else 0.3f)
+                    else -> off
+                },
+                alpha,
+            )
             canvas.drawRoundRect(rect, dp(8f), dp(8f), fill)
             if (step == playhead) {
                 fill.color = Color.argb(if (v > 0f) 90 else 55, 255, 255, 255)
@@ -362,6 +519,8 @@ class StepGridView(context: Context) : View(context) {
     private var touching = false
     private var downX = 0f
     private var downY = 0f
+    private var downRawX = 0f
+    private var downRawY = 0f
     private var startScrollX = 0f
     private var startScrollY = 0f
     private var scrollingX = false
@@ -386,8 +545,7 @@ class StepGridView(context: Context) : View(context) {
         if (zone == Zone.PAD && downLane >= 0 && downWasOn && !painting) {
             longPressed = true
             performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
-            listener?.onVelocityCycle(downLane, downStep)
-            listener?.onPreview(downLane, downStep)
+            listener?.onStepEdit(downLane, downStep, downRawX, downRawY)
             invalidate()
         }
     }
@@ -466,6 +624,8 @@ class StepGridView(context: Context) : View(context) {
                 startScrollY = scrollY
                 downX = event.x
                 downY = event.y
+                downRawX = event.rawX
+                downRawY = event.rawY
                 painting = false
                 longPressed = false
                 downLane = -1
@@ -475,8 +635,10 @@ class StepGridView(context: Context) : View(context) {
                 dragFrom = -1
                 parent?.requestDisallowInterceptTouchEvent(true)
                 val rowAtDown = laneAt(event.y)
+                // Le vide sous les pistes sert aussi à faire glisser la grille de gauche à droite, comme la barre du haut
+                val belowTracks = event.y > topBar + rowCount() * rowH - scrollY
                 zone = when {
-                    event.y < topBar -> Zone.TOPBAR
+                    event.y < topBar || belowTracks -> Zone.TOPBAR
                     addLabel != null && rowAtDown == laneNames.size -> Zone.ADD
                     event.x < headerW -> Zone.HEADER
                     else -> Zone.PAD
@@ -492,6 +654,25 @@ class StepGridView(context: Context) : View(context) {
                         val lane = laneAt(event.y)
                         val step = stepAt(event.x)
                         if (lane < 0 || step < 0) return true
+                        if (selectMode) {
+                            // En sélection, on ne peint pas : un glissé trace un cadre ; en mode coller, il place l'aperçu
+                            downLane = lane
+                            downStep = step
+                            selX = event.x
+                            selY = event.y
+                            if (!pasteArmed) {
+                                selecting = true
+                                anchorLane = lane
+                                anchorStep = step
+                                setSelection(lane, lane, step, step)
+                                handler.post(selScroll)
+                            } else {
+                                placing = true
+                                updatePlacementEnd()
+                                handler.post(selScroll)
+                            }
+                            return true
+                        }
                         downLane = lane
                         downStep = step
                         downWasOn = isOn(lane, step)
@@ -536,6 +717,18 @@ class StepGridView(context: Context) : View(context) {
                         return true
                     }
                     Zone.PAD -> {
+                        if (selectMode) {
+                            if (selecting) {
+                                selX = event.x
+                                selY = event.y
+                                updateSelectionEnd()
+                            } else if (placing) {
+                                selX = event.x
+                                selY = event.y
+                                updatePlacementEnd()
+                            }
+                            return true
+                        }
                         if (!scrollingY && !painting && !longPressed && maxScrollY() > 0f && abs(dy) > slop && abs(dy) > abs(dx)) {
                             // Un geste surtout vertical : on fait défiler les lignes au lieu de peindre
                             scrollingY = true
@@ -581,6 +774,19 @@ class StepGridView(context: Context) : View(context) {
                     invalidate()
                     return true
                 }
+                if (selectMode && zone == Zone.PAD) {
+                    handler.removeCallbacks(selScroll)
+                    if (selecting) {
+                        selecting = false
+                        listener?.onSelectionChanged()
+                    } else if (placing) {
+                        placing = false
+                        listener?.onPasteAt(downLane, pasteStep)
+                    }
+                    downLane = -1
+                    endScroll(false)
+                    return true
+                }
                 if (scrollingX || scrollingY) {
                     endScroll(true)
                     return true
@@ -601,6 +807,9 @@ class StepGridView(context: Context) : View(context) {
             }
 
             MotionEvent.ACTION_CANCEL -> {
+                selecting = false
+                placing = false
+                handler.removeCallbacks(selScroll)
                 handler.removeCallbacks(longPress)
                 handler.removeCallbacks(headerLongPress)
                 handler.removeCallbacks(autoScroll)
@@ -618,6 +827,7 @@ class StepGridView(context: Context) : View(context) {
     }
 
     override fun onDetachedFromWindow() {
+        handler.removeCallbacks(selScroll)
         handler.removeCallbacks(longPress)
         handler.removeCallbacks(headerLongPress)
         handler.removeCallbacks(autoScroll)

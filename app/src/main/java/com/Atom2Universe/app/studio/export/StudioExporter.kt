@@ -33,8 +33,9 @@ object StudioExporter {
 
     /** Nombre de trames (musique + queue) d'un rendu du projet à [sampleRate]. */
     fun frameCount(project: StudioProject, sampleRate: Int): Long {
-        val loop = sampleRate * 60.0 / project.bpm / 4.0 * project.stepCount
-        return (loop * plan(project).size).roundToInt().toLong() + (TAIL_SECONDS * sampleRate).toLong()
+        val steps = plan(project).sumOf { it.stepCount }
+        val frames = sampleRate * 60.0 / project.bpm / 4.0 * steps
+        return frames.roundToInt().toLong() + (TAIL_SECONDS * sampleRate).toLong()
     }
 
     /** Durée du rendu en secondes. */

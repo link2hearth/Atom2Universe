@@ -84,6 +84,8 @@ class Lane(
     val velocity: FloatArray,
     val note: IntArray = IntArray(velocity.size) { 60 },
     val gate: Float = 0.9f,
+    /** La durée de chaque coup, en multiple de celle du son (1 = d'origine, 2 = deux fois plus long). */
+    val hold: FloatArray = FloatArray(velocity.size) { 1f },
 )
 
 /**
@@ -136,6 +138,53 @@ class StepPattern(
     companion object {
         /** Points d'automation par pas. */
         const val AUTO_RES = 4
+
+        /** Met bout à bout des motifs de même longueur : la vue « à la suite » des motifs A à D (un motif long de plusieurs mesures). */
+        fun concat(parts: List<StepPattern>): StepPattern {
+            if (parts.size == 1) return parts[0]
+            val base = parts[0].stepCount
+            val total = base * parts.size
+            val lanes = parts[0].lanes.map { first ->
+                val id = first.instrument
+                val each = parts.map { it.lane(id) }
+                Lane(
+                    id,
+                    FloatArray(total) { i -> each[i / base]?.velocity?.getOrNull(i % base) ?: 0f },
+                    IntArray(total) { i -> each[i / base]?.note?.getOrNull(i % base) ?: 60 },
+                    first.gate,
+                    FloatArray(total) { i -> each[i / base]?.hold?.getOrNull(i % base) ?: 1f },
+                )
+            }
+            val notes = parts.flatMapIndexed { k, p -> p.notes.map { Note(it.step + k * base, it.pitch, it.length, it.velocity, it.track) } }
+            fun auto(pick: (StepPattern) -> FloatArray?): FloatArray? {
+                if (parts.all { pick(it) == null }) return null
+                val n = base * AUTO_RES
+                return FloatArray(n * parts.size) { i -> pick(parts[i / n])?.getOrNull(i % n) ?: 0f }
+            }
+            return StepPattern(total, lanes, notes, auto { it.autoFilter }, auto { it.autoSpace })
+        }
+
+        /** L'inverse : redécoupe un motif long en [count] motifs de [base] pas. Une note qui déborde est coupée à la fin de son morceau. */
+        fun split(whole: StepPattern, count: Int, base: Int): List<StepPattern> = List(count) { k ->
+            val from = k * base
+            val lanes = whole.lanes.map { l ->
+                Lane(
+                    l.instrument,
+                    l.velocity.copyOfRange(from, from + base),
+                    l.note.copyOfRange(from, from + base),
+                    l.gate,
+                    l.hold.copyOfRange(from, from + base),
+                )
+            }
+            val notes = whole.notes.filter { it.step in from until from + base }
+                .map { Note(it.step - from, it.pitch, minOf(it.length, from + base - it.step), it.velocity, it.track) }
+            fun auto(a: FloatArray?): FloatArray? {
+                if (a == null) return null
+                val n = base * AUTO_RES
+                return a.copyOfRange(k * n, k * n + n).takeIf { part -> part.any { it > 0.001f } }
+            }
+            StepPattern(base, lanes, notes, auto(whole.autoFilter), auto(whole.autoSpace))
+        }
     }
 }
 
@@ -608,7 +657,10 @@ class StudioEngine(val sampleRate: Int) {
             val v = lane.velocity[s]
             if (v <= 0f) continue
             val slot = table.getOrNull(lane.instrument) ?: continue
-            if (slot.melody == null) fire(slot, lane.note[s], v)
+            if (slot.melody == null) {
+                slot.instrument.hold = lane.hold.getOrElse(s) { 1f }
+                fire(slot, lane.note[s], v)
+            }
         }
         val notes = p.notes
         for (i in 0 until notes.size) {
