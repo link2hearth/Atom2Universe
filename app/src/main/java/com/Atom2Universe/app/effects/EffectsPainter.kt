@@ -11,6 +11,7 @@ import android.graphics.RectF
 import android.graphics.Shader
 import com.Atom2Universe.app.AppEffectPack
 import kotlin.math.PI
+import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.min
 import kotlin.math.sin
@@ -151,7 +152,8 @@ internal class EffectsPainter(private val density: Float) {
                 val progress = (phase - METEOR_START) / (METEOR_END - METEOR_START)
                 val saveMeteor = canvas.save()
                 canvas.translate(w * (.08f + .9f * progress), h * (.1f + .26f * progress))
-                canvas.rotate(28f)
+                // The trail must follow the real direction of travel, which depends on the screen ratio.
+                canvas.rotate(Math.toDegrees(atan2(h * .26, w * .9)).toFloat())
                 stroke(Color.WHITE, (sin(progress * PI).toFloat() * 230).toInt(), 1.6f)
                 paint.shader = meteor
                 canvas.drawLine(-trail, 0f, 0f, 0f, paint)
