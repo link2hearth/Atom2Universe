@@ -28,10 +28,11 @@ object StudioFiles {
         project: StudioProject,
         sf2Factory: ((sampleRate: Int, bank: Int, program: Int) -> com.Atom2Universe.app.studio.dsp.ExternalSynth?)? = null,
         sampleRate: Int = 48_000,
+        sounds: StudioExporter.Sounds = StudioExporter.Sounds(),
         onProgress: (Float) -> Boolean,
     ): Saved? =
         save(context, baseName(project) + ".wav", "audio/wav") { out ->
-            StudioExporter.renderWav(project, sampleRate, out, sf2Factory, onProgress)
+            StudioExporter.renderWav(project, sampleRate, out, sf2Factory, sounds, onProgress)
         }
 
     fun saveMidi(context: Context, project: StudioProject): Saved? =

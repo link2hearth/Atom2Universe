@@ -12,6 +12,7 @@ import com.Atom2Universe.app.studio.dsp.PolySynth
 import com.Atom2Universe.app.studio.dsp.Sf2DrumInstrument
 import com.Atom2Universe.app.studio.dsp.Sf2Instrument
 import com.Atom2Universe.app.studio.dsp.Snare
+import com.Atom2Universe.app.studio.dsp.SynthSample
 import com.Atom2Universe.app.studio.dsp.StereoReverb
 import com.Atom2Universe.app.studio.dsp.Tom
 import kotlin.math.abs
@@ -86,7 +87,34 @@ class Lane(
     val gate: Float = 0.9f,
     /** La durée de chaque coup, en multiple de celle du son (1 = d'origine, 2 = deux fois plus long). */
     val hold: FloatArray = FloatArray(velocity.size) { 1f },
-)
+    /** Quand chaque pas joue ([StepCond]) : toujours, un tour sur deux, un tour sur quatre, au hasard. */
+    val cond: IntArray = IntArray(velocity.size),
+) {
+    /** La même ligne avec ce qu'on remplace (le reste est partagé : les tableaux ne sont jamais modifiés en place). */
+    fun copy(
+        velocity: FloatArray = this.velocity,
+        note: IntArray = this.note,
+        hold: FloatArray = this.hold,
+        cond: IntArray = this.cond,
+    ) = Lane(instrument, velocity, note, gate, hold, cond)
+}
+
+/** Quand un pas de batterie joue : à chaque tour, un tour sur deux (le 2e, le 4e…), le 4e tour seulement, ou une fois sur deux au hasard. */
+object StepCond {
+    const val ALWAYS = 0
+    const val EVERY_OTHER = 1
+    const val EVERY_FOURTH = 2
+    const val RANDOM = 3
+    const val COUNT = 4
+
+    /** Vrai si un pas de condition [cond] joue au tour [loop] (0 = le premier) ; [coin] est un tirage de 0 à 1. */
+    fun plays(cond: Int, loop: Int, coin: Float): Boolean = when (cond) {
+        EVERY_OTHER -> loop % 2 == 1
+        EVERY_FOURTH -> loop % 4 == 3
+        RANDOM -> coin < 0.5f
+        else -> true
+    }
+}
 
 /**
  * Une note d'une piste mélodique ([track]) : elle commence au pas [step], dure [length] pas, à la hauteur MIDI [pitch].
@@ -153,6 +181,7 @@ class StepPattern(
                     IntArray(total) { i -> each[i / base]?.note?.getOrNull(i % base) ?: 60 },
                     first.gate,
                     FloatArray(total) { i -> each[i / base]?.hold?.getOrNull(i % base) ?: 1f },
+                    IntArray(total) { i -> each[i / base]?.cond?.getOrNull(i % base) ?: 0 },
                 )
             }
             val notes = parts.flatMapIndexed { k, p -> p.notes.map { Note(it.step + k * base, it.pitch, it.length, it.velocity, it.track) } }
@@ -174,6 +203,7 @@ class StepPattern(
                     l.note.copyOfRange(from, from + base),
                     l.gate,
                     l.hold.copyOfRange(from, from + base),
+                    l.cond.copyOfRange(from, from + base),
                 )
             }
             val notes = whole.notes.filter { it.step in from until from + base }
@@ -253,8 +283,17 @@ class StudioEngine(val sampleRate: Int) {
         table = next
     }
 
+    /** Le son enregistré au micro pour le synthé (patch « Mon son ») ; `null` : aucun. */
+    @Volatile var synthSample: SynthSample? = null
+        private set
+
+    fun setSynthSample(sample: SynthSample?) {
+        synthSample = sample
+        for (s in table) (s?.instrument as? PolySynth)?.sample = sample
+    }
+
     private fun create(spec: TrackSpec): Slot = when (spec.kind) {
-        TrackKind.SYNTH -> PolySynth(sampleRate).let { Slot(spec, it, Melody(it)) }
+        TrackKind.SYNTH -> PolySynth(sampleRate).also { it.sample = synthSample }.let { Slot(spec, it, Melody(it)) }
         TrackKind.SF2 -> {
             val source = sf2Factory?.invoke(sampleRate, spec.bank, spec.program)
             val ins = Sf2Instrument(sampleRate, source)
@@ -307,6 +346,17 @@ class StudioEngine(val sampleRate: Int) {
         ins.drive = m.drive
         ins.crush = m.crush
         ins.filterSweep = m.filter
+        ins.pump = m.pump
+    }
+
+    /** La distorsion jouée en direct sur une piste (le doigt qui bouge sur une touche des pads) : 0 = son net, 1 = saturé, même volume. */
+    fun setLiveDrive(id: Int, value: Float) {
+        instrument(id)?.liveDrive = value.coerceIn(0f, 1f)
+    }
+
+    /** Le jeu en direct d'une piste (pad thérémine) : 1 = normal, vers 0 = plus doux et plus sourd. */
+    fun setExpression(id: Int, value: Float) {
+        instrument(id)?.expression = value.coerceIn(0f, 1f)
     }
 
     /** Le caractère (variante, hauteur, durée) d'une piste de batterie ; sans effet sur une piste qui joue des notes. */
@@ -355,6 +405,19 @@ class StudioEngine(val sampleRate: Int) {
 
     @Volatile var playing: Boolean = false
         private set
+
+    /** Le métronome : un petit clic sur chaque temps pendant la lecture (et pendant le décompte, toujours). */
+    @Volatile var metronome: Boolean = false
+
+    /** Pendant le décompte avant la lecture : les temps qui restent (4, 3, 2, 1) ; 0 sinon. */
+    @Volatile var countInBeats: Int = 0
+        private set
+
+    /**
+     * Vrai : les coups joués en direct sur les pistes de batterie (pads, roulements) sont rendus à l'écran ([takeLiveHits]), avec
+     * leur position dans la boucle pendant la lecture (pour les enregistrer).
+     */
+    @Volatile var recordHits: Boolean = false
 
     /** Plus haut niveau de sortie depuis la dernière lecture de [takePeak]. */
     @Volatile private var peak = 0f
@@ -406,8 +469,56 @@ class StudioEngine(val sampleRate: Int) {
         }
     }
 
-    fun play() = push(CMD_PLAY, 0, 0, 0f)
+    /** Lance la lecture ; avec [countIn], une mesure de clics la précède (le temps de se préparer à enregistrer). */
+    fun play(countIn: Boolean = false) = push(CMD_PLAY, if (countIn) 1 else 0, 0, 0f)
     fun stop() = push(CMD_STOP, 0, 0, 0f)
+
+    /** La note tenue [from] de la piste [track] devient [to], en glissant si l'instrument le sait (pad thérémine). */
+    fun glide(track: Int, from: Int, to: Int, velocity: Float = 1f) =
+        push(CMD_GLIDE, (track and 0x3F) or (to.coerceIn(0, 127) shl 6), from.coerceIn(0, 127), velocity)
+
+    /** Roulement : la piste de batterie [track] frappe tout de suite, puis à chaque double-croche tant qu'on ne l'arrête pas. */
+    fun rollOn(track: Int, velocity: Float = 1f) = push(CMD_ROLL_ON, track, 0, velocity)
+
+    fun rollOff(track: Int) = push(CMD_ROLL_OFF, track, 0, 0f)
+
+    // ---- Coups joués en direct, rendus à l'interface pour l'enregistrement (le fil audio écrit, l'écran lit) --------
+
+    private val hitTrack = IntArray(HIT_RING)
+    private val hitPos = DoubleArray(HIT_RING)
+    private val hitVel = FloatArray(HIT_RING)
+    @Volatile private var hitHead = 0
+    @Volatile private var hitTail = 0
+
+    /** Donne chaque coup noté depuis le dernier appel : piste, position de lecture en pas (avec décimales) et force. */
+    fun takeLiveHits(each: (track: Int, position: Double, velocity: Float) -> Unit) {
+        var h = hitHead
+        while (h != hitTail) {
+            each(hitTrack[h], hitPos[h], hitVel[h])
+            h = (h + 1) % HIT_RING
+        }
+        hitHead = h
+    }
+
+    private fun noteHit(track: Int, frame: Long, velocity: Float) {
+        if (!recordHits) return
+        val t = hitTail
+        val next = (t + 1) % HIT_RING
+        if (next == hitHead) return
+        hitTrack[t] = track
+        // À l'arrêt, le coup n'a pas de place dans la boucle (il sert seulement à faire briller son pad)
+        hitPos[t] = if (running) positionAt(frame) else Double.NEGATIVE_INFINITY
+        hitVel[t] = velocity
+        hitTail = next
+    }
+
+    /** La position de lecture (en pas, avec décimales, négative pendant le décompte) à l'échantillon [frame]. */
+    private fun positionAt(frame: Long): Double {
+        val stepFrames = stepFramesNow()
+        return (stepIndex - 1) + (frame - lastFireFrame) / stepFrames
+    }
+
+    private fun stepFramesNow(): Double = sampleRate * 60.0 / max(bpm, 20f) / 4.0
 
     /**
      * Joue la piste [track] tout de suite (au début du prochain bloc) : pads tactiles, clavier. [hold] : la durée du coup d'une
@@ -441,6 +552,36 @@ class StudioEngine(val sampleRate: Int) {
     private val offNote = IntArray(MAX_PENDING_OFFS)
     private val offTrack = IntArray(MAX_PENDING_OFFS)
     private var offCount = 0
+
+    /** Tirage des pas « au hasard » (xorshift : pas d'allocation). */
+    private var coin = 0x6C8E9CF5
+
+    private fun nextCoin(): Float {
+        var x = coin
+        x = x xor (x shl 13); x = x xor (x ushr 17); x = x xor (x shl 5)
+        coin = x
+        return (x ushr 8) / 16_777_216f
+    }
+
+    // Pompe : l'enveloppe de la grosse caisse, par échantillon, que les pistes à pompe soustraient de leur niveau
+    private val duckBuf = FloatArray(MAX_BLOCK)
+    private var duckEnv = 0f
+    private var duckRising = false
+    private val duckAttack = (1.0 - Math.exp(-1.0 / (0.0015 * sampleRate))).toFloat()
+
+    // Métronome : un bip court, plus aigu sur le premier temps
+    private var clickEnv = 0f
+    private var clickPhase = 0f
+    private var clickInc = 0f
+    private val clickDecay = com.Atom2Universe.app.studio.dsp.Fast.decayCoef(0.035f, sampleRate)
+
+    /** Les notes tenues au doigt, par piste et par hauteur (combien de doigts) : le motif ne les relâche pas. */
+    private val liveHeld = IntArray(MAX_TRACKS * 128)
+
+    // Roulements : par piste, en marche ou non, le prochain coup (instant sans swing) et sa force
+    private val rollOn = BooleanArray(MAX_TRACKS)
+    private val rollNext = DoubleArray(MAX_TRACKS)
+    private val rollVel = FloatArray(MAX_TRACKS)
 
     init {
         setTracks(TrackSpec.defaults())
@@ -557,9 +698,84 @@ class StudioEngine(val sampleRate: Int) {
 
     private fun renderInstruments(left: FloatArray, right: FloatArray, from: Int, to: Int) {
         if (to <= from) return
+        // L'enveloppe de pompe avance par échantillon (indépendante du découpage en blocs)
+        if (duckRising || duckEnv > 1e-4f) {
+            val release = Math.exp(-1.0 / (60.0 / max(bpm, 20f) * PUMP_RELEASE_BEATS * sampleRate)).toFloat()
+            var e = duckEnv
+            for (i in from until to) {
+                if (duckRising) {
+                    e += (1f - e) * duckAttack
+                    if (e > 0.995f) { e = 1f; duckRising = false }
+                } else {
+                    e *= release
+                }
+                duckBuf[i] = e
+            }
+            duckEnv = if (!duckRising && e <= 1e-4f) 0f else e
+        } else {
+            java.util.Arrays.fill(duckBuf, from, to, 0f)
+        }
         val t = table
-        for (i in 0 until t.size) t[i]?.instrument?.render(left, right, reverbBus, delayBus, from, to)
+        for (i in 0 until t.size) t[i]?.instrument?.render(left, right, reverbBus, delayBus, from, to, duckBuf)
+        // Le clic du métronome va directement au mixage sec (ni effets, ni pompe)
+        if (clickEnv > 1e-4f) {
+            var e = clickEnv
+            var ph = clickPhase
+            for (i in from until to) {
+                val s = kotlin.math.sin(ph * 6.2831855f) * e * CLICK_LEVEL
+                left[i] += s
+                right[i] += s
+                ph += clickInc
+                if (ph >= 1f) ph -= 1f
+                e *= clickDecay
+            }
+            clickEnv = if (e > 1e-4f) e else 0f
+            clickPhase = ph
+        }
     }
+
+    private fun click(accent: Boolean) {
+        clickEnv = 1f
+        clickPhase = 0f
+        clickInc = (if (accent) 1760f else 1320f) / sampleRate
+    }
+
+    // ---- Swing : la grille des pas impairs est retardée ; arpège et roulements la suivent ---------------------------
+
+    /** L'instant réel (avec swing) d'un instant [t] de la grille droite, pendant la lecture. */
+    private fun swung(t: Double): Double {
+        val sw = min(max(swing, 0f), 0.5f).toDouble()
+        val sf = originStepFrames
+        if (!running || sw <= 0.0 || sf <= 0.0) return t
+        val p = (t - playOrigin) / sf
+        val pair = kotlin.math.floor(p / 2.0)
+        val r = p - 2.0 * pair
+        val r2 = if (r < 1.0) r * (1.0 + sw) else (1.0 + sw) + (r - 1.0) * (1.0 - sw)
+        return playOrigin + (2.0 * pair + r2) * sf
+    }
+
+    /** L'inverse de [swung] : l'instant de la grille droite qui tombe à l'instant réel [t]. */
+    private fun unswung(t: Double): Double {
+        val sw = min(max(swing, 0f), 0.5f).toDouble()
+        val sf = originStepFrames
+        if (!running || sw <= 0.0 || sf <= 0.0) return t
+        val p = (t - playOrigin) / sf
+        val pair = kotlin.math.floor(p / 2.0)
+        val r2 = p - 2.0 * pair
+        val r = if (r2 < 1.0 + sw) r2 / (1.0 + sw) else 1.0 + (r2 - (1.0 + sw)) / (1.0 - sw)
+        return playOrigin + (2.0 * pair + r) * sf
+    }
+
+    /** Le premier instant de la grille droite (pas de [division] pas) au moins [minAhead] échantillons après l'instant réel [now]. */
+    private fun nextGridPoint(now: Double, division: Double, minAhead: Double): Double {
+        val d = stepFramesNow() * division
+        val u = unswung(now + minAhead)
+        val k = kotlin.math.ceil((u - playOrigin) / d - 1e-9)
+        return playOrigin + k * d
+    }
+
+    /** Le moteur joue le motif qu'on voit : celui du morceau en cours de lecture (pour l'affichage du pad). */
+    fun displayPattern(): StepPattern = activePattern()
 
     private fun drainCommands(blockStart: Long) {
         var h = head
@@ -571,17 +787,52 @@ class StudioEngine(val sampleRate: Int) {
             val b = ((v ushr 24) and 0xFF).toInt()
             val f = java.lang.Float.intBitsToFloat((v ushr 32).toInt())
             when (kind) {
-                CMD_PLAY -> startSequencer(blockStart)
+                CMD_PLAY -> startSequencer(blockStart, countIn = a == 1)
                 CMD_STOP -> stopSequencer()
                 CMD_TRIGGER -> table.getOrNull(a and 0x3F)?.let { s ->
                     if (s.melody != null) {
+                        liveHeld[(a and 0x3F) * 128 + b]++
                         s.melody.on(b, f, blockStart)
                     } else {
                         s.instrument.hold = (a ushr 6) / 100f
                         fire(s, b, f)
+                        noteHit(a and 0x3F, blockStart, f)
                     }
                 }
-                CMD_RELEASE -> table.getOrNull(a)?.let { s -> if (s.melody != null) s.melody.off(b) else s.instrument.noteOff(b) }
+                CMD_RELEASE -> table.getOrNull(a)?.let { s ->
+                    if (s.melody != null) {
+                        val k = a * 128 + b
+                        if (liveHeld[k] > 0) liveHeld[k]--
+                        s.melody.off(b)
+                    } else {
+                        s.instrument.noteOff(b)
+                    }
+                }
+                CMD_GLIDE -> table.getOrNull(a and 0x3F)?.let { s ->
+                    val to = a ushr 6
+                    if (s.melody != null) {
+                        val base = (a and 0x3F) * 128
+                        if (liveHeld[base + b] > 0) liveHeld[base + b]--
+                        liveHeld[base + to]++
+                        s.melody.glide(b, to, f)
+                    } else {
+                        s.instrument.glide(b, to, f)
+                    }
+                }
+                CMD_ROLL_ON -> table.getOrNull(a)?.let { s ->
+                    if (s.melody != null) return@let
+                    s.instrument.hold = 1f
+                    fire(s, 60, f)
+                    noteHit(a, blockStart, f)
+                    rollOn[a] = true
+                    rollVel[a] = f
+                    // Le coup suivant tombe sur la grille des doubles-croches, au moins une double-croche (et 150 ms) plus tard :
+                    // un simple toucher ne frappe qu'une fois, seul un doigt qui reste fait rouler
+                    val sf = stepFramesNow()
+                    val wait = max(sf, ROLL_MIN_WAIT * sampleRate)
+                    rollNext[a] = if (running) nextGridPoint(blockStart.toDouble(), 1.0, wait) else blockStart + wait
+                }
+                CMD_ROLL_OFF -> if (a in 0 until MAX_TRACKS) rollOn[a] = false
             }
         }
         head = h
@@ -593,11 +844,13 @@ class StudioEngine(val sampleRate: Int) {
         return if (sg != null && sg.isNotEmpty()) sg[songPosition.coerceIn(0, sg.size - 1)] else pattern
     }
 
-    private fun startSequencer(blockStart: Long) {
+    private fun startSequencer(blockStart: Long, countIn: Boolean = false) {
         songPosition = 0
         running = true
         playing = true
-        stepIndex = 0
+        // Le décompte : une mesure de pas « négatifs » qui ne jouent que des clics
+        stepIndex = if (countIn) -COUNT_IN_STEPS else 0
+        countInBeats = if (countIn) COUNT_IN_STEPS / 4 else 0
         playOrigin = blockStart.toDouble()
         originStepFrames = 0.0
         straightTime = blockStart.toDouble()
@@ -608,8 +861,9 @@ class StudioEngine(val sampleRate: Int) {
         running = false
         playing = false
         currentStep = -1
+        countInBeats = 0
         // Les notes tenues se relâchent, la batterie finit de sonner d'elle-même.
-        for (i in 0 until offCount) table.getOrNull(offTrack[i])?.melody?.off(offNote[i])
+        for (i in 0 until offCount) patternOff(offTrack[i], offNote[i])
         offCount = 0
     }
 
@@ -618,6 +872,10 @@ class StudioEngine(val sampleRate: Int) {
         var t = Long.MAX_VALUE
         if (running) t = frameOf(nextStepTime)
         for (i in 0 until offCount) if (offFrame[i] < t) t = offFrame[i]
+        for (k in 0 until MAX_TRACKS) if (rollOn[k]) {
+            val r = frameOf(swung(rollNext[k]))
+            if (r < t) t = r
+        }
         val tb = table
         for (i in 0 until tb.size) {
             val m = tb[i]?.melody ?: continue
@@ -638,7 +896,7 @@ class StudioEngine(val sampleRate: Int) {
         var i = 0
         while (i < offCount) {
             if (offFrame[i] <= frame) {
-                table.getOrNull(offTrack[i])?.melody?.off(offNote[i])
+                patternOff(offTrack[i], offNote[i])
                 offCount--
                 offFrame[i] = offFrame[offCount]
                 offNote[i] = offNote[offCount]
@@ -650,10 +908,41 @@ class StudioEngine(val sampleRate: Int) {
         if (running && frameOf(nextStepTime) <= frame) fireStep(frame)
         // Après le pas : une note du motif qui commence à cet instant doit déjà compter dans l'arpège.
         for (k in 0 until tb.size) tb[k]?.melody?.arpTickDue(frame)
+        for (k in 0 until MAX_TRACKS) {
+            if (!rollOn[k] || frameOf(swung(rollNext[k])) > frame) continue
+            val s = tb[k]
+            if (s == null || s.melody != null) {
+                rollOn[k] = false
+                continue
+            }
+            s.instrument.hold = 1f
+            fire(s, 60, rollVel[k])
+            noteHit(k, frame, rollVel[k])
+            val sf = stepFramesNow()
+            rollNext[k] += sf
+            // Jamais de rafale pour rattraper un retard (lecture lancée ou arrêtée pendant le roulement) : on saute au coup suivant
+            while (frameOf(swung(rollNext[k])) <= frame) rollNext[k] += sf
+        }
     }
 
     private fun fireStep(frame: Long) {
         val step = stepIndex
+        if (step < 0) {
+            // Décompte : un clic par temps, rien d'autre (le premier, plus aigu, marque le début de la mesure)
+            val stepFrames = stepFramesNow()
+            if (stepFrames != originStepFrames) {
+                playOrigin = straightTime - step * stepFrames
+                originStepFrames = stepFrames
+            }
+            if ((step + COUNT_IN_STEPS) % 4 == 0) click(step == -COUNT_IN_STEPS)
+            countInBeats = (-step + 3) / 4
+            lastFireFrame = frame
+            straightTime += stepFrames
+            stepIndex = step + 1
+            nextStepTime = straightTime
+            if (stepIndex == 0) countInBeats = 0
+            return
+        }
         val sg = song
         if (sg != null && sg.isNotEmpty()) {
             // Au début de chaque tour, on passe au motif suivant du morceau
@@ -673,14 +962,18 @@ class StudioEngine(val sampleRate: Int) {
         onStep?.invoke(step, frame)
         currentStep = s
         lastFireFrame = frame
+        if (metronome && s % 4 == 0) click(s % 16 == 0)
 
         // Boucles à indices : aucune allocation d'itérateur dans le fil audio.
+        val loop = step / max(p.stepCount, 1)
         val lanes = p.lanes
         for (i in 0 until lanes.size) {
             val lane = lanes[i]
             if (s >= lane.velocity.size) continue
             val v = lane.velocity[s]
             if (v <= 0f) continue
+            val c = if (s < lane.cond.size) lane.cond[s] else StepCond.ALWAYS
+            if (c != StepCond.ALWAYS && !StepCond.plays(c, loop, if (c == StepCond.RANDOM) nextCoin() else 0f)) continue
             val slot = table.getOrNull(lane.instrument) ?: continue
             if (slot.melody == null) {
                 slot.instrument.hold = lane.hold.getOrElse(s) { 1f }
@@ -694,8 +987,13 @@ class StudioEngine(val sampleRate: Int) {
             val m = table.getOrNull(n.track)?.melody ?: continue
             m.on(n.pitch, n.velocity, frame)
             // La note est relâchée juste avant la fin de sa durée : deux notes de même hauteur collées se séparent.
-            val held = (stepFrames * n.length * NOTE_GATE).roundToLong()
-            scheduleOff(frame + max(1L, held), n.track, n.pitch)
+            // Avec du swing, sa fin suit la grille décalée (une note d'un pas impair, jouée en retard, finit quand même avant le pas suivant).
+            val offAt = if (swing > 0f) {
+                frameOf(swung(straightTime + stepFrames * n.length * NOTE_GATE))
+            } else {
+                frame + (stepFrames * n.length * NOTE_GATE).roundToLong()
+            }
+            scheduleOff(max(frame + 1L, offAt), n.track, n.pitch)
         }
 
         straightTime += stepFrames
@@ -705,6 +1003,8 @@ class StudioEngine(val sampleRate: Int) {
     }
 
     private fun fire(slot: Slot, note: Int, velocity: Float) {
+        // Une grosse caisse qu'on entend fait pomper les pistes qui le demandent
+        if (slot.spec.voice == Inst.KICK && !slot.instrument.muted) duckRising = true
         // Un charleston fermé coupe les charlestons ouverts.
         if (slot.spec.voice == Inst.HAT) {
             val t = table
@@ -716,9 +1016,18 @@ class StudioEngine(val sampleRate: Int) {
         slot.instrument.noteOn(note, velocity)
     }
 
+    /**
+     * La fin d'une note du motif. Si un doigt tient la même note sur la même piste (clavier, pads, thérémine), elle continue :
+     * c'est le doigt qui la relâchera (sinon une note jouée par-dessus la boucle se coupait toute seule).
+     */
+    private fun patternOff(track: Int, note: Int) {
+        if (track in 0 until MAX_TRACKS && note in 0..127 && liveHeld[track * 128 + note] > 0) return
+        table.getOrNull(track)?.melody?.off(note)
+    }
+
     private fun scheduleOff(frame: Long, track: Int, note: Int) {
         if (offCount >= MAX_PENDING_OFFS) {
-            table.getOrNull(track)?.melody?.off(note)
+            patternOff(track, note)
             return
         }
         offFrame[offCount] = frame
@@ -783,11 +1092,24 @@ class StudioEngine(val sampleRate: Int) {
             }
         }
 
+        /** Une note tenue en remplace une autre (pad thérémine) : glissé direct, ou échange dans les notes tenues de l'arpège. */
+        fun glide(from: Int, to: Int, velocity: Float) {
+            if (arpMode == Arp.OFF) {
+                inst.glide(from, to, velocity)
+                return
+            }
+            for (i in 0 until heldCount) if (held[i] == from) {
+                held[i] = to
+                heldVel[i] = velocity
+                return
+            }
+        }
+
         /** Le prochain échantillon où cette piste a quelque chose à faire (fin d'un coup d'arpège, coup suivant), ou le maximum. */
         fun nextEvent(): Long {
             var t = arpOffFrame
             if (arpMode != Arp.OFF && heldCount > 0) {
-                val a = frameOf(arpNextTime)
+                val a = frameOf(swung(arpNextTime))
                 if (a < t) t = a
             }
             return t
@@ -802,7 +1124,7 @@ class StudioEngine(val sampleRate: Int) {
         }
 
         fun arpTickDue(frame: Long) {
-            if (arpMode != Arp.OFF && heldCount > 0 && frameOf(arpNextTime) <= frame) arpTick(frame)
+            if (arpMode != Arp.OFF && heldCount > 0 && frameOf(swung(arpNextTime)) <= frame) arpTick(frame)
         }
 
         private fun arpFrames(): Double = sampleRate * 60.0 / max(bpm, 20f) / 4.0 * max(arpDivision, 0.25f)
@@ -813,8 +1135,10 @@ class StudioEngine(val sampleRate: Int) {
             // Un instant de la grille est « dû » à l'échantillon ceil(t) : l'instant de grille d'un pas qui vient de démarrer à
             // l'échantillon [now] peut donc être jusqu'à un échantillon AVANT [now]. On le garde (sinon, quand la durée d'un
             // pas n'est pas un nombre entier d'échantillons, comme à 124 bpm, l'arpège sautait au pas suivant, où la note
-            // du motif n'était déjà plus tenue : le synthé se taisait).
-            val k = kotlin.math.floor((now - 1.0 + 1e-3 - playOrigin) / d) + 1.0
+            // du motif n'était déjà plus tenue : le synthé se taisait). La grille est droite ; le swing la décale à la lecture
+            // (un pas impair joué en retard garde donc son coup d'arpège, au lieu de le reporter au pas suivant).
+            val u = unswung(now - 1.0 + 1e-3)
+            val k = kotlin.math.floor((u - playOrigin) / d) + 1.0
             return playOrigin + k * d
         }
 
@@ -888,6 +1212,24 @@ class StudioEngine(val sampleRate: Int) {
         private const val CMD_STOP = 2
         private const val CMD_TRIGGER = 3
         private const val CMD_RELEASE = 4
+        private const val CMD_GLIDE = 5
+        private const val CMD_ROLL_ON = 6
+        private const val CMD_ROLL_OFF = 7
+
+        /** Le décompte avant un enregistrement : une mesure (seize pas, quatre clics). */
+        const val COUNT_IN_STEPS = 16
+
+        /** Nombre de coups joués en direct que l'interface peut avoir en retard. */
+        private const val HIT_RING = 256
+
+        /** Durée de la remontée après un coup de grosse caisse, en temps (constante de l'exponentielle). */
+        private const val PUMP_RELEASE_BEATS = 0.2
+
+        /** Volume du clic du métronome. */
+        private const val CLICK_LEVEL = 0.3f
+
+        /** Un doigt doit rester au moins ce temps (en secondes) sur un pad pour que le roulement commence. */
+        private const val ROLL_MIN_WAIT = 0.15
     }
 }
 

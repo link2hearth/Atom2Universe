@@ -14,6 +14,8 @@ data class TrackMix(
     val drive: Float = 0f,
     val crush: Float = 0f,
     val filter: Float = 0f,
+    /** La pompe : la piste se creuse à chaque coup de grosse caisse (0 = jamais, 1 = à fond). */
+    val pump: Float = 0f,
 ) {
     companion object {
         /**

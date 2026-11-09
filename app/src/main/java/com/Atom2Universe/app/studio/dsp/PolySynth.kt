@@ -39,13 +39,25 @@ data class SynthPatch(
     /** Écart en demi-tons du second oscillateur au premier (0 = même hauteur ; 12 = octave ; 19 = octave et quinte). */
     val interval: Int = 0,
 ) {
+    /** Vrai si ce son joue l'enregistrement du micro ([WAVE_SAMPLE]). */
+    val isSample: Boolean get() = wave == WAVE_SAMPLE
+
     companion object {
         const val WAVE_SAW = 0
         const val WAVE_SQUARE = 1
         const val WAVE_TRIANGLE = 2
         const val WAVE_SINE = 3
+
+        /** L'oscillateur est le son enregistré au micro, rejoué plus aigu ou plus grave selon la note. */
+        const val WAVE_SAMPLE = 4
+
+        /** Les sons gardés par l'utilisateur ont un identifiant « mine:<nom> ». */
+        const val MINE_PREFIX = "mine:"
     }
 }
+
+/** Un son enregistré au micro pour le synthé : les échantillons, leur fréquence, et la note MIDI (avec décimales) qu'ils jouent tels quels. */
+class SynthSample(val data: FloatArray, val sourceRate: Int, val rootNote: Float)
 
 object SynthPresets {
     val BASS = SynthPatch(
@@ -111,17 +123,36 @@ object SynthPresets {
         keyTrack = 0f, interval = 19,
     )
 
+    /** Le son enregistré au micro : rejoué tel quel (filtre grand ouvert), avec une petite attaque et un relâchement doux. */
+    val MY_VOICE = SynthPatch(
+        id = "my_voice", wave = SynthPatch.WAVE_SAMPLE, detuneCents = 0f, subLevel = 0f, cutoffHz = 9000f, resonance = 0.7f,
+        envOctaves = 0f, filterDecay = 1f, attack = 0.004f, decay = 0.5f, sustain = 1f, release = 0.25f, keyTrack = 0f,
+        volume = 1.2f,
+    )
+
     val ALL = listOf(BASS, SUB, ACID, DIST_BASS, WOBBLE, PAD, STRINGS, DRONE, LEAD, ARP, PLUCK, BELL)
 
-    fun byId(id: String): SynthPatch = ALL.firstOrNull { it.id == id } ?: BASS
+    fun byId(id: String): SynthPatch = if (id == MY_VOICE.id) MY_VOICE else ALL.firstOrNull { it.id == id } ?: BASS
 }
 
 class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate) {
 
     @Volatile var patch: SynthPatch = SynthPresets.BASS
 
+    /** Le son enregistré au micro que joue un patch [SynthPatch.WAVE_SAMPLE] (`null` : ce patch se tait). */
+    @Volatile var sample: SynthSample? = null
+
     private val voices = Array(voiceCount) { Voice() }
     private var age = 0L
+
+    override fun glide(from: Int, to: Int, velocity: Float) {
+        // La voix qui tient [from] change de hauteur en glissant, sans repartir de zéro (pad thérémine)
+        for (v in voices) if (v.active && v.held && v.note == from) {
+            v.retune(to)
+            return
+        }
+        noteOn(to, velocity)
+    }
 
     override val activeVoices: Int
         get() {
@@ -206,6 +237,21 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate) {
         private var filterCoef = 0f
         private val filter = Svf(sampleRate)
 
+        // Son enregistré : la position de lecture (en échantillons de la source), son pas, et le pas visé pendant un glissé
+        private var smp: SynthSample? = null
+        private var smpPos = 0.0
+        private var smpInc = 0.0
+        private var smpIncTarget = 0.0
+
+        // Glissé de hauteur (pad thérémine) : les pas des oscillateurs rejoignent leur cible en quelques dizaines de ms
+        private var gliding = false
+        private var inc1Target = 0f
+        private var inc2Target = 0f
+        private var incSubTarget = 0f
+        private var cutoffTarget = 0f
+
+        private fun freqOf(n: Int): Float = 440f * 2f.pow((n - 69) / 12f)
+
         fun start(n: Int, velocity: Float, patch: SynthPatch, a: Long) {
             val wasActive = active
             p = patch
@@ -215,8 +261,9 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate) {
             held = true
             active = true
             stage = ATTACK
+            gliding = false
             if (!wasActive) level = 0f
-            val freq = 440f * 2f.pow((n - 69) / 12f)
+            val freq = freqOf(n)
             val half = 2f.pow(patch.detuneCents / 2400f)
             inc1 = freq / half / sampleRate
             inc2 = freq * half * 2f.pow(patch.interval / 12f) / sampleRate
@@ -230,7 +277,26 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate) {
             lfoPhase = 0f
             fEnv = 1f
             ctl = 0
+            smp = if (patch.isSample) sample else null
+            smp?.let { s ->
+                smpPos = 0.0
+                smpInc = s.sourceRate.toDouble() / sampleRate * Math.pow(2.0, (n - s.rootNote) / 12.0)
+                smpIncTarget = smpInc
+            }
             if (!wasActive) filter.reset()
+        }
+
+        /** Change de note sans nouvelle attaque : la hauteur glisse vers [n]. */
+        fun retune(n: Int) {
+            note = n
+            val freq = freqOf(n)
+            val half = 2f.pow(p.detuneCents / 2400f)
+            inc1Target = freq / half / sampleRate
+            inc2Target = freq * half * 2f.pow(p.interval / 12f) / sampleRate
+            incSubTarget = freq / 2f / sampleRate
+            cutoffTarget = p.cutoffHz * (freq / 261.63f).pow(p.keyTrack)
+            smp?.let { s -> smpIncTarget = s.sourceRate.toDouble() / sampleRate * Math.pow(2.0, (n - s.rootNote) / 12.0) }
+            gliding = true
         }
 
         fun release() {
@@ -242,15 +308,31 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate) {
             val sub = p.subLevel
             val sus = p.sustain
             val wave = p.wave
+            val s = smp
             for (i in 0 until count) {
                 if (ctl <= 0) {
                     ctl = CONTROL_PERIOD
+                    if (gliding) {
+                        // Portamento : chaque pas d'oscillateur fait un bout du chemin (≈ 40 ms pour arriver)
+                        inc1 += (inc1Target - inc1) * GLIDE
+                        inc2 += (inc2Target - inc2) * GLIDE
+                        incSub += (incSubTarget - incSub) * GLIDE
+                        baseCutoff += (cutoffTarget - baseCutoff) * GLIDE
+                        smpInc += (smpIncTarget - smpInc) * GLIDE
+                        if (abs(inc1 - inc1Target) < inc1Target * 1e-4f) {
+                            inc1 = inc1Target; inc2 = inc2Target; incSub = incSubTarget; baseCutoff = cutoffTarget; smpInc = smpIncTarget
+                            gliding = false
+                        }
+                    }
                     var octaves = p.envOctaves * fEnv
                     if (p.lfoFilter != 0f) {
                         octaves += p.lfoFilter * sin(lfoPhase * TWO_PI)
                         lfoPhase += lfoInc * CONTROL_PERIOD
                         if (lfoPhase >= 1f) lfoPhase -= 1f
                     }
+                    // Le pad thérémine assombrit le son quand le doigt descend (jusqu'à trois octaves de filtre en moins)
+                    val dim = expressionNow
+                    if (dim < 0.999f) octaves -= (1f - dim) * 3f
                     filter.set(baseCutoff * 2.0.pow(octaves.toDouble()).toFloat(), p.resonance)
                 }
                 ctl--
@@ -270,14 +352,23 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate) {
                     }
                 }
 
-                p1 += inc1
-                if (p1 >= 1f) p1 -= 1f
-                p2 += inc2
-                if (p2 >= 1f) p2 -= 1f
                 ps += incSub
                 if (ps >= 1f) ps -= 1f
-
-                val osc = (shape(p1, inc1, wave) + shape(p2, inc2, wave)) * 0.4f + sin(ps * TWO_PI) * sub * 0.5f
+                val osc = if (wave == SynthPatch.WAVE_SAMPLE) {
+                    // Le son enregistré, lu avec interpolation ; à sa fin, la voix s'éteint (sans enregistrement : silence)
+                    if (s == null) { active = false; return }
+                    val k = smpPos.toInt()
+                    if (k >= s.data.size - 1) { active = false; return }
+                    val f = (smpPos - k).toFloat()
+                    smpPos += smpInc
+                    (s.data[k] * (1f - f) + s.data[k + 1] * f) * 0.8f + sin(ps * TWO_PI) * sub * 0.5f
+                } else {
+                    p1 += inc1
+                    if (p1 >= 1f) p1 -= 1f
+                    p2 += inc2
+                    if (p2 >= 1f) p2 -= 1f
+                    (shape(p1, inc1, wave) + shape(p2, inc2, wave)) * 0.4f + sin(ps * TWO_PI) * sub * 0.5f
+                }
                 filter.tick(osc)
                 out[i] += filter.lp * level * vel * 0.5f
                 fEnv *= filterCoef
@@ -291,6 +382,9 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate) {
         const val RELEASE = 2
         const val CONTROL_PERIOD = 16
         const val SILENT = 1e-4f
+
+        /** Part du chemin faite à chaque période de contrôle pendant un glissé (≈ 40 ms pour arriver à 48 kHz). */
+        const val GLIDE = 0.06f
         const val TWO_PI = (2.0 * PI).toFloat()
 
         /** Gain d'entrée de l'étage de distorsion, et pente de la compensation de niveau (réglés par mesure). */

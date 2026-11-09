@@ -132,6 +132,26 @@ abstract class Instrument(protected val sampleRate: Int) {
     /** −1 = coupe les aigus (étouffé), +1 = coupe les graves (mince), 0 = pas de filtre. */
     @Volatile var filterSweep = 0f
 
+    /** La « pompe » : de combien la piste se creuse à chaque coup de grosse caisse (0 = pas du tout, 1 = presque au silence). */
+    @Volatile var pump = 0f
+
+    /**
+     * La distorsion jouée en direct (hauteur du doigt sur une touche des pads), de 0 (son net) à 1 : elle s'ajoute à [drive]
+     * et, comme elle, garde le niveau du son. Lissée par échantillon : pas de saut audible.
+     */
+    @Volatile var liveDrive = 0f
+    private var liveDriveNow = 0f
+
+    /**
+     * Le jeu en direct (pad thérémine) : 1 = normal, vers 0 = plus doux (et plus sourd pour le synthé). Lissé par échantillon,
+     * il ne fait jamais de saut audible.
+     */
+    @Volatile var expression = 1f
+
+    /** L'expression telle qu'elle sonne en ce moment (elle rejoint [expression] en quelques millisecondes). */
+    protected var expressionNow = 1f
+        private set
+
     private val fxFilter = Svf(sampleRate)
     private var fxFilterFor = 0f
     private var crushCounter = 0
@@ -157,6 +177,15 @@ abstract class Instrument(protected val sampleRate: Int) {
     /** Libère tout ce qui est tenu. */
     abstract fun allOff()
 
+    /**
+     * La note tenue [from] devient [to] sans nouvelle attaque quand l'instrument le sait (le synthé glisse d'une hauteur à
+     * l'autre) ; sinon on relâche l'une et on joue l'autre.
+     */
+    open fun glide(from: Int, to: Int, velocity: Float) {
+        noteOff(from)
+        noteOn(to, velocity)
+    }
+
     abstract val activeVoices: Int
 
     /** Écrit [count] trames dans out[0 until count] et rend vrai ; rend faux (sans rien écrire) si tout est silencieux. */
@@ -164,11 +193,12 @@ abstract class Instrument(protected val sampleRate: Int) {
 
     /**
      * Ajoute le rendu de [from] (inclus) à [to] (exclu) au mixage sec stéréo ([left], [right]) et aux deux
-     * bus d'envoi mono ([reverbBus], [delayBus]).
+     * bus d'envoi mono ([reverbBus], [delayBus]). [duck] (de 0 à 1, aux mêmes indices) est l'enveloppe de la grosse caisse
+     * qui fait « pomper » les pistes dont [pump] n'est pas nul.
      */
     fun render(
         left: FloatArray, right: FloatArray, reverbBus: FloatArray, delayBus: FloatArray,
-        from: Int, to: Int,
+        from: Int, to: Int, duck: FloatArray? = null,
     ) {
         val angle = (pan.coerceIn(-1f, 1f) + 1f) * (PI.toFloat() / 4f)
         val gl = cos(angle) * level
@@ -176,7 +206,9 @@ abstract class Instrument(protected val sampleRate: Int) {
         val rs = level * reverbSend
         val ds = level * delaySend
         val audible = !muted
-        val fxOn = drive > FX_MIN || crush > FX_MIN || abs(filterSweep) > FX_MIN
+        val fxOn = drive > FX_MIN || crush > FX_MIN || abs(filterSweep) > FX_MIN || liveDrive > FX_MIN || liveDriveNow > FX_MIN
+        val depth = if (duck != null) pump.coerceIn(0f, 1f) * PUMP_DEPTH else 0f
+        val exprTarget = expression.coerceIn(0f, 1f)
         var pos = from
         while (pos < to) {
             val c = min(to - pos, MAX_CHUNK)
@@ -187,15 +219,29 @@ abstract class Instrument(protected val sampleRate: Int) {
                 applyEffects(c)
                 produced = true
             }
+            // L'expression se lisse même en silence : la note suivante part du bon niveau
+            var e = expressionNow
+            val smoothing = e != exprTarget
             if (produced && audible) {
                 for (i in 0 until c) {
-                    val s = scratch[i]
+                    var s = scratch[i]
+                    if (smoothing) {
+                        e += (exprTarget - e) * EXPRESSION_GLIDE
+                        s *= e
+                    } else if (e != 1f) {
+                        s *= e
+                    }
+                    if (depth > 0f) s *= 1f - depth * duck!![pos + i]
                     left[pos + i] += s * gl
                     right[pos + i] += s * gr
                     reverbBus[pos + i] += s * rs
                     delayBus[pos + i] += s * ds
                 }
+            } else if (smoothing) {
+                for (i in 0 until c) e += (exprTarget - e) * EXPRESSION_GLIDE
             }
+            if (smoothing && abs(e - exprTarget) < 1e-4f) e = exprTarget
+            expressionNow = e
             pos += c
         }
     }
@@ -216,13 +262,17 @@ abstract class Instrument(protected val sampleRate: Int) {
             }
         }
         val d = drive
-        if (d > FX_MIN) {
+        val live = liveDrive.coerceIn(0f, 1f)
+        if (d > FX_MIN || live > FX_MIN || liveDriveNow > FX_MIN) {
             // Compensation qui suit le niveau : une distorsion rend un son doux bien plus fort qu'un son déjà fort,
             // donc un retrait fixe ne convient pas. On garde le niveau d'entrée (suivi sur ~10 ms, par échantillon).
-            val g = 1f + d * 7f
             var ein = driveEnvIn
             var eout = driveEnvOut
+            var ld = liveDriveNow
             for (i in 0 until count) {
+                ld += (live - ld) * LIVE_DRIVE_GLIDE
+                // Le doigt pousse bien plus fort que le réglage du mixeur : l'effet doit s'entendre franchement sous le doigt
+                val g = 1f + d * 7f + ld * LIVE_DRIVE_GAIN
                 val x = scratch[i]
                 val y = Fast.tanh(x * g)
                 ein += (x * x - ein) * DRIVE_ENV
@@ -232,6 +282,7 @@ abstract class Instrument(protected val sampleRate: Int) {
             }
             driveEnvIn = ein
             driveEnvOut = eout
+            liveDriveNow = if (live <= FX_MIN && ld < FX_MIN) 0f else ld
         }
         val fs = filterSweep
         if (abs(fs) > FX_MIN) {
@@ -254,5 +305,17 @@ abstract class Instrument(protected val sampleRate: Int) {
 
         /** Vitesse du suivi de niveau de la compensation de distorsion (≈ 10 ms à 48 kHz). */
         private const val DRIVE_ENV = 0.002f
+
+        /** Le creux le plus profond de la pompe (pompe à fond) : il reste un dixième du son. */
+        const val PUMP_DEPTH = 0.9f
+
+        /** Vitesse du lissage de la distorsion jouée en direct (≈ 10 ms à 48 kHz). */
+        private const val LIVE_DRIVE_GLIDE = 0.002f
+
+        /** Gain de distorsion ajouté quand le doigt est au bout de son geste. */
+        private const val LIVE_DRIVE_GAIN = 24f
+
+        /** Vitesse du lissage de l'expression (≈ 10 ms à 48 kHz). */
+        private const val EXPRESSION_GLIDE = 0.002f
     }
 }

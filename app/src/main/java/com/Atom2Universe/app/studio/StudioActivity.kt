@@ -60,6 +60,12 @@ import com.Atom2Universe.app.studio.ui.FlowRow
 import com.Atom2Universe.app.studio.ui.InstrumentIcons
 import com.Atom2Universe.app.studio.ui.PianoRollView
 import com.Atom2Universe.app.studio.ui.StepGridView
+import com.Atom2Universe.app.studio.ui.ChainView
+import com.Atom2Universe.app.studio.ui.PadsView
+import com.Atom2Universe.app.studio.ui.ThereminView
+import com.Atom2Universe.app.studio.data.MySounds
+import com.Atom2Universe.app.studio.dsp.SynthPatch
+import com.Atom2Universe.app.studio.dsp.SynthSample
 import com.Atom2Universe.app.util.enableImmersiveMode
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.button.MaterialButtonToggleGroup
@@ -178,16 +184,57 @@ class StudioActivity : AudioThemedActivity() {
 
     private val saveRunnable = Runnable { session.flush() }
 
+    // Pads de batterie (onglet Rythme) et leur enregistrement
+    private lateinit var padsPane: LinearLayout
+    private lateinit var pads: PadsView
+
+    /** Vrai : rester sur une case de batterie la fait rejouer à chaque double-croche. */
+    private var padsRoll = false
+    private lateinit var padsRecordButton: MaterialButton
+    private val tabPadsId = View.generateViewId()
+    private var padsRecording = false
+
+    // Pad thérémine (onglet Notes)
+    private lateinit var thereminToggle: MaterialButton
+    private lateinit var theremin: ThereminView
+    private var thereminOn = false
+    private var thereminTrack = -1
+
+    /** Après une note du thérémine, la piste retrouve son expression normale (une fois la note éteinte). */
+    private val expressionReset = Runnable { if (thereminTrack >= 0) engine.setExpression(thereminTrack, 1f) }
+
+    private lateinit var mySounds: MySounds
+    private var shownCountIn = 0
+
     private val frameTick = object : Runnable {
         override fun run() {
             val step = if (playing) engine.currentStep else -1
             if (onNotesTab) roll.playhead = step else grid.playhead = step
+            // Le décompte s'affiche sur le bouton de lecture : 4, 3, 2, 1
+            val countIn = if (playing) engine.countInBeats else 0
+            if (countIn != shownCountIn) {
+                shownCountIn = countIn
+                if (countIn > 0) playButton.text = countIn.toString() else refreshTransport()
+            }
+            // Les coups joués aux pads pendant l'enregistrement s'écrivent dans la grille
+            var wrote = false
+            engine.takeLiveHits { track, position, velocity ->
+                if (padsRecording) {
+                    session.recordHit(track, position, velocity)
+                    wrote = true
+                }
+                if (::pads.isInitialized) pads.flash(track)
+            }
+            if (wrote) {
+                grid.invalidate()
+                scheduleSave()
+            }
             if (::padView.isInitialized) {
                 if (padView.isTouching) {
                     if (gestureTaking) session.recordGesture(engine.playPosition, engine.masterFilter, engine.spaceBoost)
                 } else if (playing && mixerPane.visibility == View.VISIBLE) {
-                    // Sans doigt, le repère suit le geste enregistré
-                    val pat = session.project.pattern
+                    // Sans doigt, le repère suit le geste enregistré (celui du motif qui joue, morceau compris)
+                    val pat = engine.displayPattern()
                     val f = pat.filterAt(engine.playPosition)
                     val s = pat.spaceAt(engine.playPosition)
                     padView.showAt(1f - (f ?: 0f), s ?: 0f)
@@ -223,6 +270,8 @@ class StudioActivity : AudioThemedActivity() {
         projectId = entry.id
         projectName = entry.name
         SampleTools.load(this)?.let { (data, rate) -> engine.setPercSample(data, rate) }
+        loadSynthSample()
+        mySounds = MySounds(File(filesDir, "studio/my_sounds.json"))
         val loaded = entry.project
         // Un projet qui a des pistes soundfont ouvre le soundfont avant que le moteur fabrique leurs instruments
         if (loaded.tracks.any { it.kind == TrackKind.SF2 || it.sfKit >= 0 }) {
@@ -255,6 +304,10 @@ class StudioActivity : AudioThemedActivity() {
     override fun onPause() {
         grid.removeCallbacks(frameTick)
         handler.removeCallbacks(saveRunnable)
+        // Rien ne reste tenu : pads, thérémine, enregistrement des pads
+        pads.releaseAll()
+        theremin.finish()
+        setPadsRecording(false)
         stopLive()
         session.flush()
         engine.stop()
@@ -323,6 +376,7 @@ class StudioActivity : AudioThemedActivity() {
             isSingleSelection = true
             isSelectionRequired = true
             addView(outlined(R.string.studio_tab_rhythm).apply { id = tabRhythmId })
+            addView(outlined(R.string.studio_pads).apply { id = tabPadsId })
             addView(outlined(R.string.studio_tab_notes).apply { id = tabNotesId })
             addView(outlined(R.string.studio_tab_mixer).apply { id = tabMixerId })
             check(tabRhythmId)
@@ -406,7 +460,6 @@ class StudioActivity : AudioThemedActivity() {
         songButton = outlined(R.string.studio_song).apply { setOnClickListener { showSongPanel(it) } }
         transport.addView(songButton, wrap(end = dp(8)))
         songDefaultColor = songButton.textColors.defaultColor
-        transport.addView(outlined(R.string.studio_edit_menu).also { it.setOnClickListener { v -> showEditMenu(v) } }, wrap(end = dp(8)))
         transport.addView(square(R.string.studio_more).also {
             it.contentDescription = getString(R.string.studio_settings)
             it.setOnClickListener { v -> showSettingsPanel(v) }
@@ -440,9 +493,11 @@ class StudioActivity : AudioThemedActivity() {
         ).apply { topMargin = dp(8) })
 
         rhythmPane = buildRhythmPane()
+        padsPane = buildPadsPane().also { it.visibility = View.GONE }
         notesPane = buildNotesPane().also { it.visibility = View.GONE }
         mixerPane = buildMixerPane().also { it.visibility = View.GONE }
         root.addView(rhythmPane, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f))
+        root.addView(padsPane, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f))
         root.addView(notesPane, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f))
         root.addView(mixerPane, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f))
         return root
@@ -458,6 +513,8 @@ class StudioActivity : AudioThemedActivity() {
             velocity = { lane, step -> gridIds.getOrNull(lane)?.let { session.velocity(it, step) } ?: 0f }
             isMuted = { lane -> gridIds.getOrNull(lane)?.let { session.isMuted(it) } ?: false }
             isTail = { lane, step -> gridIds.getOrNull(lane)?.let { session.isTail(it, step) } ?: false }
+            cond = { lane, step -> gridIds.getOrNull(lane)?.let { session.stepCond(it, step) } ?: 0 }
+            condMarks = resources.getStringArray(R.array.studio_cond_marks).toList()
             listener = object : StepGridView.Listener {
                 override fun onStepSet(lane: Int, step: Int, on: Boolean) {
                     gridIds.getOrNull(lane)?.let { id ->
@@ -498,6 +555,119 @@ class StudioActivity : AudioThemedActivity() {
         return pane
     }
 
+    /**
+     * L'onglet Pads : une case par piste. Batterie : toucher = un coup, rester = roulement en rythme. Piste à notes : la case est
+     * coupée en niveaux (les notes de la gamme, le grave en bas) ; la note tient tant que le doigt reste.
+     */
+    private fun buildPadsPane(): LinearLayout {
+        val pane = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
+        val header = flowRow(topMargin = dp(8))
+        padsRecordButton = outlined(R.string.studio_record_off).apply { setOnClickListener { setPadsRecording(!padsRecording) } }
+        header.addView(padsRecordButton, wrap(end = dp(8)))
+        // Roulement : un doigt qui reste sur une case de batterie la fait rejouer en rythme (sinon, un seul coup). Gardé d'une fois sur l'autre.
+        val prefs = getSharedPreferences(PREFS, MODE_PRIVATE)
+        padsRoll = prefs.getBoolean(PREF_PADS_ROLL, false)
+        header.addView(outlined(R.string.studio_roll).apply {
+            isCheckable = true
+            isChecked = padsRoll
+            setOnClickListener {
+                padsRoll = isChecked
+                prefs.edit().putBoolean(PREF_PADS_ROLL, padsRoll).apply()
+            }
+        }, wrap(end = dp(8)))
+        pane.addView(header)
+        pads = PadsView(this).apply {
+            noteNames = resources.getStringArray(R.array.studio_key_names).toList()
+            onDown = { track -> if (padsRoll) engine.rollOn(track, 1f) else engine.trigger(track, 60, 1f) }
+            onUp = { track -> engine.rollOff(track) }
+            onNoteDown = { track, pitch -> padNoteDown(track, pitch) }
+            onNoteUp = { track, pitch -> padNoteUp(track, pitch) }
+            onNoteEffect = { track, amount -> engine.setLiveDrive(track, amount) }
+        }
+        pane.addView(pads, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f).apply { topMargin = dp(8) })
+        return pane
+    }
+
+    /** Les doigts posés sur les touches de chaque piste, et le retour au son net une fois tous levés. */
+    private val padFingers = HashMap<Int, Int>()
+    private val padExpressionResets = HashMap<Int, Runnable>()
+
+    /**
+     * Une note posée sur une case à notes : elle sonne tout de suite, avec le son normal (c'est le doigt qui bouge qui distord),
+     * et s'enregistre sur sa piste si la prise est en cours.
+     */
+    private fun padNoteDown(track: Int, pitch: Int) {
+        if (session.isMuted(track)) return
+        padExpressionResets.remove(track)?.let { handler.removeCallbacks(it) }
+        val fingers = padFingers[track] ?: 0
+        padFingers[track] = fingers + 1
+        if (fingers == 0) engine.setLiveDrive(track, 0f)
+        engine.trigger(track, pitch, 0.9f)
+        recorder.press(pitch, engine.playPosition, track)
+    }
+
+    private fun padNoteUp(track: Int, pitch: Int) {
+        engine.release(track, pitch)
+        recorder.release(pitch, engine.playPosition, track)
+        roll.invalidate()
+        val left = ((padFingers[track] ?: 1) - 1).coerceAtLeast(0)
+        padFingers[track] = left
+        if (left == 0) {
+            // Plus aucun doigt : la piste retrouve son son net une fois la note éteinte (pas pendant sa queue)
+            val reset = Runnable { engine.setLiveDrive(track, 0f) }
+            padExpressionResets[track] = reset
+            handler.postDelayed(reset, 1500)
+        }
+    }
+
+    /**
+     * Les niveaux d'une case à notes : une octave de la gamme, de tonique à tonique, dans le registre de la piste (celui de
+     * ses notes ; sans note, l'octave du milieu pour un synthé de mélodie).
+     */
+    private fun padLevels(trackId: Int): IntArray {
+        val p = session.project
+        val notes = p.pattern.notes.filter { it.track == trackId }
+        val low = notes.minOfOrNull { it.pitch } ?: 48
+        val tonic = low - Math.floorMod(low - p.keyPc, 12)
+        return Scales.rows(Scales.byId(p.scaleId), p.keyPc, tonic, 1, true)
+    }
+
+    /** Les cases : une par piste visible (batterie ou notes), dans l'ordre des pistes. */
+    private fun refreshPads() {
+        if (!::pads.isInitialized) return
+        pads.keyPc = session.project.keyPc
+        pads.tiles = visibleTracks().map { t ->
+            PadsView.Tile(t.id, trackColor(t), InstrumentIcons.of(t), if (t.melodic) padLevels(t.id) else null)
+        }
+    }
+
+    /**
+     * Enregistrer aux pads : les coups s'écrivent dans la boucle sur le pas le plus proche, et ce qu'on joue sur la zone synthé
+     * devient des notes. À l'arrêt, une mesure de décompte précède la lecture ; le métronome bat pendant toute la prise.
+     */
+    private fun setPadsRecording(on: Boolean) {
+        if (!::padsRecordButton.isInitialized) return
+        padsRecording = on
+        padsRecordButton.setText(if (on) R.string.studio_record_on else R.string.studio_record_off)
+        padsRecordButton.setBackgroundColor(if (on) 0x66E74C3C else android.graphics.Color.TRANSPARENT)
+        if (::recorder.isInitialized && recorder.armed != on) {
+            if (recorder.armed) recorder.finishAll()
+            recorder.armed = on
+            scheduleSave()
+        }
+        refreshMetronome()
+        if (on && !playing) {
+            playing = true
+            engine.play(countIn = true)
+            refreshTransport()
+        }
+    }
+
+    /** Le métronome bat tant qu'on enregistre (aux pads ou au clavier). */
+    private fun refreshMetronome() {
+        engine.metronome = padsRecording || (::recorder.isInitialized && recorder.armed)
+    }
+
     /** Le mixeur : une tranche par piste (nom, volume, panoramique, muet, solo, effets) et un pad XY pour jouer le filtre et la réverbération. */
     private fun buildMixerPane(): LinearLayout {
         val pane = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
@@ -505,7 +675,9 @@ class StudioActivity : AudioThemedActivity() {
         mixerStrips = strips
         val strip = HorizontalScrollView(this).apply {
             isHorizontalScrollBarEnabled = true
-            addView(strips, FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+            // Sur un écran large, les tranches prennent toute la hauteur (des faders plus longs, plus précis)
+            isFillViewport = true
+            addView(strips, FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT))
         }
 
         // Pad XY : le doigt ferme le filtre (vers la gauche) et ajoute de la réverbération (vers le haut)
@@ -588,10 +760,14 @@ class StudioActivity : AudioThemedActivity() {
     private fun applyMixerLayout() {
         val wide = resources.configuration.screenWidthDp >= 1100
         mixerBody.orientation = if (wide) LinearLayout.HORIZONTAL else LinearLayout.VERTICAL
-        // Les tranches gardent leur taille ; le pad de jeu, lui, prend toute la place qui reste
+        // Large : les tranches prennent toute la hauteur ; étroit : elles gardent leur taille et le pad prend ce qui reste
         mixerStripView.layoutParams =
-            if (wide) LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            if (wide) LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT)
             else LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        if (wide != mixerWide) {
+            mixerWide = wide
+            if (::session.isInitialized && !building) rebuildMixer()
+        }
         mixerPadBox.layoutParams =
             if (wide) LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1f).apply {
                 marginStart = dp(24)
@@ -604,9 +780,14 @@ class StudioActivity : AudioThemedActivity() {
         mixerBody.requestLayout()
     }
 
+    /** Vrai quand le mixeur est rangé côte à côte (tranches pleine hauteur, pad à droite). */
+    private var mixerWide = false
+
     override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
         super.onConfigurationChanged(newConfig)
         if (::mixerBody.isInitialized) applyMixerLayout()
+        applyNotesLayout()
+        if (::theremin.isInitialized) refreshRoll()
     }
 
     /** Les tranches du mixeur : une par piste visible (nom, volume, panoramique, muet, solo, effets). */
@@ -655,7 +836,11 @@ class StudioActivity : AudioThemedActivity() {
                 }
             }
             levelFaders += level
-            strip.addView(level, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(230)))
+            strip.addView(
+                level,
+                if (mixerWide) LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f)
+                else LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(FADER_DP)),
+            )
 
             strip.addView(View(this), LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(10)))
             val buttons = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
@@ -690,7 +875,11 @@ class StudioActivity : AudioThemedActivity() {
                 setOnClickListener { showFxPanel(it, lane, title) }
             }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(44)))
 
-            mixerStrips.addView(strip, LinearLayout.LayoutParams(dp(90), ViewGroup.LayoutParams.WRAP_CONTENT).apply { marginEnd = dp(8) })
+            mixerStrips.addView(
+                strip,
+                LinearLayout.LayoutParams(dp(90), if (mixerWide) ViewGroup.LayoutParams.MATCH_PARENT else ViewGroup.LayoutParams.WRAP_CONTENT)
+                    .apply { marginEnd = dp(8); bottomMargin = if (mixerWide) dp(12) else 0 },
+            )
         }
         refreshMixer()
     }
@@ -734,6 +923,11 @@ class StudioActivity : AudioThemedActivity() {
         add(R.string.studio_fx_filter, { it.filter }, { (it + 1f) / 2f }, { it * 2f - 1f }, { m, v -> m.copy(filter = if (kotlin.math.abs(v) < 0.04f) 0f else v) })
         add(R.string.studio_fx_drive, { it.drive }, { it }, { it }, { m, v -> m.copy(drive = v) })
         add(R.string.studio_fx_crush, { it.crush }, { it }, { it }, { m, v -> m.copy(crush = v) })
+        // La pompe suit la grosse caisse : elle n'a pas de sens sur la grosse caisse elle-même
+        val t = session.project.trackOrNull(lane)
+        if (t != null && !(t.kind == TrackKind.DRUM && t.voice == Inst.KICK)) {
+            add(R.string.studio_fx_pump, { it.pump }, { it }, { it }, { m, v -> m.copy(pump = if (v < 0.02f) 0f else v) })
+        }
         box.addView(TextView(this).apply {
             text = title
             textSize = 16f
@@ -807,10 +1001,16 @@ class StudioActivity : AudioThemedActivity() {
         header.addView(arpButton, wrap(end = dp(8)))
         recordButton = outlined(null).also { it.setOnClickListener { toggleRecord() } }
         header.addView(recordButton, wrap(end = dp(8)))
+        // Thérémine : le clavier laisse la place à une surface où l'on glisse le doigt
+        thereminToggle = outlined(R.string.studio_theremin).apply {
+            isCheckable = true
+            setOnClickListener { setTheremin(isChecked) }
+        }
+        header.addView(thereminToggle, wrap(end = dp(8)))
         midiText = caption(R.string.studio_midi_connected).also { it.visibility = View.GONE }
         header.addView(midiText, wrap())
         outer.addView(header)
-        trackDependent.addAll(listOf(keyButton, scaleButton, lockSwitch, octaves, soundButton, arpButton, recordButton))
+        trackDependent.addAll(listOf(keyButton, scaleButton, lockSwitch, octaves, soundButton, arpButton, recordButton, thereminToggle))
 
         notesEmpty = TextView(this).apply {
             setText(R.string.studio_no_melody)
@@ -861,8 +1061,8 @@ class StudioActivity : AudioThemedActivity() {
                 override fun onEditNote(note: Note, screenX: Float, screenY: Float) = showStepBubble(note.track, note.step, screenX, screenY)
             }
         }
-        // Le piano roll prend sa hauteur naturelle, le clavier se pose juste dessous
-        roll.reserveBelow = dp(150 + 8)
+        // Le piano roll prend sa hauteur naturelle, le clavier se pose juste dessous (plus de place au clavier en portrait)
+        applyNotesLayout()
         pane.addView(roll, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(8) })
 
         keyboard = KeyboardView(this).apply {
@@ -887,11 +1087,51 @@ class StudioActivity : AudioThemedActivity() {
             setOnTouchListener { _, event -> roll.dragScroll(event) }
         }
         keyboardZone.addView(keyboard, FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.BOTTOM).apply { topMargin = dp(8) })
+        theremin = ThereminView(this).apply { visibility = View.GONE }
+        wireTheremin(theremin)
+        keyboardZone.addView(theremin, FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT).apply { topMargin = dp(8) })
         pane.addView(keyboardZone, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f))
         outer.addView(pane, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f))
         drumPanel = buildDrumPanel()
         outer.addView(drumPanel, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
         return outer
+    }
+
+    /**
+     * Branche un pad thérémine sur la piste mélodique choisie : le doigt joue (et s'enregistre si l'enregistrement est armé),
+     * glisse d'une note de la gamme à l'autre, et règle le jeu (doux et sourd en bas, fort et brillant en haut).
+     */
+    private fun wireTheremin(view: ThereminView) {
+        view.apply {
+            noteNames = resources.getStringArray(R.array.studio_key_names).toList()
+            onStart = { pitch, expression ->
+                handler.removeCallbacks(expressionReset)
+                thereminTrack = selectedTrack
+                engine.setExpression(selectedTrack, expression)
+                roll.setLit(pitch, true)
+                liveNoteOn(pitch, 0.9f, engine.playPosition)
+            }
+            onPitch = { from, to ->
+                val track = thereminTrack
+                if (track >= 0 && !session.isMuted(track)) engine.glide(track, from, to, 0.9f)
+                roll.setLit(from, false)
+                roll.setLit(to, true)
+                // L'enregistreur voit deux notes : celle qu'on quitte se termine, la nouvelle commence
+                val position = engine.playPosition
+                recorder.release(from, position)
+                recorder.press(to, position)
+                roll.invalidate()
+            }
+            onExpression = { expression -> if (thereminTrack >= 0) engine.setExpression(thereminTrack, expression) }
+            onEnd = { pitch ->
+                roll.setLit(pitch, false)
+                if (thereminTrack >= 0) engine.release(thereminTrack, pitch)
+                recorder.release(pitch, engine.playPosition)
+                roll.invalidate()
+                // La piste retrouve son niveau normal une fois la note éteinte (pas pendant sa queue)
+                handler.postDelayed(expressionReset, 1500)
+            }
+        }
     }
 
     /**
@@ -1082,16 +1322,22 @@ class StudioActivity : AudioThemedActivity() {
         val params = ArrayList<SoundParam>()
         val synthKind = t.kind == TrackKind.SYNTH
         val pick = outlined(null)
+        val forget = outlined(R.string.studio_forget_sound)
         fun refreshPick() {
             val now = curTrack() ?: return
-            pick.text = if (now.kind == TrackKind.SYNTH) getString(presetName(now.synth.id)) else sf2ProgramName(now)
+            pick.text = if (now.kind == TrackKind.SYNTH) soundName(now.synth) else sf2ProgramName(now)
+            forget.visibility = if (now.kind == TrackKind.SYNTH && now.synth.id.startsWith(SynthPatch.MINE_PREFIX)) View.VISIBLE else View.GONE
             for (p in params) p.bar.progress = (p.toSlider(p.read()).coerceIn(0f, 1f) * 1000).roundToInt()
             refreshNotesControls()
         }
         pick.setOnClickListener {
             if (synthKind) {
-                dropdown(pick, SynthPresets.ALL.map { getString(presetName(it.id)) }) { which ->
-                    session.setPreset(SynthPresets.ALL[which].id, selectedTrack)
+                // Les sons du synthé, puis « Mon son (micro) » s'il y a un enregistrement, puis les sons gardés
+                val choices = ArrayList<SynthPatch>(SynthPresets.ALL)
+                if (engine.synthSample != null) choices += SynthPresets.MY_VOICE
+                choices += mySounds.all()
+                dropdown(pick, choices.map { soundName(it) }) { which ->
+                    session.updateSynth(selectedTrack) { choices[which] }
                     scheduleSave()
                     refreshPick()
                     previewKeyNote()
@@ -1108,6 +1354,63 @@ class StudioActivity : AudioThemedActivity() {
             }
         }
         box.addView(pick)
+
+        if (synthKind) {
+            // Un son à soi : enregistré au micro, ou un réglage gardé pour le retrouver dans tous les morceaux
+            val own = FlowRow(this).apply { hGap = dp(8); vGap = dp(4) }
+            val status = TextView(this).apply { textSize = 13f; alpha = 0.75f; visibility = View.GONE }
+            val record = outlined(R.string.studio_synth_record)
+            record.setOnClickListener {
+                withMic {
+                    record.isEnabled = false
+                    status.visibility = View.VISIBLE
+                    status.setText(R.string.studio_synth_listening)
+                    Thread {
+                        val pcm = SampleTools.record()
+                        val clean = pcm?.let { SampleTools.clean(it) }
+                        val root = clean?.let { SampleTools.detectRoot(it, SampleTools.RATE) }
+                        if (clean != null) SampleTools.save(this, clean, SampleTools.SYNTH_FILE)
+                        runOnUiThread {
+                            if (isFinishing || isDestroyed) return@runOnUiThread
+                            record.isEnabled = true
+                            if (clean != null && root != null) {
+                                status.visibility = View.GONE
+                                engine.setSynthSample(SynthSample(clean, SampleTools.RATE, root))
+                                session.updateSynth(selectedTrack) { SynthPresets.MY_VOICE }
+                                scheduleSave()
+                                refreshPick()
+                                previewKeyNote()
+                            } else {
+                                status.setText(if (pcm == null) R.string.studio_sample_failed else R.string.studio_sample_nothing)
+                            }
+                        }
+                    }.start()
+                }
+            }
+            own.addView(record)
+            own.addView(outlined(R.string.studio_keep_sound).apply {
+                setOnClickListener {
+                    val now = curTrack()?.synth ?: return@setOnClickListener
+                    val suggested = if (now.id.startsWith(SynthPatch.MINE_PREFIX)) MySounds.nameOf(now.id) else soundName(now)
+                    promptText(R.string.studio_keep_sound_title, suggested, android.R.string.ok) { name ->
+                        if (name.isNotBlank()) {
+                            val kept = mySounds.keep(now, name)
+                            session.updateSynth(selectedTrack) { kept }
+                            scheduleSave()
+                            refreshPick()
+                        }
+                    }
+                }
+            })
+            forget.setOnClickListener {
+                // Le morceau garde son exemplaire du réglage ; le son disparaît seulement de la liste
+                curTrack()?.synth?.id?.let { mySounds.forget(it) }
+                forget.visibility = View.GONE
+            }
+            own.addView(forget)
+            box.addView(own, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(8) })
+            box.addView(status)
+        }
 
         fun add(into: ViewGroup, p: SoundParam) {
             params += p
@@ -1133,7 +1436,7 @@ class StudioActivity : AudioThemedActivity() {
                 isSelectionRequired = true
                 val labels = listOf(R.string.studio_wave_saw, R.string.studio_wave_square, R.string.studio_wave_triangle, R.string.studio_wave_sine)
                 for (i in 0 until 4) addView(outlined(labels[i]).apply { id = waveIds[i]; minWidth = 0; setPadding(dp(8), 0, dp(8), 0) })
-                check(waveIds[curSynth().wave.coerceIn(0, 3)])
+                if (curSynth().wave in 0..3) check(waveIds[curSynth().wave])
                 addOnButtonCheckedListener { _, id, checked ->
                     if (checked) {
                         session.updateSynth(selectedTrack) { it.copy(wave = waveIds.indexOf(id)) }
@@ -1284,13 +1587,31 @@ class StudioActivity : AudioThemedActivity() {
     private fun togglePlay() {
         playing = !playing
         if (playing) engine.play() else engine.stop()
+        // Arrêter la lecture arrête aussi la prise aux pads
+        if (!playing && padsRecording) setPadsRecording(false)
         refreshTransport()
     }
 
     private fun showTab(id: Int) {
         val notes = id == tabNotesId
+        val padsTab = id == tabPadsId
         onNotesTab = notes
+        // Rien ne reste tenu sur la page qu'on quitte ; la prise aux pads s'arrête avec elle
+        if (!padsTab) {
+            pads.releaseAll()
+            if (padsRecording) setPadsRecording(false)
+        }
+        if (!notes) theremin.finish()
+        // Les coups des pads reviennent à l'écran (pour briller, et pour s'écrire pendant l'enregistrement)
+        engine.recordHits = padsTab
+        if (padsTab) {
+            setSelectMode(false)
+            ensureSelected()
+            refreshRoll()
+            refreshPads()
+        }
         rhythmPane.visibility = if (id == tabRhythmId) View.VISIBLE else View.GONE
+        padsPane.visibility = if (padsTab) View.VISIBLE else View.GONE
         notesPane.visibility = if (notes) View.VISIBLE else View.GONE
         mixerPane.visibility = if (id == tabMixerId) View.VISIBLE else View.GONE
         if (id == tabMixerId) refreshMixer()
@@ -1343,15 +1664,6 @@ class StudioActivity : AudioThemedActivity() {
     private fun pickScale(anchor: View) {
         dropdown(anchor, Scales.ALL.map { getString(scaleName(it.id)) }) { which ->
             session.setScale(Scales.ALL[which].id)
-            changed()
-        }
-    }
-
-    /** Le menu « ⋯ » : les actions qui changent tout le motif en cours. */
-    private fun showEditMenu(anchor: View) {
-        val labels = listOf(getString(R.string.studio_random), getString(R.string.studio_clear))
-        dropdown(anchor, labels) { which ->
-            if (which == 0) session.randomize(System.nanoTime()) else session.clear()
             changed()
         }
     }
@@ -1425,6 +1737,13 @@ class StudioActivity : AudioThemedActivity() {
     private fun toggleRecord() {
         if (recorder.armed) recorder.finishAll()
         recorder.armed = !recorder.armed
+        refreshMetronome()
+        // À l'arrêt, une mesure de décompte (au métronome) laisse le temps de poser les doigts
+        if (recorder.armed && !playing) {
+            playing = true
+            engine.play(countIn = true)
+            refreshTransport()
+        }
         refreshNotesControls()
         roll.invalidate()
         scheduleSave()
@@ -1473,6 +1792,7 @@ class StudioActivity : AudioThemedActivity() {
         midi?.stop()
         recorder.finishAll()
         recorder.armed = false
+        refreshMetronome()
     }
 
     /** Après un remplacement en bloc (style, hasard, effacer, annuler, tonalité, son) : tout se redessine et se sauvegarde. */
@@ -1578,6 +1898,18 @@ class StudioActivity : AudioThemedActivity() {
 
     // ---- Export ---------------------------------------------------------------------------------------------------
 
+    /** Les sons enregistrés au micro, pour que le fichier sonne comme l'écoute. */
+    private fun exportSounds(): StudioExporter.Sounds {
+        val perc = SampleTools.load(this)
+        return StudioExporter.Sounds(perc?.first, perc?.second ?: SampleTools.RATE, engine.synthSample)
+    }
+
+    /** Le son du micro pour le synthé, s'il y en a un : sa note est retrouvée à l'ouverture (rapide : une fraction de seconde de calcul). */
+    private fun loadSynthSample() {
+        val (data, rate) = SampleTools.load(this, SampleTools.SYNTH_FILE) ?: return
+        engine.setSynthSample(SynthSample(data, rate, SampleTools.detectRoot(data, rate)))
+    }
+
     /** Rend le fichier hors ligne (plus vite que le temps réel) avec une barre de progression, puis dit où il est. */
     private fun runExport(kind: Int) {
         // Pendant le rendu, la lecture se tait : le téléphone a besoin de toute sa puissance
@@ -1601,7 +1933,7 @@ class StudioActivity : AudioThemedActivity() {
             var shown = -1
             val saved = when (kind) {
                 EXPORT_MIDI -> StudioFiles.saveMidi(this, project)
-                else -> StudioFiles.saveWav(this, project, sf2?.factory) { f ->
+                else -> StudioFiles.saveWav(this, project, sf2?.factory, sounds = exportSounds()) { f ->
                     // Le rendu donne des nouvelles tous les 1 024 échantillons : l'écran n'en reçoit qu'une par pour mille gagné
                     val p = (f * 1000).toInt()
                     if (p != shown) {
@@ -1664,27 +1996,35 @@ class StudioActivity : AudioThemedActivity() {
             orientation = LinearLayout.VERTICAL
             setPadding(dp(16), dp(12), dp(16), dp(12))
         }
-        val chainText = TextView(this).apply { textSize = 22f; setPadding(0, dp(8), 0, dp(12)) }
+        // Les blocs du morceau : glisser pour ranger, tirer hors de la rangée pour retirer ; celui qui joue s'allume
+        val emptyText = TextView(this).apply { textSize = 16f; alpha = 0.75f; setText(R.string.studio_song_empty); setPadding(0, dp(8), 0, dp(8)) }
+        val blocks = ChainView(this).apply {
+            this.names = names.toList()
+            colors = PATTERN_COLORS
+            playing = { if (this@StudioActivity.playing && session.project.songMode) engine.songPosition else -1 }
+        }
         val playSwitch = androidx.appcompat.widget.SwitchCompat(this).apply { setText(R.string.studio_song_play) }
         fun refresh() {
             val chain = session.project.chain
-            chainText.text = if (chain.isEmpty()) getString(R.string.studio_song_empty)
-            else chain.joinToString(getString(R.string.studio_chain_join)) { names[it] }
+            blocks.chain = chain
+            emptyText.visibility = if (chain.isEmpty()) View.VISIBLE else View.GONE
             playSwitch.isEnabled = chain.isNotEmpty()
             val was = playSwitch.isChecked
             if (was != session.project.songMode) playSwitch.isChecked = session.project.songMode
             refreshPatterns()
             scheduleSave()
         }
-        box.addView(chainText)
-        val adds = FlowRow(this)
+        blocks.onMove = { from, to -> session.chainMove(from, to); refresh() }
+        blocks.onRemove = { index -> session.chainRemoveAt(index); refresh() }
+        box.addView(emptyText)
+        box.addView(blocks, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(8); bottomMargin = dp(8) })
+        val adds = FlowRow(this).apply { hGap = dp(8); vGap = dp(4) }
         for (k in 0 until StudioProject.SLOTS) {
             adds.addView(outlined(null).apply {
                 text = getString(R.string.studio_song_add, names[k])
                 setOnClickListener { session.chainAdd(k); refresh() }
             })
         }
-        adds.addView(outlined(R.string.studio_song_remove).apply { setOnClickListener { session.chainRemoveLast(); refresh() } })
         adds.addView(outlined(R.string.studio_song_clear).apply { setOnClickListener { session.chainClear(); refresh() } })
         box.addView(adds)
         playSwitch.setOnCheckedChangeListener { _, on ->
@@ -1718,6 +2058,8 @@ class StudioActivity : AudioThemedActivity() {
         refreshRoll()
         refreshNotesControls()
         refreshMixer()
+        // Les niveaux des cases à notes suivent la gamme, la tonalité et le registre des notes
+        if (padsPane.visibility == View.VISIBLE) refreshPads()
     }
 
     private fun refreshRoll() {
@@ -1731,6 +2073,36 @@ class StudioActivity : AudioThemedActivity() {
         keyboard.scale = scale
         keyboard.low = rollBase
         keyboard.locked = scaleLocked
+        // Le thérémine joue toujours sur la gamme (glisser, c'est passer d'une note juste à la suivante) : deux octaves, trois si large
+        val octaves = if (resources.configuration.screenWidthDp >= 900) 3 else 2
+        theremin.keyPc = p.keyPc
+        theremin.pitches = Scales.rows(scale, p.keyPc, rollBase, octaves, true)
+    }
+
+    /** Le clavier ou le thérémine, sous le piano roll. */
+    private fun setTheremin(on: Boolean) {
+        thereminOn = on
+        if (thereminToggle.isChecked != on) thereminToggle.isChecked = on
+        if (!on) theremin.finish()
+        theremin.visibility = if (on) View.VISIBLE else View.GONE
+        keyboard.visibility = if (on) View.GONE else View.VISIBLE
+        applyNotesLayout()
+    }
+
+    /**
+     * La part du bas de l'onglet Notes : en portrait, le clavier (ou le thérémine) a plus de place ; en paysage, le piano roll
+     * garde la sienne. Le thérémine, lui, prend toujours au moins un tiers de la hauteur.
+     */
+    private fun applyNotesLayout() {
+        if (!::roll.isInitialized) return
+        val portrait = resources.configuration.screenHeightDp > resources.configuration.screenWidthDp
+        val below = when {
+            thereminOn -> maxOf(resources.configuration.screenHeightDp / 3, 220)
+            portrait -> 208
+            else -> 158
+        }
+        roll.reserveBelow = dp(below)
+        roll.requestLayout()
     }
 
     private fun refreshNotesControls() {
@@ -1752,12 +2124,14 @@ class StudioActivity : AudioThemedActivity() {
         recordButton.setText(if (recorder.armed) R.string.studio_record_on else R.string.studio_record_off)
         recordButton.setBackgroundColor(if (recorder.armed) 0x66E74C3C else android.graphics.Color.TRANSPARENT)
         if (t == null) return
-        val soundName = if (t.kind == TrackKind.SYNTH) getString(presetName(t.synth.id)) else sf2ProgramName(t)
+        val soundName = if (t.kind == TrackKind.SYNTH) soundName(t.synth) else sf2ProgramName(t)
         soundButton.text = getString(R.string.studio_sound_label, soundName)
         arpButton.text = getString(R.string.studio_arp_label, getString(arpName(t.arpMode)))
         roll.accent = trackColor(t)
         keyboard.accent = trackColor(t)
         keyboard.invalidate()
+        theremin.accent = trackColor(t)
+        theremin.invalidate()
     }
 
     // ---- Les pistes -------------------------------------------------------------------------------------------------
@@ -1904,6 +2278,24 @@ class StudioActivity : AudioThemedActivity() {
         )
         box.addView(row(R.string.studio_drum_tune, pitchControl), rowParams(dp(6)))
 
+        // Quand le coup joue : à chaque tour, un tour sur deux, le 4e tour, ou au hasard (batterie seulement)
+        val condButton = outlined(null)
+        val conds = resources.getStringArray(R.array.studio_step_conds)
+        fun refreshCond() {
+            condButton.text = conds.getOrElse(session.stepInfo(trackId, step)?.cond ?: 0) { conds[0] }
+        }
+        if (!t.melodic) {
+            condButton.setOnClickListener {
+                dropdown(condButton, conds.toList()) { which ->
+                    session.editStep(trackId, step, cond = which)
+                    refreshCond()
+                    redraw()
+                }
+            }
+            refreshCond()
+            box.addView(row(R.string.studio_step_when, condButton), rowParams(dp(6)))
+        }
+
         // Copier / Oublier / Effacer
         val actions = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
         val copy = outlined(null)
@@ -1920,6 +2312,7 @@ class StudioActivity : AudioThemedActivity() {
             bar.progress = 90
             redraw()
             refreshCopy()
+            refreshCond()
             previewLane(trackId, step)
         }
         refreshCopy()
@@ -2072,7 +2465,7 @@ class StudioActivity : AudioThemedActivity() {
     /** Montre ou cache la barre (pas sur le mixeur ni sur le son d'une batterie) et grise ce qui n'a pas de sens pour l'instant. */
     private fun refreshSelectionBar() {
         if (!::selectionBar.isInitialized) return
-        val relevant = mixerPane.visibility != View.VISIBLE && !(onNotesTab && editedDrum >= 0)
+        val relevant = mixerPane.visibility != View.VISIBLE && padsPane.visibility != View.VISIBLE && !(onNotesTab && editedDrum >= 0)
         selectionBar.visibility = if (relevant && selectMode) View.VISIBLE else View.GONE
         selectToggle.visibility = if (relevant) View.VISIBLE else View.GONE
         if (selectToggle.isChecked != selectMode) selectToggle.isChecked = selectMode
@@ -2167,6 +2560,7 @@ class StudioActivity : AudioThemedActivity() {
         grid.laneBadges = visible.map { trackBadge(it) }
         grid.laneNames = visible.map { trackName(it) }
         rebuildMixer()
+        refreshPads()
     }
 
     private fun triggerPerc() {
@@ -2191,21 +2585,24 @@ class StudioActivity : AudioThemedActivity() {
                 refreshRoll()
                 refreshNotesControls()
             }
-            // Le contour porte la couleur de la piste ; la piste ouverte a un trait plus épais et un fond teinté
-            val on = if (editedDrum >= 0) t.id == editedDrum else t.id == selectedTrack
-            val color = trackColor(t)
-            val raised = ContextCompat.getColor(this, R.color.audio_surface_raised)
-            val shape = android.graphics.drawable.GradientDrawable().apply {
-                cornerRadius = dp(17).toFloat()
-                setColor(if (on) androidx.core.graphics.ColorUtils.compositeColors((color and 0x00FFFFFF) or 0x40000000, raised) else raised)
-                setStroke(dp(if (on) 3 else 2), color)
-            }
-            c.background = android.graphics.drawable.RippleDrawable(
-                android.content.res.ColorStateList.valueOf(ContextCompat.getColor(this, R.color.audio_ripple)), shape, null,
-            )
+            styleTrackChip(c, t, if (editedDrum >= 0) t.id == editedDrum else t.id == selectedTrack)
             trackStrip.addView(c)
         }
         trackStrip.addView(chip(null, R.drawable.ic_px_add) { showAddTrackSheet() })
+    }
+
+    /** Le contour d'une pastille de piste porte sa couleur ; la piste ouverte ([on]) a un trait plus épais et un fond teinté. */
+    private fun styleTrackChip(c: View, t: Track, on: Boolean) {
+        val color = trackColor(t)
+        val raised = ContextCompat.getColor(this, R.color.audio_surface_raised)
+        val shape = android.graphics.drawable.GradientDrawable().apply {
+            cornerRadius = dp(17).toFloat()
+            setColor(if (on) androidx.core.graphics.ColorUtils.compositeColors((color and 0x00FFFFFF) or 0x40000000, raised) else raised)
+            setStroke(dp(if (on) 3 else 2), color)
+        }
+        c.background = android.graphics.drawable.RippleDrawable(
+            android.content.res.ColorStateList.valueOf(ContextCompat.getColor(this, R.color.audio_ripple)), shape, null,
+        )
     }
 
     /** Ouvre le soundfont de l'appli (hors du fil de l'écran) puis fait [action] ; sans soundfont, le dit. */
@@ -2357,6 +2754,13 @@ class StudioActivity : AudioThemedActivity() {
         "blues" -> R.string.studio_scale_blues
         "chromatic" -> R.string.studio_scale_chromatic
         else -> R.string.studio_scale_minor_pent
+    }
+
+    /** Le nom d'un son du synthé : celui d'un son d'origine, « Mon son (micro) », ou le nom donné par l'utilisateur. */
+    private fun soundName(patch: SynthPatch): String = when {
+        patch.id.startsWith(SynthPatch.MINE_PREFIX) -> MySounds.nameOf(patch.id)
+        patch.id == SynthPresets.MY_VOICE.id -> getString(R.string.studio_preset_my_voice)
+        else -> getString(presetName(patch.id))
     }
 
     private fun presetName(id: String): Int = when (id) {
@@ -2535,6 +2939,16 @@ class StudioActivity : AudioThemedActivity() {
 
         /** Volume maximal d'une piste : le haut du fader. */
         const val LEVEL_MAX = 1.5f
+
+        /** Les réglages du Studio gardés d'une fois sur l'autre (pas ceux d'un morceau). */
+        const val PREFS = "studio_prefs"
+        const val PREF_PADS_ROLL = "pads_roll"
+
+        /** Hauteur d'un fader quand les tranches sont au-dessus du pad (écran étroit). */
+        const val FADER_DP = 260
+
+        /** La couleur de chaque motif (A à D) dans les blocs du morceau. */
+        val PATTERN_COLORS = intArrayOf(0xFF7C8CFF.toInt(), 0xFF1ABC9C.toInt(), 0xFFF39C12.toInt(), 0xFFE84393.toInt())
 
         /** Les noms des sept sons de batterie, dans l'ordre de [Inst]. */
         /** Les allures proposées en touchant le tempo, de la plus lente à la plus rapide (noms : `studio_tempo_names`). */

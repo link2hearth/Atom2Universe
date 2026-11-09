@@ -4,6 +4,7 @@ import com.Atom2Universe.app.studio.data.StudioProject
 import com.Atom2Universe.app.studio.data.StudioSession
 import com.Atom2Universe.app.studio.data.Track
 import com.Atom2Universe.app.studio.dsp.ExternalSynth
+import com.Atom2Universe.app.studio.dsp.SynthSample
 import com.Atom2Universe.app.studio.engine.GM_DRUM_NOTES
 import com.Atom2Universe.app.studio.engine.Inst
 import com.Atom2Universe.app.studio.engine.StepPattern
@@ -26,6 +27,9 @@ object StudioExporter {
 
     /** Queue de réverbération et d'écho gardée après la dernière frappe, en secondes. */
     private const val TAIL_SECONDS = 2.5
+
+    /** Les sons enregistrés au micro que le rendu doit jouer comme à l'écoute (percussion, synthé). */
+    class Sounds(val perc: FloatArray? = null, val percRate: Int = 48_000, val synth: SynthSample? = null)
 
     /** Les motifs exportés, dans l'ordre. */
     fun plan(project: StudioProject): List<StepPattern> =
@@ -52,10 +56,14 @@ object StudioExporter {
         out: OutputStream,
         /** Fabrique le synthé des pistes soundfont (sans lui, ces pistes restent muettes). */
         sf2Factory: ((sampleRate: Int, bank: Int, program: Int) -> ExternalSynth?)? = null,
+        sounds: Sounds = Sounds(),
         onProgress: (Float) -> Boolean = { true },
     ): Boolean {
         val engine = StudioEngine(sampleRate)
         engine.sf2Factory = sf2Factory
+        // Avant les pistes : les instruments fabriqués par la session reçoivent déjà ces sons
+        engine.setPercSample(sounds.perc, sounds.percRate)
+        engine.setSynthSample(sounds.synth)
         StudioSession(engine, project) // pousse tout le projet (sons, mixage, morceau) dans le moteur
         val total = frameCount(project, sampleRate)
         val music = total - (TAIL_SECONDS * sampleRate).toLong()

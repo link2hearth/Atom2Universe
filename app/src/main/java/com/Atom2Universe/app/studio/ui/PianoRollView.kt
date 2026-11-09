@@ -119,12 +119,12 @@ class PianoRollView(context: Context) : View(context) {
     override fun onMeasure(widthSpec: Int, heightSpec: Int) {
         val w = MeasureSpec.getSize(widthSpec)
         val available = (MeasureSpec.getSize(heightSpec) - reserveBelow).coerceAtLeast(0)
-        val natural = (topBar + rows.size * dp(40f)).toInt()
+        val natural = (topBar + rows.size * dp(ROW_MAX_DP)).toInt()
         setMeasuredDimension(w, if (MeasureSpec.getMode(heightSpec) == MeasureSpec.UNSPECIFIED) natural else min(natural, available))
     }
 
-    /** Hauteur d'une rangée : au plus 40 dp (on n'étire pas), moins s'il y en a beaucoup. */
-    private fun rowH(): Float = if (rows.isEmpty()) 0f else min(dp(40f), (height - topBar) / rows.size)
+    /** Hauteur d'une rangée : la place disponible partagée, au plus [ROW_MAX_DP] (on n'étire pas au-delà), moins s'il y en a beaucoup. */
+    private fun rowH(): Float = if (rows.isEmpty()) 0f else min(dp(ROW_MAX_DP), (height - topBar) / rows.size)
 
     /** Une case : la grille tient dans la largeur si elle peut, sinon chaque case garde au moins 32 dp et la grille défile. */
     private fun cellW(): Float {
@@ -705,3 +705,6 @@ class PianoRollView(context: Context) : View(context) {
         return super.onTouchEvent(event)
     }
 }
+
+/** La plus grande hauteur d'une rangée du piano roll, en dp. */
+private const val ROW_MAX_DP = 56f

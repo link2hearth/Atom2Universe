@@ -34,8 +34,6 @@
     <string name="studio_style_electro">Electro</string>
     <string name="studio_style_ambient">Ambient</string>
 
-    <string name="studio_random">Random</string>
-    <string name="studio_clear">Clear</string>
     <string name="studio_undo">Undo</string>
     <string name="studio_redo">Redo</string>
 
@@ -129,10 +127,8 @@
     <string name="studio_song_title">Song: patterns played one after another</string>
     <string name="studio_song_empty">Add patterns below</string>
     <string name="studio_song_add">+ %1$s</string>
-    <string name="studio_song_remove">Remove last</string>
     <string name="studio_song_clear">Clear</string>
     <string name="studio_song_play">Play the song</string>
-    <string name="studio_chain_join">" → "</string>
     <string name="studio_export_midi">MIDI file</string>
     <string name="studio_export_editor">Send to the audio editor</string>
     <string name="studio_export_working">Exporting…</string>
@@ -140,7 +136,7 @@
     <string name="studio_export_failed">The export did not work.</string>
     <string name="studio_help_button">?</string>
     <string name="studio_help_title">How it works</string>
-    <string name="studio_help_text">Rhythm: tap the squares to place drum hits. Press and hold a lit square to set its strength, length and pitch. Select outlines steps or notes to copy, cut, paste or delete. Pattern > Random gives ideas.\n\nNotes: pick a track in the top row. A track that plays notes shows the grid and the keyboard: draw notes, or play and press Record while the music runs. A drum track shows its sound: three versions, pitch, length, or a kit from your soundfont.\n\nMixer: one strip per track with its volume. Mute silences it, Solo keeps only that track, Effects opens balance, reverb, echo, filter, distortion and lo-fi. The pad changes the filter and the reverb while your finger is on it; Record my gesture keeps the move in the loop.\n\nPatterns A to D hold four different loops. Song plays them one after another. Export saves an audio file, a MIDI file, or sends the sound to the audio editor.\n\nMy sound: record two seconds with the microphone; it replaces the sound of the Perc. track.</string>
+    <string name="studio_help_text">Rhythm: tap the squares to place drum hits. Press and hold a lit square to set its strength, length and pitch. Select outlines steps or notes to copy, cut, paste or delete.\n\nNotes: pick a track in the top row. A track that plays notes shows the grid and the keyboard: draw notes, or play and press Record while the music runs. A drum track shows its sound: three versions, pitch, length, or a kit from your soundfont.\n\nMixer: one strip per track with its volume. Mute silences it, Solo keeps only that track, Effects opens balance, reverb, echo, filter, distortion and lo-fi. The pad changes the filter and the reverb while your finger is on it; Record my gesture keeps the move in the loop.\n\nPatterns A to D hold four different loops. Song plays them one after another. Export saves an audio file, a MIDI file, or sends the sound to the audio editor.\n\nMy sound: record two seconds with the microphone; it replaces the sound of the Perc. track.\n\nPads: big squares to play the drums with your fingers. A track that plays notes gets a small keyboard: low on the left, high on the right; move your finger up or down on a key to distort the sound. Roll: keep a finger on a drum to repeat it in time. Record starts after one bar of clicks.\n\nTheremin: slide your finger to play; left and right change the note (always on the scale), up makes the sound louder and brighter.\n\nSound > Record a sound: sing or play a note, the synth plays it on every key. Keep this sound finds it again in every song.</string>
     <string name="studio_sample">My sound</string>
     <string name="studio_sample_title">My sound (Perc. track)</string>
     <string name="studio_sample_default">The Perc. track plays its original bell.</string>
@@ -168,7 +164,6 @@
     <string name="studio_sf2_pick">Choose an instrument</string>
     <string name="studio_sf2_default_name">Soundfont</string>
     <string name="studio_settings">Settings</string>
-    <string name="studio_edit_menu">Pattern</string>
     <string name="studio_track_label">Track: %1$s</string>
     <string name="studio_key_label">Key: %1$s</string>
     <string name="studio_scale_label">Scale: %1$s</string>
@@ -226,6 +221,19 @@
     <string name="studio_volume">Volume</string>
     <string name="studio_lexicon_line">%1$s: %2$s</string>
     <string name="studio_lexicon_title">Glossary</string>
-    <string-array name="studio_lexicon_terms"><item>Volume</item><item>Balance</item><item>Mute</item><item>Solo</item><item>Reverb</item><item>Echo</item><item>Filter</item><item>Distortion</item><item>Lo-fi</item><item>Performance pad</item><item>Pitch</item><item>Length</item><item>Scale</item><item>Key</item><item>Arpeggio</item><item>Pattern</item><item>BPM</item><item>Soundfont</item><item>Copy</item><item>Select</item></string-array>
-    <string-array name="studio_lexicon_defs"><item>How loud the track is.</item><item>Places the sound more to the left or to the right.</item><item>Silences the track.</item><item>Keeps only this track.</item><item>The sound rings out as if in a big room.</item><item>The sound repeats and fades away.</item><item>Muffles the sound (to the left) or thins it (to the right).</item><item>Makes the sound rougher and louder.</item><item>A grain like an old machine or a worn tape.</item><item>While your finger is on it, the filter (left to right) and the reverb (bottom to top) change for the whole song.</item><item>Makes a drum sound lower or higher.</item><item>How long the sound lasts before it fades.</item><item>The notes that sound good together. With On the scale, you cannot hit a wrong note.</item><item>The note the scale starts from.</item><item>Plays the notes of a chord one after another.</item><item>One of the four loops, A to D.</item><item>The speed, in beats per minute.</item><item>A file of recorded instruments (piano, guitar, drums…).</item><item>The next steps you place on this track take the strength, length and pitch of this one.</item><item>Outline steps or notes, then Copy, Cut, Paste or Delete. To paste, turn Paste on and touch where it should go.</item></string-array>
+    <string-array name="studio_lexicon_terms"><item>Volume</item><item>Balance</item><item>Mute</item><item>Solo</item><item>Reverb</item><item>Echo</item><item>Filter</item><item>Distortion</item><item>Lo-fi</item><item>Performance pad</item><item>Pitch</item><item>Length</item><item>Scale</item><item>Key</item><item>Arpeggio</item><item>Pattern</item><item>BPM</item><item>Soundfont</item><item>Copy</item><item>Select</item><item>Pump</item><item>Roll</item></string-array>
+    <string-array name="studio_lexicon_defs"><item>How loud the track is.</item><item>Places the sound more to the left or to the right.</item><item>Silences the track.</item><item>Keeps only this track.</item><item>The sound rings out as if in a big room.</item><item>The sound repeats and fades away.</item><item>Muffles the sound (to the left) or thins it (to the right).</item><item>Makes the sound rougher and louder.</item><item>A grain like an old machine or a worn tape.</item><item>While your finger is on it, the filter (left to right) and the reverb (bottom to top) change for the whole song.</item><item>Makes a drum sound lower or higher.</item><item>How long the sound lasts before it fades.</item><item>The notes that sound good together. With On the scale, you cannot hit a wrong note.</item><item>The note the scale starts from.</item><item>Plays the notes of a chord one after another.</item><item>One of the four loops, A to D.</item><item>The speed, in beats per minute.</item><item>A file of recorded instruments (piano, guitar, drums…).</item><item>The next steps you place on this track take the strength, length and pitch of this one.</item><item>Outline steps or notes, then Copy, Cut, Paste or Delete. To paste, turn Paste on and touch where it should go.</item><item>The track dips at each kick drum hit, then comes back: the sound breathes with the beat.</item><item>Keep a finger on a pad: it plays again on every sixteenth note.</item></string-array>
+    <string name="studio_pads">Pads</string>
+    <string name="studio_roll">Roll</string>
+    <string name="studio_theremin">Theremin</string>
+    <string name="studio_fx_pump">Pump</string>
+    <string name="studio_step_when">Plays</string>
+    <string-array name="studio_step_conds"><item>Always</item><item>Every other loop</item><item>Every fourth loop</item><item>At random</item></string-array>
+    <string-array name="studio_cond_marks"><item></item><item>½</item><item>¼</item><item>?</item></string-array>
+    <string name="studio_synth_record">Record a sound</string>
+    <string name="studio_synth_listening">Listening… sing or play a note!</string>
+    <string name="studio_preset_my_voice">My sound (mic)</string>
+    <string name="studio_keep_sound">Keep this sound</string>
+    <string name="studio_keep_sound_title">Sound name</string>
+    <string name="studio_forget_sound">Forget this sound</string>
 </resources>

@@ -100,6 +100,12 @@ class StepGridView(context: Context) : View(context) {
     /** Vrai pour un pas qui prolonge une note commencée avant (longueur d'une note) : il se dessine en teinte douce. */
     var isTail: (lane: Int, step: Int) -> Boolean = { _, _ -> false }
 
+    /** Quand un pas allumé joue ([com.Atom2Universe.app.studio.engine.StepCond]) ; un pas qui ne joue pas à chaque tour porte une marque. */
+    var cond: (lane: Int, step: Int) -> Int = { _, _ -> 0 }
+
+    /** Les marques des pas « parfois », dans l'ordre des conditions (la première, « toujours », n'est pas dessinée). */
+    var condMarks: List<String> = emptyList()
+
     // ---- Sélection : un cadre de pistes et de pas ---------------------------------------------------------------
 
     /** Un cadre : les pistes (rang d'affichage) de [laneFrom] à [laneTo] et les pas de [stepFrom] à [stepTo], bornes comprises. */
@@ -254,6 +260,12 @@ class StepGridView(context: Context) : View(context) {
         color = Color.WHITE
         isFakeBoldText = true
     }
+    private val condPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        textSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 15f, resources.displayMetrics)
+        textAlign = Paint.Align.CENTER
+        isFakeBoldText = true
+        color = Color.WHITE
+    }
     private val badgePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         textSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 11f, resources.displayMetrics)
         textAlign = Paint.Align.RIGHT
@@ -288,7 +300,7 @@ class StepGridView(context: Context) : View(context) {
     private fun measures() {
         headerW = min(dp(HEADER_DP), width * 0.3f)
         topBar = dp(TOPBAR_DP)
-        rowH = dp(ROW_DP)
+        rowH = rowHeight()
         stride = dp(CELL_DP)
         gridLeft = headerW + dp(8f)
     }
@@ -297,7 +309,17 @@ class StepGridView(context: Context) : View(context) {
 
     private fun maxScrollX(): Float = max(0f, contentW() - (width - (min(dp(HEADER_DP), width * 0.3f) + dp(8f))))
 
-    private fun maxScrollY(): Float = max(0f, dp(TOPBAR_DP) + rowCount() * dp(ROW_DP) - height)
+    private fun maxScrollY(): Float = max(0f, dp(TOPBAR_DP) + rowCount() * rowHeight() - height)
+
+    /**
+     * La hauteur d'une ligne : les lignes se partagent la hauteur de la vue (pas de vide sous la grille), entre [ROW_MIN_DP] et
+     * [ROW_MAX_DP] ; quand elles ne tiennent pas, la grille défile.
+     */
+    private fun rowHeight(): Float {
+        val rows = rowCount()
+        if (rows == 0 || height == 0) return dp(ROW_DP)
+        return ((height - dp(TOPBAR_DP)) / rows).coerceIn(dp(ROW_MIN_DP), dp(ROW_MAX_DP))
+    }
 
     private fun clampScroll() {
         scrollX = scrollX.coerceIn(0f, maxScrollX())
@@ -451,6 +473,13 @@ class StepGridView(context: Context) : View(context) {
                 alpha,
             )
             canvas.drawRoundRect(rect, dp(8f), dp(8f), fill)
+            if (v > 0f) {
+                val c = cond(lane, step)
+                if (c > 0) condMarks.getOrNull(c)?.let { mark ->
+                    condPaint.color = withAlpha(Color.WHITE, alpha * 0.9f)
+                    canvas.drawText(mark, rect.centerX(), rect.bottom - dp(8f), condPaint)
+                }
+            }
             if (step == playhead) {
                 fill.color = Color.argb(if (v > 0f) 90 else 55, 255, 255, 255)
                 canvas.drawRoundRect(rect, dp(8f), dp(8f), fill)
@@ -839,6 +868,8 @@ class StepGridView(context: Context) : View(context) {
         const val HEADER_DP = 60f
         const val TOPBAR_DP = 36f
         const val ROW_DP = 72f
+        const val ROW_MIN_DP = 60f
+        const val ROW_MAX_DP = 96f
         const val CELL_DP = 44f
     }
 }
