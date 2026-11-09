@@ -39,8 +39,12 @@ class XyPadView(context: Context) : View(context) {
     /** Montre où en est le geste enregistré (le pad le joue tout seul) : sans doigt, juste un repère qui bouge. */
     fun showAt(fx: Float, fy: Float) {
         if (touching) return
-        x = fx.coerceIn(0f, 1f)
-        y = fy.coerceIn(0f, 1f)
+        val nx = fx.coerceIn(0f, 1f)
+        val ny = fy.coerceIn(0f, 1f)
+        // Appelé à chaque image pendant la lecture : on ne redessine que si le repère bouge (sans geste enregistré, il ne bouge pas)
+        if (nx == x && ny == y) return
+        x = nx
+        y = ny
         invalidate()
     }
 

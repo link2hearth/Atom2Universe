@@ -121,6 +121,28 @@ class StudioDrumVoiceTest {
     }
 
     @Test
+    fun aTriggerPlaysTheLengthItIsGiven() {
+        // Régression : l'essai d'un pas (bulle d'édition, durée −/+) jouait la durée du dernier coup de la piste, pas celle réglée.
+        val engine = StudioEngine(rate).also {
+            it.spaceAmount = 0f
+            it.echoAmount = 0f
+        }
+        val l = FloatArray(rate)
+        val r = FloatArray(rate)
+        fun tail(hold: Float): Double {
+            engine.trigger(Inst.SNARE, 60, 1f, hold)
+            engine.render(l, r, rate)
+            return energy(l, rate / 5, rate)
+        }
+        val normal = tail(1f)
+        val long = tail(2f)
+        assertTrue("deux fois plus long : bien plus de queue ($long contre $normal)", long > normal * 50)
+        // Un coup sans durée donnée (pad, clavier) revient à la durée du son, quel qu'ait été le coup d'avant
+        val again = tail(1f)
+        assertTrue("retour à la durée d'origine ($again contre $normal)", again < normal * 2)
+    }
+
+    @Test
     fun aSoundfontKitPlaysTheGmDrumNote() {
         val engine = StudioEngine(rate)
         val created = ArrayList<Pair<Int, Int>>()

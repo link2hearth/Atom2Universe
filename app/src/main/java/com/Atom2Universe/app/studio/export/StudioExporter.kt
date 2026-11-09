@@ -4,6 +4,7 @@ import com.Atom2Universe.app.studio.data.StudioProject
 import com.Atom2Universe.app.studio.data.StudioSession
 import com.Atom2Universe.app.studio.data.Track
 import com.Atom2Universe.app.studio.dsp.ExternalSynth
+import com.Atom2Universe.app.studio.engine.GM_DRUM_NOTES
 import com.Atom2Universe.app.studio.engine.Inst
 import com.Atom2Universe.app.studio.engine.StepPattern
 import com.Atom2Universe.app.studio.engine.StudioEngine
@@ -113,8 +114,8 @@ object StudioExporter {
     private const val TICKS_PER_QUARTER = 480
     private const val TICKS_PER_STEP = TICKS_PER_QUARTER / 4
 
-    /** Notes GM de la batterie, dans l'ordre des sons : grosse caisse, caisse claire, clap, charleston, charleston ouvert, tom, percussion. */
-    private val DRUM_NOTES = intArrayOf(36, 38, 39, 42, 46, 47, 56)
+    /** Notes GM de la batterie : les mêmes que celles que jouent les kits du soundfont (le tom était 47 ici, 45 au moteur). */
+    private val DRUM_NOTES = GM_DRUM_NOTES
 
     /** Programme GM donné aux pistes du synthé maison (« lead scie »). */
     private const val SYNTH_PROGRAM = 81

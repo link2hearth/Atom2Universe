@@ -52,13 +52,30 @@ class StereoReverb(sampleRate: Int) {
     private val combsR = Array(8) { Comb(maxOf(8, ((COMB[it] + SPREAD) * scale).toInt())) }
     private val allL = Array(4) { AllPass(maxOf(8, (ALLPASS[it] * scale).toInt())) }
     private val allR = Array(4) { AllPass(maxOf(8, ((ALLPASS[it] + SPREAD) * scale).toInt())) }
+    private val longestComb = combsR.maxOf { it.buf.size }
+
+    /** Échantillons d'entrée nuls d'affilée : au-delà de la durée de la queue, la réverbération dort (elle ne coûte plus rien). */
+    private var silentRun = 0
 
     /** Ajoute le retour de la réverbération (niveau [wet]) à [outL] et [outR] pour [from] à [to]. */
     fun process(input: FloatArray, outL: FloatArray, outR: FloatArray, from: Int, to: Int, wet: Float) {
         val feedback = roomSize.coerceIn(0f, 1f) * 0.28f + 0.7f
         val damp = damping.coerceIn(0f, 1f) * 0.4f
+        // Le temps que met le plus long peigne à perdre 120 dB : passé ce délai sans rien recevoir, la queue est éteinte.
+        val idleAfter = (Math.log(1e-6) / Math.log(feedback.toDouble()) * longestComb).toInt() + longestComb
         for (i in from until to) {
-            val x = input[i] * 0.03f
+            val raw = input[i]
+            if (raw == 0f) {
+                // Décompte par échantillon : le résultat ne dépend pas du découpage en blocs.
+                if (silentRun >= idleAfter) continue
+                if (++silentRun == idleAfter) {
+                    clear()
+                    continue
+                }
+            } else {
+                silentRun = 0
+            }
+            val x = raw * 0.03f
             var l = 0f
             var r = 0f
             for (c in combsL) l += c.process(x, feedback, damp)
@@ -68,6 +85,14 @@ class StereoReverb(sampleRate: Int) {
             outL[i] += l * wet
             outR[i] += r * wet
         }
+    }
+
+    /** Remet la réverbération au silence exact (les restes étaient déjà sous −120 dB). */
+    private fun clear() {
+        for (c in combsL) { java.util.Arrays.fill(c.buf, 0f); c.store = 0f }
+        for (c in combsR) { java.util.Arrays.fill(c.buf, 0f); c.store = 0f }
+        for (a in allL) java.util.Arrays.fill(a.buf, 0f)
+        for (a in allR) java.util.Arrays.fill(a.buf, 0f)
     }
 
     private companion object {

@@ -158,6 +158,35 @@ class StudioLiveTest {
     }
 
     @Test
+    fun arpStaysOnTheStepsAfterATempoChange() {
+        // Régression : la grille de l'arpège partait du début de la lecture au tempo du moment. Changer le tempo pendant la
+        // lecture (boutons − / + maintenus) la décalait des pas : l'arpège jouait à côté, ou pas du tout.
+        val steps = listOf(0, 1, 3, 5, 9, 10, 11, 13)
+        val e = quiet()
+        e.bpm = 120f
+        e.setArp(Inst.SYNTH, Arp.UP, 1f, 1)
+        e.pattern = StepPattern(16, emptyList(), steps.map { Note(it, 45, 1) })
+        val notes = ArrayList<Long>()
+        val starts = ArrayList<Long>()
+        e.onSynthNote = { _, f -> notes += f }
+        e.onStep = { step, f -> if (step % 16 in steps) starts += f }
+        render(e, 256)
+        e.play()
+        render(e, (rate * 60.0 / 120 * 4).toInt()) // un motif à 120 bpm
+        for (bpm in listOf(124f, 97f, 133.3f)) {
+            e.bpm = bpm
+            render(e, (rate * 60.0 / bpm).toInt()) // un temps, le temps de quitter le pas commencé à l'ancien tempo
+            notes.clear()
+            starts.clear()
+            render(e, (rate * 60.0 / bpm * 4 * 2).toInt()) // deux motifs
+            assertEquals("bpm $bpm : un coup d'arpège par note du motif", starts.size, notes.size)
+            for (k in starts.indices) {
+                assertTrue("bpm $bpm : coup $k à ${notes[k]} pour un pas à ${starts[k]}", abs(notes[k] - starts[k]) <= 1)
+            }
+        }
+    }
+
+    @Test
     fun turningTheArpOffReleasesEverything() {
         val e = quiet()
         e.setArp(Inst.SYNTH, Arp.UP, 1f, 1)

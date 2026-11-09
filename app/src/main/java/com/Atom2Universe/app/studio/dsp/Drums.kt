@@ -8,6 +8,10 @@ import kotlin.math.sin
  * La batterie électro, entièrement fabriquée par code (aucun fichier son). Chaque instrument est
  * monophonique : une nouvelle frappe reprend la précédente. Les enveloppes sont exponentielles et les
  * voix s'éteignent d'elles-mêmes sous −80 dB.
+ *
+ * [Instrument.setVoice] est appelé par le fil de l'écran (à chaque réglage de la piste, mixeur compris) : il ne fait que
+ * noter les réglages, c'est la frappe suivante (fil audio) qui calcule enveloppes et filtres. Il ne touche ni aux filtres
+ * qui tournent ni à l'enveloppe du coup en cours (qui perdait sinon sa durée de pas).
  */
 
 private const val TWO_PI = (2.0 * PI).toFloat()
@@ -58,14 +62,13 @@ open class Kick(sampleRate: Int, private val variants: List<KickParams> = KICK_V
         val m = lengthMul(length)
         ratio = semitoneRatio(tune)
         ampT60 = v.ampT60 * m
-        ampCoef = Fast.decayCoef(ampT60, sampleRate)
-        pitchCoef = Fast.decayCoef(v.pitchT60, sampleRate)
         p = v
     }
 
     override fun noteOn(note: Int, velocity: Float) {
         hit = semitoneRatio(note - 60)
         ampCoef = Fast.decayCoef(ampT60 * hold, sampleRate)
+        pitchCoef = Fast.decayCoef(p.pitchT60, sampleRate)
         offset = lastOut
         phase = 0f
         amp = 1f
@@ -165,9 +168,6 @@ class Snare(sampleRate: Int) : Instrument(sampleRate) {
         hpHz = v.highPassHz
         noiseT60 = v.noiseT60 * m
         toneT60 = v.toneT60 * m
-        noiseCoef = Fast.decayCoef(noiseT60, sampleRate)
-        toneCoef = Fast.decayCoef(toneT60, sampleRate)
-        filter.set(hpHz * ratio, 0.8f)
     }
 
     override fun noteOn(note: Int, velocity: Float) {
@@ -244,10 +244,8 @@ class Clap(sampleRate: Int) : Instrument(sampleRate) {
     override fun setVoice(kit: Int, tune: Int, length: Int) {
         val v = CLAP_VARIANTS[kit.coerceIn(0, CLAP_VARIANTS.size - 1)]
         tailT60 = v.first * lengthMul(length)
-        tailCoef = Fast.decayCoef(tailT60, sampleRate)
         bandHz = v.second
         ratio = semitoneRatio(tune)
-        filter.set(bandHz * ratio, 1.5f)
     }
 
     override fun noteOn(note: Int, velocity: Float) {
@@ -330,11 +328,8 @@ class Hat(sampleRate: Int, private val open: Boolean) : Instrument(sampleRate) {
         val v = (if (open) OPEN_HAT_VARIANTS else HAT_VARIANTS)[kit.coerceIn(0, 2)]
         ratio = semitoneRatio(tune)
         decayT60 = v.decay * lengthMul(length)
-        normalCoef = Fast.decayCoef(decayT60, sampleRate)
         hpHz = v.highPassHz
         lpHz = v.lowPassHz
-        highPass.set(hpHz * ratio, 0.7f)
-        lowPass.set(lpHz * ratio, 0.7f)
     }
 
     override fun allOff() {
@@ -418,9 +413,7 @@ class Perc(sampleRate: Int) : Instrument(sampleRate) {
         freqA = v.freqA
         freqB = v.freqB
         t60 = v.t60 * lengthMul(length)
-        coef = Fast.decayCoef(t60, sampleRate)
         filterHz = v.filterHz
-        filter.set(filterHz * ratio, 1.1f)
     }
 
     override val activeVoices get() = if (env > SILENT || playing != null) 1 else 0

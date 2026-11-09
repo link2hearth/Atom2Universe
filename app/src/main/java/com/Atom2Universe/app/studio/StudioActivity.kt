@@ -1312,7 +1312,8 @@ class StudioActivity : AudioThemedActivity() {
                 ?: (24 + session.project.keyPc)
             previewPitch(pitch, v, track = trackId)
         } else {
-            engine.trigger(trackId, session.stepInfo(trackId, step)?.pitch ?: 60, v)
+            val info = session.stepInfo(trackId, step)
+            engine.trigger(trackId, info?.pitch ?: 60, v, (info?.hold ?: 100) / 100f)
         }
     }
 
@@ -1588,26 +1589,33 @@ class StudioActivity : AudioThemedActivity() {
         val project = session.project
         val bar = android.widget.ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal).apply { max = 1000 }
         val holder = FrameLayout(this).apply { setPadding(dp(24), dp(16), dp(24), 0); addView(bar) }
-        var cancelled = false
+        // Lu par le fil de rendu, écrit par le bouton : partagé entre deux fils
+        val cancelled = java.util.concurrent.atomic.AtomicBoolean(false)
         val dialog = MaterialAlertDialogBuilder(this)
             .setTitle(R.string.studio_export_working)
             .setView(holder)
             .setCancelable(false)
-            .setNegativeButton(android.R.string.cancel) { _, _ -> cancelled = true }
+            .setNegativeButton(android.R.string.cancel) { _, _ -> cancelled.set(true) }
             .show()
         Thread {
+            var shown = -1
             val saved = when (kind) {
                 EXPORT_MIDI -> StudioFiles.saveMidi(this, project)
                 else -> StudioFiles.saveWav(this, project, sf2?.factory) { f ->
-                    runOnUiThread { bar.progress = (f * 1000).toInt() }
-                    !cancelled
+                    // Le rendu donne des nouvelles tous les 1 024 échantillons : l'écran n'en reçoit qu'une par pour mille gagné
+                    val p = (f * 1000).toInt()
+                    if (p != shown) {
+                        shown = p
+                        runOnUiThread { bar.progress = p }
+                    }
+                    !cancelled.get()
                 }
             }
             runOnUiThread {
                 dialog.dismiss()
                 if (isFinishing || isDestroyed) return@runOnUiThread
                 when {
-                    cancelled -> Unit
+                    cancelled.get() -> Unit
                     saved == null -> MaterialAlertDialogBuilder(this).setMessage(R.string.studio_export_failed).setPositiveButton(android.R.string.ok, null).show()
                     kind == EXPORT_EDITOR -> startActivity(
                         Intent(this, AudioEditorLibraryActivity::class.java)

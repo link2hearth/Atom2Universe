@@ -409,10 +409,17 @@ class StudioEngine(val sampleRate: Int) {
     fun play() = push(CMD_PLAY, 0, 0, 0f)
     fun stop() = push(CMD_STOP, 0, 0, 0f)
 
-    /** Joue la piste [track] tout de suite (au début du prochain bloc) : pads tactiles, clavier. */
-    fun trigger(track: Int, note: Int = 60, velocity: Float = 1f) = push(CMD_TRIGGER, track, note, velocity)
+    /**
+     * Joue la piste [track] tout de suite (au début du prochain bloc) : pads tactiles, clavier. [hold] : la durée du coup d'une
+     * piste de batterie (1 = celle du son), pour faire entendre le réglage d'un pas.
+     */
+    fun trigger(track: Int, note: Int = 60, velocity: Float = 1f, hold: Float = 1f) {
+        // La piste (moins de 64) et la durée en pour cent se partagent les 16 bits du premier champ de la commande.
+        val holdPct = Math.round(hold * 100f).coerceIn(1, 1000)
+        push(CMD_TRIGGER, (track and 0x3F) or (holdPct shl 6), note.coerceIn(0, 127), velocity)
+    }
 
-    fun release(track: Int, note: Int) = push(CMD_RELEASE, track, note, 0f)
+    fun release(track: Int, note: Int) = push(CMD_RELEASE, track, note.coerceIn(0, 127), 0f)
 
     // ---- État du séquenceur (fil audio seulement) ----------------------------------------------
 
@@ -422,7 +429,12 @@ class StudioEngine(val sampleRate: Int) {
     private var straightTime = 0.0
     private var nextStepTime = 0.0
 
-    private var playOrigin = 0L
+    /**
+     * L'instant (fictif) du pas 0 au tempo actuel : la grille de l'arpège en part. Recalé à chaque changement de tempo, sinon
+     * la grille calculée depuis le vrai début de la lecture ne tombe plus sur les pas (l'arpège jouait à côté, ou se taisait).
+     */
+    private var playOrigin = 0.0
+    private var originStepFrames = 0.0
     private var lastFireFrame = 0L
 
     private val offFrame = LongArray(MAX_PENDING_OFFS)
@@ -561,7 +573,14 @@ class StudioEngine(val sampleRate: Int) {
             when (kind) {
                 CMD_PLAY -> startSequencer(blockStart)
                 CMD_STOP -> stopSequencer()
-                CMD_TRIGGER -> table.getOrNull(a)?.let { s -> if (s.melody != null) s.melody.on(b, f, blockStart) else fire(s, b, f) }
+                CMD_TRIGGER -> table.getOrNull(a and 0x3F)?.let { s ->
+                    if (s.melody != null) {
+                        s.melody.on(b, f, blockStart)
+                    } else {
+                        s.instrument.hold = (a ushr 6) / 100f
+                        fire(s, b, f)
+                    }
+                }
                 CMD_RELEASE -> table.getOrNull(a)?.let { s -> if (s.melody != null) s.melody.off(b) else s.instrument.noteOff(b) }
             }
         }
@@ -579,7 +598,8 @@ class StudioEngine(val sampleRate: Int) {
         running = true
         playing = true
         stepIndex = 0
-        playOrigin = blockStart
+        playOrigin = blockStart.toDouble()
+        originStepFrames = 0.0
         straightTime = blockStart.toDouble()
         nextStepTime = straightTime
     }
@@ -644,6 +664,11 @@ class StudioEngine(val sampleRate: Int) {
         val p = activePattern()
         val s = step % max(p.stepCount, 1)
         val stepFrames = sampleRate * 60.0 / max(bpm, 20f) / 4.0
+        if (stepFrames != originStepFrames) {
+            // Nouveau tempo : la grille de l'arpège repart de ce pas (straightTime = son instant sans swing).
+            playOrigin = straightTime - step * stepFrames
+            originStepFrames = stepFrames
+        }
 
         onStep?.invoke(step, frame)
         currentStep = s
