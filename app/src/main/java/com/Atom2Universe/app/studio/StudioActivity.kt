@@ -55,6 +55,7 @@ import com.Atom2Universe.app.studio.engine.Note
 import com.Atom2Universe.app.studio.engine.StudioAudioOutput
 import com.Atom2Universe.app.studio.engine.StudioEngine
 import com.Atom2Universe.app.studio.engine.TrackMix
+import com.Atom2Universe.app.studio.music.BarRhythm
 import com.Atom2Universe.app.studio.music.TapTempo
 import com.Atom2Universe.app.studio.music.StudioRegister
 import com.Atom2Universe.app.studio.music.Scales
@@ -1273,7 +1274,7 @@ class StudioActivity : AudioThemedActivity() {
         val tune = sliderRow(24, drumTuneText) { editDrum(tune = it - 12) }
         drumTuneBar = tune.first
         drumSliders.addView(section(R.string.studio_drum_tune))
-        drumSliders.addView(tune.second, LinearLayout.LayoutParams(dp(520), ViewGroup.LayoutParams.WRAP_CONTENT))
+        drumSliders.addView(tune.second, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
 
         drumLengthText = TextView(this).apply {
             textSize = 14f
@@ -1282,10 +1283,11 @@ class StudioActivity : AudioThemedActivity() {
         val length = sliderRow(150, drumLengthText) { editDrum(length = it + 50) }
         drumLengthBar = length.first
         drumSliders.addView(section(R.string.studio_drum_length))
-        drumSliders.addView(length.second, LinearLayout.LayoutParams(dp(520), ViewGroup.LayoutParams.WRAP_CONTENT))
+        drumSliders.addView(length.second, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
 
-        val buttons = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
-        buttons.addView(outlined(R.string.studio_drum_listen).also { it.setOnClickListener { listenDrum() } }, wrap(end = dp(8)))
+        val buttons = FlowRow(this).apply { hGap = dp(8); vGap = dp(4) }
+        buttons.addView(outlined(R.string.studio_spread).apply { setOnClickListener { showSpread(it, editedDrum) } })
+        buttons.addView(outlined(R.string.studio_drum_listen).also { it.setOnClickListener { listenDrum() } })
         buttons.addView(outlined(R.string.studio_drum_reset).also {
             it.setOnClickListener {
                 session.setDrumSoundfont(editedDrum, -1)
@@ -1296,6 +1298,116 @@ class StudioActivity : AudioThemedActivity() {
         }, wrap())
         box.addView(buttons, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(22) })
         return box
+    }
+
+    private var refreshSpread: (() -> Unit)? = null
+
+    private fun showSpread(anchor: View, track: Int) {
+        val project = session.project
+        val instrument = project.trackOrNull(track) ?: return
+        val lane = project.pattern.lane(track) ?: return
+        val slots = project.viewSlots
+        fun valid() = session.project.viewSlots == slots && session.project.baseSteps == project.baseSteps &&
+            session.project.trackOrNull(track)?.hidden == false
+
+        val box = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dp(14), dp(4), dp(14), dp(12))
+        }
+        var hits = lane.velocity.take(BarRhythm.STEPS).count { it > 0f }.takeIf { it > 0 } ?: 4
+        var offset = BarRhythm.offsetOf(lane.velocity, hits)
+        val strip = LinearLayout(this)
+        val color = trackColor(instrument)
+        val dots = List(BarRhythm.STEPS) { step ->
+            View(this).also { cell ->
+                cell.background = android.graphics.drawable.GradientDrawable().apply {
+                    cornerRadius = dp(3).toFloat()
+                    setColor(color)
+                }
+                strip.addView(cell, LinearLayout.LayoutParams(0, dp(14), 1f).apply {
+                    marginStart = dp(if (step == 0) 0 else if (step % 4 == 0) 5 else 2)
+                })
+            }
+        }
+        box.addView(strip, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(8) })
+        val listen = outlined(R.string.studio_drum_listen)
+        val playback = Any()
+        fun stopPreview() {
+            handler.removeCallbacksAndMessages(playback)
+            listen.isSelected = false
+            listen.setText(R.string.studio_drum_listen)
+        }
+        val apply = outlined(R.string.studio_spread_apply)
+        fun refreshApply() {
+            val currentLane = session.project.pattern.lane(track)
+            val mask = BarRhythm.steps(hits, offset)
+            apply.isEnabled = currentLane != null && currentLane.velocity.indices.any {
+                (currentLane.velocity[it] > 0f) != mask[it % mask.size]
+            }
+            apply.alpha = if (apply.isEnabled) 1f else 0.45f
+        }
+        fun update() {
+            refreshApply()
+            stopPreview()
+            BarRhythm.steps(hits, offset).forEachIndexed { index, active -> dots[index].alpha = if (active) 1f else 0.18f }
+        }
+        fun control(label: Int, min: Int, max: Int, value: Int, edit: (Int) -> Unit) {
+            val title = caption(label)
+            fun showValue(v: Int) { title.text = getString(label, v) }
+            val bar = slider(max - min) { progress ->
+                val v = min + progress
+                edit(v)
+                showValue(v)
+                update()
+            }
+            showValue(value)
+            bar.id = View.generateViewId()
+            title.labelFor = bar.id
+            bar.progress = value - min
+            box.addView(title)
+            box.addView(bar, LinearLayout.LayoutParams(-1, dp(44)))
+        }
+        control(R.string.studio_spread_hits, 1, 16, hits) { hits = it }
+        control(R.string.studio_spread_shift, 0, 15, offset) { offset = it }
+        val actions = FlowRow(this).apply { hGap = dp(8) }
+        actions.addView(listen)
+        listen.setOnClickListener {
+            if (listen.isSelected) { stopPreview(); return@setOnClickListener }
+            if (!valid() || padsRecording) return@setOnClickListener
+            val current = session.project
+            val start = android.os.SystemClock.uptimeMillis()
+            val stepMs = 15000.0 / current.bpm
+            listen.isSelected = true
+            listen.setText(R.string.studio_stop)
+            BarRhythm.steps(hits, offset).forEachIndexed { i, active ->
+                if (active) {
+                    val delay = (i + if (i % 2 == 1) current.swing.toDouble() else 0.0) * stepMs
+                    handler.postAtTime({
+                        if (box.isShown && hasWindowFocus() && valid() && !padsRecording) {
+                            val info = session.stepInfo(track, i)
+                            engine.trigger(track, info?.pitch ?: 60, info?.velocity ?: 1f, (info?.hold ?: 100) / 100f)
+                        }
+                    }, playback, start + delay.toLong())
+                }
+            }
+            handler.postAtTime({ stopPreview() }, playback, start + (BarRhythm.STEPS * stepMs).toLong())
+        }
+        box.addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
+            override fun onViewAttachedToWindow(v: View) { refreshSpread = ::refreshApply }
+            override fun onViewDetachedFromWindow(v: View) {
+                refreshSpread = null
+                stopPreview()
+            }
+        })
+        apply.setOnClickListener {
+            stopPreview()
+            if (valid() && session.spreadDrum(track, hits, offset)) changed()
+        }
+        actions.addView(apply)
+        box.addView(actions)
+        update()
+        panels.show(R.string.studio_spread, getString(R.string.studio_panel_track,
+            getString(R.string.studio_spread), trackName(instrument)), box, 320, anchor, valid = ::valid)
     }
 
     /** Change le son de la piste de batterie ouverte (ce qu'on ne donne pas reste comme avant) et le note. */
@@ -1904,6 +2016,7 @@ class StudioActivity : AudioThemedActivity() {
 
     private fun scheduleSave() {
         panels.prune()
+        refreshSpread?.invoke()
         refreshHistory()
         handler.removeCallbacks(saveRunnable)
         handler.postDelayed(saveRunnable, 600)
@@ -2487,6 +2600,9 @@ class StudioActivity : AudioThemedActivity() {
         // Copier / Oublier / Effacer
         val actions = FlowRow(this).apply { hGap = dp(6) }
         val copy = outlined(null)
+        if (!t.melodic) actions.addView(outlined(R.string.studio_spread).apply {
+            setOnClickListener { showSpread(it, trackId) }
+        })
         val reset = outlined(R.string.studio_drum_reset)
         fun refreshCopy() = copy.setText(if (pens.containsKey(trackId)) R.string.studio_step_stamped else R.string.studio_step_stamp)
         copy.setOnClickListener {

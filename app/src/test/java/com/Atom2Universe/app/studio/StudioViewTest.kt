@@ -17,6 +17,45 @@ class StudioViewTest {
     private fun session() = StudioSession(StudioEngine(48_000), StudioProject.blank())
 
     @Test
+    fun spreadKeepsThePulseCountAndEvenSpacingAtEveryRotation() {
+        for (hits in 1..16) for (offset in 0..15) {
+            val mask = com.Atom2Universe.app.studio.music.BarRhythm.steps(hits, offset)
+            val positions = mask.indices.filter { mask[it] }
+            assertEquals(hits, positions.size)
+            assertTrue(mask[offset])
+            val velocity = FloatArray(16) { if (mask[it]) 0.4f else 0f }
+            val recovered = com.Atom2Universe.app.studio.music.BarRhythm.offsetOf(velocity, hits)
+            assertTrue(mask.contentEquals(com.Atom2Universe.app.studio.music.BarRhythm.steps(hits, recovered)))
+            val gaps = (positions + (positions.first() + 16)).zipWithNext { a, b -> b - a }
+            assertTrue(gaps.max() - gaps.min() <= 1)
+        }
+    }
+
+    @Test
+    fun spreadingADrumOnlyChangesTheVisibleSlotsAndUndoesInOneAction() {
+        val s = session()
+        s.setView(listOf(0, 2))
+        s.setStep(Inst.KICK, 0, true)
+        s.editStep(Inst.KICK, 0, velocity = 0.36f, hold = 140, pitch = 63)
+        s.setStep(Inst.KICK, 2, true)
+        s.setStep(Inst.SNARE, 5, true)
+        assertTrue(s.spreadDrum(Inst.KICK, 4, 0))
+        assertEquals(listOf(0, 4, 8, 12, 16, 20, 24, 28), (0..31).filter { s.isOn(Inst.KICK, it) })
+        val kept = s.stepInfo(Inst.KICK, 0)!!
+        assertEquals(0.36f, kept.velocity, 0f)
+        assertEquals(140, kept.hold)
+        assertEquals(63, kept.pitch)
+        assertTrue(s.isOn(Inst.SNARE, 5))
+        assertTrue(s.isPatternEmpty(1))
+        assertTrue(s.isPatternEmpty(3))
+        assertTrue(!s.spreadDrum(Inst.KICK, 4, 0))
+        s.undo()
+        assertEquals(listOf(0, 2), (0..31).filter { s.isOn(Inst.KICK, it) })
+        s.redo()
+        assertTrue(s.isOn(Inst.KICK, 28))
+    }
+
+    @Test
     fun twoPatternsShownTogetherFormOneLongPattern() {
         val s = session()
         s.setView(listOf(0, 1))

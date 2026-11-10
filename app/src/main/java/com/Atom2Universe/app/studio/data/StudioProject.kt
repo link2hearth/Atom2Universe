@@ -760,6 +760,30 @@ class StudioSession(
         }
     }
 
+    /** Répète une mesure sur les motifs affichés. Les coups communs gardent leurs nuances. */
+    internal fun spreadDrum(track: Int, hits: Int, offset: Int): Boolean {
+        val lane = project.pattern.lane(track) ?: return false
+        val bar = com.Atom2Universe.app.studio.music.BarRhythm.steps(hits, offset)
+        if (lane.velocity.indices.all { (lane.velocity[it] > 0f) == bar[it % bar.size] }) return false
+        val velocity = lane.velocity.copyOf()
+        val pitch = lane.note.copyOf()
+        val hold = lane.hold.copyOf()
+        val condition = lane.cond.copyOf()
+        for (i in velocity.indices) {
+            if (!bar[i % bar.size]) velocity[i] = 0f
+            else if (velocity[i] == 0f) {
+                velocity[i] = LEVELS[0]
+                pitch[i] = 60
+                hold[i] = 1f
+                condition[i] = StepCond.ALWAYS
+            }
+        }
+        closeOpen()
+        withLane(track) { it.copy(velocity = velocity, note = pitch, hold = hold, cond = condition) }
+        closeOpen()
+        return true
+    }
+
     fun setSongMode(on: Boolean) {
         project = project.copy(songMode = on && project.chain.isNotEmpty())
         pushSong()
