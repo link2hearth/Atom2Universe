@@ -28,7 +28,7 @@ import java.io.File
 import com.Atom2Universe.app.studio.data.StudioSession
 import com.Atom2Universe.app.studio.dsp.SynthPresets
 import com.Atom2Universe.app.studio.data.LiveRecorder
-import com.Atom2Universe.app.studio.data.MidiNotes
+import com.Atom2Universe.app.studio.data.MidiPerformance
 import com.Atom2Universe.app.studio.engine.Arp
 import com.Atom2Universe.app.studio.ui.FaderView
 import com.Atom2Universe.app.studio.export.SampleTools
@@ -105,7 +105,7 @@ class StudioActivity : AudioThemedActivity() {
     private var sf2: Sf2Bridge? = null
 
     /** La piste mélodique que montrent l'onglet Notes et le clavier (-1 : aucune). */
-    private var selectedTrack = -1
+    @Volatile private var selectedTrack = -1
 
     /** Les pistes visibles, dans l'ordre de la grille ; [trackSignature] dit à quoi elles ressemblaient au dernier dessin. */
     private var gridIds: List<Int> = emptyList()
@@ -172,6 +172,9 @@ class StudioActivity : AudioThemedActivity() {
     private lateinit var midiText: TextView
     private lateinit var arpButton: MaterialButton
     private lateinit var recorder: LiveRecorder
+    private val keyboardTracks = HashMap<Int, Int>()
+    @Volatile private var takeRevision = 0L
+    private var midiPerformance: MidiPerformance? = null
     private var midi: MidiInputController? = null
     private val waveIds = IntArray(4) { View.generateViewId() }
 
@@ -316,13 +319,13 @@ class StudioActivity : AudioThemedActivity() {
     override fun onPause() {
         if (!::output.isInitialized) { super.onPause(); return }
         grid.removeCallbacks(frameTick)
-        handler.removeCallbacks(saveRunnable)
         // Rien ne reste tenu : pads, thérémine, enregistrement des pads
         pads.releaseAll()
         keyboard.releaseAll()
         theremin.finish()
         setPadsRecording(false)
         stopLive()
+        handler.removeCallbacks(saveRunnable)
         session.flush()
         engine.stop()
         playing = false
@@ -455,6 +458,7 @@ class StudioActivity : AudioThemedActivity() {
             addOnButtonCheckedListener { group, _, _ ->
                 if (!building) {
                     setPasteArmed(false)
+                    finishTakeSegment()
                     session.setView(patternIds.indices.filter { patternIds[it] in group.checkedButtonIds })
                     // La grille et le piano roll changent de longueur : tout se redessine, la sélection n'a plus de sens
                     grid.clearSelection()
@@ -653,12 +657,12 @@ class StudioActivity : AudioThemedActivity() {
         padFingers[track] = fingers + 1
         if (fingers == 0) engine.setLiveDrive(track, 0f)
         engine.trigger(track, pitch, 0.9f)
-        recorder.press(pitch, engine.playPosition, track)
+        recorder.press(pitch, engine.playPosition, track, 0.9f)
     }
 
     private fun padNoteUp(track: Int, pitch: Int) {
         engine.release(track, pitch)
-        recorder.release(pitch, engine.playPosition, track)
+        endRecordedNote(track, pitch, engine.playPosition)
         roll.invalidate()
         val left = ((padFingers[track] ?: 1) - 1).coerceAtLeast(0)
         padFingers[track] = left
@@ -701,7 +705,7 @@ class StudioActivity : AudioThemedActivity() {
         padsRecordButton.setText(if (on) R.string.studio_record_on else R.string.studio_record_off)
         padsRecordButton.setBackgroundColor(if (on) 0x66E74C3C else android.graphics.Color.TRANSPARENT)
         if (::recorder.isInitialized && recorder.armed != on) {
-            if (recorder.armed) recorder.finishAll()
+            finishTakeSegment()
             recorder.armed = on
             scheduleSave()
         }
@@ -1047,6 +1051,15 @@ class StudioActivity : AudioThemedActivity() {
             }
         }
         tuning.addView(lockSwitch, wrap(end = dp(8)))
+        val prefs = getSharedPreferences(PREFS, MODE_PRIVATE)
+        tuning.addView(SwitchCompat(this).apply {
+            setText(R.string.studio_dynamic_touch)
+            isChecked = prefs.getBoolean("dynamic_touch", false)
+            setOnCheckedChangeListener { _, enabled ->
+                keyboard.dynamicTouch = enabled
+                prefs.edit().putBoolean("dynamic_touch", enabled).apply()
+            }
+        }, wrap())
         val octaves = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
@@ -1140,17 +1153,22 @@ class StudioActivity : AudioThemedActivity() {
         pane.addView(roll, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(8) })
 
         keyboard = KeyboardView(this).apply {
+            dynamicTouch = prefs.getBoolean("dynamic_touch", false)
             accent = LANE_COLORS[Inst.SYNTH]
             noteNames = resources.getStringArray(R.array.studio_key_names).toList()
             listener = object : KeyboardView.Listener {
-                override fun onKeyDown(pitch: Int) {
+                override fun onKeyDown(pitch: Int, velocity: Float) {
+                    if (selectedTrack < 0 || session.isMuted(selectedTrack)) return
+                    keyboardTracks[pitch] = selectedTrack
                     roll.setLit(pitch, true)
-                    liveNoteOn(pitch, 0.9f, engine.playPosition)
+                    liveNoteOn(pitch, velocity, engine.playPosition)
                 }
 
                 override fun onKeyUp(pitch: Int) {
                     roll.setLit(pitch, false)
-                    liveNoteOff(pitch, engine.playPosition)
+                    val track = keyboardTracks.remove(pitch) ?: return
+                    engine.release(track, pitch)
+                    endRecordedNote(track, pitch, engine.playPosition)
                 }
             }
         }
@@ -1192,15 +1210,15 @@ class StudioActivity : AudioThemedActivity() {
                 roll.setLit(to, true)
                 // L'enregistreur voit deux notes : celle qu'on quitte se termine, la nouvelle commence
                 val position = engine.playPosition
-                recorder.release(from, position)
-                recorder.press(to, position)
+                endRecordedNote(track, from, position)
+                recorder.press(to, position, track, 0.9f)
                 roll.invalidate()
             }
             onExpression = { expression -> if (thereminTrack >= 0) engine.setExpression(thereminTrack, expression) }
             onEnd = { pitch ->
                 roll.setLit(pitch, false)
                 if (thereminTrack >= 0) engine.release(thereminTrack, pitch)
-                recorder.release(pitch, engine.playPosition)
+                endRecordedNote(thereminTrack, pitch, engine.playPosition)
                 roll.invalidate()
                 // La piste retrouve son niveau normal une fois la note éteinte (pas pendant sa queue)
                 handler.postDelayed(expressionReset, 1500)
@@ -1622,6 +1640,7 @@ class StudioActivity : AudioThemedActivity() {
                 if (checked) {
                     val n = when (id) { ids[2] -> 64; ids[1] -> 32; else -> 16 }
                     if (n != session.project.baseSteps) {
+                        finishTakeSegment()
                         session.setStepCount(n)
                         grid.clearSelection()
                         roll.clearSelection()
@@ -1643,12 +1662,14 @@ class StudioActivity : AudioThemedActivity() {
     // ---- Actions ---------------------------------------------------------------------------------
 
     private fun togglePlay() {
+        if (playing && recorder.armed) {
+            setPadsRecording(false)
+            refreshNotesControls()
+        }
         playing = !playing
         if (playing) engine.play() else engine.stop()
         grid.removeCallbacks(frameTick)
         grid.postOnAnimation(frameTick)
-        // Arrêter la lecture arrête aussi la prise aux pads
-        if (!playing && padsRecording) setPadsRecording(false)
         refreshTransport()
     }
 
@@ -1749,6 +1770,7 @@ class StudioActivity : AudioThemedActivity() {
 
     private fun stepHistory(redo: Boolean) {
         setPasteArmed(false)
+        finishTakeSegment()
         if (redo) session.redo() else session.undo()
         panels.refreshAfterHistory()
         grid.clearSelection()
@@ -1797,8 +1819,13 @@ class StudioActivity : AudioThemedActivity() {
         else -> R.string.studio_arp_off
     }
 
+    private fun finishTakeSegment() {
+        takeRevision++
+        recorder.finishAll()
+    }
+
     private fun toggleRecord() {
-        if (recorder.armed) recorder.finishAll()
+        finishTakeSegment()
         recorder.armed = !recorder.armed
         refreshMetronome()
         // À l'arrêt, une mesure de décompte (au métronome) laisse le temps de poser les doigts
@@ -1816,43 +1843,51 @@ class StudioActivity : AudioThemedActivity() {
     private fun liveNoteOn(pitch: Int, velocity: Float, position: Double) {
         if (selectedTrack < 0 || session.isMuted(selectedTrack)) return
         engine.trigger(selectedTrack, pitch, velocity)
-        recorder.press(pitch, position)
+        recorder.press(pitch, position, selectedTrack, velocity)
     }
 
-    private fun liveNoteOff(pitch: Int, position: Double) {
-        if (selectedTrack >= 0) engine.release(selectedTrack, pitch)
-        recorder.release(pitch, position)
-        roll.invalidate()
+    private fun endRecordedNote(track: Int, pitch: Int, position: Double) {
+        if (recorder.release(pitch, position, track)) {
+            roll.invalidate()
+            grid.invalidate()
+            scheduleSave()
+        }
     }
 
     private fun startMidi() {
-        val controller = midi ?: MidiInputController(
-            this,
-            { bytes ->
-                // Fil MIDI : le son et l'instant partent tout de suite, le reste (projet, écran) passe par le fil principal.
-                val position = engine.playPosition
-                val track = selectedTrack
-                MidiNotes.handle(
-                    bytes,
-                    { note, velocity ->
-                        if (track >= 0 && !session.isMuted(track)) engine.trigger(track, note, velocity)
-                        handler.post { recorder.press(note, position) }
-                    },
-                    { note ->
-                        if (track >= 0) engine.release(track, note)
-                        handler.post { recorder.release(note, position); roll.invalidate() }
-                    },
-                )
+        lateinit var keys: MidiPerformance
+        keys = MidiPerformance(
+            onPress = { track, pitch, velocity ->
+                val revision = takeRevision
+                val at = engine.playPosition
+                engine.trigger(track, pitch, velocity)
+                handler.post { if (midiPerformance === keys && revision == takeRevision) recorder.press(pitch, at, track, velocity) }
             },
-            { status ->
-                handler.post { midiText.visibility = if (status == MidiConnectionStatus.DEVICE_DETECTED) View.VISIBLE else View.GONE }
+            onRelease = { track, pitch ->
+                val revision = takeRevision
+                val at = engine.playPosition
+                engine.release(track, pitch)
+                handler.post { if (midiPerformance === keys && revision == takeRevision) endRecordedNote(track, pitch, at) }
             },
-        ).also { midi = it }
-        controller.start()
+        )
+        midiPerformance = keys
+        midi = MidiInputController(this, { bytes ->
+            val track = selectedTrack
+            keys.receive(bytes, if (track >= 0 && !session.isMuted(track)) track else -1)
+        }, { status ->
+            if (status != MidiConnectionStatus.DEVICE_DETECTED) keys.reset()
+            handler.post {
+                if (midiPerformance === keys) midiText.visibility =
+                    if (status == MidiConnectionStatus.DEVICE_DETECTED) View.VISIBLE else View.GONE
+            }
+        }).also { it.start() }
     }
 
     private fun stopLive() {
+        midiPerformance?.close()
+        midiPerformance = null
         midi?.stop()
+        midi = null
         recorder.finishAll()
         recorder.armed = false
         refreshMetronome()

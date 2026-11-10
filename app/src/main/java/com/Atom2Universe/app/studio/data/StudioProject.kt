@@ -1294,24 +1294,38 @@ class LiveRecorder(
     var armed = false
 
     /** Les notes en cours, par piste et hauteur (clé : piste × 128 + hauteur) : l'instant de l'appui. */
-    private val pressed = HashMap<Int, Double>()
+    private class Attack(val start: Double, val velocity: Float, var holds: Int = 1)
+    private val pressed = HashMap<Int, Attack>()
 
     /** [at] : la position de lecture à l'instant de l'appui (par défaut : maintenant) ; [onTrack] : la piste qui reçoit la note. */
-    fun press(pitch: Int, at: Double = position(), onTrack: Int = track()) {
-        if (armed && isPlaying() && onTrack >= 0) pressed[onTrack * 128 + pitch] = at
+    fun press(pitch: Int, at: Double = position(), onTrack: Int = track(), velocity: Float = 1f) {
+        if (!armed || !isPlaying() || onTrack < 0 || pitch !in 0..127 || at < -0.5) return
+        val id = onTrack * 128 + pitch
+        val held = pressed[id]
+        if (held == null) pressed[id] = Attack(at.coerceAtLeast(0.0), velocity.coerceIn(0f, 1f)) else held.holds++
     }
 
-    fun release(pitch: Int, at: Double = position(), onTrack: Int = track()) {
-        val start = pressed.remove(onTrack * 128 + pitch) ?: return
+    fun release(pitch: Int, at: Double = position(), onTrack: Int = track()): Boolean {
+        val id = onTrack * 128 + pitch
+        val attack = pressed[id] ?: return false
+        if (--attack.holds > 0) return false
+        pressed.remove(id)
+        write(pitch, onTrack, attack, at)
+        return true
+    }
+
+    private fun write(pitch: Int, onTrack: Int, attack: Attack, at: Double) {
         val steps = session.project.stepCount
-        val step = Math.floorMod(Math.round(start).toInt(), steps)
-        val held = (at - start).coerceAtLeast(0.0)
-        session.addNote(step, pitch, Math.round(held).toInt().coerceAtLeast(1), track = onTrack)
+        val step = Math.floorMod(Math.round(attack.start), steps.toLong()).toInt()
+        val held = (at - attack.start).coerceIn(0.0, steps.toDouble())
+        session.addNote(step, pitch, Math.round(held).toInt().coerceAtLeast(1), attack.velocity, onTrack)
     }
 
     /** Les notes encore tenues quand l'enregistrement s'arrête sont terminées là. */
     fun finishAll() {
-        for (key in pressed.keys.toList()) release(key % 128, onTrack = key / 128)
+        val end = position()
+        for ((key, attack) in pressed) write(key % 128, key / 128, attack, end)
+        pressed.clear()
     }
 }
 

@@ -22,10 +22,11 @@ import kotlin.math.min
 class KeyboardView(context: Context) : View(context) {
 
     interface Listener {
-        fun onKeyDown(pitch: Int)
+        fun onKeyDown(pitch: Int, velocity: Float)
         fun onKeyUp(pitch: Int)
     }
 
+    var dynamicTouch = false
     var listener: Listener? = null
 
     /** La première touche : un do (hauteur MIDI multiple de 12). Le clavier montre ensuite autant d'octaves que la place le permet. */
@@ -197,7 +198,7 @@ class KeyboardView(context: Context) : View(context) {
         return if (active(p)) p else -1
     }
 
-    private fun setFinger(id: Int, pitch: Int) {
+    private fun setFinger(id: Int, pitch: Int, y: Float = 0f) {
         val old = down[id]
         if (old == pitch || (old == null && pitch < 0)) return
         if (old != null) {
@@ -207,7 +208,11 @@ class KeyboardView(context: Context) : View(context) {
         if (pitch >= 0) {
             val held = pitch in down.values
             down[id] = pitch
-            if (!held) listener?.onKeyDown(pitch)
+            if (!held) {
+                val depth = if (isBlack(pitch % 12)) blackH() else height.toFloat()
+                val velocity = if (dynamicTouch) 0.25f + 0.75f * (y / depth).coerceIn(0f, 1f) else 0.9f
+                listener?.onKeyDown(pitch, velocity)
+            }
         }
         invalidate()
     }
@@ -219,13 +224,13 @@ class KeyboardView(context: Context) : View(context) {
                 val idx = event.actionIndex
                 val id = event.getPointerId(idx)
                 val pitch = pitchAt(event.getX(idx), event.getY(idx))
-                setFinger(id, pitch)
+                setFinger(id, pitch, event.getY(idx))
             }
 
             MotionEvent.ACTION_MOVE -> {
                 for (k in 0 until event.pointerCount) {
                     val id = event.getPointerId(k)
-                    setFinger(id, pitchAt(event.getX(k), event.getY(k)))
+                    setFinger(id, pitchAt(event.getX(k), event.getY(k)), event.getY(k))
                 }
             }
 

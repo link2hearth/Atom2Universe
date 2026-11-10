@@ -295,6 +295,66 @@ class StudioLiveTest {
     }
 
     @Test
+    fun sustainReleasesTheOriginalTrackAndKeepsOtherChannelsIndependent() {
+        val starts = mutableListOf<Pair<Int, Float>>()
+        val ends = mutableListOf<Pair<Int, Int>>()
+        val keys = com.Atom2Universe.app.studio.data.MidiPerformance(
+            { track, _, velocity -> starts += track to velocity }, { track, pitch -> ends += track to pitch })
+        fun send(track: Int, vararg bytes: Int) = keys.receive(ByteArray(bytes.size) { bytes[it].toByte() }, track)
+        send(3, 0x90, 60, 37)
+        send(3, 0xB0, 64, 127)
+        send(5, 0x80, 60, 0)
+        send(5, 0x91, 60, 90)
+        send(6, 0x81, 60, 0)
+        assertEquals(listOf(5 to 60), ends)
+        send(-1, 0xB0, 64, 0)
+        assertEquals(listOf(5 to 60, 3 to 60), ends)
+        assertEquals(37 / 127f, starts.first().second, 0f)
+        send(6, 0x90, 67, 90)
+        keys.close()
+        send(6, 0x90, 65, 90)
+        assertEquals(6 to 67, ends.last())
+        assertEquals(3, starts.size)
+    }
+
+    @Test
+    fun pedalResetAndPanicRespectHeldKeysAndChannels() {
+        val released = mutableListOf<Int>()
+        val keys = com.Atom2Universe.app.studio.data.MidiPerformance({ _, _, _ -> }, { _, pitch -> released += pitch })
+        fun send(status: Int, a: Int, b: Int) = keys.receive(byteArrayOf(status.toByte(), a.toByte(), b.toByte()), 1)
+        send(0x90, 60, 80)
+        send(0x90, 62, 80)
+        send(0xB0, 64, 127)
+        send(0x80, 60, 0)
+        send(0xB0, 121, 0)
+        assertEquals(listOf(60), released)
+        send(0xB0, 64, 127)
+        send(0xB0, 123, 0)
+        assertEquals(listOf(60), released)
+        send(0xB0, 64, 0)
+        assertEquals(listOf(60, 62), released)
+        send(0x90, 67, 90)
+        send(0xB0, 64, 127)
+        send(0xB0, 120, 0)
+        assertEquals(listOf(60, 62, 67), released)
+    }
+
+    @Test
+    fun liveTakeKeepsDynamicsAndIgnoresEarlyCountInNotes() {
+        val s = session()
+        val rec = LiveRecorder(s, { true }, { 4.0 })
+        rec.armed = true
+        rec.press(48, -4.0)
+        rec.release(48, -2.0)
+        rec.press(52, -0.2, velocity = 0.32f)
+        rec.finishAll()
+        val n = StudioProjectCodec.decode(StudioProjectCodec.encode(s.project))!!.pattern.notes.single()
+        assertEquals(0, n.step)
+        assertEquals(4, n.length)
+        assertEquals(0.32f, n.velocity, 0f)
+    }
+
+    @Test
     fun midiMessagesBecomeNotes() {
         val on = ArrayList<Pair<Int, Float>>()
         val off = ArrayList<Int>()

@@ -692,7 +692,7 @@ class StudioEngine(val sampleRate: Int) {
         if (blockPeak > peak) peak = blockPeak
         if (limited > 0) limitedSamples += limited
         framesRendered = blockStart + n
-        playPosition = if (running && stepIndex > 0) {
+        playPosition = if (running) {
             val stepFrames = sampleRate * 60.0 / max(bpm, 20f) / 4.0
             (stepIndex - 1) + ((blockStart + n - lastFireFrame) / stepFrames).coerceIn(0.0, 1.0)
         } else 0.0
