@@ -481,7 +481,7 @@ class PianoRollView(context: Context) : View(context) {
             val isRoot = ((pitch - keyPc) % 12 + 12) % 12 == 0
             val pc = ((pitch % 12) + 12) % 12
             val black = pc == 1 || pc == 3 || pc == 6 || pc == 8 || pc == 10
-            val pressedNow = pitch == pressedPitch || pitch in lit
+            val pressedNow = pitch == pressedPitch || pitch in lit || (midiLights?.get(pitch) ?: 0) > 0
             rect.set(0f, top + pad, keyW, top + rh - pad)
             fill.color = if (black) 0xFF24242B.toInt() else 0xFF14141A.toInt()
             canvas.drawRoundRect(rect, dp(4f), dp(4f), fill)
@@ -549,6 +549,7 @@ class PianoRollView(context: Context) : View(context) {
 
     /** Les touches que le clavier du bas (ou un clavier MIDI) tient : elles s'allument aussi dans la colonne de gauche. */
     private val lit = HashSet<Int>()
+    internal var midiLights: IntArray? = null
 
     fun setLit(pitch: Int, on: Boolean) {
         if (if (on) lit.add(pitch) else lit.remove(pitch)) invalidate()

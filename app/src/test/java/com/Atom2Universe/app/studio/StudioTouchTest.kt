@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
 import com.Atom2Universe.app.studio.ui.StudioPanelHost
+import com.Atom2Universe.app.studio.ui.KeyboardView
 import com.Atom2Universe.app.studio.ui.PianoRollView
 import com.Atom2Universe.app.studio.engine.Note
 import org.junit.Assert.*
@@ -18,6 +19,36 @@ import org.robolectric.annotation.Config
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [34], application = Application::class)
 class StudioTouchTest {
+    @Test fun keyDepthChangesAttackOnlyWhenDynamicTouchIsEnabled() {
+        val keyboard = KeyboardView(RuntimeEnvironment.getApplication()).apply {
+            low = 60
+            high = 72
+            locked = false
+            layout(0, 0, 400, 200)
+        }
+        val attacks = mutableListOf<Float>()
+        val releases = mutableListOf<Int>()
+        keyboard.listener = object : KeyboardView.Listener {
+            override fun onKeyDown(pitch: Int, velocity: Float) { attacks += velocity }
+            override fun onKeyUp(pitch: Int) { releases += pitch }
+        }
+        fun tap(y: Float) {
+            for (action in listOf(MotionEvent.ACTION_DOWN, MotionEvent.ACTION_UP)) {
+                val event = MotionEvent.obtain(0, 20, action, 12f, y, 0)
+                keyboard.onTouchEvent(event)
+                event.recycle()
+            }
+        }
+        tap(24f)
+        tap(180f)
+        keyboard.dynamicTouch = true
+        tap(24f)
+        tap(180f)
+        assertEquals(listOf(60, 60, 60, 60), releases)
+        assertEquals(attacks[0], attacks[1], 0f)
+        assertTrue(attacks[2] < 0.5f && attacks[3] > 0.9f)
+    }
+
     @Test fun narrowingTheDeskKeepsSideBySidePanelsApart() {
         val ctx = RuntimeEnvironment.getApplication()
         val d = ctx.resources.displayMetrics.density

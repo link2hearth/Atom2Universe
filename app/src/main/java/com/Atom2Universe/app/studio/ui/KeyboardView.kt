@@ -74,6 +74,7 @@ class KeyboardView(context: Context) : View(context) {
 
     /** Doigt (identifiant) -> hauteur de la touche qu'il tient. */
     private val down = HashMap<Int, Int>()
+    internal var midiLights: IntArray? = null
 
     private fun dp(v: Float) = v * resources.displayMetrics.density
 
@@ -137,7 +138,7 @@ class KeyboardView(context: Context) : View(context) {
             val pc = p % 12
             if (isBlack(pc)) continue
             val x = left0() + whiteIndex(p) * ww
-            val isDown = p in pressed
+            val isDown = p in pressed || (midiLights?.get(p) ?: 0) > 0
             val offset = if (isDown) dp(2f) else 0f
             rect.set(x + gap, top() + offset, x + ww - gap, height.toFloat() - dp(1f))
             fill.color = when {
@@ -165,7 +166,7 @@ class KeyboardView(context: Context) : View(context) {
             val pc = p % 12
             if (!isBlack(pc)) continue
             val x = blackLeft(p)
-            val isDown = p in pressed
+            val isDown = p in pressed || (midiLights?.get(p) ?: 0) > 0
             val offset = if (isDown) dp(2f) else 0f
             rect.set(x, top() + offset, x + blackW(), blackH())
             fill.color = when {

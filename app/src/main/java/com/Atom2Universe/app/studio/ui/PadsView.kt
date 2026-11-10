@@ -52,6 +52,7 @@ class PadsView(context: Context) : View(context) {
     private class Hold(val tile: Int, val pitch: Int, var startY: Float = 0f, var effect: Float = 0f)
 
     private val held = HashMap<Int, Hold>()
+    internal val hasHeldDrum get() = held.values.any { it.pitch < 0 }
 
     /** Éclat de chaque case (1 juste après un coup, puis s'éteint). */
     private val glow = HashMap<Int, Float>()

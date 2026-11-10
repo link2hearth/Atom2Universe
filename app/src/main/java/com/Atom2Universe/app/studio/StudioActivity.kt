@@ -173,6 +173,7 @@ class StudioActivity : AudioThemedActivity() {
     private lateinit var midiText: TextView
     private lateinit var arpButton: MaterialButton
     private lateinit var recorder: LiveRecorder
+    private val midiLights = HashMap<Int, IntArray>()
     private val keyboardTracks = HashMap<Int, Int>()
     @Volatile private var takeRevision = 0L
     private var midiPerformance: MidiPerformance? = null
@@ -185,7 +186,16 @@ class StudioActivity : AudioThemedActivity() {
     private val handler = Handler(Looper.getMainLooper())
     private var playing = false
     private var bufferBlocks = 2
-    private var frames = 0
+    private var screenActive = false
+    private var framePending = false
+    private val statsTick = object : Runnable {
+        override fun run() {
+            if (screenActive && stats.visibility == View.VISIBLE) {
+                refreshStats()
+                handler.postDelayed(this, 250)
+            }
+        }
+    }
     private var building = true
     private var scaleLocked = true
     private var requestedOctaves: Int? = null
@@ -220,6 +230,7 @@ class StudioActivity : AudioThemedActivity() {
 
     private val frameTick = object : Runnable {
         override fun run() {
+            framePending = false
             val step = if (playing) engine.currentStep else -1
             songBlocks?.playingIndex = if (playing && session.project.songMode) engine.songPosition else -1
             if (onNotesTab) roll.playhead = step else if (rhythmPane.visibility == View.VISIBLE) grid.playhead = step
@@ -229,19 +240,7 @@ class StudioActivity : AudioThemedActivity() {
                 shownCountIn = countIn
                 if (countIn > 0) playButton.text = countIn.toString() else refreshTransport()
             }
-            // Les coups joués aux pads pendant l'enregistrement s'écrivent dans la grille
-            var wrote = false
-            engine.takeLiveHits { track, position, velocity ->
-                if (padsRecording) {
-                    session.recordHit(track, position, velocity)
-                    wrote = true
-                }
-                if (::pads.isInitialized) pads.flash(track)
-            }
-            if (wrote) {
-                grid.invalidate()
-                scheduleSave()
-            }
+            drainPadHits()
             if (::padView.isInitialized) {
                 if (padView.isTouching) {
                     if (gestureTaking) session.recordGesture(engine.playPosition, engine.masterFilter, engine.spaceBoost)
@@ -253,9 +252,30 @@ class StudioActivity : AudioThemedActivity() {
                     padView.showAt(1f - (f ?: 0f), s ?: 0f)
                 }
             }
-            if (stats.visibility == View.VISIBLE && ++frames % 15 == 0) refreshStats()
-            if (playing || padsPane.visibility == View.VISIBLE || stats.visibility == View.VISIBLE) grid.postOnAnimation(this)
-            else grid.postDelayed(this, 100)
+            if (playing || pads.hasHeldDrum) requestFrame()
+        }
+    }
+
+    private fun requestFrame() {
+        if (screenActive && !framePending) {
+            framePending = true
+            grid.postOnAnimation(frameTick)
+        }
+    }
+
+    private fun drainPadHits() {
+        // Les coups joués aux pads pendant l'enregistrement s'écrivent dans la grille
+        var wrote = false
+        engine.takeLiveHits { track, position, velocity ->
+            if (padsRecording) {
+                session.recordHit(track, position, velocity)
+                wrote = true
+            }
+            if (::pads.isInitialized) pads.flash(track)
+        }
+        if (wrote) {
+            grid.invalidate()
+            scheduleSave()
         }
     }
 
@@ -313,13 +333,18 @@ class StudioActivity : AudioThemedActivity() {
             statsText.setText(R.string.studio_audio_failed)
         }
         output.setBufferBlocks(bufferBlocks)
-        grid.postOnAnimation(frameTick)
+        screenActive = true
+        requestFrame()
+        statsTick.run()
         startMidi()
     }
 
     override fun onPause() {
         if (!::output.isInitialized) { super.onPause(); return }
+        screenActive = false
+        framePending = false
         grid.removeCallbacks(frameTick)
+        handler.removeCallbacks(statsTick)
         // Rien ne reste tenu : pads, thérémine, enregistrement des pads
         pads.releaseAll()
         keyboard.releaseAll()
@@ -379,7 +404,8 @@ class StudioActivity : AudioThemedActivity() {
             setOnLongClickListener {
                 stats.visibility = if (stats.visibility == View.VISIBLE) View.GONE else View.VISIBLE
                 output.resetMax()
-                refreshStats()
+                handler.removeCallbacks(statsTick)
+                statsTick.run()
                 true
             }
         }
@@ -633,7 +659,10 @@ class StudioActivity : AudioThemedActivity() {
         pane.addView(header)
         pads = PadsView(this).apply {
             noteNames = resources.getStringArray(R.array.studio_key_names).toList()
-            onDown = { track -> if (padsRoll) engine.rollOn(track, 1f, 1 shl rollRate) else engine.trigger(track, 60, 1f) }
+            onDown = { track ->
+                if (padsRoll) engine.rollOn(track, 1f, 1 shl rollRate) else engine.trigger(track, 60, 1f)
+                requestFrame()
+            }
             onUp = { track -> engine.rollOff(track) }
             onNoteDown = { track, pitch -> padNoteDown(track, pitch) }
             onNoteUp = { track, pitch -> padNoteUp(track, pitch) }
@@ -702,6 +731,7 @@ class StudioActivity : AudioThemedActivity() {
      */
     private fun setPadsRecording(on: Boolean) {
         if (!::padsRecordButton.isInitialized) return
+        if (padsRecording != on) drainPadHits()
         padsRecording = on
         padsRecordButton.setText(if (on) R.string.studio_record_on else R.string.studio_record_off)
         padsRecordButton.setBackgroundColor(if (on) 0x66E74C3C else android.graphics.Color.TRANSPARENT)
@@ -1780,8 +1810,6 @@ class StudioActivity : AudioThemedActivity() {
         }
         playing = !playing
         if (playing) engine.play() else engine.stop()
-        grid.removeCallbacks(frameTick)
-        grid.postOnAnimation(frameTick)
         refreshTransport()
     }
 
@@ -1808,6 +1836,7 @@ class StudioActivity : AudioThemedActivity() {
         padsPane.visibility = if (padsTab) View.VISIBLE else View.GONE
         notesPane.visibility = if (notes) View.VISIBLE else View.GONE
         mixerPane.visibility = if (id == tabMixerId) View.VISIBLE else View.GONE
+        requestFrame()
         if (id == tabMixerId) refreshMixer()
         refreshSelectionBar()
         if (notes) {
@@ -1966,6 +1995,20 @@ class StudioActivity : AudioThemedActivity() {
         }
     }
 
+    private fun displayMidiLights() {
+        val lights = midiLights[selectedTrack]
+        keyboard.midiLights = lights
+        roll.midiLights = lights
+        keyboard.invalidate()
+        roll.invalidate()
+    }
+
+    private fun midiLight(track: Int, pitch: Int, down: Boolean) {
+        val counts = midiLights.getOrPut(track) { IntArray(128) }
+        counts[pitch] = if (down) counts[pitch] + 1 else (counts[pitch] - 1).coerceAtLeast(0)
+        if (track == selectedTrack) displayMidiLights()
+    }
+
     private fun startMidi() {
         lateinit var keys: MidiPerformance
         keys = MidiPerformance(
@@ -1973,13 +2016,23 @@ class StudioActivity : AudioThemedActivity() {
                 val revision = takeRevision
                 val at = engine.playPosition
                 engine.trigger(track, pitch, velocity)
-                handler.post { if (midiPerformance === keys && revision == takeRevision) recorder.press(pitch, at, track, velocity) }
+                handler.post {
+                    if (midiPerformance === keys) {
+                        midiLight(track, pitch, true)
+                        if (revision == takeRevision) recorder.press(pitch, at, track, velocity)
+                    }
+                }
             },
             onRelease = { track, pitch ->
                 val revision = takeRevision
                 val at = engine.playPosition
                 engine.release(track, pitch)
-                handler.post { if (midiPerformance === keys && revision == takeRevision) endRecordedNote(track, pitch, at) }
+                handler.post {
+                    if (midiPerformance === keys) {
+                        midiLight(track, pitch, false)
+                        if (revision == takeRevision) endRecordedNote(track, pitch, at)
+                    }
+                }
             },
         )
         midiPerformance = keys
@@ -1998,6 +2051,8 @@ class StudioActivity : AudioThemedActivity() {
     private fun stopLive() {
         midiPerformance?.close()
         midiPerformance = null
+        midiLights.clear()
+        displayMidiLights()
         midi?.stop()
         midi = null
         recorder.finishAll()
@@ -2186,11 +2241,7 @@ class StudioActivity : AudioThemedActivity() {
     /** Rend le fichier hors ligne (plus vite que le temps réel) avec une barre de progression, puis dit où il est. */
     private fun runExport(kind: Int) {
         // Pendant le rendu, la lecture se tait : le téléphone a besoin de toute sa puissance
-        if (playing) {
-            playing = false
-            engine.stop()
-            refreshTransport()
-        }
+        if (playing) togglePlay()
         val project = session.project
         val bar = android.widget.ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal).apply { max = 1000 }
         val holder = FrameLayout(this).apply { setPadding(dp(24), dp(16), dp(24), 0); addView(bar) }
@@ -2326,6 +2377,7 @@ class StudioActivity : AudioThemedActivity() {
 
     private fun refreshTransport() {
         playButton.setText(if (playing) R.string.studio_stop else R.string.studio_play)
+        requestFrame()
     }
 
     private fun refreshAll() {
@@ -2342,6 +2394,7 @@ class StudioActivity : AudioThemedActivity() {
     }
 
     private fun refreshRoll() {
+        displayMidiLights()
         val p = session.project
         val scale = Scales.byId(p.scaleId)
         roll.keyPc = p.keyPc
