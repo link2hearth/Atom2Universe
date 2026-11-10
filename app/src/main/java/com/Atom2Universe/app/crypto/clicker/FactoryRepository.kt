@@ -11,12 +11,12 @@ class FactoryRepository(context: Context) {
     fun getAllCounts(): Map<FactoryType, Int> =
         FactoryType.values().associateWith { getCount(it) }
 
-    fun increment(type: FactoryType) =
-        prefs.edit { putInt(type.id, getCount(type) + 1) }
-
-    /** Écriture directe — utilisée par la restauration d'une sauvegarde Drive. */
     fun setCount(type: FactoryType, count: Int) =
         prefs.edit { putInt(type.id, count.coerceAtLeast(0)) }
+
+    fun setCounts(counts: Map<FactoryType, Int>) = prefs.edit {
+        for ((type, count) in counts) putInt(type.id, count)
+    }
 
     fun reset() = prefs.edit { clear() }
 }

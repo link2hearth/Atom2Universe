@@ -63,18 +63,9 @@
                 android:fontFamily="monospace"
                 android:paddingEnd="6dp" />
 
-            <Button
+            <include
                 android:id="@+id/shop_god_finger_mult"
-                android:layout_width="52dp"
-                android:layout_height="36dp"
-                android:text="×1"
-                android:textSize="13sp"
-                android:textColor="@color/audio_text_secondary"
-                android:padding="0dp"
-                android:background="@android:color/transparent"
-                android:minWidth="0dp"
-                android:minHeight="0dp"
-                android:fontFamily="monospace" />
+                layout="@layout/button_clicker_shop_quantity" />
 
             <Button
                 android:id="@+id/shop_god_finger_buy"
@@ -143,18 +134,9 @@
                 android:fontFamily="monospace"
                 android:paddingEnd="6dp" />
 
-            <Button
+            <include
                 android:id="@+id/shop_star_core_mult"
-                android:layout_width="52dp"
-                android:layout_height="36dp"
-                android:text="×1"
-                android:textSize="13sp"
-                android:textColor="@color/audio_text_secondary"
-                android:padding="0dp"
-                android:background="@android:color/transparent"
-                android:minWidth="0dp"
-                android:minHeight="0dp"
-                android:fontFamily="monospace" />
+                layout="@layout/button_clicker_shop_quantity" />
 
             <Button
                 android:id="@+id/shop_star_core_buy"
@@ -169,12 +151,21 @@
 
         </LinearLayout>
 
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/shop_auto_buy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:layout_marginTop="4dp"
+            android:text="@string/clicker_shop_auto_buy"
+            android:textColor="@color/audio_text_primary"
+            android:textSize="16sp" />
+
         <!-- ── Section Usines ───────────────────────────────────────────────── -->
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="?attr/a2uOutlineColor"
-            android:layout_marginTop="18dp"
             android:layout_marginBottom="12dp" />
 
         <TextView

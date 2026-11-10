@@ -28,16 +28,16 @@ internal object ClickerShopEngine {
     private const val WALL_SHIFT_PER_LEVEL = 10.0
     private val DISCOUNT_LOG_PER_LEVEL = WALL_SHIFT_PER_LEVEL * RATIO_B
 
-    private fun effectiveIndex(level: Int): Int {
+    private fun effectiveIndex(level: Int): Long {
         val n = level.coerceAtLeast(0)
         if (n <= 0) return 0
         return if (n <= VISIBLE_MAX) {
             val span = (VISIBLE_MAX - 1).toDouble()
             val t = ((n - 1) / span).coerceIn(0.0, 1.0)
             val curved = t.pow(POWER)
-            1 + (curved * (INTERNAL_MAX - 1)).roundToInt()
+            1L + (curved * (INTERNAL_MAX - 1)).roundToInt()
         } else {
-            n + POST_CURVE_OFFSET
+            n.toLong() + POST_CURVE_OFFSET
         }
     }
 
@@ -86,7 +86,4 @@ internal object ClickerShopEngine {
         }
         return total
     }
-
-    fun effectiveBuyAmount(currentLevel: Int, requested: Int): Int =
-        requested.coerceAtLeast(0)
 }

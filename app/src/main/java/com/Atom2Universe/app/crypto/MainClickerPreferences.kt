@@ -55,6 +55,8 @@ object MainClickerPreferences {
     private const val KEY_CRYPTO_COMPARISON_MINUTES = "crypto_comparison_minutes"
     private const val KEY_CLICKER_ENABLED = "clicker_enabled"
     private const val KEY_SHOP_PLUS_PREFIX = "shop_plus_enabled_"
+    private const val KEY_SHOP_QUANTITY_PREFIX = "shop_quantity_"
+    private const val KEY_SHOP_AUTO_BUY = "shop_auto_buy"
     private const val KEY_CLICKER_OPACITY_PERCENT = "clicker_opacity_percent"
     private const val KEY_CLICKER_HEIGHT_DP = "clicker_height_dp"
     private const val KEY_CLICKER_DECIMAL_DIGITS = "clicker_decimal_digits"
@@ -126,6 +128,19 @@ object MainClickerPreferences {
 
     fun setShopPlusEnabled(context: Context, upgradeId: String, enabled: Boolean) {
         prefs(context).edit { putBoolean(KEY_SHOP_PLUS_PREFIX + upgradeId, enabled) }
+    }
+
+    fun getShopQuantity(context: Context, upgradeId: String): Int =
+        prefs(context).getInt(KEY_SHOP_QUANTITY_PREFIX + upgradeId, 1)
+
+    fun setShopQuantity(context: Context, upgradeId: String, quantity: Int) {
+        prefs(context).edit { putInt(KEY_SHOP_QUANTITY_PREFIX + upgradeId, quantity) }
+    }
+
+    fun isShopAutoBuyEnabled(context: Context): Boolean = prefs(context).getBoolean(KEY_SHOP_AUTO_BUY, false)
+
+    fun setShopAutoBuyEnabled(context: Context, enabled: Boolean) {
+        prefs(context).edit { putBoolean(KEY_SHOP_AUTO_BUY, enabled) }
     }
 
     fun getClickerOpacityPercent(context: Context): Int =

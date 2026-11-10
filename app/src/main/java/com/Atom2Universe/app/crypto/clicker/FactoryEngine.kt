@@ -8,6 +8,14 @@ internal object FactoryEngine {
 
     private const val PRICE_SCALE = 1.35
 
+    fun batchCost(type: FactoryType, currentCount: Int, quantity: Int): LayeredNumber {
+        var total = LayeredNumber.zero()
+        for (offset in 0 until quantity) {
+            total = total.add(cost(type, currentCount + offset))
+        }
+        return total
+    }
+
     fun cost(type: FactoryType, currentCount: Int): LayeredNumber {
         val logPrice = log10(type.basePrice) + currentCount * log10(PRICE_SCALE)
         // Petits prix : calcul direct, identique à avant ; au-delà, mantisse/exposant

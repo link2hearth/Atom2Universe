@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.os.SystemClock
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.Atom2Universe.app.crypto.MainClickerPreferences
 import com.Atom2Universe.app.crypto.clicker.engine.LayeredNumber
 import com.Atom2Universe.app.crypto.gacha.completedRarityCount
 import com.Atom2Universe.app.crypto.gacha.frenzyChanceForCompletedRarities
@@ -26,6 +27,9 @@ import androidx.core.content.edit
 /** Coût d'échange : neutrinos requis pour 1 ticket gacha à la boutique. */
 private const val NEUTRINOS_PER_TICKET = 10
 
+// Un gros solde est dépensé sur plusieurs ticks afin de laisser la main à l'écran.
+private const val MAX_AUTO_BATCHES_PER_TICK = 32
+
 class ClickerViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository            = ClickerRepository(application)
@@ -42,6 +46,22 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
     private val critRepo              = CritRepository(application)
 
     private var bigBangEffects = BigBangEngine.computeEffects(bigBangRepo)
+
+    private val shopQuantities = AtomShopUpgrade.entries.associateWith {
+        MainClickerPreferences.getShopQuantity(application, it.preferenceId)
+    }.toMutableMap()
+    private val shopPlusEnabled = AtomShopUpgrade.entries.filterTo(mutableSetOf()) {
+        MainClickerPreferences.isShopPlusEnabled(application, it.preferenceId)
+    }
+    var shopAutoBuyEnabled = MainClickerPreferences.isShopAutoBuyEnabled(application)
+        set(enabled) {
+            field = enabled
+            MainClickerPreferences.setShopAutoBuyEnabled(getApplication(), enabled)
+        }
+
+    // Le prix ne change ni à chaque clic ni à chaque tick de production.
+    private data class BatchPrice(val level: Int, val quantity: Int, val discount: Int, val cost: LayeredNumber)
+    private val shopPrices = mutableMapOf<AtomShopUpgrade, BatchPrice>()
 
     private val _state = MutableStateFlow(ClickerGameState())
     val state: StateFlow<ClickerGameState> = _state.asStateFlow()
@@ -255,6 +275,7 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
                     s = recalcProduction(s, nowMs)
                     _frenzyUiState.value = frenzyManager.buildUiState(nowMs)
                 }
+                if (shopAutoBuyEnabled) s = buyCheapestShopBatches(s)
                 _state.value = s
 
                 checkAchievements(s.lifetime, emitEvents = true)
@@ -488,27 +509,72 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
         statsRepository.save(playTimeSnapshot)
     }
 
-    fun buyUpgrade(upgradeId: String, quantity: Int) {
-        val s = _state.value
-        val currentLevel = when (upgradeId) {
-            "godFinger" -> s.godFingerLevel
-            "starCore"  -> s.starCoreLevel
-            else        -> return
+    internal fun isShopPlusEnabled(upgrade: AtomShopUpgrade) = upgrade in shopPlusEnabled
+
+    internal fun setShopPlusEnabled(upgrade: AtomShopUpgrade, enabled: Boolean) {
+        if (enabled) shopPlusEnabled.add(upgrade) else shopPlusEnabled.remove(upgrade)
+        MainClickerPreferences.setShopPlusEnabled(getApplication(), upgrade.preferenceId, enabled)
+    }
+
+    internal fun shopQuantity(upgrade: AtomShopUpgrade) = shopQuantities.getValue(upgrade)
+
+    internal fun cycleShopQuantity(upgrade: AtomShopUpgrade) {
+        val next = when (shopQuantity(upgrade)) {
+            1 -> 10
+            10 -> 100
+            else -> 1
         }
-        val effective = ClickerShopEngine.effectiveBuyAmount(currentLevel, quantity)
-        if (effective <= 0) return
-        val cost = ClickerShopEngine.batchCost(currentLevel, effective, costDiscountLevel(upgradeId))
-        if (cost.greaterThan(s.atoms)) return
-        val newLevel = currentLevel + effective
-        val afterPurchase = when (upgradeId) {
-            "godFinger" -> s.copy(atoms = s.atoms.subtract(cost), godFingerLevel = newLevel)
-            "starCore"  -> s.copy(atoms = s.atoms.subtract(cost), starCoreLevel  = newLevel)
-            else        -> return
+        shopQuantities[upgrade] = next
+        MainClickerPreferences.setShopQuantity(getApplication(), upgrade.preferenceId, next)
+    }
+
+    internal fun buyUpgrade(upgrade: AtomShopUpgrade) {
+        if (!initCompleted) return
+        val state = _state.value
+        val cost = shopCost(upgrade, state) ?: return
+        if (state.atoms >= cost) {
+            _state.value = finishShopPurchases(state, purchaseShopBatch(state, upgrade, cost))
         }
+    }
+
+    private fun buyCheapestShopBatches(initial: ClickerGameState): ClickerGameState {
+        var state = initial
+        for (batch in 1..MAX_AUTO_BATCHES_PER_TICK) {
+            var cheapest: AtomShopUpgrade? = null
+            var lowestPrice: LayeredNumber? = null
+            for (upgrade in AtomShopUpgrade.entries) {
+                if (!isShopPlusEnabled(upgrade)) continue
+                val price = shopCost(upgrade, state) ?: continue
+                if (lowestPrice == null || price < lowestPrice) {
+                    cheapest = upgrade
+                    lowestPrice = price
+                }
+            }
+            if (cheapest == null || lowestPrice == null || state.atoms < lowestPrice) break
+            state = purchaseShopBatch(state, cheapest, lowestPrice)
+        }
+        return if (state === initial) initial else finishShopPurchases(initial, state)
+    }
+
+    private fun purchaseShopBatch(state: ClickerGameState, upgrade: AtomShopUpgrade, cost: LayeredNumber): ClickerGameState {
+        val atoms = state.atoms.subtract(cost)
+        val newLevel = upgrade.level(state) + shopQuantity(upgrade)
         attributeSpending(cost)
-        val newState = recalcProduction(afterPurchase)
-        _state.value = newState
+        return when (upgrade) {
+            AtomShopUpgrade.GOD_FINGER -> state.copy(atoms = atoms, godFingerLevel = newLevel)
+            AtomShopUpgrade.STAR_CORE -> state.copy(atoms = atoms, starCoreLevel = newLevel)
+            else -> {
+                val type = requireNotNull(upgrade.factory)
+                state.copy(atoms = atoms, factoryCounts = state.factoryCounts + (type to newLevel))
+            }
+        }
+    }
+
+    private fun finishShopPurchases(previous: ClickerGameState, purchased: ClickerGameState): ClickerGameState {
+        if (purchased.factoryCounts !== previous.factoryCounts) factoryRepo.setCounts(purchased.factoryCounts)
+        val newState = recalcProduction(purchased)
         viewModelScope.launch { repository.save(newState) }
+        return newState
     }
 
     private fun attributeSpending(cost: LayeredNumber) {
@@ -522,22 +588,27 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
         )
     }
 
-    fun shopCost(upgradeId: String, quantity: Int): LayeredNumber {
-        val s = _state.value
-        val currentLevel = when (upgradeId) {
-            "godFinger" -> s.godFingerLevel
-            "starCore"  -> s.starCoreLevel
-            else        -> return LayeredNumber.zero()
+    internal fun shopCost(upgrade: AtomShopUpgrade, state: ClickerGameState): LayeredNumber? {
+        val level = upgrade.level(state)
+        val quantity = shopQuantity(upgrade)
+        if (quantity !in 1..(ClickerShopEngine.MAX_LEVEL - level)) return null
+        val discount = when (upgrade) {
+            AtomShopUpgrade.GOD_FINGER -> bigBangEffects.godFingerCostDiscountLevel
+            AtomShopUpgrade.STAR_CORE -> bigBangEffects.starCoreCostDiscountLevel
+            else -> 0
         }
-        val effective = ClickerShopEngine.effectiveBuyAmount(currentLevel, quantity)
-        return ClickerShopEngine.batchCost(currentLevel, effective, costDiscountLevel(upgradeId))
-    }
-
-    /** Niveau de réduction de prix Big Bang applicable à l'upgrade du shop ciblé. */
-    private fun costDiscountLevel(upgradeId: String): Int = when (upgradeId) {
-        "godFinger" -> bigBangEffects.godFingerCostDiscountLevel
-        "starCore"  -> bigBangEffects.starCoreCostDiscountLevel
-        else        -> 0
+        val cached = shopPrices[upgrade]
+        if (cached != null && cached.level == level && cached.quantity == quantity && cached.discount == discount) {
+            return cached.cost
+        }
+        val type = upgrade.factory
+        val cost = if (type == null) {
+            ClickerShopEngine.batchCost(level, quantity, discount)
+        } else {
+            FactoryEngine.batchCost(type, level, quantity)
+        }
+        shopPrices[upgrade] = BatchPrice(level, quantity, discount, cost)
+        return cost
     }
 
     fun getTotalElements(): Int = collectionStore.getTotalCopies()
@@ -667,25 +738,6 @@ class ClickerViewModel(application: Application) : AndroidViewModel(application)
             repository.addGachaTickets(1)
             repository.save(newState)
         }
-    }
-
-    fun factoryCost(type: FactoryType): LayeredNumber =
-        FactoryEngine.cost(type, _state.value.factoryCounts[type] ?: 0)
-
-    fun buyFactory(type: FactoryType) {
-        val s = _state.value
-        val cost = FactoryEngine.cost(type, s.factoryCounts[type] ?: 0)
-        if (cost.greaterThan(s.atoms)) return
-        factoryRepo.increment(type)
-        val newCounts = factoryRepo.getAllCounts()
-        val afterPurchase = s.copy(
-            atoms = s.atoms.subtract(cost),
-            factoryCounts = newCounts
-        )
-        attributeSpending(cost)
-        val newState = recalcProduction(afterPurchase)
-        _state.value = newState
-        viewModelScope.launch { repository.save(newState) }
     }
 
     fun refreshElementBonuses() {

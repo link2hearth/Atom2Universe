@@ -72,6 +72,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.Atom2Universe.app.crypto.clicker.ClickerBannerView
+import com.Atom2Universe.app.crypto.clicker.AtomShopUpgrade
 import com.Atom2Universe.app.crypto.clicker.ClickerGameState
 import com.Atom2Universe.app.crypto.clicker.ClickerViewModel
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
@@ -162,9 +163,6 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
     /** Dernier solde transmis au Blackjack (affichage seul) : -1 = jamais transmis. */
     private var lastBlackjackNeutrinos = -1
 
-    /** Toggles « + » du shop, lus une fois (et mis à jour au clic) plutôt qu'à chaque état. */
-    private val shopPlusEnabled = mutableMapOf<String, Boolean>()
-
     /** Atome de crit : un seul moteur de dessin partagé par toutes les popups. */
     private val critAtomRenderer by lazy { com.Atom2Universe.app.crypto.clicker.AnimatedAtomRenderer() }
 
@@ -230,18 +228,12 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
     }
 
     private var shopDialog: Dialog? = null
-    private var shopGodFingerMult = 1
-    private var shopStarCoreMult = 1
     private var shopGodFingerLevelView: TextView? = null
     private var shopGodFingerPriceView: TextView? = null
-    private var shopGodFingerMultBtn: Button? = null
     private var shopGodFingerBuyBtn: Button? = null
-    private var shopGodFingerPlusView: TextView? = null
     private var shopStarCoreLevelView: TextView? = null
     private var shopStarCorePriceView: TextView? = null
-    private var shopStarCoreMultBtn: Button? = null
     private var shopStarCoreBuyBtn: Button? = null
-    private var shopStarCorePlusView: TextView? = null
 
     // Critique dans le shop
     private var shopCritSection: View? = null
@@ -320,7 +312,6 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
     private val shopFactoryEffectViews = mutableMapOf<com.Atom2Universe.app.crypto.clicker.FactoryType, TextView>()
     private val shopFactoryPriceViews  = mutableMapOf<com.Atom2Universe.app.crypto.clicker.FactoryType, TextView>()
     private val shopFactoryBuyBtns     = mutableMapOf<com.Atom2Universe.app.crypto.clicker.FactoryType, Button>()
-    private val shopFactoryPlusViews   = mutableMapOf<com.Atom2Universe.app.crypto.clicker.FactoryType, TextView>()
 
     // Collections de raretés dans le shop
     private var shopCollectionsProgress: TextView? = null
@@ -890,14 +881,16 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
 
         shopGodFingerLevelView  = view.findViewById(R.id.shop_god_finger_level)
         shopGodFingerPriceView  = view.findViewById(R.id.shop_god_finger_price)
-        shopGodFingerMultBtn    = view.findViewById(R.id.shop_god_finger_mult)
-        shopGodFingerPlusView   = view.findViewById(R.id.shop_god_finger_plus)
-        bindShopPlusToggle(shopGodFingerPlusView, "godFinger")
+        bindShopQuantity(view.findViewById(R.id.shop_god_finger_mult), AtomShopUpgrade.GOD_FINGER)
+        bindShopPlusToggle(view.findViewById(R.id.shop_god_finger_plus), AtomShopUpgrade.GOD_FINGER)
         shopStarCoreLevelView   = view.findViewById(R.id.shop_star_core_level)
         shopStarCorePriceView   = view.findViewById(R.id.shop_star_core_price)
-        shopStarCoreMultBtn     = view.findViewById(R.id.shop_star_core_mult)
-        shopStarCorePlusView    = view.findViewById(R.id.shop_star_core_plus)
-        bindShopPlusToggle(shopStarCorePlusView, "starCore")
+        bindShopQuantity(view.findViewById(R.id.shop_star_core_mult), AtomShopUpgrade.STAR_CORE)
+        bindShopPlusToggle(view.findViewById(R.id.shop_star_core_plus), AtomShopUpgrade.STAR_CORE)
+        view.findViewById<SwitchCompat>(R.id.shop_auto_buy).apply {
+            isChecked = clickerViewModel.shopAutoBuyEnabled
+            setOnCheckedChangeListener { _, enabled -> clickerViewModel.shopAutoBuyEnabled = enabled }
+        }
         shopCritSection         = view.findViewById(R.id.shop_crit_section)
         shopQuarkBalance        = view.findViewById(R.id.shop_quark_balance)
         shopGamowLevelView      = view.findViewById(R.id.shop_gamow_level)
@@ -971,28 +964,13 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
         buildAchievementShopItems()
         buildFactoryShopItems(view.findViewById(R.id.shop_factories_container))
 
-        // Le layout est ré-inflaté à chaque ouverture du shop avec le texte statique "×1" :
-        // on resynchronise l'affichage avec le multiplicateur réellement mémorisé.
-        shopGodFingerMultBtn?.text = "×$shopGodFingerMult"
-        shopStarCoreMultBtn?.text  = "×$shopStarCoreMult"
-
-        shopGodFingerMultBtn?.setOnClickListener {
-            shopGodFingerMult = cycleShopMultiplier(shopGodFingerMult)
-            shopGodFingerMultBtn?.text = "×$shopGodFingerMult"
-            updateShopViews(clickerViewModel.state.value)
-        }
-        shopStarCoreMultBtn?.setOnClickListener {
-            shopStarCoreMult = cycleShopMultiplier(shopStarCoreMult)
-            shopStarCoreMultBtn?.text = "×$shopStarCoreMult"
-            updateShopViews(clickerViewModel.state.value)
-        }
         shopGodFingerBuyBtn = view.findViewById(R.id.shop_god_finger_buy)
         shopGodFingerBuyBtn?.setOnClickListener {
-            clickerViewModel.buyUpgrade("godFinger", shopGodFingerMult)
+            clickerViewModel.buyUpgrade(AtomShopUpgrade.GOD_FINGER)
         }
         shopStarCoreBuyBtn = view.findViewById(R.id.shop_star_core_buy)
         shopStarCoreBuyBtn?.setOnClickListener {
-            clickerViewModel.buyUpgrade("starCore", shopStarCoreMult)
+            clickerViewModel.buyUpgrade(AtomShopUpgrade.STAR_CORE)
         }
         shopApcToApsBuyBtn = view.findViewById(R.id.shop_apc_to_aps_buy)
         shopApcToApsBuyBtn?.setOnClickListener {
@@ -1018,14 +996,10 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
         dialog.setOnDismissListener {
             shopGodFingerLevelView = null
             shopGodFingerPriceView = null
-            shopGodFingerMultBtn   = null
             shopGodFingerBuyBtn    = null
             shopStarCoreLevelView  = null
             shopStarCorePriceView  = null
-            shopStarCoreMultBtn    = null
             shopStarCoreBuyBtn     = null
-            shopGodFingerPlusView  = null
-            shopStarCorePlusView   = null
             shopCritSection        = null
             shopQuarkBalance       = null
             shopGamowLevelView     = null
@@ -1085,7 +1059,6 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
             shopFactoryEffectViews.clear()
             shopFactoryPriceViews.clear()
             shopFactoryBuyBtns.clear()
-            shopFactoryPlusViews.clear()
             shopDialog = null
         }
         shopDialog = dialog
@@ -1244,7 +1217,6 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
         shopFactoryEffectViews.clear()
         shopFactoryPriceViews.clear()
         shopFactoryBuyBtns.clear()
-        shopFactoryPlusViews.clear()
         container.removeAllViews()
 
         val dp      = resources.displayMetrics.density
@@ -1255,15 +1227,9 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
         val dp28    = (28 * dp).toInt()
         val dp36    = (36 * dp).toInt()
 
-        val orderedByPair = listOf(
-            com.Atom2Universe.app.crypto.clicker.FactoryType.PROTON_ACCELERATOR,
-            com.Atom2Universe.app.crypto.clicker.FactoryType.PROTON_INJECTOR,
-            com.Atom2Universe.app.crypto.clicker.FactoryType.FUSION_REACTOR,
-            com.Atom2Universe.app.crypto.clicker.FactoryType.PLASMA_CATALYST,
-            com.Atom2Universe.app.crypto.clicker.FactoryType.HADRON_COLLIDER,
-            com.Atom2Universe.app.crypto.clicker.FactoryType.SYNCHROTRON
-        )
-        for ((index, type) in orderedByPair.withIndex()) {
+        val compact = resources.configuration.screenWidthDp < 600
+        for ((index, upgrade) in AtomShopUpgrade.factories.withIndex()) {
+            val type = requireNotNull(upgrade.factory)
             if (index > 0) {
                 val isPairBoundary = index % 2 == 0
                 val sep = View(this)
@@ -1275,18 +1241,28 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
             }
 
             val row = LinearLayout(this)
-            row.orientation = LinearLayout.HORIZONTAL
+            row.orientation = if (compact) LinearLayout.VERTICAL else LinearLayout.HORIZONTAL
             row.gravity     = Gravity.CENTER_VERTICAL
             val rowP = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
             rowP.bottomMargin = if (index % 2 == 0) dp6 else dp14
             row.layoutParams = rowP
+
+            // Sur téléphone, garder toute la largeur pour le nom et l'effet de l'usine.
+            val details = if (compact) LinearLayout(this).also {
+                it.gravity = Gravity.CENTER_VERTICAL
+                row.addView(it, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            } else row
+            val controls = if (compact) LinearLayout(this).also {
+                it.gravity = Gravity.END or Gravity.CENTER_VERTICAL
+                row.addView(it, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            } else row
 
             val icon = TextView(this)
             icon.text     = factoryIcon(type)
             icon.textSize = 22f
             icon.gravity  = Gravity.CENTER
             icon.layoutParams = LinearLayout.LayoutParams(dp28, LinearLayout.LayoutParams.WRAP_CONTENT)
-            row.addView(icon)
+            details.addView(icon)
 
             val textCol = LinearLayout(this)
             textCol.orientation = LinearLayout.VERTICAL
@@ -1305,7 +1281,6 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
             nameRow.addView(nameView)
 
             val countView = TextView(this)
-            countView.text     = "×0"
             countView.setTextColor(uiPalette.secondary)
             countView.textSize = 13f
             countView.typeface = android.graphics.Typeface.MONOSPACE
@@ -1323,7 +1298,7 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
             shopFactoryEffectViews[type] = effectView
             textCol.addView(effectView)
 
-            row.addView(textCol)
+            details.addView(textCol)
 
             val plusView = TextView(this)
             plusView.text     = "+"
@@ -1335,9 +1310,8 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
             theme.resolveAttribute(android.R.attr.selectableItemBackgroundBorderless, plusValue, true)
             plusView.setBackgroundResource(plusValue.resourceId)
             plusView.contentDescription = getString(R.string.clicker_shop_plus_toggle_desc)
-            shopFactoryPlusViews[type] = plusView
-            bindShopPlusToggle(plusView, type.name)
-            row.addView(plusView)
+            bindShopPlusToggle(plusView, upgrade)
+            controls.addView(plusView)
 
             val priceView = TextView(this)
             priceView.text     = "—"
@@ -1346,7 +1320,11 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
             priceView.typeface = android.graphics.Typeface.MONOSPACE
             priceView.setPadding(0, 0, dp6, 0)
             shopFactoryPriceViews[type] = priceView
-            row.addView(priceView)
+            controls.addView(priceView)
+
+            val quantityButton = layoutInflater.inflate(R.layout.button_clicker_shop_quantity, controls, false) as Button
+            bindShopQuantity(quantityButton, upgrade)
+            controls.addView(quantityButton)
 
             val buyBtn = Button(this)
             buyBtn.text     = getString(R.string.clicker_shop_buy)
@@ -1355,9 +1333,9 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
             buyBtn.setPadding(dp14, 0, dp14, 0)
             buyBtn.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, dp36)
             buyBtn.backgroundTintList = android.content.res.ColorStateList.valueOf(uiPalette.accent)
-            buyBtn.setOnClickListener { clickerViewModel.buyFactory(type) }
+            buyBtn.setOnClickListener { clickerViewModel.buyUpgrade(upgrade) }
             shopFactoryBuyBtns[type] = buyBtn
-            row.addView(buyBtn)
+            controls.addView(buyBtn)
 
             container.addView(row)
         }
@@ -1570,22 +1548,31 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
      * Lie un toggle "+" d'amélioration : sa couleur reflète l'état sauvegardé, et un appui
      * bascule la préférence puis réévalue le badge "$+" du bandeau.
      */
-    private fun bindShopPlusToggle(toggle: TextView?, upgradeId: String) {
-        toggle ?: return
-        applyShopPlusToggleColor(toggle, isShopPlusEnabled(upgradeId))
+    private fun bindShopPlusToggle(toggle: TextView, upgrade: AtomShopUpgrade) {
+        applyShopPlusToggleColor(toggle, clickerViewModel.isShopPlusEnabled(upgrade))
         toggle.setOnClickListener {
-            val next = !isShopPlusEnabled(upgradeId)
-            MainClickerPreferences.setShopPlusEnabled(this, upgradeId, next)
-            shopPlusEnabled[upgradeId] = next
+            val next = !clickerViewModel.isShopPlusEnabled(upgrade)
+            clickerViewModel.setShopPlusEnabled(upgrade, next)
             applyShopPlusToggleColor(toggle, next)
             refreshShopPlusBadge()
         }
     }
 
-    private fun isShopPlusEnabled(upgradeId: String): Boolean =
-        shopPlusEnabled.getOrPut(upgradeId) { MainClickerPreferences.isShopPlusEnabled(this, upgradeId) }
+    private fun bindShopQuantity(button: Button, upgrade: AtomShopUpgrade) {
+        fun showQuantity() {
+            button.text = getString(R.string.clicker_shop_quantity, clickerViewModel.shopQuantity(upgrade))
+        }
+        showQuantity()
+        button.setOnClickListener {
+            clickerViewModel.cycleShopQuantity(upgrade)
+            showQuantity()
+            updateShopViews(clickerViewModel.state.value)
+            refreshShopPlusBadge()
+        }
+    }
 
     private fun applyShopPlusToggleColor(toggle: TextView, enabled: Boolean) {
+        toggle.isSelected = enabled
         toggle.setTextColor(if (enabled) 0xFF22C55E.toInt() else uiPalette.tertiary)
         toggle.alpha = if (enabled) 1f else 0.5f
     }
@@ -1599,16 +1586,16 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
      * Vrai si au moins une amélioration en atomes dont le toggle "+" est activé est achetable
      * (doigt créateur, cœur d'étoile, usines). Pilote le badge "$+" du bandeau.
      */
-    private fun computeShopPlusAffordable(state: ClickerGameState): Boolean {
-        if (isShopPlusEnabled("godFinger") &&
-            state.atoms.greaterOrEqual(clickerViewModel.shopCost("godFinger", 1))) return true
-        if (isShopPlusEnabled("starCore") &&
-            state.atoms.greaterOrEqual(clickerViewModel.shopCost("starCore", 1))) return true
-        for (type in com.Atom2Universe.app.crypto.clicker.FactoryType.values()) {
-            if (isShopPlusEnabled(type.name) &&
-                state.atoms.greaterOrEqual(clickerViewModel.factoryCost(type))) return true
+    private fun computeShopPlusAffordable(state: ClickerGameState): Boolean =
+        AtomShopUpgrade.entries.any { upgrade ->
+            clickerViewModel.isShopPlusEnabled(upgrade) &&
+                clickerViewModel.shopCost(upgrade, state)?.let { state.atoms >= it } == true
         }
-        return false
+
+    private fun showShopPrice(upgrade: AtomShopUpgrade, state: ClickerGameState, price: TextView?, buy: Button?) {
+        val cost = clickerViewModel.shopCost(upgrade, state)
+        price.setTextIfChanged(cost?.toString() ?: getString(R.string.clicker_shop_max))
+        styleShopPurchase(buy, cost != null && state.atoms >= cost)
     }
 
     private fun styleShopPurchase(button: Button?, affordable: Boolean) {
@@ -1628,15 +1615,11 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
     private fun updateShopViews(state: ClickerGameState) {
         val fmt = shopNumberFormat
 
-        val godFingerCost = clickerViewModel.shopCost("godFinger", shopGodFingerMult)
         shopGodFingerLevelView.setTextIfChanged(getString(R.string.clicker_shop_level, state.godFingerLevel))
-        shopGodFingerPriceView.setTextIfChanged(godFingerCost.toString())
-        styleShopPurchase(shopGodFingerBuyBtn, !godFingerCost.greaterThan(state.atoms))
+        showShopPrice(AtomShopUpgrade.GOD_FINGER, state, shopGodFingerPriceView, shopGodFingerBuyBtn)
 
-        val starCoreCost = clickerViewModel.shopCost("starCore", shopStarCoreMult)
         shopStarCoreLevelView.setTextIfChanged(getString(R.string.clicker_shop_level, state.starCoreLevel))
-        shopStarCorePriceView.setTextIfChanged(starCoreCost.toString())
-        styleShopPurchase(shopStarCoreBuyBtn, !starCoreCost.greaterThan(state.atoms))
+        showShopPrice(AtomShopUpgrade.STAR_CORE, state, shopStarCorePriceView, shopStarCoreBuyBtn)
 
         val neutrinoTicketCost = clickerViewModel.neutrinoTicketCost()
         shopNeutrinoTicketEffectView.setTextIfChanged("$neutrinoTicketCost ⚛ → 1 🎟")
@@ -1697,13 +1680,12 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
 
         updateProductionBar(stats)
 
-        for (type in com.Atom2Universe.app.crypto.clicker.FactoryType.values()) {
+        for (upgrade in AtomShopUpgrade.factories) {
+            val type = requireNotNull(upgrade.factory)
             val count = state.factoryCounts[type] ?: 0
-            val cost = clickerViewModel.factoryCost(type)
-            shopFactoryCountViews[type].setTextIfChanged("×$count")
+            shopFactoryCountViews[type].setTextIfChanged(getString(R.string.clicker_shop_quantity, count))
             shopFactoryEffectViews[type].setTextIfChanged(factoryEffectText(type, state.factoryCounts))
-            shopFactoryPriceViews[type].setTextIfChanged(cost.toString())
-            styleShopPurchase(shopFactoryBuyBtns[type], !cost.greaterThan(state.atoms))
+            showShopPrice(upgrade, state, shopFactoryPriceViews[type], shopFactoryBuyBtns[type])
         }
     }
 
@@ -1833,12 +1815,6 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
             if (hasProd) prodApcPct.toFloat().coerceIn(0f, 100f) else 1f,
             if (hasProd) prodApsPct.toFloat().coerceIn(0f, 100f) else 1f)
 
-    }
-
-    private fun cycleShopMultiplier(current: Int): Int = when (current) {
-        1    -> 10
-        10   -> 100
-        else -> 1
     }
 
     // Cours (et taux EUR/USD) téléchargés seulement quand le widget crypto est affiché.
