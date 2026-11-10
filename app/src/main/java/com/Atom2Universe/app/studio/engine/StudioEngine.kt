@@ -478,7 +478,8 @@ class StudioEngine(val sampleRate: Int) {
         push(CMD_GLIDE, (track and 0x3F) or (to.coerceIn(0, 127) shl 6), from.coerceIn(0, 127), velocity)
 
     /** Roulement : la piste de batterie [track] frappe tout de suite, puis à chaque double-croche tant qu'on ne l'arrête pas. */
-    fun rollOn(track: Int, velocity: Float = 1f) = push(CMD_ROLL_ON, track, 0, velocity)
+    fun rollOn(track: Int, velocity: Float = 1f, stepsPerHit: Int = 1) =
+        push(CMD_ROLL_ON, track, stepsPerHit.coerceIn(1, 4), velocity)
 
     fun rollOff(track: Int) = push(CMD_ROLL_OFF, track, 0, 0f)
 
@@ -580,6 +581,7 @@ class StudioEngine(val sampleRate: Int) {
 
     // Roulements : par piste, en marche ou non, le prochain coup (instant sans swing) et sa force
     private val rollOn = BooleanArray(MAX_TRACKS)
+    private val rollSteps = IntArray(MAX_TRACKS) { 1 }
     private val rollNext = DoubleArray(MAX_TRACKS)
     private val rollVel = FloatArray(MAX_TRACKS)
 
@@ -802,8 +804,7 @@ class StudioEngine(val sampleRate: Int) {
                 CMD_RELEASE -> table.getOrNull(a)?.let { s ->
                     if (s.melody != null) {
                         val k = a * 128 + b
-                        if (liveHeld[k] > 0) liveHeld[k]--
-                        s.melody.off(b)
+                        if (liveHeld[k] > 0 && --liveHeld[k] == 0) s.melody.off(b)
                     } else {
                         s.instrument.noteOff(b)
                     }
@@ -826,11 +827,12 @@ class StudioEngine(val sampleRate: Int) {
                     noteHit(a, blockStart, f)
                     rollOn[a] = true
                     rollVel[a] = f
+                    rollSteps[a] = b
                     // Le coup suivant tombe sur la grille des doubles-croches, au moins une double-croche (et 150 ms) plus tard :
                     // un simple toucher ne frappe qu'une fois, seul un doigt qui reste fait rouler
                     val sf = stepFramesNow()
-                    val wait = max(sf, ROLL_MIN_WAIT * sampleRate)
-                    rollNext[a] = if (running) nextGridPoint(blockStart.toDouble(), 1.0, wait) else blockStart + wait
+                    val wait = max(sf * b, ROLL_MIN_WAIT * sampleRate)
+                    rollNext[a] = if (running) nextGridPoint(blockStart.toDouble(), b.toDouble(), wait) else blockStart + wait
                 }
                 CMD_ROLL_OFF -> if (a in 0 until MAX_TRACKS) rollOn[a] = false
             }
@@ -918,7 +920,7 @@ class StudioEngine(val sampleRate: Int) {
             s.instrument.hold = 1f
             fire(s, 60, rollVel[k])
             noteHit(k, frame, rollVel[k])
-            val sf = stepFramesNow()
+            val sf = stepFramesNow() * rollSteps[k]
             rollNext[k] += sf
             // Jamais de rafale pour rattraper un retard (lecture lancée ou arrêtée pendant le roulement) : on saute au coup suivant
             while (frameOf(swung(rollNext[k])) <= frame) rollNext[k] += sf

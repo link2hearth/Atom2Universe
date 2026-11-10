@@ -31,8 +31,10 @@ class PianoRollView(context: Context) : View(context) {
     interface Listener {
         fun onAddNote(step: Int, pitch: Int, length: Int)
         fun onRemoveNote(note: Note)
-        fun onResizeNote(note: Note, length: Int)
+        fun onEditPosition(note: Note, step: Int, pitch: Int, length: Int)
         fun onPreview(pitch: Int)
+        fun onScrollRegister(whiteKeys: Int)
+        fun onRevealNote(note: Note)
 
         /** Le cadre de sélection vient d'être tracé (ou effacé) : l'écran met à jour ses boutons. */
         fun onSelectionChanged()
@@ -72,6 +74,7 @@ class PianoRollView(context: Context) : View(context) {
             clampScroll()
             invalidate()
         }
+    var scaleLocked = true
     var keyPc: Int = 9
     var scale: Scale = Scales.MINOR_PENT
     var accent: Int = 0xFF1ABC9C.toInt()
@@ -86,7 +89,7 @@ class PianoRollView(context: Context) : View(context) {
             if (field != value) {
                 field = value
                 // Pendant la lecture, la grille suit le repère quand il sort de l'écran (sauf si un doigt la tient)
-                if (value >= 0 && !touching && scrollTracker == null) ensureVisible(value)
+                if (value >= 0 && !selectMode && !touching && scrollTracker == null) ensureVisible(value)
                 invalidate()
             }
         }
@@ -97,6 +100,10 @@ class PianoRollView(context: Context) : View(context) {
     private val rowOut = if (dark) 0xFF2A2A2F.toInt() else 0xFFE8E8EC.toInt()
     private val rowRoot = if (dark) 0xFF54545E.toInt() else 0xFFBDBDC8.toInt()
     private val labelColor = if (dark) 0xFFB5B5C0.toInt() else 0xFF55555F.toInt()
+
+    private val ghostStroke = ghostOutline(resources.displayMetrics.density)
+    private val ghostColor = if (dark) GHOST_DARK else GHOST_LIGHT
+    var pasteSpan = 1
 
     private val fill = Paint(Paint.ANTI_ALIAS_FLAG)
     private val label = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -118,7 +125,8 @@ class PianoRollView(context: Context) : View(context) {
 
     override fun onMeasure(widthSpec: Int, heightSpec: Int) {
         val w = MeasureSpec.getSize(widthSpec)
-        val available = (MeasureSpec.getSize(heightSpec) - reserveBelow).coerceAtLeast(0)
+        val offered = MeasureSpec.getSize(heightSpec)
+        val available = offered - min(reserveBelow, (offered * 0.42f).toInt())
         val natural = (topBar + rows.size * dp(ROW_MAX_DP)).toInt()
         setMeasuredDimension(w, if (MeasureSpec.getMode(heightSpec) == MeasureSpec.UNSPECIFIED) natural else min(natural, available))
     }
@@ -130,7 +138,7 @@ class PianoRollView(context: Context) : View(context) {
     private fun cellW(): Float {
         val groups = max(1, stepCount / 4)
         val fit = (width - keyW - dp(6f) - groupGap * (groups - 1)) / stepCount
-        return fit.coerceIn(dp(32f), dp(64f))
+        return fit.coerceAtLeast(dp(32f))
     }
 
     private val gridLeft get() = keyW + dp(6f)
@@ -175,6 +183,8 @@ class PianoRollView(context: Context) : View(context) {
             invalidate()
         }
     var pasteLow = 0
+    var pastePitchSpan = 0
+    var pasteValid = true
 
     var pasteAnchorPitch = -1
         private set
@@ -183,17 +193,24 @@ class PianoRollView(context: Context) : View(context) {
     var pasteStep = -1
         private set
     private var placing = false
+    private var grabStep = 0
+    private var grabRow = 0
 
     fun placePaste(pitch: Int, step: Int) {
-        pasteAnchorPitch = pitch
-        pasteStep = step.coerceIn(0, max(0, stepCount - 1))
+        if (rows.isEmpty()) return
+        val anchor = pitch.coerceIn(0, 127 - pastePitchSpan)
+        val target = step.coerceIn(0, max(0, stepCount - pasteSpan))
+        if (pasteAnchorPitch == anchor && pasteStep == target) return
+        pasteAnchorPitch = anchor
+        pasteStep = target
+        listener?.onPasteAt(anchor, target)
         invalidate()
     }
 
     private fun updatePlacementEnd() {
         val pitch = pitchAt(selY).let { if (it >= 0) it else if (selY < topBar) rows.last() else rows.first() }
-        val step = stepAt(selX).let { if (it >= 0) it else if (selX < gridLeft) 0 else stepCount - 1 }
-        placePaste(pitch, step)
+        val step = gridStep(selX.coerceIn(gridLeft, max(gridLeft, width.toFloat())) - gridLeft + scrollX, cellW(), groupGap, stepCount)
+        placePaste(pitch - grabRow, step - grabStep)
     }
 
     var selection: Frame? = null
@@ -218,11 +235,25 @@ class PianoRollView(context: Context) : View(context) {
 
     private fun updateSelectionEnd() {
         val pitch = pitchAt(selY).let { if (it >= 0) it else if (selY < topBar) rows.last() else rows.first() }
-        val step = stepAt(selX).let { if (it >= 0) it else if (selX < gridLeft) 0 else stepCount - 1 }
+        val step = gridStep(selX.coerceIn(gridLeft, max(gridLeft, width.toFloat())) - gridLeft + scrollX, cellW(), groupGap, stepCount)
         setSelection(anchorPitch, pitch, anchorStep, step)
     }
 
     /** Pendant qu'on trace un cadre, le bord de l'écran fait défiler la grille de gauche à droite. */
+    private var edgeScrolling = false
+
+    private fun stopEdgeScroll() {
+        edgeScrolling = false
+        removeCallbacks(selScroll)
+    }
+
+    private fun startEdgeScroll() {
+        if (!edgeScrolling) {
+            edgeScrolling = true
+            post(selScroll)
+        }
+    }
+
     private val selScroll = object : Runnable {
         override fun run() {
             if (!selecting && !placing) return
@@ -235,7 +266,7 @@ class PianoRollView(context: Context) : View(context) {
                 scrollX = (scrollX + dx).coerceIn(0f, maxScrollX())
                 if (placing) updatePlacementEnd() else updateSelectionEnd()
             }
-            handler.postDelayed(this, 16)
+            postDelayed(this, 16)
         }
     }
 
@@ -341,7 +372,9 @@ class PianoRollView(context: Context) : View(context) {
         // Règle, cases, notes et repère : sous un clip, pour que la colonne des touches reste fixe à gauche
         canvas.save()
         canvas.clipRect(left0 - dp(2f), 0f, width.toFloat(), height.toFloat())
-        for (s in 0 until stepCount step 4) {
+        val first = gridStep(scrollX, cw, groupGap, stepCount)
+        val last = gridStep(scrollX + width - left0, cw, groupGap, stepCount)
+        for (s in (first / 4 * 4)..last step 4) {
             val x = cellLeft(s) + cw / 2f
             if (x < left0 - cw || x > width + cw) continue
             val local = s % sectionLen
@@ -374,7 +407,7 @@ class PianoRollView(context: Context) : View(context) {
                 inScale -> rowIn
                 else -> rowOut
             }
-            for (s in 0 until stepCount) {
+            for (s in first..last) {
                 val left = cellLeft(s)
                 if (left + cw < left0 - dp(2f) || left > width) continue
                 rect.set(left, top + pad, left + cw, top + rh - pad)
@@ -386,8 +419,19 @@ class PianoRollView(context: Context) : View(context) {
         // Notes
         val low = rows.first()
         val high = rows.last()
+        var above: Note? = null
+        var below: Note? = null
         for (n in notes()) {
-            if (n.pitch < low || n.pitch > high) continue
+            if (n.pitch > high && (above == null || n.pitch < above.pitch)) above = n
+            if (n.pitch < low && (below == null || n.pitch > below.pitch)) below = n
+            if (n.step > last || n.step + n.length <= first) continue
+            if (n.pitch !in low..high) {
+                val y = if (n.pitch > high) topBar else height - dp(3f)
+                fill.color = accent
+                canvas.drawRect(cellLeft(n.step), y, cellLeft(n.step + n.length - 1) + cw, y + dp(3f), fill)
+                continue
+            }
+            if (moved && ghost != null && n === downNote) continue
             drawNote(canvas, n.step, n.length, n.pitch, n.velocity, 1f)
         }
         ghost?.let { drawNote(canvas, it.step, it.length, it.pitch, 1f, 0.55f) }
@@ -397,18 +441,37 @@ class PianoRollView(context: Context) : View(context) {
             fill.color = Color.argb(70, 255, 255, 255)
             canvas.drawRect(x, topBar, x + cw, height.toFloat(), fill)
         }
-        drawSelection(canvas)
+        if (!pasteArmed) drawSelection(canvas)
         if (pasteArmed && pasteStep >= 0 && pasteAnchorPitch >= 0) {
+            ghostStroke.color = if (pasteValid) ghostColor else 0xFFE45454.toInt()
             val lo = rows.first()
             val hi = rows.last()
             for (n in pasteNotes) {
                 val pitch = n[0] - pasteLow + pasteAnchorPitch
                 val s = pasteStep + n[1]
-                if (pitch < lo || pitch > hi || s >= stepCount) continue
-                drawNote(canvas, s, min(n[2], stepCount - s), pitch, 1f, 0.6f)
+                if (s >= stepCount) continue
+                if (pitch !in lo..hi) {
+                    val y = if (pitch > hi) topBar else height - dp(3f)
+                    canvas.drawLine(cellLeft(s), y, cellLeft(minOf(stepCount - 1, s + n[2] - 1)) + cw, y, ghostStroke)
+                    continue
+                }
+                drawNote(canvas, s, min(n[2], stepCount - s), pitch, 1f, 0.6f, outline = true)
             }
         }
         canvas.restore()
+
+        higherNote = above
+        lowerNote = below
+        fun arrow(x: Float, upwards: Boolean) {
+            val y = topBar / 2
+            val dy = dp(4f) * if (upwards) -1 else 1
+            fill.color = accent
+            fill.strokeWidth = dp(2.5f)
+            canvas.drawLine(x - dp(5f), y - dy / 2, x, y + dy, fill)
+            canvas.drawLine(x, y + dy, x + dp(5f), y - dy / 2, fill)
+        }
+        if (below != null) arrow(keyW * 0.25f, false)
+        if (above != null) arrow(keyW * 0.75f, true)
 
         // La colonne des touches : de vraies touches de piano, une blanche pleine largeur, une noire plus courte et sombre
         for (r in rows.indices) {
@@ -434,16 +497,16 @@ class PianoRollView(context: Context) : View(context) {
                 fill.color = accent
                 canvas.drawCircle(keyW - dp(10f), top + rh / 2f, dp(3.5f), fill)
             }
-            if (pc == 0) {
-                val name = noteNames[pc] + (pitch / 12 - 1)
-                label.color = if (pressedNow) 0xFFFFFFFF.toInt() else 0xFF45454F.toInt()
-                label.isFakeBoldText = true
+            if (pc == 0 || rh >= label.textSize * 1.25f) {
+                val name = if (pc == 0) noteNames[pc] + (pitch / 12 - 1) else noteNames[pc]
+                label.color = if (pressedNow || black) 0xFFFFFFFF.toInt() else 0xFF45454F.toInt()
+                label.isFakeBoldText = pc == 0
                 canvas.drawText(name, dp(8f), top + rh / 2f + label.textSize / 3f, label)
             }
         }
     }
 
-    private fun drawNote(canvas: Canvas, step: Int, length: Int, pitch: Int, velocity: Float, alpha: Float) {
+    private fun drawNote(canvas: Canvas, step: Int, length: Int, pitch: Int, velocity: Float, alpha: Float, outline: Boolean = false) {
         val rowIndex = rows.size - 1 - rows.indexOf(pitch)
         if (rowIndex < 0 || rowIndex >= rows.size) return
         val rh = rowH()
@@ -459,7 +522,9 @@ class PianoRollView(context: Context) : View(context) {
             val a = (Color.alpha(c) * (0.45f + 0.55f * velocity)).toInt()
             Color.argb(a, Color.red(c), Color.green(c), Color.blue(c))
         }
+        if (outline) fill.color = (ghostStroke.color and 0x00FFFFFF) or 0x66000000
         canvas.drawRoundRect(rect, dp(5f), dp(5f), fill)
+        if (outline) canvas.drawRoundRect(rect, dp(5f), dp(5f), ghostStroke)
         // La poignée : deux petits traits au bout droit de la note, à saisir pour l'allonger
         if (alpha >= 1f) {
             fill.color = Color.argb(150, 255, 255, 255)
@@ -478,6 +543,9 @@ class PianoRollView(context: Context) : View(context) {
     private var ghost: Ghost? = null
     /** La touche qu'un doigt tient dans la colonne des touches (elle s'allume). */
     private var pressedPitch = -1
+    private var higherNote: Note? = null
+    private var lowerNote: Note? = null
+    private var jumpNote: Note? = null
 
     /** Les touches que le clavier du bas (ou un clavier MIDI) tient : elles s'allument aussi dans la colonne de gauche. */
     private val lit = HashSet<Int>()
@@ -514,26 +582,42 @@ class PianoRollView(context: Context) : View(context) {
 
     private fun stepAt(x: Float): Int {
         val cw = cellW()
-        var best = -1
-        var bestD = Float.MAX_VALUE
-        for (s in 0 until stepCount) {
-            val l = cellLeft(s)
-            val d = when {
-                x < l -> l - x
-                x > l + cw -> x - (l + cw)
-                else -> 0f
-            }
-            if (d < bestD) {
-                bestD = d
-                best = s
-            }
-        }
-        return if (x >= keyW && bestD <= groupGap) best else -1
+        val offset = x - gridLeft + scrollX
+        if (x < keyW || offset < -groupGap || offset > contentW() + groupGap) return -1
+        return gridStep(offset, cw, groupGap, stepCount)
     }
 
     private var rulerDrag = false
+    private var keyStripGesture = false
+    private var keyStripDragged = false
+    private var keyStripY = 0f
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (keyStripGesture && event.actionMasked != MotionEvent.ACTION_DOWN) {
+            when (event.actionMasked) {
+                MotionEvent.ACTION_MOVE -> {
+                    val dy = event.y - keyStripY
+                    if (kotlin.math.abs(dy) > slop) keyStripDragged = true
+                    val travel = max(dp(12f), rowH() * 1.7f)
+                    val keys = (dy / travel).toInt()
+                    if (keys != 0) {
+                        keyStripY += keys * travel
+                        listener?.onScrollRegister(keys)
+                    }
+                }
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                    if (!keyStripDragged && event.actionMasked == MotionEvent.ACTION_UP) jumpNote?.let { listener?.onRevealNote(it) }
+                    jumpNote = null
+                    if (!keyStripDragged && event.actionMasked == MotionEvent.ACTION_UP && pressedPitch >= 0 &&
+                        (!scaleLocked || Scales.contains(scale, keyPc, pressedPitch))) listener?.onPreview(pressedPitch)
+                    keyStripGesture = false
+                    touching = false
+                    pressedPitch = -1
+                    invalidate()
+                }
+            }
+            return true
+        }
         if (rulerDrag && event.actionMasked != MotionEvent.ACTION_DOWN) {
             if (event.actionMasked == MotionEvent.ACTION_UP || event.actionMasked == MotionEvent.ACTION_CANCEL) {
                 rulerDrag = false
@@ -560,12 +644,13 @@ class PianoRollView(context: Context) : View(context) {
                 rulerDrag = false
                 val pitch = pitchAt(event.y)
                 if (event.x < keyW) {
-                    if (pitch >= 0) {
-                        pressedPitch = pitch
-                        listener?.onPreview(pitch)
-                        invalidate()
-                    }
+                    jumpNote = if (event.y >= topBar) null else if (event.x < keyW / 2) lowerNote else higherNote
+                    keyStripGesture = true
+                    keyStripDragged = false
+                    keyStripY = event.y
+                    pressedPitch = pitch
                     downStep = -1
+                    invalidate()
                     return true
                 }
                 val step = stepAt(event.x)
@@ -585,28 +670,37 @@ class PianoRollView(context: Context) : View(context) {
                         anchorPitch = pitch
                         anchorStep = step
                         setSelection(pitch, pitch, step, step)
-                        handler.post(selScroll)
                     } else {
                         placing = true
+                        val grabbing = pasteNotes.any { n -> pitch == n[0] - pasteLow + pasteAnchorPitch &&
+                            step - pasteStep in n[1] until n[1] + n[2] }
+                        grabStep = if (grabbing) step - pasteStep else 0
+                        grabRow = if (grabbing) pitch - pasteAnchorPitch else 0
                         updatePlacementEnd()
-                        handler.post(selScroll)
                     }
                     return true
                 }
                 downStep = step
                 downPitch = pitch
-                listener?.onPreview(pitch)
                 val hit = notes().firstOrNull { it.pitch == pitch && step >= it.step && step < it.step + it.length }
+                if (hit == null && scaleLocked && !Scales.contains(scale, keyPc, pitch)) {
+                    downStep = -1
+                    return true
+                }
+                listener?.onPreview(pitch)
                 downNote = hit
                 // On n'allonge une note qu'en saisissant sa poignée (le dernier pas) ; ailleurs un glissé ne l'efface pas non plus
-                resizing = hit != null && step == hit.step + hit.length - 1
-                if (hit != null) handler.postDelayed(longPress, ViewConfiguration.getLongPressTimeout().toLong())
+                resizing = hit != null && step == hit.step + hit.length - 1 &&
+                    event.x >= cellLeft(step) + cellW() - min(dp(16f), cellW() * 0.35f)
+                if (hit != null) postDelayed(longPress, ViewConfiguration.getLongPressTimeout().toLong())
                 else ghost = Ghost(step, 1, pitch)
                 invalidate()
                 return true
             }
 
             MotionEvent.ACTION_MOVE -> {
+                if ((selecting || placing) && (kotlin.math.abs(event.rawX - downRawX) > slop ||
+                        kotlin.math.abs(event.rawY - downRawY) > slop)) startEdgeScroll()
                 if (selectMode && selecting) {
                     selX = event.x
                     selY = event.y
@@ -631,28 +725,42 @@ class PianoRollView(context: Context) : View(context) {
                     }
                     return true
                 }
-                if (kotlin.math.abs(event.rawX - downRawX) > slop || kotlin.math.abs(event.rawY - downRawY) > slop) handler.removeCallbacks(longPress)
+                if (kotlin.math.abs(event.rawX - downRawX) > slop || kotlin.math.abs(event.rawY - downRawY) > slop) {
+                    removeCallbacks(longPress)
+                    if (downNote != null) moved = true
+                }
                 if (longPressed) return true
                 val step = stepAt(event.x)
-                if (step < 0) return true
+                if (step < 0) {
+                    if (moved && downNote != null) { ghost = null; invalidate() }
+                    return true
+                }
                 val note = downNote
                 if (note != null) {
-                    if (step != downStep || moved) {
-                        moved = true
-                        handler.removeCallbacks(longPress)
-                        if (resizing && step >= note.step) {
-                            val len = step - note.step + 1
-                            if (len != note.length) {
-                                listener?.onResizeNote(note, len)
-                                // la note a été remplacée : on retrouve la nouvelle pour la suite du geste
-                                downNote = notes().firstOrNull { it.pitch == note.pitch && it.step == note.step }
-                            }
-                        }
+                    val pitch = pitchAt(event.y)
+                    if (!moved) return true
+                    if (pitch < 0 || (!resizing && scaleLocked && pitch != note.pitch && !Scales.contains(scale, keyPc, pitch))) {
+                        ghost = null
+                        invalidate()
+                        return true
                     }
+                    moved = true
+                    removeCallbacks(longPress)
+                    ghost = if (resizing) {
+                        val limit = min(stepCount - note.step, sectionLen - note.step % sectionLen)
+                        Ghost(note.step, (step - note.step + 1).coerceIn(1, limit), note.pitch)
+                    } else {
+                        val start = (note.step + step - downStep).coerceIn(0, max(0, stepCount - note.length))
+                        val endOfSection = start - start % sectionLen + sectionLen
+                        val fit = min(start, endOfSection - note.length)
+                        if (ghost?.pitch != pitch && pitch != note.pitch) listener?.onPreview(pitch)
+                        Ghost(fit, note.length, pitch)
+                    }
+                    invalidate()
                 } else {
                     val len = max(1, step - downStep + 1)
                     if (len != 1) moved = true
-                    ghost = Ghost(downStep, min(len, stepCount - downStep), downPitch)
+                    ghost = Ghost(downStep, minOf(len, stepCount - downStep, sectionLen - downStep % sectionLen), downPitch)
                     invalidate()
                 }
                 return true
@@ -660,15 +768,15 @@ class PianoRollView(context: Context) : View(context) {
 
             MotionEvent.ACTION_UP -> {
                 touching = false
-                handler.removeCallbacks(longPress)
+                removeCallbacks(longPress)
                 if (selectMode && selDownStep >= 0) {
-                    handler.removeCallbacks(selScroll)
+                    stopEdgeScroll()
                     if (selecting) {
                         selecting = false
                         listener?.onSelectionChanged()
                     } else if (placing) {
                         placing = false
-                        listener?.onPasteAt(pasteAnchorPitch, pasteStep)
+                        updatePlacementEnd()
                     }
                     selDownStep = -1
                     return true
@@ -679,6 +787,7 @@ class PianoRollView(context: Context) : View(context) {
                 ghost = null
                 if (downStep >= 0 && !longPressed) {
                     if (note != null && !moved) listener?.onRemoveNote(note)
+                    else if (note != null && g != null) listener?.onEditPosition(note, g.step, g.pitch, g.length)
                     else if (note == null && g != null) listener?.onAddNote(g.step, g.pitch, g.length)
                 }
                 downStep = -1
@@ -691,9 +800,9 @@ class PianoRollView(context: Context) : View(context) {
                 selecting = false
                 placing = false
                 selDownStep = -1
-                handler.removeCallbacks(selScroll)
+                stopEdgeScroll()
                 touching = false
-                handler.removeCallbacks(longPress)
+                removeCallbacks(longPress)
                 pressedPitch = -1
                 ghost = null
                 downStep = -1
@@ -703,6 +812,14 @@ class PianoRollView(context: Context) : View(context) {
             }
         }
         return super.onTouchEvent(event)
+    }
+
+    override fun onDetachedFromWindow() {
+        stopEdgeScroll()
+        removeCallbacks(longPress)
+        scrollTracker?.recycle()
+        scrollTracker = null
+        super.onDetachedFromWindow()
     }
 }
 

@@ -31,7 +31,12 @@ class ChainView(context: Context) : View(context) {
     var colors: IntArray = IntArray(0)
 
     /** Le rang du bloc qui joue en ce moment (-1 : aucun) ; lu à chaque image pendant la lecture. */
-    var playing: () -> Int = { -1 }
+    var playingIndex: Int = -1
+        set(value) {
+            if (field == value) return
+            field = value
+            invalidate()
+        }
 
     var onMove: ((from: Int, to: Int) -> Unit)? = null
     var onRemove: ((index: Int) -> Unit)? = null
@@ -88,7 +93,14 @@ class ChainView(context: Context) : View(context) {
     }
 
     override fun onDraw(canvas: Canvas) {
-        val now = playing()
+        val now = playingIndex
+        if (!dragging) {
+            for (i in chain.indices) {
+                slotRect(i, rect)
+                drawBlock(canvas, i, if (i == now) 1f else 0.75f)
+            }
+            return
+        }
         // Pendant le glissé, les autres blocs s'écartent pour montrer où le bloc tombera
         val order = chain.indices.toMutableList()
         if (dragging && dragFrom >= 0) {
@@ -104,7 +116,6 @@ class ChainView(context: Context) : View(context) {
             rect.set(curX - block / 2, curY - block / 2, curX + block / 2, curY + block / 2)
             drawBlock(canvas, dragFrom, if (outside()) 0.3f else 1f)
         }
-        if (now >= 0) postInvalidateOnAnimation()
     }
 
     private fun drawBlock(canvas: Canvas, i: Int, light: Float) {

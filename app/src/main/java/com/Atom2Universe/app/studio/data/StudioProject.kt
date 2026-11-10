@@ -825,15 +825,40 @@ class StudioSession(
 
     private fun isMelodic(track: Int): Boolean = project.trackOrNull(track)?.melodic == true
 
-    private fun notesOf(track: Int): List<Note> = project.pattern.notes.filter { it.track == track }
+    /** Un index partagé par les deux grilles tant que le motif affiché reste le même. */
+    private class Melody(val notes: List<Note>, steps: Int) {
+        val velocity = FloatArray(steps)
+        val tails = BooleanArray(steps)
+        init {
+            for (note in notes) {
+                if (note.step !in velocity.indices) continue
+                velocity[note.step] = maxOf(velocity[note.step], note.velocity)
+                for (s in note.step + 1 until minOf(steps, note.step + note.length)) tails[s] = true
+            }
+        }
+    }
+
+    private var indexedPattern: StepPattern? = null
+    private var melodies = emptyMap<Int, Melody>()
+
+    private fun melody(track: Int): Melody? {
+        val pattern = project.pattern
+        if (pattern !== indexedPattern) {
+            melodies = pattern.notes.groupBy { it.track }.mapValues { Melody(it.value, pattern.stepCount) }
+            indexedPattern = pattern
+        }
+        return melodies[track]
+    }
+
+    fun notesOf(track: Int): List<Note> = melody(track)?.notes.orEmpty()
 
     fun isOn(track: Int, step: Int): Boolean =
-        if (isMelodic(track)) project.pattern.notes.any { it.track == track && it.step == step }
+        if (isMelodic(track)) (melody(track)?.velocity?.getOrNull(step) ?: 0f) > 0f
         else (project.pattern.lane(track)?.velocity?.getOrNull(step) ?: 0f) > 0f
 
     /** Vélocité d'un pas (0 = éteint) ; pour une piste mélodique, la plus forte des notes qui y commencent. */
     fun velocity(track: Int, step: Int): Float =
-        if (isMelodic(track)) project.pattern.notes.filter { it.track == track && it.step == step }.maxOfOrNull { it.velocity } ?: 0f
+        if (isMelodic(track)) melody(track)?.velocity?.getOrNull(step) ?: 0f
         else project.pattern.lane(track)?.velocity?.getOrNull(step) ?: 0f
 
     fun setStep(track: Int, step: Int, on: Boolean) {
@@ -864,7 +889,7 @@ class StudioSession(
 
     /** Vrai si le pas est le prolongement d'une note qui a commencé avant (une note longue de la piste [track]). */
     fun isTail(track: Int, step: Int): Boolean =
-        isMelodic(track) && project.pattern.notes.any { it.track == track && it.step < step && step < it.step + it.length }
+        isMelodic(track) && melody(track)?.tails?.getOrNull(step) == true
 
     fun toggleStep(track: Int, step: Int) = setStep(track, step, !isOn(track, step))
 
@@ -891,13 +916,22 @@ class StudioSession(
 
     /** Ce que le presse-papiers garde : des coups de batterie et des notes, placés par rapport au bord gauche du cadre copié. */
     class Clip(val hits: List<Hit>, val notes: List<ClipNote>) {
-        class Hit(val track: Int, val rel: Int, val velocity: Float, val pitch: Int, val hold: Float, val cond: Int = StepCond.ALWAYS)
-        class ClipNote(val track: Int, val rel: Int, val pitch: Int, val length: Int, val velocity: Float)
+        data class Hit(val track: Int, val rel: Int, val velocity: Float, val pitch: Int, val hold: Float, val cond: Int = StepCond.ALWAYS)
+        data class ClipNote(val track: Int, val rel: Int, val pitch: Int, val length: Int, val velocity: Float)
 
         val isEmpty: Boolean get() = hits.isEmpty() && notes.isEmpty()
 
         /** La note la plus grave : coller dans le piano roll l'aligne sur la case touchée. */
-        val lowPitch: Int get() = notes.minOfOrNull { it.pitch } ?: 0
+        val lowPitch = notes.minOfOrNull { it.pitch } ?: 0
+        val highPitch = notes.maxOfOrNull { it.pitch } ?: 0
+        val span = maxOf(hits.maxOfOrNull { it.rel + 1 } ?: 0, notes.maxOfOrNull { it.rel + it.length } ?: 0)
+        val firstStep = minOf(hits.minOfOrNull { it.rel } ?: Int.MAX_VALUE,
+            notes.minOfOrNull { it.rel } ?: Int.MAX_VALUE).takeUnless { it == Int.MAX_VALUE } ?: 0
+
+        fun alignedToFirstEvent(): Clip = if (firstStep == 0) this else Clip(
+            hits.map { it.copy(rel = it.rel - firstStep) }, notes.map { it.copy(rel = it.rel - firstStep) })
+
+        val tracks = (hits.map { it.track } + notes.map { it.track }).toSet()
     }
 
     /**
@@ -945,12 +979,12 @@ class StudioSession(
      * la même hauteur). [pitchShift] transpose les notes ; [noteTrack] envoie toutes les notes sur cette piste (le piano roll colle sur la
      * piste ouverte). Ce qui sortirait de la boucle est ignoré. Un pas en arrière rend tout.
      */
-    fun paste(clip: Clip, atStep: Int, pitchShift: Int = 0, noteTrack: Int? = null) {
+    fun paste(clip: Clip, atStep: Int, pitchShift: Int = 0, noteTrack: Int? = null, trackMap: Map<Int, Int> = emptyMap()) {
         if (clip.isEmpty) return
         remember()
         val steps = project.stepCount
         val lanes = project.pattern.lanes.map { l ->
-            val mine = clip.hits.filter { it.track == l.instrument && atStep + it.rel in 0 until steps }
+            val mine = clip.hits.filter { (trackMap[it.track] ?: it.track) == l.instrument && atStep + it.rel in 0 until steps }
             if (mine.isEmpty()) {
                 l
             } else {
@@ -970,7 +1004,7 @@ class StudioSession(
         }
         var notes: List<Note> = project.pattern.notes
         for (c in clip.notes) {
-            val track = noteTrack ?: c.track
+            val track = noteTrack ?: trackMap[c.track] ?: c.track
             val s = atStep + c.rel
             if (!isMelodic(track) || s !in 0 until steps) continue
             val pitch = (c.pitch + pitchShift).coerceIn(0, 127)
@@ -1068,15 +1102,23 @@ class StudioSession(
         withNotes(kept + Note(step, pitch.coerceIn(0, 127), len, velocity, track))
     }
 
-    fun removeNote(note: Note) = withNotes(project.pattern.notes.filter { it !== note })
+    fun removeNote(note: Note) = withNotes(project.pattern.notes.filter {
+        it.track != note.track || it.step != note.step || it.pitch != note.pitch
+    })
 
-    fun resizeNote(note: Note, length: Int) {
-        val len = length.coerceIn(1, project.stepCount - note.step)
-        val others = project.pattern.notes.filter { it !== note }
-        val kept = others.filter { n ->
-            !(n.track == note.track && n.pitch == note.pitch && n.step < note.step + len && n.step + n.length > note.step)
+    fun resizeNote(note: Note, length: Int) = editNote(note, note.step, note.pitch, length)
+
+    /** Un seul changement au relâchement, même si le doigt a traversé plusieurs notes. */
+    fun editNote(note: Note, step: Int, pitch: Int, length: Int = note.length, velocity: Float = note.velocity) {
+        val notes = project.pattern.notes
+        val current = notes.firstOrNull { it.track == note.track && it.step == note.step && it.pitch == note.pitch } ?: return
+        if (step !in 0 until project.stepCount || pitch !in 0..127) return
+        val len = length.coerceIn(1, project.baseSteps - step % project.baseSteps)
+        if (current.step == step && current.pitch == pitch && current.length == len && current.velocity == velocity) return
+        val kept = notes.filter { n ->
+            n !== current && !(n.track == note.track && n.pitch == pitch && n.step < step + len && n.step + n.length > step)
         }
-        withNotes(kept + Note(note.step, note.pitch, len, note.velocity, note.track))
+        withNotes(kept + Note(step, pitch, len, velocity, note.track))
     }
 
     /** Change de tonalité : les notes se transposent par le plus court chemin (de −5 à +6 demi-tons). */

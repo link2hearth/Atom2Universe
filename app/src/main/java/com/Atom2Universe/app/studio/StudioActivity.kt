@@ -42,7 +42,8 @@ import com.Atom2Universe.app.studio.ui.KeyboardView
 import com.Atom2Universe.app.studio.ui.XyPadView
 import android.widget.HorizontalScrollView
 import android.widget.ImageButton
-import android.widget.PopupWindow
+import androidx.activity.OnBackPressedCallback
+import com.Atom2Universe.app.studio.ui.StudioPanelHost
 import android.util.TypedValue
 import android.widget.FrameLayout
 import com.Atom2Universe.app.midi.input.MidiConnectionStatus
@@ -54,6 +55,8 @@ import com.Atom2Universe.app.studio.engine.Note
 import com.Atom2Universe.app.studio.engine.StudioAudioOutput
 import com.Atom2Universe.app.studio.engine.StudioEngine
 import com.Atom2Universe.app.studio.engine.TrackMix
+import com.Atom2Universe.app.studio.music.TapTempo
+import com.Atom2Universe.app.studio.music.StudioRegister
 import com.Atom2Universe.app.studio.music.Scales
 import com.Atom2Universe.app.studio.music.Styles
 import com.Atom2Universe.app.studio.ui.FlowRow
@@ -141,6 +144,7 @@ class StudioActivity : AudioThemedActivity() {
     private lateinit var mixerPane: LinearLayout
     private lateinit var padView: XyPadView
     private lateinit var patternGroup: MaterialButtonToggleGroup
+    private var songBlocks: ChainView? = null
     private lateinit var songButton: MaterialButton
     private var songDefaultColor = 0
     private val patternIds = List(StudioProject.SLOTS) { View.generateViewId() }
@@ -154,6 +158,7 @@ class StudioActivity : AudioThemedActivity() {
     private val tabMixerId = View.generateViewId()
 
     // Rythme
+    private lateinit var panels: StudioPanelHost
     private lateinit var grid: StepGridView
 
     // Notes
@@ -179,10 +184,13 @@ class StudioActivity : AudioThemedActivity() {
     private var frames = 0
     private var building = true
     private var scaleLocked = true
-    private var rollBase = 24
+    private var requestedOctaves: Int? = null
+    private var manualRegister = false
+    private lateinit var register: StudioRegister
+    private lateinit var registerButton: MaterialButton
     private var onNotesTab = false
 
-    private val saveRunnable = Runnable { session.flush() }
+    private val saveRunnable = Runnable { session.flush(); refreshPatterns() }
 
     // Pads de batterie (onglet Rythme) et leur enregistrement
     private lateinit var padsPane: LinearLayout
@@ -209,7 +217,8 @@ class StudioActivity : AudioThemedActivity() {
     private val frameTick = object : Runnable {
         override fun run() {
             val step = if (playing) engine.currentStep else -1
-            if (onNotesTab) roll.playhead = step else grid.playhead = step
+            songBlocks?.playingIndex = if (playing && session.project.songMode) engine.songPosition else -1
+            if (onNotesTab) roll.playhead = step else if (rhythmPane.visibility == View.VISIBLE) grid.playhead = step
             // Le décompte s'affiche sur le bouton de lecture : 4, 3, 2, 1
             val countIn = if (playing) engine.countInBeats else 0
             if (countIn != shownCountIn) {
@@ -241,7 +250,8 @@ class StudioActivity : AudioThemedActivity() {
                 }
             }
             if (stats.visibility == View.VISIBLE && ++frames % 15 == 0) refreshStats()
-            grid.postOnAnimation(this)
+            if (playing || padsPane.visibility == View.VISIBLE || stats.visibility == View.VISIBLE) grid.postOnAnimation(this)
+            else grid.postDelayed(this, 100)
         }
     }
 
@@ -282,7 +292,8 @@ class StudioActivity : AudioThemedActivity() {
         output = StudioAudioOutput(engine)
         recorder = LiveRecorder(session, { engine.playing }, { engine.playPosition }, { selectedTrack })
         ensureSelected()
-        rollBase = autoBase()
+        register = newRegister()
+        focusRegister()
 
         setContentView(buildContent())
         building = false
@@ -292,6 +303,7 @@ class StudioActivity : AudioThemedActivity() {
 
     override fun onResume() {
         super.onResume()
+        if (!::output.isInitialized) return
         if (!output.start(this)) {
             stats.visibility = View.VISIBLE
             statsText.setText(R.string.studio_audio_failed)
@@ -302,10 +314,12 @@ class StudioActivity : AudioThemedActivity() {
     }
 
     override fun onPause() {
+        if (!::output.isInitialized) { super.onPause(); return }
         grid.removeCallbacks(frameTick)
         handler.removeCallbacks(saveRunnable)
         // Rien ne reste tenu : pads, thérémine, enregistrement des pads
         pads.releaseAll()
+        keyboard.releaseAll()
         theremin.finish()
         setPadsRecording(false)
         stopLive()
@@ -371,7 +385,7 @@ class StudioActivity : AudioThemedActivity() {
         redoButton = historyButton(R.drawable.ic_studio_redo, R.string.studio_redo) { stepHistory(redo = true) }
         titleRow.addView(undoButton, LinearLayout.LayoutParams(dp(48), dp(48)))
         titleRow.addView(redoButton, LinearLayout.LayoutParams(dp(48), dp(48)))
-        titleRow.addView(View(this), LinearLayout.LayoutParams(0, 1, 1f))
+
         tabsGroup = MaterialButtonToggleGroup(this).apply {
             isSingleSelection = true
             isSelectionRequired = true
@@ -395,6 +409,7 @@ class StudioActivity : AudioThemedActivity() {
             }
         })
         root.addView(titleRow)
+        layoutTabs()
 
         // Transport commun aux trois pages : lecture, tempo, motifs A à D, morceau, réglages
         val transport = flowRow(topMargin = dp(10))
@@ -421,14 +436,7 @@ class StudioActivity : AudioThemedActivity() {
             context.theme.resolveAttribute(android.R.attr.selectableItemBackground, ripple, true)
             setBackgroundResource(ripple.resourceId)
             minHeight = dp(48)
-            setOnClickListener { v ->
-                val names = resources.getStringArray(R.array.studio_tempo_names)
-                dropdown(v, TEMPO_PRESETS.mapIndexed { i, bpm -> getString(R.string.studio_tempo_option, names[i], bpm) }) { which ->
-                    session.setBpm(TEMPO_PRESETS[which])
-                    refreshTempo()
-                    scheduleSave()
-                }
-            }
+            setOnClickListener { showTempoPanel(it) }
         }
         tempo.addView(tempoText)
         tempo.addView(square(R.string.studio_tempo_more).also { holdToRepeat(it) { session.setBpm(session.project.bpm + 1); refreshTempo(); scheduleSave() } })
@@ -446,6 +454,7 @@ class StudioActivity : AudioThemedActivity() {
             }
             addOnButtonCheckedListener { group, _, _ ->
                 if (!building) {
+                    setPasteArmed(false)
                     session.setView(patternIds.indices.filter { patternIds[it] in group.checkedButtonIds })
                     // La grille et le piano roll changent de longueur : tout se redessine, la sélection n'a plus de sens
                     grid.clearSelection()
@@ -500,7 +509,33 @@ class StudioActivity : AudioThemedActivity() {
         root.addView(padsPane, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f))
         root.addView(notesPane, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f))
         root.addView(mixerPane, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f))
-        return root
+        val back = object : OnBackPressedCallback(false) {
+            override fun handleOnBackPressed() = panels.closeTop()
+        }
+        onBackPressedDispatcher.addCallback(this, back)
+        panels = StudioPanelHost(this).apply {
+            addView(root)
+            onCountChanged = { back.isEnabled = it > 0 }
+        }
+        return panels
+    }
+
+    private fun layoutTabs() {
+        val titleRow = titleView.parent as LinearLayout
+        val root = titleRow.parent as LinearLayout
+        val target = if (resources.configuration.screenWidthDp < 520) root else titleRow
+        if (tabsGroup.parent !== target) {
+            (tabsGroup.parent as ViewGroup).removeView(tabsGroup)
+            val index = if (target === root) 1 else titleRow.childCount - 1
+            target.addView(tabsGroup, index, wrap())
+        }
+        val compact = resources.configuration.screenWidthDp < 680
+        for (i in 0 until tabsGroup.childCount) {
+            val b = tabsGroup.getChildAt(i) as MaterialButton
+            b.minWidth = dp(if (compact) 56 else 88)
+            b.minimumWidth = b.minWidth
+            b.setPadding(dp(if (compact) 8 else 16), 0, dp(if (compact) 8 else 16), 0)
+        }
     }
 
     private fun buildRhythmPane(): LinearLayout {
@@ -526,7 +561,7 @@ class StudioActivity : AudioThemedActivity() {
 
                 override fun onSelectionChanged() = refreshSelectionBar()
 
-                override fun onPasteAt(lane: Int, step: Int) = refreshSelectionBar()
+                override fun onPasteAt(lane: Int, step: Int) = updatePasteTarget()
 
                 override fun onStepEdit(lane: Int, step: Int, screenX: Float, screenY: Float) {
                     gridIds.getOrNull(lane)?.let { showStepBubble(it, step, screenX, screenY) }
@@ -567,18 +602,33 @@ class StudioActivity : AudioThemedActivity() {
         // Roulement : un doigt qui reste sur une case de batterie la fait rejouer en rythme (sinon, un seul coup). Gardé d'une fois sur l'autre.
         val prefs = getSharedPreferences(PREFS, MODE_PRIVATE)
         padsRoll = prefs.getBoolean(PREF_PADS_ROLL, false)
+        val rates = resources.getStringArray(R.array.studio_roll_rates)
+        var rollRate = prefs.getInt(PREF_ROLL_RATE, 0).coerceIn(rates.indices)
+        val rateButton = outlined(null).apply {
+            text = rates[rollRate]
+            visibility = if (padsRoll) View.VISIBLE else View.GONE
+            setOnClickListener { v ->
+                dropdown(v, rates.toList()) { which ->
+                    rollRate = which
+                    text = rates[which]
+                    prefs.edit().putInt(PREF_ROLL_RATE, which).apply()
+                }
+            }
+        }
         header.addView(outlined(R.string.studio_roll).apply {
             isCheckable = true
             isChecked = padsRoll
             setOnClickListener {
                 padsRoll = isChecked
+                rateButton.visibility = if (padsRoll) View.VISIBLE else View.GONE
                 prefs.edit().putBoolean(PREF_PADS_ROLL, padsRoll).apply()
             }
         }, wrap(end = dp(8)))
+        header.addView(rateButton)
         pane.addView(header)
         pads = PadsView(this).apply {
             noteNames = resources.getStringArray(R.array.studio_key_names).toList()
-            onDown = { track -> if (padsRoll) engine.rollOn(track, 1f) else engine.trigger(track, 60, 1f) }
+            onDown = { track -> if (padsRoll) engine.rollOn(track, 1f, 1 shl rollRate) else engine.trigger(track, 60, 1f) }
             onUp = { track -> engine.rollOff(track) }
             onNoteDown = { track, pitch -> padNoteDown(track, pitch) }
             onNoteUp = { track, pitch -> padNoteUp(track, pitch) }
@@ -626,9 +676,9 @@ class StudioActivity : AudioThemedActivity() {
      */
     private fun padLevels(trackId: Int): IntArray {
         val p = session.project
-        val notes = p.pattern.notes.filter { it.track == trackId }
+        val notes = session.notesOf(trackId)
         val low = notes.minOfOrNull { it.pitch } ?: 48
-        val tonic = low - Math.floorMod(low - p.keyPc, 12)
+        val tonic = (low - Math.floorMod(low - p.keyPc, 12)).coerceIn(p.keyPc, 108 + p.keyPc)
         return Scales.rows(Scales.byId(p.scaleId), p.keyPc, tonic, 1, true)
     }
 
@@ -758,12 +808,13 @@ class StudioActivity : AudioThemedActivity() {
      * rotation, donc ce choix se refait à chaque changement de configuration.
      */
     private fun applyMixerLayout() {
-        val wide = resources.configuration.screenWidthDp >= 1100
+        val config = resources.configuration
+        val wide = config.screenWidthDp >= 650 && config.screenWidthDp > config.screenHeightDp
         mixerBody.orientation = if (wide) LinearLayout.HORIZONTAL else LinearLayout.VERTICAL
         // Large : les tranches prennent toute la hauteur ; étroit : elles gardent leur taille et le pad prend ce qui reste
         mixerStripView.layoutParams =
-            if (wide) LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT)
-            else LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            if (wide) LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 2f)
+            else LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1.35f)
         if (wide != mixerWide) {
             mixerWide = wide
             if (::session.isInitialized && !building) rebuildMixer()
@@ -785,9 +836,15 @@ class StudioActivity : AudioThemedActivity() {
 
     override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
         super.onConfigurationChanged(newConfig)
+        if (::tabsGroup.isInitialized) layoutTabs()
         if (::mixerBody.isInitialized) applyMixerLayout()
         applyNotesLayout()
-        if (::theremin.isInitialized) refreshRoll()
+        if (::theremin.isInitialized) {
+            val low = register.low
+            register = newRegister()
+            if (manualRegister) register.setLow(low) else focusRegister()
+            refreshRoll()
+        }
     }
 
     /** Les tranches du mixeur : une par piste visible (nom, volume, panoramique, muet, solo, effets). */
@@ -838,8 +895,7 @@ class StudioActivity : AudioThemedActivity() {
             levelFaders += level
             strip.addView(
                 level,
-                if (mixerWide) LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f)
-                else LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(FADER_DP)),
+                LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f),
             )
 
             strip.addView(View(this), LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(10)))
@@ -877,7 +933,7 @@ class StudioActivity : AudioThemedActivity() {
 
             mixerStrips.addView(
                 strip,
-                LinearLayout.LayoutParams(dp(90), if (mixerWide) ViewGroup.LayoutParams.MATCH_PARENT else ViewGroup.LayoutParams.WRAP_CONTENT)
+                LinearLayout.LayoutParams(dp(90), ViewGroup.LayoutParams.MATCH_PARENT)
                     .apply { marginEnd = dp(8); bottomMargin = if (mixerWide) dp(12) else 0 },
             )
         }
@@ -928,12 +984,7 @@ class StudioActivity : AudioThemedActivity() {
         if (t != null && !(t.kind == TrackKind.DRUM && t.voice == Inst.KICK)) {
             add(R.string.studio_fx_pump, { it.pump }, { it }, { it }, { m, v -> m.copy(pump = if (v < 0.02f) 0f else v) })
         }
-        box.addView(TextView(this).apply {
-            text = title
-            textSize = 16f
-            setTypeface(typeface, Typeface.BOLD)
-        }, 0)
-        panel(anchor, box, 400).setOnDismissListener { refreshNotesControls() }
+        panels.show(R.string.studio_fx, getString(R.string.studio_panel_track, getString(R.string.studio_fx), title), box, 400, anchor, onHistory = { showFxPanel(anchor, lane, title) }) { session.project.trackOrNull(lane)?.hidden == false }
     }
 
     private fun refreshGestureButtons() {
@@ -969,10 +1020,23 @@ class StudioActivity : AudioThemedActivity() {
 
         val header = flowRow(topMargin = dp(6))
         notesHeader = header
+        val tuning = FlowRow(this).apply {
+            hGap = dp(6)
+            vGap = dp(4)
+            setPadding(dp(12), 0, dp(12), dp(12))
+        }
+        val tuningButton = outlined(R.string.studio_tab_notes).apply {
+            setIconResource(R.drawable.ic_px_tune)
+            setOnClickListener { anchor ->
+                (tuning.parent as? ViewGroup)?.removeView(tuning)
+                panels.show(R.string.studio_tab_notes, getString(R.string.studio_tab_notes), tuning, 350, anchor)
+            }
+        }
+        header.addView(tuningButton, wrap())
         keyButton = outlined(null).also { it.setOnClickListener { v -> pickKey(v) } }
-        header.addView(keyButton, wrap(end = dp(8)))
+        tuning.addView(keyButton, wrap(end = dp(8)))
         scaleButton = outlined(null).also { it.setOnClickListener { v -> pickScale(v) } }
-        header.addView(scaleButton, wrap(end = dp(8)))
+        tuning.addView(scaleButton, wrap(end = dp(8)))
         lockSwitch = SwitchCompat(this).apply {
             setText(R.string.studio_lock)
             textSize = 14f
@@ -982,19 +1046,25 @@ class StudioActivity : AudioThemedActivity() {
                 refreshRoll()
             }
         }
-        header.addView(lockSwitch, wrap(end = dp(8)))
+        tuning.addView(lockSwitch, wrap(end = dp(8)))
         val octaves = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
         }
-        octaves.addView(caption(R.string.studio_octave), wrap(end = dp(4)))
+
         octaves.addView(square(R.string.studio_tempo_less).also {
-            it.setOnClickListener { rollBase = (rollBase - 12).coerceAtLeast(12); refreshRoll() }
+            it.contentDescription = getString(R.string.studio_octave_down)
+            it.setOnClickListener { shiftRegister(-7) }
         })
+        registerButton = outlined(null).apply {
+            setOnClickListener { showRegisterMenu(it) }
+        }
+        octaves.addView(registerButton)
         octaves.addView(square(R.string.studio_tempo_more).also {
-            it.setOnClickListener { rollBase = (rollBase + 12).coerceAtMost(84); refreshRoll() }
+            it.contentDescription = getString(R.string.studio_octave_up)
+            it.setOnClickListener { shiftRegister(7) }
         })
-        header.addView(octaves, wrap(end = dp(8)))
+        tuning.addView(octaves, wrap(end = dp(8)))
         soundButton = outlined(null).also { it.setOnClickListener { v -> showSoundPanel(v) } }
         header.addView(soundButton, wrap(end = dp(8)))
         arpButton = outlined(null).also { it.setOnClickListener { v -> showArpPanel(v) } }
@@ -1010,7 +1080,7 @@ class StudioActivity : AudioThemedActivity() {
         midiText = caption(R.string.studio_midi_connected).also { it.visibility = View.GONE }
         header.addView(midiText, wrap())
         outer.addView(header)
-        trackDependent.addAll(listOf(keyButton, scaleButton, lockSwitch, octaves, soundButton, arpButton, recordButton, thereminToggle))
+        trackDependent.addAll(listOf(tuningButton, soundButton, arpButton, recordButton, thereminToggle))
 
         notesEmpty = TextView(this).apply {
             setText(R.string.studio_no_melody)
@@ -1027,7 +1097,7 @@ class StudioActivity : AudioThemedActivity() {
             accent = LANE_COLORS[Inst.SYNTH]
             noteNames = resources.getStringArray(R.array.studio_key_names).toList()
             stepCount = session.project.stepCount
-            notes = { session.project.pattern.notes.filter { it.track == selectedTrack } }
+            notes = { session.notesOf(selectedTrack) }
             listener = object : PianoRollView.Listener {
                 override fun onAddNote(step: Int, pitch: Int, length: Int) {
                     // Une note posée d'un simple toucher reprend la force et la longueur copiées pour cette piste
@@ -1046,19 +1116,23 @@ class StudioActivity : AudioThemedActivity() {
                     invalidate()
                 }
 
-                override fun onResizeNote(note: Note, length: Int) {
-                    session.resizeNote(note, length)
+                override fun onEditPosition(note: Note, step: Int, pitch: Int, length: Int) {
+                    session.editNote(note, step, pitch, length)
                     scheduleSave()
                     invalidate()
                 }
+
+                override fun onScrollRegister(whiteKeys: Int) = shiftRegister(whiteKeys)
+
+                override fun onRevealNote(note: Note) = revealNote(note)
 
                 override fun onPreview(pitch: Int) = previewPitch(pitch)
 
                 override fun onSelectionChanged() = refreshSelectionBar()
 
-                override fun onPasteAt(pitch: Int, step: Int) = refreshSelectionBar()
+                override fun onPasteAt(pitch: Int, step: Int) = updatePasteTarget()
 
-                override fun onEditNote(note: Note, screenX: Float, screenY: Float) = showStepBubble(note.track, note.step, screenX, screenY)
+                override fun onEditNote(note: Note, screenX: Float, screenY: Float) = showStepBubble(note.track, note.step, screenX, screenY, note.pitch)
             }
         }
         // Le piano roll prend sa hauteur naturelle, le clavier se pose juste dessous (plus de place au clavier en portrait)
@@ -1082,7 +1156,7 @@ class StudioActivity : AudioThemedActivity() {
         }
         // Le clavier occupe tout le bas : il prend la place restante (au plus 300 dp), collé en bas, sans bande vide dessous
         val keyboardZone = FrameLayout(this).apply {
-            minimumHeight = dp(150 + 8)
+            minimumHeight = dp(48)
             // Le vide au-dessus du clavier fait glisser la grille des notes, comme sur la page Rythme
             setOnTouchListener { _, event -> roll.dragScroll(event) }
         }
@@ -1285,7 +1359,7 @@ class StudioActivity : AudioThemedActivity() {
     }
 
     /** Un curseur de réglage du son, avec son nom au-dessus, dans un panneau. */
-    private fun soundSlider(box: ViewGroup, p: SoundParam): SeekBar {
+    private fun soundSlider(box: ViewGroup, p: SoundParam, trackId: Int): SeekBar {
         val bar = SeekBar(this).apply {
             max = 1000
             progress = (p.toSlider(p.read()).coerceIn(0f, 1f) * 1000).roundToInt()
@@ -1298,33 +1372,28 @@ class StudioActivity : AudioThemedActivity() {
                 }
 
                 override fun onStartTrackingTouch(seekBar: SeekBar) {}
-                override fun onStopTrackingTouch(seekBar: SeekBar) = previewKeyNote()
+                override fun onStopTrackingTouch(seekBar: SeekBar) = previewTrack(trackId)
             })
         }
         p.bar = bar
-        box.addView(labeled(p.labelRes, bar, 300), LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(6) })
+        box.addView(labeled(p.labelRes, bar), LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(6) })
         return bar
     }
 
     /** Le panneau « Son » de la piste choisie : instrument, trois réglages simples, et le détail avancé du synthé. */
-    private fun showSoundPanel(anchor: View) {
-        val t = curTrack() ?: return
+    private fun showSoundPanel(anchor: View, trackId: Int = selectedTrack) {
+        val t = session.project.trackOrNull(trackId) ?: return
         val box = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(dp(16), dp(12), dp(16), dp(12))
         }
-        box.addView(TextView(this).apply {
-            setText(R.string.studio_sound_caption)
-            textSize = 16f
-            setTypeface(typeface, Typeface.BOLD)
-            setPadding(0, 0, 0, dp(8))
-        })
         val params = ArrayList<SoundParam>()
+        fun patch() = session.project.trackOrNull(t.id)?.synth ?: t.synth
         val synthKind = t.kind == TrackKind.SYNTH
         val pick = outlined(null)
         val forget = outlined(R.string.studio_forget_sound)
         fun refreshPick() {
-            val now = curTrack() ?: return
+            val now = session.project.trackOrNull(t.id) ?: return
             pick.text = if (now.kind == TrackKind.SYNTH) soundName(now.synth) else sf2ProgramName(now)
             forget.visibility = if (now.kind == TrackKind.SYNTH && now.synth.id.startsWith(SynthPatch.MINE_PREFIX)) View.VISIBLE else View.GONE
             for (p in params) p.bar.progress = (p.toSlider(p.read()).coerceIn(0f, 1f) * 1000).roundToInt()
@@ -1337,23 +1406,23 @@ class StudioActivity : AudioThemedActivity() {
                 if (engine.synthSample != null) choices += SynthPresets.MY_VOICE
                 choices += mySounds.all()
                 dropdown(pick, choices.map { soundName(it) }) { which ->
-                    session.updateSynth(selectedTrack) { choices[which] }
+                    session.updateSynth(t.id) { choices[which] }
                     scheduleSave()
                     refreshPick()
-                    previewKeyNote()
+                    previewTrack(t.id)
                 }
             } else {
                 withSf2 { bridge ->
                     pickProgram(bridge) { bank, program ->
-                        session.setSf2Program(selectedTrack, bank, program)
+                        session.setSf2Program(t.id, bank, program)
                         scheduleSave()
                         refreshPick()
-                        previewKeyNote()
+                        previewTrack(t.id)
                     }
                 }
             }
         }
-        box.addView(pick)
+        box.addView(pick, wrap())
 
         if (synthKind) {
             // Un son à soi : enregistré au micro, ou un réglage gardé pour le retrouver dans tous les morceaux
@@ -1376,10 +1445,10 @@ class StudioActivity : AudioThemedActivity() {
                             if (clean != null && root != null) {
                                 status.visibility = View.GONE
                                 engine.setSynthSample(SynthSample(clean, SampleTools.RATE, root))
-                                session.updateSynth(selectedTrack) { SynthPresets.MY_VOICE }
+                                session.updateSynth(t.id) { SynthPresets.MY_VOICE }
                                 scheduleSave()
                                 refreshPick()
-                                previewKeyNote()
+                                previewTrack(t.id)
                             } else {
                                 status.setText(if (pcm == null) R.string.studio_sample_failed else R.string.studio_sample_nothing)
                             }
@@ -1390,12 +1459,12 @@ class StudioActivity : AudioThemedActivity() {
             own.addView(record)
             own.addView(outlined(R.string.studio_keep_sound).apply {
                 setOnClickListener {
-                    val now = curTrack()?.synth ?: return@setOnClickListener
+                    val now = session.project.trackOrNull(t.id)?.synth ?: return@setOnClickListener
                     val suggested = if (now.id.startsWith(SynthPatch.MINE_PREFIX)) MySounds.nameOf(now.id) else soundName(now)
                     promptText(R.string.studio_keep_sound_title, suggested, android.R.string.ok) { name ->
                         if (name.isNotBlank()) {
                             val kept = mySounds.keep(now, name)
-                            session.updateSynth(selectedTrack) { kept }
+                            session.updateSynth(t.id) { kept }
                             scheduleSave()
                             refreshPick()
                         }
@@ -1404,7 +1473,7 @@ class StudioActivity : AudioThemedActivity() {
             })
             forget.setOnClickListener {
                 // Le morceau garde son exemplaire du réglage ; le son disparaît seulement de la liste
-                curTrack()?.synth?.id?.let { mySounds.forget(it) }
+                session.project.trackOrNull(t.id)?.synth?.id?.let { mySounds.forget(it) }
                 forget.visibility = View.GONE
             }
             own.addView(forget)
@@ -1414,17 +1483,17 @@ class StudioActivity : AudioThemedActivity() {
 
         fun add(into: ViewGroup, p: SoundParam) {
             params += p
-            soundSlider(into, p)
+            soundSlider(into, p, t.id)
         }
         if (synthKind) {
-            add(box, SoundParam(R.string.studio_macro_bright, { curSynth().cutoffHz },
+            add(box, SoundParam(R.string.studio_macro_bright, { patch().cutoffHz },
                 { hz -> ln(hz.coerceIn(100f, 10000f) / 100f) / ln(100f) }, { t2 -> 100f * exp(t2 * ln(100f)) },
-                { v -> session.updateSynth(selectedTrack) { it.copy(cutoffHz = v) } }))
-            add(box, SoundParam(R.string.studio_macro_drive, { curSynth().drive }, { it }, { it },
-                { v -> session.updateSynth(selectedTrack) { it.copy(drive = v) } }))
+                { v -> session.updateSynth(t.id) { it.copy(cutoffHz = v) } }))
+            add(box, SoundParam(R.string.studio_macro_drive, { patch().drive }, { it }, { it },
+                { v -> session.updateSynth(t.id) { it.copy(drive = v) } }))
         }
-        add(box, SoundParam(R.string.studio_macro_ambience, { curTrack()?.mix?.reverbSend ?: 0f }, { it }, { it },
-            { v -> session.setSynthSpace(v, selectedTrack) }))
+        add(box, SoundParam(R.string.studio_macro_ambience, { session.project.trackOrNull(t.id)?.mix?.reverbSend ?: 0f }, { it }, { it },
+            { v -> session.setSynthSpace(v, t.id) }))
 
         if (synthKind) {
             val advanced = LinearLayout(this).apply {
@@ -1436,33 +1505,33 @@ class StudioActivity : AudioThemedActivity() {
                 isSelectionRequired = true
                 val labels = listOf(R.string.studio_wave_saw, R.string.studio_wave_square, R.string.studio_wave_triangle, R.string.studio_wave_sine)
                 for (i in 0 until 4) addView(outlined(labels[i]).apply { id = waveIds[i]; minWidth = 0; setPadding(dp(8), 0, dp(8), 0) })
-                if (curSynth().wave in 0..3) check(waveIds[curSynth().wave])
+                if (patch().wave in 0..3) check(waveIds[patch().wave])
                 addOnButtonCheckedListener { _, id, checked ->
                     if (checked) {
-                        session.updateSynth(selectedTrack) { it.copy(wave = waveIds.indexOf(id)) }
+                        session.updateSynth(t.id) { it.copy(wave = waveIds.indexOf(id)) }
                         scheduleSave()
-                        previewKeyNote()
+                        previewTrack(t.id)
                     }
                 }
             }
             advanced.addView(wave, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(8) })
             val list = listOf(
-                SoundParam(R.string.studio_adv_resonance, { curSynth().resonance }, { (it - 0.5f) / 9.5f }, { 0.5f + it * 9.5f },
-                    { v -> session.updateSynth(selectedTrack) { it.copy(resonance = v) } }),
-                SoundParam(R.string.studio_adv_detune, { curSynth().detuneCents }, { (it / 1200f).coerceIn(0f, 1f).pow(1f / 3f) }, { it * it * it * 1200f },
-                    { v -> session.updateSynth(selectedTrack) { it.copy(detuneCents = v) } }),
-                SoundParam(R.string.studio_adv_sub, { curSynth().subLevel }, { it }, { it },
-                    { v -> session.updateSynth(selectedTrack) { it.copy(subLevel = v) } }),
-                SoundParam(R.string.studio_adv_sweep, { curSynth().envOctaves }, { it / 5f }, { it * 5f },
-                    { v -> session.updateSynth(selectedTrack) { it.copy(envOctaves = v) } }),
-                SoundParam(R.string.studio_adv_attack, { curSynth().attack }, { ln(it.coerceIn(0.002f, 3f) / 0.002f) / ln(1500f) }, { 0.002f * exp(it * ln(1500f)) },
-                    { v -> session.updateSynth(selectedTrack) { it.copy(attack = v) } }),
-                SoundParam(R.string.studio_adv_release, { curSynth().release }, { ln(it.coerceIn(0.005f, 4f) / 0.005f) / ln(800f) }, { 0.005f * exp(it * ln(800f)) },
-                    { v -> session.updateSynth(selectedTrack) { it.copy(release = v) } }),
-                SoundParam(R.string.studio_adv_move_speed, { curSynth().lfoRate }, { (it / 12f).coerceIn(0f, 1f).pow(0.5f) }, { it * it * 12f },
-                    { v -> session.updateSynth(selectedTrack) { it.copy(lfoRate = v) } }),
-                SoundParam(R.string.studio_adv_move_depth, { curSynth().lfoFilter }, { it / 3f }, { it * 3f },
-                    { v -> session.updateSynth(selectedTrack) { it.copy(lfoFilter = v) } }),
+                SoundParam(R.string.studio_adv_resonance, { patch().resonance }, { (it - 0.5f) / 9.5f }, { 0.5f + it * 9.5f },
+                    { v -> session.updateSynth(t.id) { it.copy(resonance = v) } }),
+                SoundParam(R.string.studio_adv_detune, { patch().detuneCents }, { (it / 1200f).coerceIn(0f, 1f).pow(1f / 3f) }, { it * it * it * 1200f },
+                    { v -> session.updateSynth(t.id) { it.copy(detuneCents = v) } }),
+                SoundParam(R.string.studio_adv_sub, { patch().subLevel }, { it }, { it },
+                    { v -> session.updateSynth(t.id) { it.copy(subLevel = v) } }),
+                SoundParam(R.string.studio_adv_sweep, { patch().envOctaves }, { it / 5f }, { it * 5f },
+                    { v -> session.updateSynth(t.id) { it.copy(envOctaves = v) } }),
+                SoundParam(R.string.studio_adv_attack, { patch().attack }, { ln(it.coerceIn(0.002f, 3f) / 0.002f) / ln(1500f) }, { 0.002f * exp(it * ln(1500f)) },
+                    { v -> session.updateSynth(t.id) { it.copy(attack = v) } }),
+                SoundParam(R.string.studio_adv_release, { patch().release }, { ln(it.coerceIn(0.005f, 4f) / 0.005f) / ln(800f) }, { 0.005f * exp(it * ln(800f)) },
+                    { v -> session.updateSynth(t.id) { it.copy(release = v) } }),
+                SoundParam(R.string.studio_adv_move_speed, { patch().lfoRate }, { (it / 12f).coerceIn(0f, 1f).pow(0.5f) }, { it * it * 12f },
+                    { v -> session.updateSynth(t.id) { it.copy(lfoRate = v) } }),
+                SoundParam(R.string.studio_adv_move_depth, { patch().lfoFilter }, { it / 3f }, { it * 3f },
+                    { v -> session.updateSynth(t.id) { it.copy(lfoFilter = v) } }),
             )
             for (p in list) add(advanced, p)
             box.addView(outlined(R.string.studio_advanced).apply {
@@ -1471,33 +1540,27 @@ class StudioActivity : AudioThemedActivity() {
             box.addView(advanced)
         }
         refreshPick()
-        panel(anchor, box, 340)
+        panels.show(R.string.studio_sound_caption, getString(R.string.studio_panel_track, getString(R.string.studio_sound_caption), trackName(t)), box, 340, anchor, onHistory = { showSoundPanel(anchor, t.id) }) { session.project.trackOrNull(t.id)?.hidden == false }
     }
 
     /** Le panneau « Arpège » de la piste choisie : mode, vitesse et nombre d'octaves. */
-    private fun showArpPanel(anchor: View) {
-        val t = curTrack() ?: return
+    private fun showArpPanel(anchor: View, trackId: Int = selectedTrack) {
+        val t = session.project.trackOrNull(trackId) ?: return
         val box = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(dp(16), dp(12), dp(16), dp(12))
         }
-        box.addView(TextView(this).apply {
-            setText(R.string.studio_arp_caption)
-            textSize = 16f
-            setTypeface(typeface, Typeface.BOLD)
-            setPadding(0, 0, 0, dp(8))
-        })
         val modes = listOf(Arp.OFF, Arp.UP, Arp.DOWN, Arp.UP_DOWN, Arp.RANDOM)
         val modeButton = outlined(null).apply { text = getString(arpName(t.arpMode)) }
         modeButton.setOnClickListener {
             dropdown(modeButton, modes.map { getString(arpName(it)) }) { which ->
-                session.setArpMode(modes[which], selectedTrack)
+                session.setArpMode(modes[which], t.id)
                 modeButton.text = getString(arpName(modes[which]))
                 refreshNotesControls()
                 scheduleSave()
             }
         }
-        box.addView(modeButton)
+        box.addView(modeButton, wrap())
         box.addView(caption(R.string.studio_arp_rate), LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(10) })
         val rateIds = IntArray(3) { View.generateViewId() }
         val rate = MaterialButtonToggleGroup(this).apply {
@@ -1508,7 +1571,7 @@ class StudioActivity : AudioThemedActivity() {
             check(rateIds[t.arpRate.coerceIn(0, 2)])
             addOnButtonCheckedListener { _, id, checked ->
                 if (checked) {
-                    session.setArpRate(rateIds.indexOf(id), selectedTrack)
+                    session.setArpRate(rateIds.indexOf(id), t.id)
                     scheduleSave()
                 }
             }
@@ -1523,13 +1586,13 @@ class StudioActivity : AudioThemedActivity() {
             check(octIds[t.arpOctaves.coerceIn(1, 3) - 1])
             addOnButtonCheckedListener { _, id, checked ->
                 if (checked) {
-                    session.setArpOctaves(octIds.indexOf(id) + 1, selectedTrack)
+                    session.setArpOctaves(octIds.indexOf(id) + 1, t.id)
                     scheduleSave()
                 }
             }
         }
         box.addView(oct)
-        panel(anchor, box, 300)
+        panels.show(R.string.studio_arp_caption, getString(R.string.studio_panel_track, getString(R.string.studio_arp_caption), trackName(t)), box, 300, anchor, onHistory = { showArpPanel(anchor, t.id) }) { session.project.trackOrNull(t.id)?.hidden == false }
     }
 
     /** Le panneau « Réglages » : swing, espace, écho, longueur, copie du motif, sortie des fichiers. */
@@ -1539,15 +1602,9 @@ class StudioActivity : AudioThemedActivity() {
             orientation = LinearLayout.VERTICAL
             setPadding(dp(16), dp(12), dp(16), dp(12))
         }
-        box.addView(TextView(this).apply {
-            setText(R.string.studio_settings)
-            textSize = 16f
-            setTypeface(typeface, Typeface.BOLD)
-            setPadding(0, 0, 0, dp(4))
-        })
         fun addSlider(labelRes: Int, max: Int, value: Int, onChange: (Int) -> Unit) {
             val bar = slider(max = max) { v -> onChange(v); scheduleSave() }.apply { progress = value }
-            box.addView(labeled(labelRes, bar, 300), LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(6) })
+            box.addView(labeled(labelRes, bar), LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(6) })
         }
         addSlider(R.string.studio_swing, 50, (p.swing * 100).roundToInt()) { session.setSwing(it / 100f) }
         addSlider(R.string.studio_space, 100, (p.space * 100).roundToInt()) { session.setSpace(it / 100f) }
@@ -1560,14 +1617,15 @@ class StudioActivity : AudioThemedActivity() {
             addView(outlined(null).apply { id = ids[0]; text = "16"; minWidth = dp(64) })
             addView(outlined(null).apply { id = ids[1]; text = "32"; minWidth = dp(64) })
             addView(outlined(null).apply { id = ids[2]; text = "64"; minWidth = dp(64) })
-            check(when (p.stepCount) { 64 -> ids[2]; 32 -> ids[1]; else -> ids[0] })
+            check(when (p.baseSteps) { 64 -> ids[2]; 32 -> ids[1]; else -> ids[0] })
             addOnButtonCheckedListener { _, id, checked ->
                 if (checked) {
                     val n = when (id) { ids[2] -> 64; ids[1] -> 32; else -> 16 }
-                    if (n != session.project.stepCount) {
+                    if (n != session.project.baseSteps) {
                         session.setStepCount(n)
-                        grid.stepCount = n
-                        roll.stepCount = n
+                        grid.clearSelection()
+                        roll.clearSelection()
+                        setPasteArmed(false)
                         changed()
                     }
                 }
@@ -1579,7 +1637,7 @@ class StudioActivity : AudioThemedActivity() {
         actions.addView(outlined(R.string.studio_pattern_copy).apply { setOnClickListener { showCopyMenu(it) } })
         actions.addView(outlined(R.string.studio_output).apply { setOnClickListener { showOutputMenu(it) } })
         box.addView(actions, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(12) })
-        panel(anchor, box, 340)
+        panels.show(R.string.studio_settings, getString(R.string.studio_settings), box, 340, anchor, onHistory = { showSettingsPanel(anchor) })
     }
 
     // ---- Actions ---------------------------------------------------------------------------------
@@ -1587,6 +1645,8 @@ class StudioActivity : AudioThemedActivity() {
     private fun togglePlay() {
         playing = !playing
         if (playing) engine.play() else engine.stop()
+        grid.removeCallbacks(frameTick)
+        grid.postOnAnimation(frameTick)
         // Arrêter la lecture arrête aussi la prise aux pads
         if (!playing && padsRecording) setPadsRecording(false)
         refreshTransport()
@@ -1595,13 +1655,14 @@ class StudioActivity : AudioThemedActivity() {
     private fun showTab(id: Int) {
         val notes = id == tabNotesId
         val padsTab = id == tabPadsId
+        setPasteArmed(false)
         onNotesTab = notes
         // Rien ne reste tenu sur la page qu'on quitte ; la prise aux pads s'arrête avec elle
         if (!padsTab) {
             pads.releaseAll()
             if (padsRecording) setPadsRecording(false)
         }
-        if (!notes) theremin.finish()
+        if (!notes) { keyboard.releaseAll(); theremin.finish() }
         // Les coups des pads reviennent à l'écran (pour briller, et pour s'écrire pendant l'enregistrement)
         engine.recordHits = padsTab
         if (padsTab) {
@@ -1618,7 +1679,7 @@ class StudioActivity : AudioThemedActivity() {
         refreshSelectionBar()
         if (notes) {
             ensureSelected()
-            rollBase = autoBase()
+            focusRegister()
             refreshRoll()
             refreshNotesControls()
         }
@@ -1645,18 +1706,18 @@ class StudioActivity : AudioThemedActivity() {
     }
 
     /** Une note d'essai après un réglage du son : la tonique, dans l'octave du piano roll. */
-    private fun previewKeyNote() = previewPitch(rollBase + 12 + session.project.keyPc, 0.9f, 450)
+    private fun previewKeyNote() = previewPitch((register.low + (session.project.keyPc - register.low % 12 + 12) % 12), 0.9f, 450)
 
     /** Une note d'essai sur la piste [id] (une frappe pour la batterie). */
     private fun previewTrack(id: Int) {
         val t = session.project.trackOrNull(id) ?: return
-        if (t.melodic) previewPitch(rollBase + 12 + session.project.keyPc, 0.9f, 450, track = id) else engine.trigger(id, 60, 1f)
+        if (t.melodic) previewPitch((register.low + (session.project.keyPc - register.low % 12 + 12) % 12), 0.9f, 450, track = id) else engine.trigger(id, 60, 1f)
     }
 
     private fun pickKey(anchor: View) {
         dropdown(anchor, resources.getStringArray(R.array.studio_key_names).toList()) { which ->
             session.setKey(which)
-            rollBase = autoBase()
+            focusRegister()
             changed()
         }
     }
@@ -1687,7 +1748,9 @@ class StudioActivity : AudioThemedActivity() {
     }
 
     private fun stepHistory(redo: Boolean) {
+        setPasteArmed(false)
         if (redo) session.redo() else session.undo()
+        panels.refreshAfterHistory()
         grid.clearSelection()
         roll.clearSelection()
         changed()
@@ -1805,22 +1868,89 @@ class StudioActivity : AudioThemedActivity() {
     }
 
     private fun scheduleSave() {
+        panels.prune()
         refreshHistory()
         handler.removeCallbacks(saveRunnable)
         handler.postDelayed(saveRunnable, 600)
     }
 
-    /** La fenêtre du piano roll (deux octaves) part de l'octave de la note la plus grave et monte si besoin. */
-    private fun autoBase(): Int {
-        val notes = session.project.pattern.notes.filter { it.track == selectedTrack }
-        if (notes.isEmpty()) return 24
-        var base = notes.minOf { it.pitch } / 12 * 12
-        val top = notes.maxOf { it.pitch }
-        if (top > base + 24) base = (top - 24 + 11) / 12 * 12
-        return base.coerceIn(12, 84)
+    private fun newRegister() = resources.configuration.let { StudioRegister(it.screenWidthDp, it.screenHeightDp, requestedOctaves) }
+
+    private fun focusRegister() {
+        manualRegister = false
+        register.focus(session.notesOf(selectedTrack))
+    }
+
+    private fun shiftRegister(keys: Int) {
+        manualRegister = true
+        register.shift(keys)
+        refreshRoll()
+    }
+
+    private fun revealNote(note: Note) {
+        manualRegister = true
+        register.reveal(note.pitch)
+        roll.ensureVisible(note.step)
+        refreshRoll()
+    }
+
+    private fun showRegisterMenu(anchor: View) {
+        val notes = session.notesOf(selectedTrack)
+        val below = notes.filter { it.pitch < register.low }.maxByOrNull { it.pitch }
+        val above = notes.filter { it.pitch > register.high }.minByOrNull { it.pitch }
+        val options = mutableListOf(getString(R.string.studio_register_focus))
+        val targets = mutableListOf<Note?>(null)
+        for (note in listOfNotNull(above, below)) {
+            val label = if (note.pitch > register.high) R.string.studio_register_above else R.string.studio_register_below
+            options += getString(label, pitchName(note.pitch))
+            targets += note
+        }
+        val otherOctaves = 3 - register.octaves
+        options += resources.getQuantityString(R.plurals.studio_octaves_count, otherOctaves, otherOctaves)
+        dropdown(anchor, options, enabled = { it != 0 || notes.isNotEmpty() }) { i ->
+            if (i == targets.size) {
+                requestedOctaves = otherOctaves
+                val low = register.low
+                register = newRegister()
+                register.setLow(low)
+                if (!manualRegister) focusRegister()
+                refreshRoll()
+                return@dropdown
+            }
+            val note = targets[i]
+            if (note != null) revealNote(note) else {
+                focusRegister()
+                refreshRoll()
+            }
+        }
     }
 
     // ---- Affichage -------------------------------------------------------------------------------
+
+    private fun showTempoPanel(anchor: View) {
+        val taps = TapTempo()
+        val names = resources.getStringArray(R.array.studio_tempo_names)
+        val box = FlowRow(this).apply { setPadding(dp(12), 0, dp(12), dp(10)); hGap = dp(6) }
+        box.addView(outlined(R.string.studio_tap_tempo).apply {
+            setOnClickListener {
+                taps.tap(android.os.SystemClock.uptimeMillis())?.let { bpm ->
+                    session.setBpm(bpm)
+                    refreshTempo()
+                    scheduleSave()
+                }
+            }
+        })
+        box.addView(outlined(R.string.studio_tempos).apply {
+            setOnClickListener { button ->
+                dropdown(button, TEMPO_PRESETS.mapIndexed { i, bpm -> getString(R.string.studio_tempo_option, names[i], bpm) }) { i ->
+                    session.setBpm(TEMPO_PRESETS[i])
+                    refreshTempo()
+                    scheduleSave()
+                }
+            }
+        })
+        panels.show(R.string.studio_tap_tempo, getString(R.string.studio_tempo), box, 300, anchor)
+    }
 
     private fun refreshTempo() {
         tempoText.text = getString(R.string.studio_tempo_format, session.project.bpm)
@@ -1888,12 +2018,7 @@ class StudioActivity : AudioThemedActivity() {
             }
         })
         box.addView(row, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(12) })
-        box.addView(TextView(this).apply {
-            setText(R.string.studio_sample_title)
-            textSize = 16f
-            setTypeface(typeface, Typeface.BOLD)
-        }, 0)
-        panel(anchor, box, 380)
+        panels.show(R.string.studio_sample_title, getString(R.string.studio_sample_title), box, 380, anchor)
     }
 
     // ---- Export ---------------------------------------------------------------------------------------------------
@@ -1973,9 +2098,17 @@ class StudioActivity : AudioThemedActivity() {
         for (k in 0 until StudioProject.SLOTS) if (k in shown && patternIds[k] !in patternGroup.checkedButtonIds) patternGroup.check(patternIds[k])
         for (k in 0 until StudioProject.SLOTS) if (k !in shown && patternIds[k] in patternGroup.checkedButtonIds) patternGroup.uncheck(patternIds[k])
         building = was
-        // Un motif vide est estompé : on voit tout de suite lesquels servent
+        // Les quatre destinations restent lisibles ; un point marque celles qui contiennent de la musique.
         for (k in 0 until StudioProject.SLOTS) {
-            patternGroup.findViewById<View>(patternIds[k])?.alpha = if (k in shown || !session.isPatternEmpty(k)) 1f else 0.45f
+            val button = patternGroup.findViewById<MaterialButton>(patternIds[k])
+            val filled = !session.isPatternEmpty(k)
+            if (filled != (button.icon != null)) button.icon = if (filled) android.graphics.drawable.GradientDrawable().apply {
+                shape = android.graphics.drawable.GradientDrawable.OVAL
+                setColor(button.currentTextColor)
+            } else null
+            button.iconSize = dp(5)
+            button.iconPadding = dp(4)
+            button.iconGravity = MaterialButton.ICON_GRAVITY_TEXT_START
         }
         // Plusieurs motifs à la suite : la lettre de chacun marque son début, les numéros repartent de 1
         val letters = resources.getStringArray(R.array.studio_pattern_names)
@@ -1985,7 +2118,7 @@ class StudioActivity : AudioThemedActivity() {
         roll.sectionLen = p.baseSteps
         roll.sectionLabels = labels
         songButton.isSelected = p.songMode
-        songButton.alpha = if (p.songMode) 1f else 0.8f
+        songButton.alpha = 1f
         songButton.setTextColor(if (p.songMode) 0xFFFFC857.toInt() else songDefaultColor)
     }
 
@@ -2001,7 +2134,11 @@ class StudioActivity : AudioThemedActivity() {
         val blocks = ChainView(this).apply {
             this.names = names.toList()
             colors = PATTERN_COLORS
-            playing = { if (this@StudioActivity.playing && session.project.songMode) engine.songPosition else -1 }
+            songBlocks = this
+            addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
+                override fun onViewAttachedToWindow(v: View) {}
+                override fun onViewDetachedFromWindow(v: View) { if (songBlocks === v) songBlocks = null }
+            })
         }
         val playSwitch = androidx.appcompat.widget.SwitchCompat(this).apply { setText(R.string.studio_song_play) }
         fun refresh() {
@@ -2036,12 +2173,7 @@ class StudioActivity : AudioThemedActivity() {
         }
         box.addView(playSwitch, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(12) })
         refresh()
-        box.addView(TextView(this).apply {
-            setText(R.string.studio_song_title)
-            textSize = 14f
-            alpha = 0.75f
-        }, 0)
-        panel(anchor, box, 420)
+        panels.show(R.string.studio_song_title, getString(R.string.studio_song_title), box, 420, anchor, onHistory = { showSongPanel(anchor) })
     }
 
     private fun refreshTransport() {
@@ -2049,7 +2181,6 @@ class StudioActivity : AudioThemedActivity() {
     }
 
     private fun refreshAll() {
-        val p = session.project
         refreshTracks()
         refreshTransport()
         refreshTempo()
@@ -2067,23 +2198,25 @@ class StudioActivity : AudioThemedActivity() {
         val scale = Scales.byId(p.scaleId)
         roll.keyPc = p.keyPc
         roll.scale = scale
-        roll.rows = Scales.rows(scale, p.keyPc, rollBase, 2, scaleLocked)
+        roll.scaleLocked = scaleLocked
+        roll.rows = (register.low..register.high).toList().toIntArray()
+        registerButton.text = getString(R.string.studio_register_range, pitchName(register.low), pitchName(register.high))
+        if (roll.pasteArmed) updatePasteTarget()
         roll.invalidate()
         keyboard.keyPc = p.keyPc
         keyboard.scale = scale
-        keyboard.low = rollBase
+        keyboard.low = register.low
+        keyboard.high = register.high
         keyboard.locked = scaleLocked
-        // Le thérémine joue toujours sur la gamme (glisser, c'est passer d'une note juste à la suivante) : deux octaves, trois si large
-        val octaves = if (resources.configuration.screenWidthDp >= 900) 3 else 2
         theremin.keyPc = p.keyPc
-        theremin.pitches = Scales.rows(scale, p.keyPc, rollBase, octaves, true)
+        theremin.pitches = roll.rows.filter { Scales.contains(scale, p.keyPc, it) }.toIntArray()
     }
 
     /** Le clavier ou le thérémine, sous le piano roll. */
     private fun setTheremin(on: Boolean) {
         thereminOn = on
         if (thereminToggle.isChecked != on) thereminToggle.isChecked = on
-        if (!on) theremin.finish()
+        if (on) keyboard.releaseAll() else theremin.finish()
         theremin.visibility = if (on) View.VISIBLE else View.GONE
         keyboard.visibility = if (on) View.GONE else View.VISIBLE
         applyNotesLayout()
@@ -2125,8 +2258,12 @@ class StudioActivity : AudioThemedActivity() {
         recordButton.setBackgroundColor(if (recorder.armed) 0x66E74C3C else android.graphics.Color.TRANSPARENT)
         if (t == null) return
         val soundName = if (t.kind == TrackKind.SYNTH) soundName(t.synth) else sf2ProgramName(t)
-        soundButton.text = getString(R.string.studio_sound_label, soundName)
-        arpButton.text = getString(R.string.studio_arp_label, getString(arpName(t.arpMode)))
+        soundButton.text = soundName
+        soundButton.contentDescription = getString(R.string.studio_sound_label, soundName)
+        arpButton.setText(R.string.studio_arp_caption)
+        arpButton.isSelected = t.arpMode != Arp.OFF
+        arpButton.alpha = if (arpButton.isSelected) 1f else 0.8f
+        arpButton.contentDescription = getString(R.string.studio_arp_label, getString(arpName(t.arpMode)))
         roll.accent = trackColor(t)
         keyboard.accent = trackColor(t)
         keyboard.invalidate()
@@ -2137,8 +2274,6 @@ class StudioActivity : AudioThemedActivity() {
     // ---- Les pistes -------------------------------------------------------------------------------------------------
 
     private fun curTrack(): Track? = session.project.trackOrNull(selectedTrack)
-
-    private fun curSynth() = curTrack()?.synth ?: SynthPresets.BASS
 
     private fun visibleTracks(): List<Track> = session.project.tracks.filter { !it.hidden }
 
@@ -2182,24 +2317,42 @@ class StudioActivity : AudioThemedActivity() {
      * La bulle d'un pas, près du doigt : force, longueur et hauteur (pour une piste à notes), « Copier » pour que les prochains
      * pas de cette piste reprennent ces réglages. Chaque réglage se fait entendre.
      */
-    private fun showStepBubble(trackId: Int, step: Int, screenX: Float, screenY: Float) {
+    private fun showStepBubble(trackId: Int, step: Int, screenX: Float, screenY: Float, notePitch: Int? = null) {
         val t = session.project.trackOrNull(trackId) ?: return
-        if (session.stepInfo(trackId, step) == null) return
+        var selectedPitch = notePitch
+        fun targetNote() = selectedPitch?.let { pitch ->
+            session.notesOf(trackId).firstOrNull { it.step == step && it.pitch == pitch }
+        }
+        fun info(): StudioSession.StepInfo? {
+            if (selectedPitch == null) return session.stepInfo(trackId, step)
+            val n = targetNote() ?: return null
+            return StudioSession.StepInfo(n.velocity, n.length, n.pitch)
+        }
+        fun edit(velocity: Float? = null, length: Int? = null, pitch: Int? = null, hold: Int? = null, cond: Int? = null) {
+            if (selectedPitch == null) {
+                session.editStep(trackId, step, velocity, length, pitch, hold, cond)
+            } else {
+                val n = targetNote() ?: return
+                val target = (pitch ?: n.pitch).coerceIn(0, 127)
+                session.editNote(n, step, target, length ?: n.length, velocity ?: n.velocity)
+                selectedPitch = target
+            }
+        }
+        fun preview() {
+            val n = targetNote()
+            if (n == null) previewLane(trackId, step) else previewPitch(n.pitch, n.velocity, track = trackId)
+        }
+        if (info() == null) return
         val box = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(dp(16), dp(12), dp(16), dp(12))
         }
-        box.addView(TextView(this).apply {
-            text = trackName(t)
-            textSize = 16f
-            setTypeface(typeface, Typeface.BOLD)
-        })
         val forceText = TextView(this).apply { textSize = 14f; gravity = Gravity.END }
         val lengthText = TextView(this).apply { textSize = 14f; gravity = Gravity.CENTER; minWidth = dp(64) }
         val pitchText = TextView(this).apply { textSize = 14f; gravity = Gravity.CENTER; minWidth = dp(64) }
 
         fun refreshTexts() {
-            val i = session.stepInfo(trackId, step) ?: return
+            val i = info() ?: return
             forceText.text = getString(R.string.studio_percent, (i.velocity * 100).roundToInt())
             lengthText.text = if (t.melodic) i.length.toString() else getString(R.string.studio_percent, i.hold)
             pitchText.text = if (t.melodic) pitchName(i.pitch) else getString(R.string.studio_signed, i.pitch - 60)
@@ -2232,16 +2385,16 @@ class StudioActivity : AudioThemedActivity() {
         // Force
         val bar = SeekBar(this).apply {
             max = 90
-            progress = ((session.stepInfo(trackId, step)?.velocity ?: 1f) * 100).roundToInt() - 10
+            progress = ((info()?.velocity ?: 1f) * 100).roundToInt() - 10
             setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                 override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                     if (!fromUser) return
-                    session.editStep(trackId, step, velocity = (progress + 10) / 100f)
+                    edit(velocity = (progress + 10) / 100f)
                     redraw()
                 }
 
                 override fun onStartTrackingTouch(seekBar: SeekBar) {}
-                override fun onStopTrackingTouch(seekBar: SeekBar) = previewLane(trackId, step)
+                override fun onStopTrackingTouch(seekBar: SeekBar) = preview()
             })
         }
         val forceRow = LinearLayout(this).apply {
@@ -2256,16 +2409,16 @@ class StudioActivity : AudioThemedActivity() {
         if (t.melodic) {
             val control = stepper(
                 lengthText,
-                { session.stepInfo(trackId, step)?.let { session.editStep(trackId, step, length = it.length - 1) }; redraw() },
-                { session.stepInfo(trackId, step)?.let { session.editStep(trackId, step, length = it.length + 1) }; redraw() },
+                { info()?.let { edit(length = it.length - 1) }; redraw() },
+                { info()?.let { edit(length = it.length + 1) }; redraw() },
             )
             box.addView(row(R.string.studio_step_length, control), rowParams(dp(6)))
         } else if (t.sfKit < 0) {
             // Un coup de batterie dure plus ou moins longtemps (la caisse claire qui résonne, le charleston qui claque)
             val control = stepper(
                 lengthText,
-                { session.stepInfo(trackId, step)?.let { session.editStep(trackId, step, hold = it.hold - 10) }; redraw(); previewLane(trackId, step) },
-                { session.stepInfo(trackId, step)?.let { session.editStep(trackId, step, hold = it.hold + 10) }; redraw(); previewLane(trackId, step) },
+                { info()?.let { edit(hold = it.hold - 10) }; redraw(); preview() },
+                { info()?.let { edit(hold = it.hold + 10) }; redraw(); preview() },
             )
             box.addView(row(R.string.studio_drum_length, control), rowParams(dp(6)))
         }
@@ -2273,8 +2426,8 @@ class StudioActivity : AudioThemedActivity() {
         // Hauteur
         val pitchControl = stepper(
             pitchText,
-            { session.stepInfo(trackId, step)?.let { session.editStep(trackId, step, pitch = it.pitch - 1) }; redraw(); previewLane(trackId, step) },
-            { session.stepInfo(trackId, step)?.let { session.editStep(trackId, step, pitch = it.pitch + 1) }; redraw(); previewLane(trackId, step) },
+            { info()?.let { edit(pitch = it.pitch - 1) }; redraw(); preview() },
+            { info()?.let { edit(pitch = it.pitch + 1) }; redraw(); preview() },
         )
         box.addView(row(R.string.studio_drum_tune, pitchControl), rowParams(dp(6)))
 
@@ -2282,12 +2435,12 @@ class StudioActivity : AudioThemedActivity() {
         val condButton = outlined(null)
         val conds = resources.getStringArray(R.array.studio_step_conds)
         fun refreshCond() {
-            condButton.text = conds.getOrElse(session.stepInfo(trackId, step)?.cond ?: 0) { conds[0] }
+            condButton.text = conds.getOrElse(info()?.cond ?: 0) { conds[0] }
         }
         if (!t.melodic) {
             condButton.setOnClickListener {
                 dropdown(condButton, conds.toList()) { which ->
-                    session.editStep(trackId, step, cond = which)
+                    edit(cond = which)
                     refreshCond()
                     redraw()
                 }
@@ -2297,31 +2450,36 @@ class StudioActivity : AudioThemedActivity() {
         }
 
         // Copier / Oublier / Effacer
-        val actions = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+        val actions = FlowRow(this).apply { hGap = dp(6) }
         val copy = outlined(null)
         val reset = outlined(R.string.studio_drum_reset)
-        fun refreshCopy() = copy.setText(if (pens.containsKey(trackId)) R.string.studio_step_copied else R.string.studio_step_copy)
+        fun refreshCopy() = copy.setText(if (pens.containsKey(trackId)) R.string.studio_step_stamped else R.string.studio_step_stamp)
         copy.setOnClickListener {
-            session.stepInfo(trackId, step)?.let { pens[trackId] = it }
+            info()?.let { pens[trackId] = it }
             refreshCopy()
         }
         // Tout remettre d'origine : ce pas retrouve ses réglages normaux et la copie de la piste est oubliée
         reset.setOnClickListener {
             pens.remove(trackId)
-            session.resetStep(trackId, step)
+            if (selectedPitch == null) session.resetStep(trackId, step) else edit(velocity = 1f, length = 1)
             bar.progress = 90
             redraw()
             refreshCopy()
             refreshCond()
-            previewLane(trackId, step)
+            preview()
         }
         refreshCopy()
         actions.addView(copy, wrap(end = dp(8)))
         actions.addView(reset, wrap())
         box.addView(actions, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(14) })
 
+        val slots = session.project.viewSlots
+        val base = session.project.baseSteps
         refreshTexts()
-        panel(window.decorView, box, 360, at = screenX to screenY)
+        panels.show(R.string.studio_step_force, getString(R.string.studio_step_title, trackName(t), step % base + 1), box, 360, window.decorView, screenX to screenY,
+            onHistory = { showStepBubble(trackId, step, screenX, screenY, selectedPitch) }) {
+            session.project.viewSlots == slots && session.project.baseSteps == base && session.project.trackOrNull(trackId)?.hidden == false && info() != null
+        }
     }
 
     // ---- Sélection : copier, couper, coller, supprimer -------------------------------------------------------------
@@ -2333,7 +2491,11 @@ class StudioActivity : AudioThemedActivity() {
     private lateinit var duplicateButton: MaterialButton
     private lateinit var pasteButton: MaterialButton
     private lateinit var pasteHereButton: MaterialButton
-    private lateinit var clearClipButton: MaterialButton
+    private lateinit var cancelPasteButton: MaterialButton
+    private lateinit var pasteTarget: TextView
+    private var clipSourceStep = 0
+    private var clipLaneOffsets = emptyMap<Int, Int>()
+    private val patternLetters by lazy { resources.getStringArray(R.array.studio_pattern_names) }
     private lateinit var deleteButton: MaterialButton
     private var selectMode = false
     private var clip: StudioSession.Clip? = null
@@ -2358,16 +2520,30 @@ class StudioActivity : AudioThemedActivity() {
         val bar = flowRow(topMargin = dp(6))
         copyButton = outlined(R.string.studio_step_copy).apply { setOnClickListener { copySelection(cut = false) } }
         cutButton = outlined(R.string.studio_cut).apply { setOnClickListener { copySelection(cut = true) } }
-        pasteButton = outlined(R.string.studio_paste).apply {
-            isCheckable = true
-            setOnClickListener { setPasteArmed(isChecked) }
-        }
+        pasteButton = outlined(R.string.studio_paste).apply { setOnClickListener { setPasteArmed(true) } }
         deleteButton = outlined(R.string.studio_delete_selection).apply { setOnClickListener { deleteSelection() } }
         duplicateButton = outlined(R.string.studio_duplicate).apply { setOnClickListener { duplicateSelection() } }
-        pasteHereButton = outlined(R.string.studio_paste_here).apply { setOnClickListener { pasteAtGhost() } }
-        clearClipButton = outlined(R.string.studio_clear_clipboard).apply { setOnClickListener { clearClipboard() } }
-        for (b in listOf(duplicateButton, copyButton, cutButton, deleteButton, pasteButton, pasteHereButton, clearClipButton)) {
-            bar.addView(b, wrap(end = dp(8)))
+        pasteHereButton = MaterialButton(this).apply {
+            isAllCaps = false
+            setText(R.string.studio_paste_here)
+            setOnClickListener { pasteAtGhost() }
+        }
+        cancelPasteButton = outlined(android.R.string.cancel).apply { setOnClickListener { setPasteArmed(false) } }
+        pasteTarget = TextView(this).apply { textSize = 15f; gravity = Gravity.CENTER_VERTICAL }
+        for ((button, drawable) in listOf(copyButton to R.drawable.ic_px_copy, cutButton to R.drawable.ic_px_cut,
+                deleteButton to R.drawable.ic_px_delete)) {
+            button.contentDescription = button.text
+            button.tooltipText = button.text
+            button.text = null
+            button.setIconResource(drawable)
+            button.iconPadding = 0
+            button.iconGravity = MaterialButton.ICON_GRAVITY_TEXT_START
+            button.minWidth = dp(48)
+            button.minimumWidth = dp(48)
+            button.setPadding(dp(10), 0, dp(10), 0)
+        }
+        for (b in listOf(duplicateButton, copyButton, cutButton, deleteButton, pasteButton, pasteTarget, pasteHereButton, cancelPasteButton)) {
+            bar.addView(b, wrap())
         }
         bar.visibility = View.GONE
         return bar
@@ -2395,51 +2571,92 @@ class StudioActivity : AudioThemedActivity() {
         refreshSelectionBar()
     }
 
-    private fun setPasteArmed(on: Boolean) {
+    private fun setPasteArmed(on: Boolean, firstStep: Int? = null) {
         val c = clip
-        val armed = on && c != null && !c.isEmpty
-        grid.pasteArmed = armed
-        roll.pasteArmed = armed
-        if (armed && c != null) prepareGhost(c)
-        if (!armed) {
-            grid.pasteCells = emptyList()
-            roll.pasteNotes = emptyList()
-        }
-        if (pasteButton.isChecked != armed) pasteButton.isChecked = armed
+        val armed = on && c != null && !c.isEmpty && (!onNotesTab || canPasteNotes(c))
+        grid.pasteArmed = armed && !onNotesTab
+        roll.pasteArmed = armed && onNotesTab
+        if (armed) prepareGhost(c, firstStep)
         refreshSelectionBar()
     }
 
-    /** Pose l'aperçu de ce qu'on a copié : sur l'ancienne place s'il y a une sélection, sinon au début. L'utilisateur le glisse ensuite. */
-    private fun prepareGhost(c: StudioSession.Clip) {
-        val cells = ArrayList<IntArray>()
-        for (h in c.hits) {
-            val lane = gridIds.indexOf(h.track)
-            if (lane >= 0) cells.add(intArrayOf(lane, h.rel))
-        }
-        for (n in c.notes) {
-            val lane = gridIds.indexOf(n.track)
-            if (lane >= 0) for (k in 0 until n.length) cells.add(intArrayOf(lane, n.rel + k))
-        }
-        grid.pasteCells = cells
-        grid.placePaste(grid.selection?.stepFrom ?: 0)
-        roll.pasteNotes = c.notes.map { intArrayOf(it.pitch, it.rel, it.length) }
-        roll.pasteLow = c.lowPitch
-        roll.placePaste(roll.selection?.pitchLow ?: c.lowPitch, roll.selection?.stepFrom ?: 0)
-    }
+    private fun canPasteNotes(c: StudioSession.Clip) =
+        c.hits.isEmpty() && c.notes.isNotEmpty() && c.tracks.size == 1 && selectedTrack >= 0
 
-    /** « Coller ici » : l'aperçu devient réel, et reste là pour recoller ailleurs. */
-    private fun pasteAtGhost() {
+    private fun prepareGhost(c: StudioSession.Clip, firstStep: Int?) {
         if (onNotesTab) {
-            if (roll.pasteStep >= 0) pasteInRoll(roll.pasteAnchorPitch, roll.pasteStep)
-        } else if (grid.pasteStep >= 0) {
-            pasteInGrid(grid.pasteStep)
+            roll.pasteSpan = c.span
+            roll.pasteNotes = c.notes.map { intArrayOf(it.pitch, it.rel, it.length) }
+            roll.pasteLow = c.lowPitch
+            roll.pastePitchSpan = c.highPitch - c.lowPitch
+            register.reveal(c.lowPitch)
+            refreshRoll()
+            roll.placePaste(c.lowPitch, firstStep ?: roll.selection?.stepFrom ?: clipSourceStep)
+            roll.ensureVisible(roll.pasteStep)
+        } else {
+            val cells = ArrayList<IntArray>()
+            for (h in c.hits) cells.add(intArrayOf(clipLaneOffsets.getValue(h.track), h.rel))
+            for (n in c.notes) for (k in 0 until n.length) cells.add(intArrayOf(clipLaneOffsets.getValue(n.track), n.rel + k))
+            grid.pasteCells = cells
+            grid.pasteSpan = c.span
+            val first = clipLaneOffsets.entries.first { it.value == 0 }.key
+            grid.placePaste(gridIds.indexOf(first).coerceAtLeast(0), firstStep ?: grid.selection?.stepFrom ?: clipSourceStep)
+            grid.ensureVisible(grid.pasteStep)
+            grid.ensureLaneVisible(grid.pasteLane)
         }
     }
 
-    /** Vide le presse-papiers et sort du collage. */
-    private fun clearClipboard() {
-        clip = null
+    /** La grille conserve les écarts entre pistes. Une batterie aboutit sur une batterie, une mélodie sur un instrument. */
+    private fun gridDestinations(c: StudioSession.Clip): Map<Int, Int>? {
+        val targets = mutableMapOf<Int, Int>()
+        for ((source, offset) in clipLaneOffsets) {
+            val id = gridIds.getOrNull(grid.pasteLane + offset) ?: return null
+            val melodic = session.project.trackOrNull(id)?.melodic ?: return null
+            if (melodic != c.notes.any { it.track == source }) return null
+            targets[source] = id
+        }
+        return targets
+    }
+
+    private fun fitsAt(c: StudioSession.Clip, step: Int): Boolean {
+        val base = session.project.baseSteps
+        return step >= 0 && step + c.span <= session.project.stepCount &&
+            c.notes.all { (step + it.rel) % base + it.length <= base }
+    }
+
+    private fun updatePasteTarget() {
+        val c = clip ?: return
+        val step = if (onNotesTab) roll.pasteStep else grid.pasteStep
+        if (step < 0) return
+        val valid = fitsAt(c, step) && if (onNotesTab) {
+            canPasteNotes(c)
+        } else gridDestinations(c) != null
+        grid.pasteValid = valid
+        roll.pasteValid = valid
+        pasteHereButton.isEnabled = valid
+        val p = session.project
+        val slot = p.viewSlots.getOrNull(step / p.baseSteps) ?: return
+        val target = if (onNotesTab) pitchName(roll.pasteAnchorPitch)
+            else grid.laneNames.getOrNull(grid.pasteLane).orEmpty()
+        pasteTarget.text = if (valid) getString(R.string.studio_paste_target, patternLetters[slot], step % p.baseSteps + 1, target)
+            else getString(R.string.studio_no_room)
+    }
+
+    private fun pasteAtGhost() {
+        val c = clip ?: return
+        val step = if (onNotesTab) roll.pasteStep else grid.pasteStep
+        if (!fitsAt(c, step)) return
+        if (roll.pasteArmed && canPasteNotes(c) && roll.pasteValid) {
+            val pitch = roll.pasteAnchorPitch
+            session.paste(c, step, pitchShift = pitch - c.lowPitch, noteTrack = selectedTrack)
+            roll.setSelection(pitch, pitch + roll.pastePitchSpan, step, step + c.span - 1)
+        } else if (grid.pasteArmed) {
+            val destinations = gridDestinations(c) ?: return
+            session.paste(c, step, trackMap = destinations)
+            grid.setSelection(grid.pasteLane, grid.pasteLane + clipLaneOffsets.values.max(), step, step + c.span - 1)
+        } else return
         setPasteArmed(false)
+        afterSelectionEdit()
     }
 
     /** Copie la sélection juste après elle-même ; la copie devient la sélection, on peut donc répéter. */
@@ -2465,63 +2682,54 @@ class StudioActivity : AudioThemedActivity() {
     /** Montre ou cache la barre (pas sur le mixeur ni sur le son d'une batterie) et grise ce qui n'a pas de sens pour l'instant. */
     private fun refreshSelectionBar() {
         if (!::selectionBar.isInitialized) return
-        val relevant = mixerPane.visibility != View.VISIBLE && padsPane.visibility != View.VISIBLE && !(onNotesTab && editedDrum >= 0)
+        val relevant = (!onNotesTab || selectedTrack >= 0) && mixerPane.visibility != View.VISIBLE && padsPane.visibility != View.VISIBLE && !(onNotesTab && editedDrum >= 0)
         selectionBar.visibility = if (relevant && selectMode) View.VISIBLE else View.GONE
         selectToggle.visibility = if (relevant) View.VISIBLE else View.GONE
         if (selectToggle.isChecked != selectMode) selectToggle.isChecked = selectMode
-        val actions = if (selectMode) View.VISIBLE else View.GONE
-        val hasSelection = selectionSpec() != null
-        val canPaste = clip?.isEmpty == false
-        fun enable(b: MaterialButton, on: Boolean) {
-            b.visibility = actions
-            b.isEnabled = on
-            b.alpha = if (on) 1f else 0.4f
+        val placing = roll.pasteArmed || grid.pasteArmed
+        val spec = selectionSpec()
+        val c = clip
+        val canPaste = c != null && !c.isEmpty && (!onNotesTab || canPasteNotes(c))
+        val selected = spec?.let { session.copyRange(it.tracks, it.s0, it.s1, it.p0, it.p1) }
+        val hasNotes = selected != null && !selected.isEmpty
+        for (b in listOf(duplicateButton, copyButton, cutButton, deleteButton)) {
+            b.visibility = if (!placing) View.VISIBLE else View.GONE
+            b.isEnabled = hasNotes
         }
-        enable(duplicateButton, hasSelection)
-        enable(copyButton, hasSelection)
-        enable(cutButton, hasSelection)
-        enable(deleteButton, hasSelection)
-        enable(pasteButton, canPaste)
-        // « Coller ici » seulement pendant qu'on place ; « Vider » seulement s'il y a quelque chose à vider
-        val placing = pasteButton.isChecked && canPaste
-        pasteHereButton.visibility = if (selectMode && placing) View.VISIBLE else View.GONE
-        clearClipButton.visibility = if (selectMode && canPaste) View.VISIBLE else View.GONE
+        duplicateButton.isEnabled = hasNotes && fitsAt(selected, spec.s1 + 1)
+        pasteButton.visibility = if (!placing && canPaste) View.VISIBLE else View.GONE
+        for (v in listOf(pasteTarget, pasteHereButton, cancelPasteButton)) v.visibility = if (placing) View.VISIBLE else View.GONE
+        if (placing) updatePasteTarget()
     }
 
     private fun copySelection(cut: Boolean) {
         val s = selectionSpec() ?: return
-        clip = session.copyRange(s.tracks, s.s0, s.s1, s.p0, s.p1)
+        val c = session.copyRange(s.tracks, s.s0, s.s1, s.p0, s.p1)
+        if (c.isEmpty) return
+        val lanes = c.tracks.associateWith { gridIds.indexOf(it) }
+        val first = lanes.values.min()
+        if (first < 0) return
+        clip = c.alignedToFirstEvent()
+        clipLaneOffsets = lanes.mapValues { it.value - first }
+        clipSourceStep = s.s0 + c.firstStep
         if (cut) {
             session.clearRange(s.tracks, s.s0, s.s1, s.p0, s.p1)
             afterSelectionEdit()
         }
-        if (pasteButton.isChecked) setPasteArmed(true) else refreshSelectionBar()
+        setPasteArmed(true, clipSourceStep)
     }
 
     private fun deleteSelection() {
         val s = selectionSpec() ?: return
         session.clearRange(s.tracks, s.s0, s.s1, s.p0, s.p1)
         afterSelectionEdit()
+        refreshSelectionBar()
     }
 
     private fun afterSelectionEdit() {
         grid.invalidate()
         roll.invalidate()
         scheduleSave()
-    }
-
-    /** Coller dans la grille rythmique : chaque coup et chaque note retrouve sa piste, à partir du pas touché. */
-    private fun pasteInGrid(step: Int) {
-        val c = clip ?: return
-        session.paste(c, step)
-        afterSelectionEdit()
-    }
-
-    /** Coller dans le piano roll : les notes vont sur la piste ouverte, la plus grave sur la hauteur touchée. */
-    private fun pasteInRoll(pitch: Int, step: Int) {
-        val c = clip?.takeIf { it.notes.isNotEmpty() } ?: return
-        session.paste(StudioSession.Clip(emptyList(), c.notes), step, pitchShift = pitch - c.lowPitch, noteTrack = selectedTrack)
-        afterSelectionEdit()
     }
 
     /** Le petit chiffre d'une piste de synthé ou de soundfont quand il y en a plusieurs du même genre (« 2 » : le deuxième) ; sinon rien. */
@@ -2552,6 +2760,8 @@ class StudioActivity : AudioThemedActivity() {
         ensureSelected()
         val sig = session.project.tracks.joinToString(",") { "${it.id}:${it.kind}:${it.voice}:${it.hidden}:${it.bank}:${it.program}" }
         if (sig == trackSignature) return
+        setPasteArmed(false)
+        grid.clearSelection()
         trackSignature = sig
         val visible = visibleTracks()
         gridIds = visible.map { it.id }
@@ -2572,12 +2782,15 @@ class StudioActivity : AudioThemedActivity() {
         trackStrip.removeAllViews()
         for (t in session.project.tracks.filter { !it.hidden }) {
             val c = chip(trackName(t)) {
+                keyboard.releaseAll()
+                theremin.finish()
+                setPasteArmed(false)
                 roll.clearSelection()
                 if (t.melodic) {
                     editedDrum = -1
                     if (selectedTrack != t.id) {
                         selectedTrack = t.id
-                        rollBase = autoBase()
+                        focusRegister()
                     }
                 } else {
                     editedDrum = t.id
@@ -2598,7 +2811,7 @@ class StudioActivity : AudioThemedActivity() {
         val shape = android.graphics.drawable.GradientDrawable().apply {
             cornerRadius = dp(17).toFloat()
             setColor(if (on) androidx.core.graphics.ColorUtils.compositeColors((color and 0x00FFFFFF) or 0x40000000, raised) else raised)
-            setStroke(dp(if (on) 3 else 2), color)
+            setStroke(dp(if (on) 2 else 1), if (on) color else androidx.core.graphics.ColorUtils.blendARGB(raised, color, 0.48f))
         }
         c.background = android.graphics.drawable.RippleDrawable(
             android.content.res.ColorStateList.valueOf(ContextCompat.getColor(this, R.color.audio_ripple)), shape, null,
@@ -2653,7 +2866,7 @@ class StudioActivity : AudioThemedActivity() {
         if (id < 0) return
         if (kind != TrackKind.DRUM) {
             selectedTrack = id
-            rollBase = autoBase()
+            focusRegister()
         }
         changed()
     }
@@ -2791,56 +3004,6 @@ class StudioActivity : AudioThemedActivity() {
         menu.show()
     }
 
-    /** Un petit panneau flottant sous le bouton : on règle, puis on touche à côté pour le refermer. */
-    private fun panel(anchor: View, content: View, widthDp: Int, at: Pair<Float, Float>? = null): PopupWindow {
-        val dark = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
-            android.content.res.Configuration.UI_MODE_NIGHT_YES
-        val scroll = android.widget.ScrollView(this).apply {
-            isVerticalScrollBarEnabled = false
-            addView(content, FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
-        }
-        val frame = FrameLayout(this).apply {
-            background = android.graphics.drawable.GradientDrawable().apply {
-                cornerRadius = dp(14).toFloat()
-                setColor(if (dark) 0xFF2B2B33.toInt() else 0xFFFFFFFF.toInt())
-                setStroke(dp(1), if (dark) 0xFF4A4A54.toInt() else 0xFFCFCFD6.toInt())
-            }
-            addView(scroll, FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
-        }
-        if (at != null) {
-            // Une bulle près du doigt : au-dessous si la place y est, sinon au-dessus
-            val screenW = resources.displayMetrics.widthPixels
-            val screenH = resources.displayMetrics.heightPixels
-            val w = dp(widthDp)
-            content.measure(
-                View.MeasureSpec.makeMeasureSpec(w, View.MeasureSpec.EXACTLY),
-                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-            )
-            val h = minOf(content.measuredHeight + dp(4), screenH - dp(32))
-            val x = (at.first - w / 2f).toInt().coerceIn(dp(8), maxOf(dp(8), screenW - w - dp(8)))
-            val y = if (at.second + dp(28) + h <= screenH - dp(16)) at.second.toInt() + dp(28) else maxOf(dp(8), (at.second - h - dp(28)).toInt())
-            val bubble = PopupWindow(frame, w, h, true)
-            bubble.isOutsideTouchable = true
-            bubble.elevation = dp(12).toFloat()
-            bubble.showAtLocation(anchor, Gravity.NO_GRAVITY, x, y)
-            return bubble
-        }
-        // La hauteur : celle du contenu, sans dépasser la place sous le bouton
-        val where = IntArray(2)
-        anchor.getLocationOnScreen(where)
-        val room = resources.displayMetrics.heightPixels - (where[1] + anchor.height) - dp(16)
-        content.measure(
-            View.MeasureSpec.makeMeasureSpec(dp(widthDp), View.MeasureSpec.EXACTLY),
-            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-        )
-        val height = minOf(content.measuredHeight + dp(4), maxOf(room, dp(240)))
-        val popup = PopupWindow(frame, dp(widthDp), height, true)
-        popup.isOutsideTouchable = true
-        popup.elevation = dp(12).toFloat()
-        popup.showAsDropDown(anchor, 0, dp(4))
-        return popup
-    }
-
     /** Un bouton à contour, texte sans espacement exagéré entre les lettres. */
     private fun outlined(textRes: Int?): MaterialButton =
         MaterialButton(this, null, com.google.android.material.R.attr.materialButtonOutlinedStyle).apply {
@@ -2870,7 +3033,7 @@ class StudioActivity : AudioThemedActivity() {
     }
 
     /** Un curseur avec son nom au-dessus. */
-    private fun labeled(textRes: Int, bar: SeekBar, widthDp: Int): LinearLayout = LinearLayout(this).apply {
+    private fun labeled(textRes: Int, bar: SeekBar): LinearLayout = LinearLayout(this).apply {
         orientation = LinearLayout.VERTICAL
         addView(TextView(context).apply {
             setText(textRes)
@@ -2878,7 +3041,7 @@ class StudioActivity : AudioThemedActivity() {
             alpha = 0.75f
             setPadding(dp(4), 0, 0, 0)
         })
-        addView(bar, LinearLayout.LayoutParams(dp(widthDp), ViewGroup.LayoutParams.WRAP_CONTENT))
+        addView(bar, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
     }
 
     private fun slider(max: Int, onChange: (Int) -> Unit) = SeekBar(this).apply {
@@ -2942,10 +3105,8 @@ class StudioActivity : AudioThemedActivity() {
 
         /** Les réglages du Studio gardés d'une fois sur l'autre (pas ceux d'un morceau). */
         const val PREFS = "studio_prefs"
+        const val PREF_ROLL_RATE = "pads_roll_rate"
         const val PREF_PADS_ROLL = "pads_roll"
-
-        /** Hauteur d'un fader quand les tranches sont au-dessus du pad (écran étroit). */
-        const val FADER_DP = 260
 
         /** La couleur de chaque motif (A à D) dans les blocs du morceau. */
         val PATTERN_COLORS = intArrayOf(0xFF7C8CFF.toInt(), 0xFF1ABC9C.toInt(), 0xFFF39C12.toInt(), 0xFFE84393.toInt())

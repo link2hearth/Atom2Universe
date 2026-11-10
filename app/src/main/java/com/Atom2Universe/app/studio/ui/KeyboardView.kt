@@ -9,6 +9,7 @@ import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
 import com.Atom2Universe.app.studio.music.Scale
+import com.Atom2Universe.app.studio.music.StudioRegister
 import com.Atom2Universe.app.studio.music.Scales
 import kotlin.math.min
 
@@ -86,9 +87,13 @@ class KeyboardView(context: Context) : View(context) {
 
     // ---- Géométrie : touches blanches de largeur fixe, centrées ------------------------------------------------
 
-    private fun octaves(): Int = (((width / dp(WHITE_MIN_DP)).toInt() - 1) / 7).coerceIn(1, 4)
+    var high = 48
+        set(value) { field = value; invalidate() }
+    private val whites get() = StudioRegister.whites
+    private fun firstWhite() = whites.binarySearch(low)
 
-    private fun whiteCount(): Int = octaves() * 7 + 1
+
+    private fun whiteCount(): Int = whites.binarySearch(high) - firstWhite() + 1
 
     private fun whiteW(): Float = min(dp(WHITE_MAX_DP), width.toFloat() / whiteCount())
 
@@ -97,12 +102,7 @@ class KeyboardView(context: Context) : View(context) {
     private fun isBlack(pc: Int): Boolean = pc == 1 || pc == 3 || pc == 6 || pc == 8 || pc == 10
 
     /** Rang de la touche blanche de la hauteur [pitch] (une blanche) en partant de [low]. */
-    private fun whiteIndex(pitch: Int): Int {
-        val oct = (pitch - low) / 12
-        val pc = (pitch - low) % 12
-        val within = when (pc) { 0 -> 0; 2 -> 1; 4 -> 2; 5 -> 3; 7 -> 4; 9 -> 5; else -> 6 }
-        return oct * 7 + within
-    }
+    private fun whiteIndex(pitch: Int) = whites.binarySearch(pitch) - firstWhite()
 
     private fun top() = 0f
 
@@ -111,7 +111,7 @@ class KeyboardView(context: Context) : View(context) {
     private fun blackW() = whiteW() * 0.62f
 
     /** Hauteurs de touches blanches et noires affichées. */
-    private fun pitches(): IntRange = low..(low + octaves() * 12)
+    private fun pitches(): IntRange = low..high
 
     private fun active(pitch: Int): Boolean = !locked || Scales.contains(scale, keyPc, pitch)
 
@@ -133,7 +133,7 @@ class KeyboardView(context: Context) : View(context) {
 
         // Les blanches d'abord
         for (p in pitches()) {
-            val pc = ((p - low) % 12 + 12) % 12
+            val pc = p % 12
             if (isBlack(pc)) continue
             val x = left0() + whiteIndex(p) * ww
             val isDown = p in pressed
@@ -153,15 +153,15 @@ class KeyboardView(context: Context) : View(context) {
                 fill.color = if (isDown) 0xFFFFFFFF.toInt() else accent
                 canvas.drawCircle(x + ww / 2f, height - dp(34f), if (key == 0) dp(5f) else dp(3f), fill)
             }
-            if (pc == 0) {
+            if (pc == 0 || ww >= dp(30f)) {
                 label.color = if (isDown) 0xFFFFFFFF.toInt() else labelColor
-                canvas.drawText(noteNames[((p % 12) + 12) % 12] + (p / 12 - 1), x + ww / 2f, height - dp(10f), label)
+                canvas.drawText(if (pc == 0) noteNames[pc] + (p / 12 - 1) else noteNames[pc], x + ww / 2f, height - dp(10f), label)
             }
         }
 
         // Puis les noires, par-dessus
         for (p in pitches()) {
-            val pc = ((p - low) % 12 + 12) % 12
+            val pc = p % 12
             if (!isBlack(pc)) continue
             val x = blackLeft(p)
             val isDown = p in pressed
@@ -182,10 +182,10 @@ class KeyboardView(context: Context) : View(context) {
 
     /** La touche sous le point ([x], [y]) : les noires ont la priorité sur la moitié haute. */
     private fun pitchAt(x: Float, y: Float): Int {
-        if (width == 0) return -1
+        if (width == 0 || x < left0() || y < 0 || y >= height) return -1
         if (y <= blackH()) {
             for (p in pitches()) {
-                val pc = ((p - low) % 12 + 12) % 12
+                val pc = p % 12
                 if (!isBlack(pc)) continue
                 val bx = blackLeft(p)
                 if (x >= bx && x <= bx + blackW()) return if (active(p)) p else -1
@@ -193,11 +193,23 @@ class KeyboardView(context: Context) : View(context) {
         }
         val i = ((x - left0()) / whiteW()).toInt()
         if (i < 0 || i >= whiteCount()) return -1
-        val oct = i / 7
-        val within = i % 7
-        val pc = intArrayOf(0, 2, 4, 5, 7, 9, 11)[within]
-        val p = low + oct * 12 + pc
+        val p = whites[firstWhite() + i]
         return if (active(p)) p else -1
+    }
+
+    private fun setFinger(id: Int, pitch: Int) {
+        val old = down[id]
+        if (old == pitch || (old == null && pitch < 0)) return
+        if (old != null) {
+            down.remove(id)
+            if (old !in down.values) listener?.onKeyUp(old)
+        }
+        if (pitch >= 0) {
+            val held = pitch in down.values
+            down[id] = pitch
+            if (!held) listener?.onKeyDown(pitch)
+        }
+        invalidate()
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
@@ -207,24 +219,13 @@ class KeyboardView(context: Context) : View(context) {
                 val idx = event.actionIndex
                 val id = event.getPointerId(idx)
                 val pitch = pitchAt(event.getX(idx), event.getY(idx))
-                if (pitch >= 0 && pitch !in down.values) {
-                    down[id] = pitch
-                    listener?.onKeyDown(pitch)
-                    invalidate()
-                }
+                setFinger(id, pitch)
             }
 
             MotionEvent.ACTION_MOVE -> {
                 for (k in 0 until event.pointerCount) {
                     val id = event.getPointerId(k)
-                    val old = down[id] ?: continue
-                    val pitch = pitchAt(event.getX(k), event.getY(k))
-                    if (pitch >= 0 && pitch != old && pitch !in down.values) {
-                        down[id] = pitch
-                        listener?.onKeyUp(old)
-                        listener?.onKeyDown(pitch)
-                        invalidate()
-                    }
+                    setFinger(id, pitchAt(event.getX(k), event.getY(k)))
                 }
             }
 
@@ -233,9 +234,7 @@ class KeyboardView(context: Context) : View(context) {
                 if (event.actionMasked == MotionEvent.ACTION_CANCEL) {
                     releaseAll()
                 } else {
-                    val pitch = down.remove(event.getPointerId(idx))
-                    if (pitch != null) listener?.onKeyUp(pitch)
-                    invalidate()
+                    setFinger(event.getPointerId(idx), -1)
                 }
             }
         }
@@ -244,7 +243,7 @@ class KeyboardView(context: Context) : View(context) {
 
     /** Relâche tout (écran quitté, annulation du geste). */
     fun releaseAll() {
-        val held = down.values.toList()
+        val held = down.values.toSet()
         down.clear()
         for (p in held) listener?.onKeyUp(p)
         invalidate()
@@ -257,7 +256,6 @@ class KeyboardView(context: Context) : View(context) {
 
     private companion object {
         /** Largeur d'une touche blanche : au plus 64 dp ; au moins 48 dp pour décider combien d'octaves tiennent. */
-        const val WHITE_MAX_DP = 64f
-        const val WHITE_MIN_DP = 48f
+        const val WHITE_MAX_DP = 108f
     }
 }

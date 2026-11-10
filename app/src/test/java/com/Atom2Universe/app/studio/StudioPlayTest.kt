@@ -222,6 +222,25 @@ class StudioPlayTest {
     }
 
     @Test
+    fun padRollDivisionsAreWrittenOnWholeGridSteps() {
+        for (division in listOf(2, 4)) {
+            val e = quiet()
+            e.bpm = 120f
+            e.recordHits = true
+            e.play()
+            val stepFrames = rate / 8
+            render(e, 128)
+            e.rollOn(Inst.SNARE, stepsPerHit = division)
+            render(e, stepFrames * 13)
+            e.rollOff(Inst.SNARE)
+            render(e, stepFrames * 2)
+            val steps = mutableListOf<Int>()
+            e.takeLiveHits { _, p, _ -> steps += Math.round(p).toInt() }
+            assertEquals(listOf(0) + (2 * division..12 step division), steps)
+        }
+    }
+
+    @Test
     fun arpFollowsTheSwing() {
         // Régression : avec du swing, une note posée sur un pas impair (joué en retard) voyait son coup d'arpège reporté au pas suivant
         val e = quiet()
@@ -270,6 +289,22 @@ class StudioPlayTest {
         e.release(Inst.SYNTH, 57)
         e.stop()
         render(e, rate * 3)
+        assertEquals(0, e.synth.activeVoices)
+    }
+
+    @Test
+    fun endingAPanelPreviewDoesNotReleaseTheSameKeyHeldByThePlayer() {
+        val e = quiet()
+        e.synth.patch = SynthPresets.PAD.copy(release = 0.005f)
+        e.trigger(Inst.SYNTH, 57)
+        render(e, 256)
+        e.trigger(Inst.SYNTH, 57)
+        render(e, 256)
+        e.release(Inst.SYNTH, 57)
+        render(e, rate)
+        assertEquals(1, e.synth.activeVoices)
+        e.release(Inst.SYNTH, 57)
+        render(e, rate)
         assertEquals(0, e.synth.activeVoices)
     }
 
