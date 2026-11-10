@@ -62,11 +62,7 @@ class MidiInputController(
     private var isActive = false
     // Change à chaque start/stop : une ouverture qui répond trop tard est refermée
     private var connectGeneration = 0
-    private val midiReceiver = object : MidiReceiver() {
-        override fun onSend(data: ByteArray, offset: Int, count: Int, timestamp: Long) {
-            handleMidiData(data, offset, count)
-        }
-    }
+    private var streamDecoder: MidiStreamDecoder? = null
 
     private val deviceCallback = object : MidiManager.DeviceCallback() {
         override fun onDeviceAdded(device: MidiDeviceInfo) {
@@ -146,6 +142,8 @@ class MidiInputController(
     }
 
     private fun closeCurrentDevice() {
+        streamDecoder?.close()
+        streamDecoder = null
         outputPort?.close()
         outputPort = null
         inputPort?.close()
@@ -209,7 +207,13 @@ class MidiInputController(
         if (deviceInfo.outputPortCount > 0) {
             outputPort = device.openOutputPort(0)
             if (outputPort != null) {
-                outputPort?.connect(midiReceiver)
+                val decoder = MidiStreamDecoder(onMidiBytesReceived)
+                streamDecoder = decoder
+                outputPort?.connect(object : MidiReceiver() {
+                    override fun onSend(data: ByteArray, offset: Int, count: Int, timestamp: Long) {
+                        decoder.receive(data, offset, count)
+                    }
+                })
                 android.util.Log.d(TAG, "openPorts: outputPort opened (receive notes from keyboard)")
             }
         }
@@ -262,29 +266,6 @@ class MidiInputController(
         } else {
             @Suppress("DEPRECATION")
             properties.getParcelable(MidiDeviceInfo.PROPERTY_USB_DEVICE)
-        }
-    }
-
-    private fun handleMidiData(data: ByteArray, offset: Int, count: Int) {
-        var index = offset
-        val end = offset + count
-        while (index + 2 < end) {
-            val status = data[index].toInt() and 0xFF
-            val messageType = status and 0xF0
-            if (messageType == NOTE_OFF || messageType == NOTE_ON || messageType == CONTROL_CHANGE) {
-                val data1 = data[index + 1]
-                val data2 = data[index + 2]
-                val midiBytes = if (messageType == NOTE_ON && data2.toInt() == 0) {
-                    byteArrayOf((NOTE_OFF or (status and 0x0F)).toByte(), data1, data2)
-                } else {
-                    byteArrayOf(data[index], data1, data2)
-                }
-                // Directement sur le fil MIDI : le synthé joue sans attendre la file de l'interface
-                onMidiBytesReceived(midiBytes)
-                index += 3
-            } else {
-                index += 1
-            }
         }
     }
 
@@ -492,7 +473,6 @@ class MidiInputController(
         private const val TAG = "MidiInputController"
         private const val NOTE_OFF = 0x80
         private const val NOTE_ON = 0x90
-        private const val CONTROL_CHANGE = 0xB0
         private const val ACTION_USB_PERMISSION = "com.Atom2Universe.app.midi.USB_PERMISSION"
     }
 }
