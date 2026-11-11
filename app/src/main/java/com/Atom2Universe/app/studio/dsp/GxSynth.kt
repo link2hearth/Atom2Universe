@@ -9,6 +9,40 @@ internal class GxWave(gain: Int, val octave: Int, points: ByteArray) {
     private val integral = DoubleArray(33).also {
         for (i in levels.indices) it[i + 1] = it[i] + levels[i]
     }
+    private val bass = FloatArray(CYCLE)
+    private val mellow = FloatArray(CYCLE)
+    private var fundamental = 0f
+    private var body = octaveAndTwelfth
+
+    init {
+        // Un cycle de 32 points décrit 16 harmoniques. Les répliques au-delà (notamment
+        // H31 et H33 sur le piano) viennent uniquement du maintien de chaque palier.
+        bass.fill(levels.average().toFloat())
+        mellow.fill(bass[0])
+        for (h in 1..16) {
+            var a = 0.0
+            var b = 0.0
+            for (i in levels.indices) {
+                val center = (i * CELL + CELL / 2) * h
+                a += levels[i] * sine[(center + CYCLE / 4) and MASK]
+                b += levels[i] * sine[center and MASK]
+            }
+            val angle = Math.PI * h / 32.0
+            val gain = 2.0 / 32.0 * kotlin.math.sin(angle) / angle
+            a *= gain
+            b *= gain
+            if (h == 1) fundamental = kotlin.math.hypot(a, b).toFloat()
+            // Le piano triangulaire possède déjà une douzième. Renforcer seulement
+            // l'octave évite de lui donner deux pulsations distinctes par période.
+            if (h == 3 && kotlin.math.hypot(a, b) >= fundamental * 0.05) body = octaveOnly
+            val warmth = ((1.0 + kotlin.math.cos(Math.PI * (h - 1) / 16.0)) * 0.5).toFloat()
+            for (i in bass.indices) {
+                val partial = (a * sine[(i * h + CYCLE / 4) and MASK] + b * sine[(i * h) and MASK]).toFloat()
+                bass[i] += partial
+                mellow[i] += partial * warmth
+            }
+        }
+    }
 
     fun sample(phase: Double, width: Double): Float {
         val first = phase.toInt()
@@ -22,12 +56,31 @@ internal class GxWave(gain: Int, val octave: Int, points: ByteArray) {
         return ((endArea - startArea) / width).toFloat()
     }
 
-    fun smoothSample(phase: Double, width: Double): Float {
-        // Relier les centres des paliers garde la phase de la fondamentale lors du fondu.
-        val midpoint = phase + width * 0.5 + 31.5
-        val cell = midpoint.toInt()
-        val start = levels[cell and 31]
-        return (start + (midpoint - cell) * (levels[(cell + 1) and 31] - start)).toFloat()
+    fun bassSample(phase: Double, width: Double, softness: Float, presence: Float): Float {
+        val pos = (phase + width * 0.5) * CELL
+        val cell = pos.toInt()
+        val i = cell and MASK
+        val j = (cell + 1) and MASK
+        val fraction = (pos - cell).toFloat()
+        val base = bass[i] + (bass[j] - bass[i]) * fraction
+        val tone = if (softness == 0f) base else {
+            val soft = mellow[i] + (mellow[j] - mellow[i]) * fraction
+            base + (soft - base) * softness
+        }
+        return if (presence == 0f) tone else {
+            tone + fundamental * presence * (body[i] + (body[j] - body[i]) * fraction)
+        }
+    }
+
+    private companion object {
+        const val CYCLE = 512
+        const val CELL = CYCLE / 32
+        const val MASK = CYCLE - 1
+        val sine = DoubleArray(CYCLE) { kotlin.math.sin(2.0 * Math.PI * it / CYCLE) }
+        // Les deux pianos démarrent en phase au centre du premier palier. Un peu d'octave
+        // et de douzième rend la hauteur perceptible sur un haut-parleur qui atténue le grave.
+        val octaveOnly = FloatArray(CYCLE) { (0.22 * sine[(2 * (it - CELL / 2)) and MASK]).toFloat() }
+        val octaveAndTwelfth = FloatArray(CYCLE) { octaveOnly[it] - (0.12 * sine[(3 * (it - CELL / 2)) and MASK]).toFloat() }
     }
 }
 
@@ -123,6 +176,8 @@ class GxSynth(sampleRate: Int, voiceCount: Int = 8, midiChannel: Int = 0) : Inst
         private var glideLeft = 0
         private var smoothMix = 0f
         private var bassWeight = 0f
+        private var piano = false
+        private var presence = 0f
         private var upperBassWidth = 0.0
         private var bassWidthSpan = 0.0
         private var velocity = 0f
@@ -150,6 +205,7 @@ class GxSynth(sampleRate: Int, voiceCount: Int = 8, midiChannel: Int = 0) : Inst
             val program = selected and 127
             shape = GxBanks.wave(selected >= 128, program)
             env = GxBanks.envelope(program)
+            piano = program == 0
             noiseProgram = program == 122 || program == 126
             if (noiseProgram) noiseLevel = nextNoise()
             drumFrames = if (program == 118) (if (halfRate) 800 else 1600) else 0
@@ -161,8 +217,8 @@ class GxSynth(sampleRate: Int, voiceCount: Int = 8, midiChannel: Int = 0) : Inst
             velocity = strength
             width = phaseWidth(note)
             upperBassWidth = phaseWidth(60)
-            bassWidthSpan = upperBassWidth - phaseWidth(48)
-            bassWeight = bassWeightAt(width)
+            bassWidthSpan = upperBassWidth - phaseWidth(59)
+            updateBass()
             smoothMix = if (smoothBass) 1f else 0f
             phase = 0.0
             glideLeft = 0
@@ -195,8 +251,13 @@ class GxSynth(sampleRate: Int, voiceCount: Int = 8, midiChannel: Int = 0) : Inst
             glideLeft = glideFrames
         }
 
-        private fun bassWeightAt(step: Double): Float =
-            ((upperBassWidth - step) / bassWidthSpan).coerceIn(0.0, 1.0).toFloat()
+        private fun updateBass() {
+            // Toute la troisième octave utilise l'onde reconstruite. Le glissé de si3 à
+            // do4 rejoint en continu la lecture originale. Les effets bruités gardent leur source.
+            bassWeight = if (noiseProgram || drumFrames > 0) 0f else
+                ((upperBassWidth - width) / bassWidthSpan).coerceIn(0.0, 1.0).toFloat()
+            presence = if (piano) ((1.0 - width / upperBassWidth) / 0.75).coerceIn(0.0, 1.0).toFloat() else 0f
+        }
 
         fun release() {
             held = false
@@ -231,20 +292,19 @@ class GxSynth(sampleRate: Int, voiceCount: Int = 8, midiChannel: Int = 0) : Inst
                 if (glideLeft > 0) {
                     width += widthDelta
                     if (--glideLeft == 0) width = targetWidth
-                    bassWeight = bassWeightAt(width)
+                    updateBass()
                 }
                 if (smoothMix != smoothTarget) {
                     smoothMix = if (smoothTarget > smoothMix) (smoothMix + smoothingStep).coerceAtMost(1f)
                         else (smoothMix - smoothingStep).coerceAtLeast(0f)
                 }
-                val blend = smoothMix * bassWeight
                 val signal = when {
                     noiseProgram -> noiseLevel
-                    blend <= 0f -> shape.sample(phase, width)
-                    blend >= 1f -> shape.smoothSample(phase, width)
+                    bassWeight <= 0f -> shape.sample(phase, width)
+                    bassWeight >= 1f -> shape.bassSample(phase, width, smoothMix, presence)
                     else -> {
                         val normal = shape.sample(phase, width)
-                        normal + (shape.smoothSample(phase, width) - normal) * blend
+                        normal + (shape.bassSample(phase, width, smoothMix, presence) - normal) * bassWeight
                     }
                 }
                 out[i] += signal * (level ushr 14) * (1f / 65536f) * velocity
