@@ -21,6 +21,7 @@ Pour chaque programme retenu :
 - la fin inaudible des notes sans boucle est retirée.
 Le résultat est un SF2 ordinaire. Les modulateurs ne sont pas recopiés (le moteur ne les lit pas).
 """
+import json
 import math
 import mmap
 import re
@@ -45,6 +46,7 @@ PROGRAMS = {0: 25}          # programme -> atténuation du preset en centibels (
 # trouver ; pitches : hauteur donnée à la main (début du nom -> note MIDI décimale), pour les
 # timbales, dont le son est inharmonique (note = premier mode de la peau, relevé au spectre) ;
 # source : bibliothèque (VSCO-2-CE si absent) ; skip : texte que le nom ne doit pas contenir ;
+# attenuation : centibels retirés au preset, quand un autre programme reprend ses prises plus fort ;
 # spacing : écart minimal, en demi-tons, entre deux prises gardées ; lowest : pour des fichiers nommés
 # par la note sans l'octave (douze prises d'affilée), la note la plus grave du jeu.
 STRINGS = ["Strings/Solo Contrabass/SusVib", "Strings/Cello Section/susvib", "Strings/Viola Section/susvib",
@@ -61,7 +63,7 @@ WAVES = {
     27: dict(name="Clean Guitar", source="FreePats/electric-guitar-FSBS-clean", folders=["samples/bridge/small"],
              keep=3.0, release=0.3, gain=4.6),
     29: dict(name="Overdriven Guitar", source="FreePats/electric-guitar-FSBS-dist1", folders=["samples/bridge"],
-             skip="soft", spacing=3, keep=3.0, release=0.3, gain=1.2),
+             skip="soft", spacing=3, keep=3.0, release=0.3, gain=1.2, attenuation=50),
     30: dict(name="Distortion Guitar", same=29),
     32: dict(name="Acoustic Bass", source="Karoryfer/meatbass", folders=["Samples/pizz"], skip="perc",
              keep=2.5, release=0.4, gain=8.0),
@@ -90,12 +92,15 @@ WAVES = {
     68: dict(name="Oboe", folders=["Woodwinds/Oboe/Sus"], release=0.4, gain=1.3),
     70: dict(name="Bassoon", folders=["Woodwinds/Bassoon/sus"], release=0.4, gain=7.2),
     71: dict(name="Clarinet", folders=["Woodwinds/Clarinet/susLong"], release=0.4, gain=7.4),
-    72: dict(name="Piccolo", folders=["Woodwinds/Piccolo/Sus"], release=0.4, gain=8.0),
+    72: dict(name="Piccolo", folders=["Woodwinds/Piccolo/Sus"], release=0.4, gain=15.5),
     73: dict(name="Flute", folders=["Woodwinds/Flute/susvib"], release=0.5, gain=3.3),
 }
 DYNAMICS = {"pp": 0, "p": 1, "mp": 2, "mf": 3, "f": 4, "ff": 5}
 NOTE = re.compile(r"(?<![A-Za-z])([A-Ga-g])(#|b)?(\d)(?![0-9])")
 STEPS = {"C": 0, "D": 2, "E": 4, "F": 5, "G": 7, "A": 9, "B": 11}
+# Corrections de niveau par touche (dB), mesurées contre le SF2 de référence aux réglages du lecteur :
+# {programme: {touche: dB}}. Chaque prise reçoit la médiane des touches proches de sa note.
+LEVELS = Path(__file__).with_name("wave_levels.json")
 WAVE_LEVEL = 3300           # niveau efficace commun des notes tenues (-20 dB)
 NO_SHORTENING = range(112, 128)   # percussions et bruitages : sons qui évoluent, jamais bouclés ici
 BRIGHT_DB = -15.0           # part d'énergie au-dessus de 9,5 kHz à partir de laquelle la fréquence est gardée
@@ -400,6 +405,7 @@ class Bank:
         self.instruments = {}   # instrument d'origine -> numéro
         self.instrument_zones = []  # (nom, [zones])
         self.wave_instruments = {}  # programme de WAVES -> numéro d'instrument
+        self.ranges = {}            # programme de WAVES -> (prise la plus grave, la plus aiguë)
 
     def wave(self, sample, start, end):
         return np.frombuffer(self.sf["data"], dtype="<i2", count=end - start,
@@ -580,6 +586,7 @@ class Bank:
         spec = WAVES[program]
         if "same" in spec:
             return spec["name"], program, [[(G_INSTRUMENT, self.wave_instruments[spec["same"]])]]
+        quieter = [[(G_ATTENUATION, spec["attenuation"])]] if "attenuation" in spec else []
         looped = "keep" not in spec
         made = {}
         for source in spec["folders"]:
@@ -595,6 +602,8 @@ class Bank:
             print("    notes :", " ".join(f"{root}{correction:+d}" for root, correction in sorted(tuned)))
         zones_ = []
         roots = []
+        levels = json.loads(LEVELS.read_text()).get(str(program), {}) if LEVELS.exists() else {}
+        capped = []
         for root in sorted(made):
             if not roots or root - roots[-1] >= spec.get("spacing", 1):
                 roots.append(root)
@@ -602,6 +611,18 @@ class Bank:
             signal, loop_start, loop_end, rate, correction = made[root]
             low = 0 if i == 0 else (roots[i - 1] + root) // 2 + 1
             high = 127 if i == len(roots) - 1 else (root + roots[i + 1]) // 2
+            near = [levels[str(key)] for key in range(max(low, root - 6), min(high, root + 6) + 1) if str(key) in levels]
+            if near:
+                signal = signal * 10 ** (float(np.median(near)) / 20)
+                over = float(np.abs(signal).max()) / 32000
+                if over > 1:
+                    # Les crêtes qui dépassent sont arrondies : jusqu'à 8 dB sur une note frappée, 3 dB sur une
+                    # note tenue (au-delà cela s'entendrait). Ce qui manque encore laisse la prise plus faible.
+                    signal = signal * min(1.0, (1.41 if looped else 2.5) / over)
+                    knee = 20000.0
+                    size = np.abs(signal)
+                    signal = np.where(size > knee, np.sign(signal) * (knee + 12000 * np.tanh((size - knee) / 12000)), signal)
+                    capped.append(f"{root} ({20 * math.log10(over):+.0f} dB)")
             zones_.append([(G_KEYS, low | high << 8), (G_RELEASE, timecents(spec["release"], 8000)),
                            (G_MODES, 1 if looped else 0), (G_SAMPLE, len(self.headers))])
             self.headers.append((f"{spec['name']} {root}", self.position, self.position + len(signal),
@@ -609,9 +630,12 @@ class Bank:
             self.pcm.append(np.clip(np.round(signal), -32768, 32767).astype("<i2"))
             self.pcm.append(np.zeros(46, dtype="<i2"))
             self.position += len(signal) + 46
+        if capped:
+            print("    crêtes arrondies :", ", ".join(capped))
         self.wave_instruments[program] = len(self.instrument_zones)
         self.instrument_zones.append((spec["name"], zones_))
-        return spec["name"], program, [[(G_INSTRUMENT, self.wave_instruments[program])]]
+        self.ranges[program] = (roots[0], roots[-1])
+        return spec["name"], program, quieter + [[(G_INSTRUMENT, self.wave_instruments[program])]]
 
     def build(self, recordings=None):
         sf = self.sf
@@ -644,6 +668,11 @@ class Bank:
             before = self.position
             presets.append(self.waves(program, recordings))
             print(f"{program:3d} {WAVES[program]['name']:22s} {(self.position - before) * 2 / 1e6:5.2f} Mo")
+        for program, spec in WAVES.items():
+            if "same" in spec and spec["same"] in self.ranges:
+                self.ranges[program] = self.ranges[spec["same"]]
+        # Étendue réelle de chaque instrument, pour les outils de mesure (touches.py).
+        Path("app/build/tmp-session/etendues.json").write_text(json.dumps(self.ranges))
         presets.sort(key=lambda preset: preset[1])
         self.write(presets)
 
