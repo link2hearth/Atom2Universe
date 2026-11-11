@@ -41,7 +41,9 @@ class PadsView(context: Context) : View(context) {
     class Tile(
         val track: Int, val color: Int, val icon: Int, val levels: IntArray? = null,
         val padSize: PadSize = PadSize.NORMAL, val name: String = "", val mode: PadPlayMode = PadPlayMode.DRIVE,
-    )
+    ) {
+        internal val piano = if (mode != PadPlayMode.THEREMIN && levels != null && levels.isNotEmpty()) PadPiano(levels) else null
+    }
 
     var tiles: List<Tile> = emptyList()
         set(v) {
@@ -112,6 +114,7 @@ class PadsView(context: Context) : View(context) {
     private val glow = HashMap<Int, Float>()
 
     private val dark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+    private val pianoColors = StudioKeyColors(dark)
     private val base = if (dark) 0xFF202027.toInt() else 0xFFE4E4EA.toInt()
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val label = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -119,6 +122,7 @@ class PadsView(context: Context) : View(context) {
         color = Color.WHITE
         isFakeBoldText = true
     }
+    private val pianoLabel = Paint(label).apply { textAlign = Paint.Align.CENTER }
     private val halfLabel = context.getString(R.string.studio_pad_half_size)
     private val halfPaint = Paint(label).apply { textAlign = Paint.Align.CENTER }
     private val halfLabelWidth = halfPaint.measureText(halfLabel)
@@ -255,11 +259,15 @@ class PadsView(context: Context) : View(context) {
 
     private fun indexAt(x: Float, y: Float) = areas.indexOfFirst { it.contains(x, y) }
 
-    private fun pitchAt(i: Int, x: Float): Int? {
+    private fun pitchAt(i: Int, x: Float, y: Float): Int? {
         val levels = tiles[i].levels ?: return -1
         if (levels.isEmpty()) return null
         tileRect(i, rect)
-        // Le grave à gauche, l'aigu à droite
+        tiles[i].piano?.let { piano ->
+            val top = keysTop(rect)
+            return piano.pitchAt((x - rect.left) / rect.width(), ((y - top) / (rect.bottom - top)).coerceIn(0f, 1f))
+        }
+        // Le thérémine conserve une bande de largeur égale par degré de la gamme.
         val k = ((x - rect.left) / rect.width() * levels.size).toInt().coerceIn(0, levels.size - 1)
         return levels[k]
     }
@@ -476,30 +484,31 @@ class PadsView(context: Context) : View(context) {
             drawTheremin(canvas, i, t, levels, top)
             return
         }
-        val w = rect.width() / count
-        val gap = dp(3f)
-        for (k in 0 until count) {
-            val p = levels[k]
-            band.set(rect.left + k * w + gap, top + gap, rect.left + (k + 1) * w - gap, rect.bottom - gap)
-            val tonic = ((p % 12) + 12) % 12 == keyPc
+        val piano = t.piano ?: return
+        val h = rect.bottom - top
+        val gap = minOf(dp(1f), rect.width() / (count * 5f))
+        for (key in piano.keys) {
+            val p = key.pitch
+            val tonic = p % 12 == keyPc
             val finger = held.values.firstOrNull { it.tile == i && it.pitch == p }
-            val light = when {
-                finger != null -> 1f
-                tonic -> 0.62f
-                else -> 0.45f
-            }
-            paint.color = blend(base, t.color, light)
-            canvas.drawRoundRect(band, dp(10f), dp(10f), paint)
-            if (tonic && noteNames.size == 12 && w > label.textSize * 1.6f) {
-                label.textAlign = Paint.Align.CENTER
-                canvas.drawText(noteNames[((p % 12) + 12) % 12] + (p / 12 - 1), band.centerX(), band.bottom - dp(10f), label)
-            }
-            // La teinte suit la modulation choisie.
+            band.set(rect.left + key.left * rect.width() + gap, top + gap,
+                rect.left + key.right * rect.width() - gap, top + h * key.depth - gap)
+            val face = pianoColors.face(p, key.black, key.enabled, tonic, finger != null, t.color)
+            paint.color = face
+            val radius = minOf(dp(if (key.black) 5f else 7f), band.width() / 3f)
+            canvas.drawRoundRect(band, radius, radius, paint)
             if (finger != null && finger.effect > 0f) {
                 val alpha = (finger.effect * 150).toInt()
                 paint.color = if (t.mode == PadPlayMode.FILTER) Color.argb(alpha, 65, 170, 255) else Color.argb(alpha, 255, 90, 40)
-                canvas.drawRoundRect(band, dp(10f), dp(10f), paint)
+                canvas.drawRoundRect(band, radius, radius, paint)
             }
+            if (!key.enabled || noteNames.size != 12 || band.height() < label.textSize * 1.6f) continue
+            val name = if (tonic || p % 12 == 0) noteNames[p % 12] + (p / 12 - 1) else noteNames[p % 12]
+            val fit = (band.width() - dp(3f)) / label.measureText(name)
+            if (fit < 0.76f) continue
+            pianoLabel.textSize = label.textSize * minOf(1f, fit)
+            pianoLabel.color = pianoColors.ink(face, key.black, true, tonic || finger != null)
+            canvas.drawText(name, band.centerX(), band.bottom - minOf(dp(8f), band.height() / 10), pianoLabel)
         }
     }
 
@@ -695,7 +704,7 @@ class PadsView(context: Context) : View(context) {
                 if (header != ExploreByTouchHelper.INVALID_ID) {
                     headerPresses[id] = header
                 } else if (tile >= 0) {
-                    pitchAt(tile, x)?.let { pitch ->
+                    pitchAt(tile, x, y)?.let { pitch ->
                         performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
                         press(id, Hold(tile, pitch, y, x = x))
                     }
@@ -718,8 +727,12 @@ class PadsView(context: Context) : View(context) {
                         }
                         continue
                     }
-                    val pitch = if (tile >= 0) pitchAt(tile, x) else null
                     val was = held[id]
+                    // Dans les modes à effet, la hauteur de l’attaque choisit la rangée du piano.
+                    // Le doigt peut ensuite traverser verticalement le bord d’une noire pour doser l’effet.
+                    val effectRow = was != null && was.tile == tile &&
+                        (tiles[tile].mode == PadPlayMode.DRIVE || tiles[tile].mode == PadPlayMode.FILTER)
+                    val pitch = if (tile >= 0) pitchAt(tile, x, if (effectRow) was!!.startY else y) else null
                     if (was != null && tile == was.tile && pitch != null && pitch >= 0 && tiles[tile].mode == PadPlayMode.THEREMIN) {
                         val track = tiles[tile].track
                         val expression = expressionAt(tile, y)

@@ -2,6 +2,7 @@ package com.Atom2Universe.app.studio
 
 import android.app.Application
 import android.view.MotionEvent
+import com.Atom2Universe.app.studio.ui.PadPiano
 import com.Atom2Universe.app.studio.ui.PadsView
 import com.Atom2Universe.app.studio.data.PadSize
 import com.Atom2Universe.app.studio.data.PadPlayMode
@@ -141,7 +142,7 @@ class PadsViewTest {
         pads.touch(MotionEvent.ACTION_DOWN, 40, 70)
         pads.tiles = listOf(keys(60, 64, 67))
         assertEquals(emptyList<Int>(), releases)
-        pads.touch(MotionEvent.ACTION_MOVE, 155, 70)
+        pads.touch(MotionEvent.ACTION_MOVE, 200, 70)
         assertEquals(listOf(60, 64), attacks)
         assertEquals(listOf(60), releases)
         pads.editing = true
@@ -204,6 +205,43 @@ class PadsViewTest {
         pads.touch(MotionEvent.ACTION_UP, 380, 9)
         assertEquals(listOf(23), chosen)
         assertTrue(notes.isEmpty())
+    }
+
+    @Test fun pianoKeysMatchTheFingerAndVerticalEffectsHoldTheAccidental() {
+        val chromatic = (60..72).toList().toIntArray()
+        for (mode in listOf(PadPlayMode.CLEAN, PadPlayMode.FILTER, PadPlayMode.DRIVE)) {
+            val pads = pads(PadsView.Tile(23, 0, 0, chromatic, mode = mode))
+            val attacks = mutableListOf<Int>()
+            val amounts = mutableListOf<Float>()
+            pads.onNoteDown = { _, pitch -> attacks += pitch }
+            pads.onNoteEffect = { _, value -> amounts += value }
+            // Sur do dièse, à gauche de la frontière do/ré. Dessous se trouve la blanche do.
+            pads.touch(MotionEvent.ACTION_DOWN, 48, 48)
+            pads.touch(MotionEvent.ACTION_MOVE, 48, 93)
+            pads.touch(MotionEvent.ACTION_UP, 48, 93)
+            if (mode == PadPlayMode.CLEAN) assertEquals(listOf(61, 60), attacks)
+            else {
+                assertEquals(mode.name, listOf(61), attacks)
+                assertTrue(amounts.single() > 0f)
+            }
+            pads.touch(MotionEvent.ACTION_DOWN, 48, 93)
+            pads.touch(MotionEvent.ACTION_UP, 48, 93)
+            assertEquals(60, attacks.last())
+        }
+    }
+
+    @Test fun scalePianoKeepsItsBlackTonicAtBothEdgesAndMutesOutsideTheScale() {
+        val scale = intArrayOf(66, 68, 70, 71, 73, 75, 77, 78)
+        val piano = PadPiano(scale)
+        for (y in listOf(0.2f, 0.9f)) {
+            assertEquals(66, piano.pitchAt(0f, y))
+            assertEquals(78, piano.pitchAt(1f, y))
+        }
+        for (key in piano.keys) {
+            val y = if (key.black) 0.2f else 0.92f
+            assertEquals(if (key.pitch in scale) key.pitch else null, piano.pitchAt((key.left + key.right) / 2f, y))
+        }
+        assertEquals(127, PadPiano(intArrayOf(127)).pitchAt(1f, 1f))
     }
 
     @Test fun thereminGlidesWithoutRetriggerAndUsesAbsoluteHeightForExpression() {
