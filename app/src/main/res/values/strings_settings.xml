@@ -177,10 +177,10 @@
     <string name="about_credit_fluentemoji_desc">© Microsoft Corporation - Emoji converted into the large Logimage pictures. MIT License.\nhttps://github.com/microsoft/fluentui-emoji</string>
     <string name="about_credit_kenney_name">1-Bit Pack</string>
     <string name="about_credit_kenney_desc">By Kenney - Tiles converted into some Logimage pictures. CC0 (public domain).\nhttps://kenney.nl</string>
-    <string name="about_credit_vsco_name">VSCO 2 Community Edition</string>
-    <string name="about_credit_vsco_desc">By Versilian Studios (Sam Gossner) and Ivy Audio (Simon Dalzell) - Orchestra recordings played by the Orchestral sound bank. CC0 (public domain).\nhttps://github.com/sgossner/VSCO-2-CE</string>
+    <string name="about_credit_vsco_name">VSCO 2 Community Edition · VCSL</string>
+    <string name="about_credit_vsco_desc">By Versilian Studios (Sam Gossner) and Ivy Audio (Simon Dalzell) - Orchestra and recorder recordings played by the Orchestral sound bank. CC0 (public domain).\nhttps://github.com/sgossner/VSCO-2-CE\nhttps://github.com/sgossner/VCSL</string>
     <string name="about_credit_freepats_name">FreePats · Karoryfer Samples</string>
-    <string name="about_credit_freepats_desc">By the FreePats project and Karoryfer Samples - Guitar and bass recordings played by the Orchestral sound bank. CC0 (public domain).\nhttps://freepats.zenvoid.org\nhttps://github.com/sfzinstruments/karoryfer.meatbass</string>
+    <string name="about_credit_freepats_desc">By the FreePats project and Karoryfer Samples - Guitars, basses, old piano, accordion, tubular bells and synthesizers played by the Orchestral sound bank. CC0 (public domain).\nhttps://freepats.zenvoid.org\nhttps://github.com/sfzinstruments/karoryfer.meatbass</string>
     <string name="settings_card_backs_blue_stars">Blue stars</string>
     <string name="settings_card_backs_rainbow">Rainbow</string>
     <string name="settings_card_backs_yellow_green">Yellow and green</string>

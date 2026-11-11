@@ -7,7 +7,9 @@ Deux sources :
 - WAVES : prises de bibliothèques CC0 rangées dans le dossier des sources, une par tierce environ,
   la nuance la plus forte :
   . VSCO-2-CE : VSCO 2 Community Edition (github.com/sgossner/VSCO-2-CE), l'orchestre ;
-  . FreePats : guitare classique, guitares électriques FSBS, basses YR (freepats.zenvoid.org) ;
+  . FreePats : guitare classique, guitares électriques FSBS, basses YR, vieux piano, accordéon,
+    cloches tubulaires, synthés (freepats.zenvoid.org, github.com/freepats) ;
+  . VCSL : flûte à bec (github.com/sgossner/VCSL) ;
   . Karoryfer/meatbass : contrebasse pincée (github.com/sfzinstruments/karoryfer.meatbass). Chaque prise est mise en mono et accordée. Une note tenue est
   coupée après l'attaque puis bouclée sur une seconde environ, vibrato compris ; une note frappée
   ou pincée garde sa résonance, raccourcie.
@@ -52,10 +54,17 @@ PROGRAMS = {0: 25}          # programme -> atténuation du preset en centibels (
 STRINGS = ["Strings/Solo Contrabass/SusVib", "Strings/Cello Section/susvib", "Strings/Viola Section/susvib",
            "Strings/Violin Section/susVib"]
 WAVES = {
+    3: dict(name="Honky-tonk Piano", source="FreePats/old-piano-FB", folders=["samples/small"],
+            keep=3.0, release=0.4, gain=0.0),
     9: dict(name="Glockenspiel", folders=["Percussion/Glock"], keep=2.0, release=1.0, gain=-7.3),
     12: dict(name="Marimba", folders=["Percussion/Marimba"], keep=1.5, release=0.8, gain=8.0),
     13: dict(name="Xylophone", folders=["Percussion/Xylo"], keep=1.0, release=0.6, gain=4.5),
+    14: dict(name="Tubular Bells", source="FreePats/tubular-bells1", folders=["samples/small"],
+             keep=3.0, release=2.0, gain=0.0),
     19: dict(name="Church Organ", folders=["Keys/Organ/Loud"], only="Man3Open", numbered=35, release=0.6, gain=-0.5),
+    # L'orgue à anches reprend les anches de l'accordéon : même famille de son, pas de prise d'harmonium en CC0.
+    20: dict(name="Reed Organ", same=21, attenuation=170),
+    21: dict(name="Accordion", source="FreePats/button-accordion-HN", folders=["."], release=0.2, gain=0.0),
     24: dict(name="Nylon Guitar", source="FreePats/spanish-classical-guitar",
              folders=["SpanishClassicalGuitar-SFZ+FLAC-20190618/samples"], spacing=3, keep=2.5, release=0.3, gain=4.9),
     26: dict(name="Jazz Guitar", source="FreePats/electric-guitar-FSBS-jazz", folders=["samples/bridge/small"],
@@ -84,6 +93,9 @@ WAVES = {
              pitches={"Timpani1": 41.45, "Timpani2": 46.8, "Timpani3": 49.45, "Timpani4": 52.4, "Timpani5": 54.6}),
     48: dict(name="String Ensemble 1", folders=STRINGS, release=0.6, gain=5.4),
     49: dict(name="String Ensemble 2", same=48),
+    50: dict(name="Synth Strings 1", source="FreePats/synth-strings-1", folders=["samples"], release=0.6, gain=0.0),
+    51: dict(name="Synth Strings 2", source="FreePats/synth-strings-2", folders=["samples"], numbered=0,
+             release=0.6, gain=0.0),
     56: dict(name="Trumpet", folders=["Brass/Trumpet/sus"], release=0.3, gain=0.3),
     57: dict(name="Trombone", folders=["Brass/Tenor Trombone/sus"], release=0.3, gain=0.3),
     58: dict(name="Tuba", folders=["Brass/Tuba/sus"], release=0.3, gain=0.7),
@@ -94,6 +106,9 @@ WAVES = {
     71: dict(name="Clarinet", folders=["Woodwinds/Clarinet/susLong"], release=0.4, gain=7.4),
     72: dict(name="Piccolo", folders=["Woodwinds/Piccolo/Sus"], release=0.4, gain=15.5),
     73: dict(name="Flute", folders=["Woodwinds/Flute/susvib"], release=0.5, gain=3.3),
+    74: dict(name="Recorder", source="VCSL",
+             folders=["Aerophones/Edge-blown Aerophones/Baroque Soprano Recorder/Sustain"], release=0.3, gain=0.0),
+    80: dict(name="Square Lead", source="FreePats/synth-square", folders=["samples"], release=0.2, gain=0.0),
 }
 DYNAMICS = {"pp": 0, "p": 1, "mp": 2, "mf": 3, "f": 4, "ff": 5}
 NOTE = re.compile(r"(?<![A-Za-z])([A-Ga-g])(#|b)?(\d)(?![0-9])")
@@ -274,7 +289,7 @@ def tuning(prepared, numbered, octave, lowest):
     written = []
     for path, measured in prepared:
         note = NOTE.search(path.stem)
-        number = re.search(r"_(\d+)$", path.stem)
+        number = re.search(r"(?:^|_)(\d+)$", path.stem)
         bare = re.fullmatch(r"([A-G])(#?)", path.stem)
         if bare and lowest is not None:
             written.append(lowest + (STEPS[bare.group(1)] + len(bare.group(2)) - lowest) % 12)
@@ -339,12 +354,13 @@ def sustained(path, gain):
     first = int(np.argmax(levels > 0.05 * levels.max()))
     body_level = float(np.median(levels[first + 100:first + 500]))
     onset = max(0, (int(np.argmax(levels > 0.1 * body_level)) - 1) * hop)
-    measured = pitch(mono[onset + int(0.6 * rate):onset + int(1.1 * rate)], rate)
+    measured = pitch(mono[onset + int(0.4 * rate):onset + int(0.9 * rate)], rate)
     fade = rate // 10
     best = None
-    # Une boucle d'une seconde et plus ; pour une prise courte, une demi-seconde.
-    for shortest, longest, margin in ((0.9, 1.5, 1.0), (0.4, 0.9, 0.3)):
-        for delay in (0.6, 0.75, 0.9):
+    # Une boucle d'une seconde et plus ; pour une prise courte, une demi-seconde, voire un quart.
+    for shortest, longest, margin, delays in ((0.9, 1.5, 1.0, (0.6, 0.75, 0.9)), (0.4, 0.9, 0.3, (0.6, 0.75, 0.9)),
+                                              (0.25, 0.6, 0.1, (0.3, 0.45))):
+        for delay in delays:
             start = onset + int(delay * rate)
             low, high = start + int(shortest * rate), start + int(longest * rate)
             if high > len(mono) - int(margin * rate):
@@ -584,9 +600,9 @@ class Bank:
     def waves(self, program, folder):
         """Un programme fait de prises enregistrées. Retourne le preset."""
         spec = WAVES[program]
-        if "same" in spec:
-            return spec["name"], program, [[(G_INSTRUMENT, self.wave_instruments[spec["same"]])]]
         quieter = [[(G_ATTENUATION, spec["attenuation"])]] if "attenuation" in spec else []
+        if "same" in spec:
+            return spec["name"], program, quieter + [[(G_INSTRUMENT, self.wave_instruments[spec["same"]])]]
         looped = "keep" not in spec
         made = {}
         for source in spec["folders"]:
@@ -664,7 +680,7 @@ class Bank:
             presets.append((text(preset[0]), program, made))
             added = self.position - before
             print(f"{program:3d} {text(preset[0]):22s} {added * 2 / 1e6:5.2f} Mo")
-        for program in WAVES if recordings else ():
+        for program in sorted(WAVES, key=lambda number: "same" in WAVES[number]) if recordings else ():
             before = self.position
             presets.append(self.waves(program, recordings))
             print(f"{program:3d} {WAVES[program]['name']:22s} {(self.position - before) * 2 / 1e6:5.2f} Mo")

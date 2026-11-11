@@ -177,10 +177,10 @@
     <string name="about_credit_fluentemoji_desc">© Microsoft Corporation - Émojis convertis en grandes images du Logimage. Licence MIT.\nhttps://github.com/microsoft/fluentui-emoji</string>
     <string name="about_credit_kenney_name">1-Bit Pack</string>
     <string name="about_credit_kenney_desc">Par Kenney - Tuiles converties en images du Logimage. CC0 (domaine public).\nhttps://kenney.nl</string>
-    <string name="about_credit_vsco_name">VSCO 2 Community Edition</string>
-    <string name="about_credit_vsco_desc">Par Versilian Studios (Sam Gossner) et Ivy Audio (Simon Dalzell) - Enregistrements d\'orchestre joués par la banque de sons Orchestral. CC0 (domaine public).\nhttps://github.com/sgossner/VSCO-2-CE</string>
+    <string name="about_credit_vsco_name">VSCO 2 Community Edition · VCSL</string>
+    <string name="about_credit_vsco_desc">Par Versilian Studios (Sam Gossner) et Ivy Audio (Simon Dalzell) - Enregistrements d\'orchestre et de flûte à bec joués par la banque de sons Orchestral. CC0 (domaine public).\nhttps://github.com/sgossner/VSCO-2-CE\nhttps://github.com/sgossner/VCSL</string>
     <string name="about_credit_freepats_name">FreePats · Karoryfer Samples</string>
-    <string name="about_credit_freepats_desc">Par le projet FreePats et Karoryfer Samples - Enregistrements de guitares et de basses joués par la banque de sons Orchestral. CC0 (domaine public).\nhttps://freepats.zenvoid.org\nhttps://github.com/sfzinstruments/karoryfer.meatbass</string>
+    <string name="about_credit_freepats_desc">Par le projet FreePats et Karoryfer Samples - Guitares, basses, vieux piano, accordéon, cloches tubulaires et synthétiseurs joués par la banque de sons Orchestral. CC0 (domaine public).\nhttps://freepats.zenvoid.org\nhttps://github.com/sfzinstruments/karoryfer.meatbass</string>
     <string name="settings_card_backs_blue_stars">Bleu étoiles</string>
     <string name="settings_card_backs_rainbow">Arc-en-ciel</string>
     <string name="settings_card_backs_yellow_green">Jaune et vert</string>
