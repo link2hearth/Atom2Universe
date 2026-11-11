@@ -854,12 +854,10 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         }
         val actions = FlowRow(this).apply { hGap = dp(6) }
         actions.addView(outlined(R.string.studio_drum_listen).apply { setOnClickListener { previewTrack(id) } })
-        actions.addView(outlined(R.string.studio_fx).apply { setOnClickListener { showFxPanel(it, id, trackName(t)) } })
+        actions.addView(outlined(R.string.studio_fx).apply { setOnClickListener { showFxPanel(it, id) } })
         actions.addView(outlined(R.string.studio_spread).apply { setOnClickListener { showSpread(it, id) } })
         box.addView(actions)
-        panels.show(R.string.studio_sound_caption, getString(R.string.studio_panel_track,
-            getString(R.string.studio_sound_caption), trackName(t)), box, 320, anchor,
-            onHistory = { showDrumSound(anchor, id) }) { session.project.trackOrNull(id)?.hidden == false }
+        showTrackPanel(R.string.studio_sound_caption, id, box, 320, anchor) { showDrumSound(anchor, id) }
     }
 
     /** Les doigts posés sur les touches de chaque piste, et le retour au son net une fois tous levés. */
@@ -1253,7 +1251,7 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
             strip.addView(outlined(R.string.studio_fx).apply {
                 textSize = 13f
                 setPadding(dp(4), 0, dp(4), 0)
-                setOnClickListener { showFxPanel(it, lane, title) }
+                setOnClickListener { showFxPanel(it, lane) }
             }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(44)))
 
             mixerStrips.addView(
@@ -1266,7 +1264,7 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
     }
 
     /** Les effets d'une piste : distorsion, lo-fi, filtre et envois vers la réverbération et l'écho. */
-    private fun showFxPanel(anchor: View, lane: Int, title: String) {
+    private fun showFxPanel(anchor: View, lane: Int) {
         val box = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(dp(16), dp(12), dp(16), dp(12))
@@ -1311,7 +1309,7 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         if (t != null && !(t.kind == TrackKind.DRUM && t.voice == Inst.KICK)) {
             add(R.string.studio_fx_pump, { it.pump }, { it }, { it }, { m, v -> m.copy(pump = if (v < 0.02f) 0f else v) })
         }
-        panels.show(R.string.studio_fx, getString(R.string.studio_panel_track, getString(R.string.studio_fx), title), box, 400, anchor, onHistory = { showFxPanel(anchor, lane, title) }) { session.project.trackOrNull(lane)?.hidden == false }
+        showTrackPanel(R.string.studio_fx, lane, box, 400, anchor) { showFxPanel(anchor, lane) }
     }
 
     private fun showPadPosition() {
@@ -1341,6 +1339,13 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
             levelFaders[i].value = m.level / LEVEL_MAX
             muteButtons[i].setBackgroundColor(if (session.isMuted(id)) 0x88E74C3C.toInt() else android.graphics.Color.TRANSPARENT)
             soloButtons[i].setBackgroundColor(if (session.isSolo(id)) 0x88F1C40F.toInt() else android.graphics.Color.TRANSPARENT)
+        }
+    }
+
+    private fun showTrackPanel(caption: Int, trackId: Int, content: View, width: Int, anchor: View, onHistory: () -> Unit) {
+        fun title() = getString(R.string.studio_panel_track, getString(caption), trackName(session.project.track(trackId)))
+        panels.show(caption, title(), content, width, anchor, onHistory = onHistory, refreshContent = ::title) {
+            session.project.trackOrNull(trackId)?.hidden == false
         }
     }
 
@@ -1902,6 +1907,7 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
                         val bank = group.findViewById<View>(id).tag as SynthBank
                         fmSoundPad?.finishTouch(false)
                         session.setSynthBank(t.id, bank)
+                        refreshTracks()
                         scheduleSave()
                         showSoundPanel(anchor, t.id)
                         refreshChipKeyboard(t.id)
@@ -2128,12 +2134,12 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         }
         if (padsPane.visibility == View.VISIBLE) {
             val actions = FlowRow(this).apply { hGap = dp(6) }
-            actions.addView(outlined(R.string.studio_fx).apply { setOnClickListener { showFxPanel(it, t.id, trackName(t)) } })
+            actions.addView(outlined(R.string.studio_fx).apply { setOnClickListener { showFxPanel(it, t.id) } })
             actions.addView(outlined(R.string.studio_arp_caption).apply { setOnClickListener { showArpPanel(it, t.id) } })
             box.addView(actions)
         }
         refreshPick()
-        panels.show(R.string.studio_sound_caption, getString(R.string.studio_panel_track, getString(R.string.studio_sound_caption), trackName(t)), box, 340, anchor, onHistory = { showSoundPanel(anchor, t.id) }) { session.project.trackOrNull(t.id)?.hidden == false }
+        showTrackPanel(R.string.studio_sound_caption, t.id, box, 340, anchor) { showSoundPanel(anchor, t.id) }
     }
 
     private val presetReleases = mutableMapOf<Int, Runnable>()
@@ -2320,7 +2326,7 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
             }
         }
         box.addView(oct)
-        panels.show(R.string.studio_arp_caption, getString(R.string.studio_panel_track, getString(R.string.studio_arp_caption), trackName(t)), box, 300, anchor, onHistory = { showArpPanel(anchor, t.id) }) { session.project.trackOrNull(t.id)?.hidden == false }
+        showTrackPanel(R.string.studio_arp_caption, t.id, box, 300, anchor) { showArpPanel(anchor, t.id) }
     }
 
     /** Le panneau « Réglages » : swing, espace, écho, longueur, copie du motif, sortie des fichiers. */
@@ -3251,7 +3257,7 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
 
     private fun baseName(t: Track): String = when (t.kind) {
         TrackKind.DRUM -> getString(DRUM_NAMES[t.voice.coerceIn(0, Inst.DRUM_COUNT - 1)])
-        TrackKind.SYNTH -> getString(R.string.studio_lane_synth)
+        TrackKind.SYNTH -> getString(bankName(t.synthBank))
         else -> sf2ProgramName(t)
     }
 
@@ -3439,8 +3445,9 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         val slots = session.project.viewSlots
         val base = session.project.baseSteps
         refreshTexts()
-        panels.show(R.string.studio_step_force, getString(R.string.studio_step_title, trackName(t), step % base + 1), box, 360, window.decorView, screenX to screenY,
-            onHistory = { showStepBubble(trackId, step, screenX, screenY, selectedPitch) }) {
+        fun title() = getString(R.string.studio_step_title, trackName(session.project.track(trackId)), step % base + 1)
+        panels.show(R.string.studio_step_force, title(), box, 360, window.decorView, screenX to screenY,
+            onHistory = { showStepBubble(trackId, step, screenX, screenY, selectedPitch) }, refreshContent = ::title) {
             session.project.viewSlots == slots && session.project.baseSteps == base && session.project.trackOrNull(trackId)?.hidden == false && info() != null
         }
     }
@@ -3702,11 +3709,14 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         return if (same.size > 1) (same.indexOfFirst { it.id == t.id } + 1).toString() else ""
     }
 
-    /** Le nom d'une piste ; deux pistes du même nom se numérotent (« Synthé 1 », « Synthé 2 »). */
+    /** Le numéro suit l’ordre des pistes synthé du morceau, quel que soit leur moteur. */
     private fun trackName(t: Track): String {
         val base = baseName(t)
-        val same = session.project.tracks.filter { baseName(it) == base }
-        return if (same.size > 1) "$base ${same.indexOfFirst { it.id == t.id } + 1}" else base
+        val synth = t.kind == TrackKind.SYNTH
+        val peers = if (synth) session.project.tracks.filter { it.kind == TrackKind.SYNTH }
+            else session.project.tracks.filter { it.kind != TrackKind.SYNTH && baseName(it) == base }
+        if (!synth && peers.size == 1) return base
+        return getString(R.string.studio_track_numbered, base, peers.indexOfFirst { it.id == t.id } + 1)
     }
 
     /** La piste montrée par l'onglet Notes doit exister, jouer des notes et être visible ; sinon la première qui convient. */
@@ -3724,16 +3734,22 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
     private fun refreshTracks() {
         ensureSelected()
         val sig = session.project.tracks.joinToString(",") {
-            // Seul le soundfont nomme sa piste d'après le programme. Parcourir les sons SCC garde la sélection de notes.
-            val namedProgram = if (it.kind == TrackKind.SF2) "${it.bank}:${it.program}" else ""
-            "${it.id}:${it.kind}:${it.voice}:${it.hidden}:$namedProgram"
+            val sound = when (it.kind) {
+                TrackKind.SYNTH -> it.synthBank.name
+                TrackKind.SF2 -> "${it.bank}:${it.program}"
+                else -> ""
+            }
+            "${it.id}:${it.kind}:${it.voice}:${it.hidden}:$sound"
         }
         if (sig == trackSignature) return
-        setPasteArmed(false)
-        grid.clearSelection()
         trackSignature = sig
         val visible = visibleTracks()
-        gridIds = visible.map { it.id }
+        val ids = visible.map { it.id }
+        if (gridIds != ids) {
+            setPasteArmed(false)
+            grid.clearSelection()
+            gridIds = ids
+        }
         grid.laneColors = visible.map { trackColor(it) }.toIntArray()
         grid.laneIcons = visible.map { InstrumentIcons.of(it) }.toIntArray()
         grid.laneBadges = visible.map { trackBadge(it) }

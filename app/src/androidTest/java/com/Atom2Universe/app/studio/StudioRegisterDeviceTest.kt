@@ -23,6 +23,7 @@ import com.Atom2Universe.app.studio.data.StudioSession
 import com.Atom2Universe.app.studio.engine.TrackKind
 import com.Atom2Universe.app.studio.engine.Inst
 import com.Atom2Universe.app.studio.engine.StudioEngine
+import com.Atom2Universe.app.studio.engine.SynthBank
 import com.Atom2Universe.app.studio.ui.KeyboardView
 import com.Atom2Universe.app.studio.ui.PadsView
 import com.Atom2Universe.app.studio.ui.PianoRollView
@@ -32,6 +33,7 @@ import com.google.android.material.button.MaterialButtonToggleGroup
 import java.io.File
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.not
+import org.hamcrest.Matchers.startsWith
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -92,16 +94,19 @@ class StudioRegisterDeviceTest {
         val library = StudioLibrary(File(context.filesDir, "studio/songs"))
         val project = StudioEngine(48_000).use { engine ->
             val session = StudioSession(engine, StudioProject.blank().copy(keyPc = 0))
-            session.addTrack(TrackKind.SYNTH)
+            session.setSynthBank(Inst.SYNTH, SynthBank.SCC)
+            val secondId = session.addTrack(TrackKind.SYNTH)
+            session.setSynthBank(secondId, SynthBank.FAMICOM)
             session.project.copy(tracks = session.project.tracks.filter { it.melodic })
         }
         val (first, second) = project.tracks
         val song = library.create("Pad panel test", project)
         val intent = Intent(context, StudioActivity::class.java).putExtra(EXTRA_PROJECT_ID, song.id)
         val notes = context.getString(R.string.studio_tab_notes)
-        val synth = context.getString(R.string.studio_lane_synth)
+        fun name(engine: Int, n: Int) = context.getString(R.string.studio_track_numbered, context.getString(engine), n)
+        val names = listOf(name(R.string.studio_bank_scc, 1), name(R.string.studio_bank_famicom, 2))
         val keys = context.resources.getStringArray(R.array.studio_key_names)
-        fun title(n: Int) = context.getString(R.string.studio_panel_track, notes, "$synth $n")
+        fun title(n: Int) = context.getString(R.string.studio_panel_track, notes, names[n - 1])
         fun octave(k: Int, n: Int) = context.getString(R.string.studio_track_octave, keys[k] + n)
         fun panel(n: Int) = isDescendantOfA(withChild(withChild(withText(title(n)))))
         val tab = withParent(isAssignableFrom(MaterialButtonToggleGroup::class.java))
@@ -131,12 +136,25 @@ class StudioRegisterDeviceTest {
                 onView(withContentDescription(context.getString(R.string.studio_close_panel, title(2)))).perform(click())
                 onView(withContentDescription(context.getString(R.string.studio_close_panel, title(1)))).perform(click())
                 onView(allOf(withText(notes), tab)).perform(click())
-                val firstChip = onView(allOf(withText("$synth 1"), isDisplayed()))
-                val secondChip = onView(allOf(withText("$synth 2"), isDisplayed()))
+                val firstChip = onView(allOf(withText(names[0]), isDisplayed()))
+                val secondChip = onView(allOf(withText(names[1]), isDisplayed()))
                 firstChip.check(matches(isSelected()))
                 secondChip.perform(click()).check(matches(isSelected()))
                 firstChip.check(matches(not(isSelected())))
                 checkRegister(5, 89)
+
+                val soundLabel = context.getString(R.string.studio_sound_label, "")
+                onView(allOf(withContentDescription(startsWith(soundLabel)), isDisplayed())).perform(click())
+                onView(allOf(withText(R.string.studio_title), isDisplayed())).perform(click())
+                val renamed = name(R.string.studio_title, 2)
+                val soundTitle = context.getString(R.string.studio_panel_track, context.getString(R.string.studio_sound_caption), renamed)
+                onView(withContentDescription(context.getString(R.string.studio_close_panel, soundTitle))).perform(click())
+                onView(allOf(withText(renamed), isDisplayed())).check(matches(isSelected()))
+                onView(allOf(withText(R.string.studio_pads), tab)).perform(click())
+                pads.check { view, error ->
+                    if (error != null) throw error
+                    assertEquals(listOf(names[0], renamed), (view as PadsView).tiles.map { it.name })
+                }
             }
         } finally {
             library.delete(song.id)
