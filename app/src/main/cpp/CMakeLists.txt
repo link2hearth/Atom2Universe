@@ -53,3 +53,9 @@ target_compile_definitions(fluidsynth_jni PRIVATE
 target_link_options(fluidsynth_jni PRIVATE
     -Wl,-z,max-page-size=16384
 )
+
+# emu2413 1.6.2 (2e4f6f9752f43cc33572c6636ca31a647600732c).
+# The upstream MIT notice ships in assets/studio/EMU2413-LICENSE.txt.
+add_library(ym2413_studio SHARED ym2413_studio_jni.c emu2413/emu2413.c)
+target_link_libraries(ym2413_studio PRIVATE m)
+target_link_options(ym2413_studio PRIVATE -Wl,-z,max-page-size=16384)
