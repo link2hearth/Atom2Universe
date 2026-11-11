@@ -121,8 +121,18 @@ internal class OrchestralSoundBank {
     }
 
     init {
-        val (pcm, kit) = drums
+        val (drumPcm, kit) = drums
+        // Le piano : de vrais échantillons, joués par le moteur SF2 comme n'importe quel SF2.
+        val sampled = OrchestralSamples.file
+        val pcm = drumPcm + sampled.sampleData
+        val offset = drumPcm.size.toLong()
         val presets = programs.entries.associate { (number, layers) ->
+            sampled.getPreset(0, number)?.let { preset ->
+                return@associate "0:$number" to preset.copy(regions = preset.regions.map {
+                    it.copy(sampleStart = it.sampleStart + offset, sampleEnd = it.sampleEnd + offset,
+                        loopStart = it.loopStart + offset, loopEnd = it.loopEnd + offset)
+                })
+            }
             val regions = OrchestralRanges.zones(number).flatMap { zone ->
                 layers.mapIndexed { index, program ->
                     val pan = if (layers.size == 1) 0f else if (index == 0) -1f else 1f

@@ -166,7 +166,7 @@ class StudioNotesTest {
     @Test
     fun orchestralKeepsTheApprovedModelsInTheStereoCenter() {
         val count = rate / 4
-        for ((program, preset) in listOf(0 to SynthPresets.ACOUSTIC_PIANO, 11 to SynthPresets.VIBRAPHONE)) {
+        for ((program, preset) in listOf(11 to SynthPresets.VIBRAPHONE)) {
             for (key in listOf(48, 60, 67, 76)) {
                 val expected = FloatArray(count)
                 val left = FloatArray(count)
@@ -190,9 +190,30 @@ class StudioNotesTest {
     }
 
     @Test
-    fun grandPianoReproducesBothMeasuredHammerLayersAtMiddleC() {
-        // Sur le 00 de Perso.sf2, le deuxième partiel dépasse le premier au toucher doux.
-        for ((velocity, expectedDb) in listOf(64 to 5.0, 104 to -1.0)) {
+    fun orchestralPianoPlaysTheSampledGrandInTheCenter() {
+        val count = rate / 4
+        val expected = FloatArray(count)
+        val left = FloatArray(count)
+        val right = FloatArray(count)
+        val bus = FloatArray(count)
+        PolySynth(rate, 1).use { original ->
+            original.patch = SynthPresets.ACOUSTIC_PIANO
+            original.noteOn(60, 0.8f)
+            original.render(expected, FloatArray(count), bus, bus, 0, count)
+        }
+        PolySynth(rate, 1).use { orchestral ->
+            orchestral.selectBank(com.Atom2Universe.app.studio.engine.SynthBank.ORCHESTRAL, 0, 0)
+            orchestral.noteOn(60, 0.8f)
+            orchestral.render(left, right, bus, bus, 0, count)
+        }
+        assertTrue(expected.any { abs(it) > 0.01f })
+        assertTrue(left.indices.all { left[it] == right[it] && abs(left[it] - expected[it]) < 1e-6f })
+    }
+
+    @Test
+    fun grandPianoPlaysItsTwoHammerLayersAtMiddleC() {
+        // Sur le piano échantillonné, le deuxième partiel domine au toucher doux et cède au toucher fort.
+        val ratios = listOf(64, 104).map { velocity ->
             val engine = quietEngine()
             engine.synth.patch = SynthPresets.ACOUSTIC_PIANO
             engine.trigger(Inst.SYNTH, 60, velocity / 127f)
@@ -201,9 +222,9 @@ class StudioNotesTest {
             val window = FloatArray(n) {
                 (sound[rate / 100 + it] * (0.5 - 0.5 * kotlin.math.cos(2 * Math.PI * it / n))).toFloat()
             }
-            val ratio = 10 * log10(powerAt(window, 523.25) / powerAt(window, 261.63))
-            assertEquals("Vélocité $velocity", expectedDb, ratio, 2.5)
+            10 * log10(powerAt(window, 523.25) / powerAt(window, 261.63))
         }
+        assertTrue("Doux ${ratios[0]} dB, fort ${ratios[1]} dB", ratios[0] > 0.0 && ratios[0] > ratios[1] + 1.5)
     }
 
     @Test

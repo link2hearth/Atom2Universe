@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.studio.dsp
 
+import com.Atom2Universe.app.midi.sf2.OrchestralSamples
 import com.Atom2Universe.app.studio.engine.SynthBank
 import kotlin.math.PI
 import kotlin.math.abs
@@ -267,6 +268,11 @@ object SynthPresets {
 class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), AutoCloseable {
 
     @Volatile var patch: SynthPatch = SynthPresets.BASS
+        set(value) {
+            // Le piano joue des échantillons : les lire ici, pas au premier coup sur le fil audio.
+            if (value.wave == SynthPatch.WAVE_PIANO) OrchestralSamples.file
+            field = value
+        }
 
     /** Le son enregistré au micro que joue un patch [SynthPatch.WAVE_SAMPLE] (`null` : ce patch se tait). */
     @Volatile var sample: SynthSample? = null
@@ -339,7 +345,9 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), 
             SynthBank.STUDIO -> Unit
             SynthBank.ORCHESTRAL -> {
                 val next = program.coerceIn(0, 127)
-                stereoBank = OrchestralStereo.load(next)
+                // Le piano joue des échantillons mono, sans couche stéréo calculée.
+                stereoBank = if (next == 0) null else OrchestralStereo.load(next)
+                if (next == 0) OrchestralSamples.file
                 if (next != orchestralProgram && next != 0 && next != 11) {
                     orchestralProfile = OrchestralBank.load(next)
                     for (v in voices) v.prepareOrchestral()
@@ -499,7 +507,7 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), 
         private var filterCoef = 0f
         private val filter = Svf(sampleRate)
         private val bar = VibraphoneBar(sampleRate)
-        private val piano = PianoStrings(sampleRate)
+        private val piano = PianoSamples(sampleRate)
         private val pianoBlock = FloatArray(CONTROL_PERIOD)
         private lateinit var orchestra: OrchestralVoice
         fun prepareOrchestral() {
@@ -509,7 +517,7 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), 
         fun tuneOrchestral(multiplier: Float) {
             if (spatial != null) sideVoice?.tune(inc1 * multiplier)
             when (p.wave) {
-                SynthPatch.WAVE_PIANO -> piano.tune(inc1 * multiplier, inc2 * multiplier)
+                SynthPatch.WAVE_PIANO -> piano.tune(inc1 * multiplier)
                 SynthPatch.WAVE_VIBRAPHONE -> bar.tune(inc1 * multiplier, inc2 * multiplier)
                 SynthPatch.WAVE_ORCHESTRAL -> orchestra.tune(inc1 * multiplier)
             }
@@ -572,7 +580,7 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), 
                 ringTime * patch.decay / VibraphoneBar.DEFAULT_DECAY
             } else if (patch.wave == SynthPatch.WAVE_PIANO) {
                 piano.strike(n, velocity, wasPiano)
-                piano.tune(inc1, inc2)
+                piano.tune(inc1)
                 // Les partiels ont leur propre décroissance ; l'enveloppe générale borne la queue.
                 patch.decay * 12f
             } else patch.decay
@@ -640,7 +648,7 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), 
                             gliding = false
                         }
                         if (wave == SynthPatch.WAVE_VIBRAPHONE) bar.tune(inc1, inc2)
-                        if (wave == SynthPatch.WAVE_PIANO) piano.tune(inc1, inc2)
+                        if (wave == SynthPatch.WAVE_PIANO) piano.tune(inc1)
                         if (wave == SynthPatch.WAVE_ORCHESTRAL) orchestra.tune(inc1)
                         if (spatial != null) sideVoice?.tune(inc1)
                     }

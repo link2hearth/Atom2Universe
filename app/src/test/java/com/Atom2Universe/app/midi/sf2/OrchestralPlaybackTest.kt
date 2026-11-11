@@ -37,7 +37,7 @@ class OrchestralPlaybackTest {
         try {
             for (program in 0..127) {
                 bank.preparePrograms(setOf(program))
-                val profile = bank.file.getPreset(0, program)!!.regions.first().orchestralProgram!!.profile()
+                val profile = bank.file.getPreset(0, program)!!.regions.first().orchestralProgram?.profile()
                 val key = if (profile == null) 64 else (profile.firstKey + profile.lastKey) / 2
                 synth.reset()
                 synth.programChange(0, program)
@@ -95,8 +95,8 @@ class OrchestralPlaybackTest {
         }
     }
 
-    @Test fun pianoVibraphoneAndViolinMatchStudioAcrossBothKindsOfVoice() {
-        for (program in listOf(0, 11, 40)) {
+    @Test fun vibraphoneAndViolinMatchStudioAcrossBothKindsOfVoice() {
+        for (program in listOf(11, 40)) {
             val synth = newSynth()
             val studio = PolySynth(rate, 1)
             try {
