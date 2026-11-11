@@ -117,6 +117,47 @@ void EAS_MixEnginePrep (S_EAS_DATA *pEASData, EAS_I32 numSamples)
     /* need to clear other side-chain effect buffers (chorus & reverb) */
 }
 
+EAS_PUBLIC void EAS_EnablePlaybackLimiter(EAS_DATA_HANDLE data)
+{
+    if (data->limitPlaybackPeaks) return;
+    data->limitPlaybackPeaks = EAS_TRUE;
+    data->limiterGain = data->bufferedGainLimit = 1.0f;
+    EAS_HWMemSet(data->delayedMix, 0, sizeof(data->delayedMix));
+}
+
+/* EAS_Render always supplies one complete mix block. Anticipate the next peak
+ * while playing the buffered block. Both ends of its stereo gain ramp are
+ * bounded by its own peak, so an overload never has to be clipped sample by sample. */
+static void LimitPlaybackMix(S_EAS_DATA *data, EAS_U16 gain, EAS_I32 frames)
+{
+    const float ceiling = 29204.0f; /* -1 dBFS before the effects */
+    const float scale = gain / 65536.0f; /* SynthMasterGain uses shifts of 7 and 9 */
+    float peak = 0.0f;
+    for (EAS_I32 i = 0; i < frames * NUM_OUTPUT_CHANNELS; ++i) {
+        float sample = data->pMixBuffer[i] * scale;
+        float magnitude = sample < 0.0f ? -sample : sample;
+        if (magnitude > peak) peak = magnitude;
+    }
+    float nextLimit = peak > ceiling ? ceiling / peak : 1.0f;
+    float endGain = nextLimit < data->bufferedGainLimit ? nextLimit : data->bufferedGainLimit;
+    float startGain = data->limiterGain;
+    if (endGain > startGain) {
+        /* Recover over roughly 100 ms. */
+        endGain = startGain + (endGain - startGain) * (frames / (0.1f * _OUTPUT_SAMPLE_RATE + frames));
+    }
+    float step = (endGain - startGain) / frames;
+    for (EAS_I32 frame = 0; frame < frames; ++frame) {
+        float level = startGain + (frame + 1) * step;
+        for (int ch = 0; ch < NUM_OUTPUT_CHANNELS; ++ch) {
+            EAS_I32 i = frame * NUM_OUTPUT_CHANNELS + ch;
+            data->pOutputAudioBuffer[i] = (EAS_PCM)(data->delayedMix[i] * level);
+            data->delayedMix[i] = data->pMixBuffer[i] * scale;
+        }
+    }
+    data->bufferedGainLimit = nextLimit;
+    data->limiterGain = endGain;
+}
+
 /*----------------------------------------------------------------------------
  * EAS_MixEnginePost
  *----------------------------------------------------------------------------
@@ -169,11 +210,11 @@ void EAS_MixEnginePost (S_EAS_DATA *pEASData, EAS_I32 numSamples)
 #endif
 
     /* convert 32-bit mix buffer to 16-bit output format */
-#if (NUM_OUTPUT_CHANNELS == 2)
-    SynthMasterGain(pEASData->pMixBuffer, pEASData->pOutputAudioBuffer, gain, (EAS_U16) ((EAS_U16) numSamples * 2));
-#else
-    SynthMasterGain(pEASData->pMixBuffer, pEASData->pOutputAudioBuffer, gain, (EAS_U16) numSamples);
-#endif
+    if (pEASData->limitPlaybackPeaks)
+        LimitPlaybackMix(pEASData, gain, numSamples);
+    else
+        SynthMasterGain(pEASData->pMixBuffer, pEASData->pOutputAudioBuffer, gain,
+            (EAS_U16)(numSamples * NUM_OUTPUT_CHANNELS));
 
 #ifdef _ENHANCER_ENABLED
     /* enhancer effect */

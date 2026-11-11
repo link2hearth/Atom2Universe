@@ -44,12 +44,6 @@ interface HybridSoundFontSide {
 
 class Sf2HybridSide(private val engine: Sf2Engine) : HybridSoundFontSide {
 
-    init {
-        // Le mode hybride applique déjà le gain du mixeur aux vélocités (comme pour Sonivox) :
-        // le moteur SF2 ne doit pas l'appliquer une seconde fois au signal
-        engine.applyMixerGain = false
-    }
-
     override fun initialize(soundFontPath: String): Boolean = engine.initialize(soundFontPath)
     override fun reloadSoundFont(soundFontPath: String): Boolean = engine.reloadSoundFont(soundFontPath)
     override fun isReady(): Boolean = engine.isReadyForDirectMidi()

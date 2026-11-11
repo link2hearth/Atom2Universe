@@ -13,6 +13,8 @@ import com.Atom2Universe.app.midi.visualizer.MidiEventDispatcher
 import org.billthefarmer.mididriver.MidiDriver
 import java.io.File
 import java.io.FileOutputStream
+import kotlin.math.log10
+import kotlin.math.roundToInt
 
 /**
  * Sonivox EAS MIDI synthesis engine (lightweight, built-in sounds)
@@ -38,7 +40,7 @@ class SonivoxEngine(private val context: Context) : MidiEngine, MidiEventDispatc
     private var dlsPath: String? = null
     private var pendingReverbPreset: Int? = null
     // Réglages renvoyés à chaque démarrage du pilote (il repart des valeurs d'usine)
-    private var lastVolumePercent: Int? = null
+    private var driverVolume = PLAYBACK_VOLUME
     private var eqEnabled = false
     private val eqBandMillibels = IntArray(EQ_BAND_COUNT)
 
@@ -51,6 +53,8 @@ class SonivoxEngine(private val context: Context) : MidiEngine, MidiEventDispatc
 
     companion object {
         private const val TAG = "SonivoxEngine"
+        // Le pilote démarre à 90 et chaque cran vaut 1 dB. Réserver 16 dB au mixage des voix.
+        private const val PLAYBACK_VOLUME = 74
 
         // Seuils pour le restart périodique du driver
         private const val MAX_TRACKS_BEFORE_RESTART = 10
@@ -118,10 +122,7 @@ class SonivoxEngine(private val context: Context) : MidiEngine, MidiEventDispatc
                 val isMuted = isChannelEvent && MidiEventDispatcher.isChannelMuted(channel)
 
                 if (!isMuted) {
-                    val processedBytes = MidiAudioMixer.processMidiEvent(midiBytes)
-                    if (processedBytes != null) {
-                        midiDriver?.write(processedBytes)
-                    }
+                    midiDriver?.write(MidiAudioMixer.processMidiEvent(midiBytes))
                 }
 
                 MidiEventDispatcher.processMidiBytes(midiBytes)
@@ -330,12 +331,11 @@ class SonivoxEngine(private val context: Context) : MidiEngine, MidiEventDispatc
     }
 
     override fun setVolume(volume: Float) {
-        val clampedVolume = volume.coerceIn(0f, 1f)
-        try {
-            val volumeInt = (clampedVolume * 100).toInt()
-            lastVolumePercent = volumeInt
-            midiDriver?.setVolume(volumeInt)
-        } catch (_: Exception) { }
+        val linear = volume.coerceIn(0f, 1f)
+        driverVolume = if (linear > 0f) {
+            (PLAYBACK_VOLUME + 20f * log10(linear)).roundToInt().coerceAtLeast(0)
+        } else 0
+        if (isMidiDriverStarted) midiDriver?.setPlaybackVolume(driverVolume)
     }
 
     // ==================== Égaliseur (natif, appliqué par le pilote) ====================
@@ -805,11 +805,7 @@ class SonivoxEngine(private val context: Context) : MidiEngine, MidiEventDispatc
                 driver.setReverb(preset)
             } catch (_: Exception) { }
         }
-        lastVolumePercent?.let { volume ->
-            try {
-                driver.setVolume(volume)
-            } catch (_: Exception) { }
-        }
+        driver.setPlaybackVolume(driverVolume)
         applyEqToDriver()
         dlsPath?.let { loadSoundFont(it) }
     }

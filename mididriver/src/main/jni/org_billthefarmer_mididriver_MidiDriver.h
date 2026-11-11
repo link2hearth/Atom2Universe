@@ -96,6 +96,9 @@ JNIEXPORT jboolean JNICALL Java_org_billthefarmer_mididriver_MidiDriver_setEqEna
 JNIEXPORT jboolean JNICALL Java_org_billthefarmer_mididriver_MidiDriver_setEqBandGain
         (JNIEnv *, jobject, jint, jfloat);
 
+JNIEXPORT jboolean JNICALL Java_org_billthefarmer_mididriver_MidiDriver_setPlaybackVolume
+        (JNIEnv *, jobject, jint);
+
 #ifdef __cplusplus
 }
 #endif

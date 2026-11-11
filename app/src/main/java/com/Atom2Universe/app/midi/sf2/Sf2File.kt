@@ -49,6 +49,7 @@ class Sf2File(
     // Presets triés par (banque, programme) : recherche par dichotomie, sans clé texte par note
     private val presetKeys: LongArray
     private val presetsByKey: Array<Sf2Preset>
+    internal val hasOrchestralVoices = presetMap.values.any { preset -> preset.regions.any { it.orchestralProgram != null } }
 
     init {
         val sorted = presetMap.values.sortedBy { presetKey(it.bank, it.program) }

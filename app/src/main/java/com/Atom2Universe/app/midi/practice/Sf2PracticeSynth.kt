@@ -7,6 +7,7 @@ import com.Atom2Universe.app.midi.sf2.AudioRenderer
 import com.Atom2Universe.app.midi.sf2.AudioRendererListener
 import com.Atom2Universe.app.midi.sf2.Sf2File
 import com.Atom2Universe.app.midi.sf2.Sf2FileCache
+import com.Atom2Universe.app.midi.sf2.OrchestralSoundBank
 import com.Atom2Universe.app.midi.sf2.Sf2Synthesizer
 import java.io.File
 
@@ -40,6 +41,8 @@ class Sf2PracticeSynth(
     }
 
     private var sf2File: Sf2File? = null
+    private var orchestralBank: OrchestralSoundBank? = null
+    private val programs = IntArray(16)
     private var synthesizer: Sf2Synthesizer? = null
     private var audioRenderer: AudioRenderer? = null
     private var isInitialized = false
@@ -61,19 +64,15 @@ class Sf2PracticeSynth(
             return false
         }
 
-        val file = File(soundFontPath)
-        if (!file.exists()) {
+        if (soundFontPath != OrchestralSoundBank.ID && !File(soundFontPath).exists()) {
             android.util.Log.w(TAG, "initialize: soundFont file does not exist: $soundFontPath")
             return false
         }
 
         try {
-            // For large SF2 files, use memory mapping to avoid OOM
-            // For small files, load fully into memory for better performance
-            val useMmap = Sf2FileCache.shouldUseMmap(soundFontPath)
-            android.util.Log.d(TAG, "initialize: loading SF2 file (useMmap=$useMmap)")
-
-            sf2File = if (useMmap) {
+            sf2File = if (soundFontPath == OrchestralSoundBank.ID) {
+                OrchestralSoundBank().also { orchestralBank = it }.file
+            } else if (Sf2FileCache.shouldUseMmap(soundFontPath)) {
                 Sf2FileCache.getMemoryMapped(soundFontPath)
             } else {
                 Sf2FileCache.get(soundFontPath)
@@ -148,6 +147,7 @@ class Sf2PracticeSynth(
 
         // Don't null sf2File - it's managed by Sf2FileCache (shared resource)
         sf2File = null  // Just clear our reference
+        orchestralBank = null
         isInitialized = false
         isPaused = false
         synthListener = null
@@ -233,6 +233,12 @@ class Sf2PracticeSynth(
 
     override fun programChange(channel: Int, program: Int) {
         if (!isInitialized) return
+        orchestralBank?.let { bank ->
+            if (channel in programs.indices && channel != 9) {
+                programs[channel] = program.coerceIn(0, 127)
+                bank.preparePrograms(programs.toSet())
+            }
+        }
         synthesizer?.programChange(channel, program)
     }
 

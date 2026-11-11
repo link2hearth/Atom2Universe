@@ -16,6 +16,14 @@ class Sf2RenderingTest {
     private val sampleRate = 48000
     private val block = 512
 
+    @Test
+    fun cubicResamplingPreservesFractionalPhaseUpToTheNextSample() {
+        for (phase in listOf(0f, 0.5005f, 0.502f, (1.0 - 1e-10).toFloat())) {
+            // A linear ramp has a known value at every fractional sample position.
+            assertEquals(phase, PitchLookupTable.cubicInterpolate(-1f, 0f, 1f, 2f, phase), 1e-6f)
+        }
+    }
+
     private fun region(
         length: Int,
         loopStart: Int = 0,

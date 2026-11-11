@@ -66,7 +66,7 @@ class MidiPlayerViewModel(
     private fun loadConfiguration() {
         viewModelScope.launch {
             // Vérifie SoundFont
-            val sfPath = settingsRepository.getSoundFontPath()
+            val sfPath = settingsRepository.getPlaybackBank(settingsRepository.getSynthMode())
             _soundFontConfigured.value = !sfPath.isNullOrBlank()
 
             // Vérifie dossier MIDI

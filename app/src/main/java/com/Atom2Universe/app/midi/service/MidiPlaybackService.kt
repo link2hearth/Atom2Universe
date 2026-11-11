@@ -213,6 +213,9 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
         // Initialiser les composants
         audioManager = getSystemService(AUDIO_SERVICE) as AudioManager
         synthesizerManager = MidiSynthesizerManager(this)
+        serviceScope.launch(engineDispatcher) {
+            MidiAudioMixer.outputGain.collect { synthesizerManager.applyOutputGain() }
+        }
         queueManager = PlaybackQueueManager()
         notificationManager = MidiNotificationManager(this, this)
 
@@ -977,8 +980,8 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
             synthesizerManager.stop()
 
             val settingsRepository = SettingsRepository(applicationContext)
-            val soundFontPath = getSoundFontPath().orEmpty()
             val synthMode = settingsRepository.getSynthMode()
+            val soundFontPath = settingsRepository.getPlaybackBank(synthMode).orEmpty()
             val sf2Programs = settingsRepository.getHybridSf2Programs()
             val useSf2ForDrums = settingsRepository.isHybridUseSf2ForDrums()
 
@@ -995,7 +998,7 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
                         synthesizerManager.setOperatingMode(MidiSynthesizerManager.OperatingMode.SONIVOX_ONLY)
                     }
                 }
-                SettingsRepository.SYNTH_MODE_SF2 -> {
+                SettingsRepository.SYNTH_MODE_SF2, SettingsRepository.SYNTH_MODE_ORCHESTRAL -> {
                     if (soundFontPath.isNotBlank()) {
                         synthesizerManager.setOperatingMode(MidiSynthesizerManager.OperatingMode.SF2_ONLY)
                     } else {
@@ -1231,11 +1234,8 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
     private suspend fun initializeSynthesizer() {
         val settingsRepository = SettingsRepository(applicationContext)
 
-        // Get SoundFont path (the imported SF2, not cleared when switching to Sonivox)
-        val soundFontPath = getSoundFontPath()
-
-        // Get the selected synthesizer mode
         val synthMode = settingsRepository.getSynthMode()
+        val soundFontPath = settingsRepository.getPlaybackBank(synthMode)
         val sf2Programs = settingsRepository.getHybridSf2Programs()
         val useSf2ForDrums = settingsRepository.isHybridUseSf2ForDrums()
 
@@ -1256,7 +1256,7 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
                     initSuccess = synthesizerManager.initialize("")
                 }
             }
-            SettingsRepository.SYNTH_MODE_SF2 -> {
+            SettingsRepository.SYNTH_MODE_SF2, SettingsRepository.SYNTH_MODE_ORCHESTRAL -> {
                 if (!soundFontPath.isNullOrBlank()) {
                     synthesizerManager.setOperatingMode(MidiSynthesizerManager.OperatingMode.SF2_ONLY)
                     initSuccess = synthesizerManager.initialize(soundFontPath)
@@ -1317,16 +1317,6 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
             }
         }
         reverbPreset?.let { synthesizerManager.setReverb(it) }
-    }
-
-    /**
-     * Récupère le chemin du SoundFont configuré depuis les settings
-     */
-    private suspend fun getSoundFontPath(): String? {
-        return withContext(Dispatchers.IO) {
-            val settingsRepository = SettingsRepository(applicationContext)
-            settingsRepository.getSoundFontPath()
-        }
     }
 
     /**

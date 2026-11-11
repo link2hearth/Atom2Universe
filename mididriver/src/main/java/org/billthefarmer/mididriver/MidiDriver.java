@@ -149,6 +149,9 @@ public class MidiDriver
      */
     public  native boolean setVolume(int volume);
 
+    /** Sets EAS volume in dB steps and enables peak limiting before PCM conversion. */
+    public native boolean setPlaybackVolume(int volume);
+
     /**
      * Set EAS module parameter
      * @param preset reverb preset to use (value from ReverbConstants)

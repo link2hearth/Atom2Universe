@@ -137,8 +137,13 @@ class EnvelopeGenerator(
     /**
      * Releases the envelope (note off).
      */
-    fun release() {
+    fun release(handledBySource: Boolean = false) {
         if (stage == Stage.FINISHED || stage == Stage.RELEASE) return
+        if (handledBySource) {
+            // Le modèle natif rend sa propre queue. Le pool peut encore raccourcir une voix volée.
+            releaseSamples = Int.MAX_VALUE
+            releaseStep = 1f
+        }
         startRelease()
     }
 

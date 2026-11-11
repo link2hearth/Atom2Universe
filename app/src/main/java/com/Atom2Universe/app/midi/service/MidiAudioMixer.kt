@@ -2,6 +2,8 @@ package com.Atom2Universe.app.midi.service
 
 import com.Atom2Universe.app.R
 import androidx.annotation.StringRes
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import java.util.Locale
 
 /**
@@ -38,7 +40,8 @@ object MidiAudioMixer {
 
     // Paramètres actuels
     private var currentPreset = NormalizationPreset.MEDIUM
-    private var masterGain = 0.75f
+    private val masterGain = MutableStateFlow(currentPreset.masterGain)
+    val outputGain = masterGain.asStateFlow()
     private var velocityCap = 110
     private var compressionThreshold = 90
     private var compressionRatio = 0.6f
@@ -57,7 +60,7 @@ object MidiAudioMixer {
      */
     fun setPreset(preset: NormalizationPreset) {
         currentPreset = preset
-        masterGain = preset.masterGain
+        setMasterGain(preset.masterGain)
         velocityCap = preset.velocityCap
         compressionThreshold = preset.compressionThreshold
         compressionRatio = preset.compressionRatio
@@ -72,13 +75,13 @@ object MidiAudioMixer {
      * Définit le master gain manuellement (0.0 à 1.0)
      */
     fun setMasterGain(gain: Float) {
-        masterGain = gain.coerceIn(0.0f, 1.0f)
+        masterGain.value = gain.coerceIn(0.0f, 1.0f)
     }
 
     /**
      * Récupère le master gain
      */
-    fun getMasterGain(): Float = masterGain
+    fun getMasterGain(): Float = masterGain.value
 
     /**
      * Définit le volume d'un canal spécifique (0.0 à 1.0)
@@ -129,7 +132,7 @@ object MidiAudioMixer {
      * Traite un événement MIDI et retourne les bytes ajustés
      *
      * @param midiBytes Les bytes MIDI originaux
-     * @return Les bytes MIDI avec velocity ajustée, ou null si l'événement doit être ignoré
+     * @return Les bytes MIDI avec vélocité ajustée
      */
     fun processMidiEvent(midiBytes: ByteArray): ByteArray {
         if (midiBytes.isEmpty()) return midiBytes
@@ -198,9 +201,6 @@ object MidiAudioMixer {
 
         // 4. Appliquer le boost du canal (toujours appliqué pour l'équilibrage)
         velocity *= channelBoost[channel]
-
-        // 5. Appliquer le master gain
-        velocity *= masterGain
 
         // Convertir en int et clamper à 1-127 (0 = Note Off)
         return velocity.toInt().coerceIn(1, 127)

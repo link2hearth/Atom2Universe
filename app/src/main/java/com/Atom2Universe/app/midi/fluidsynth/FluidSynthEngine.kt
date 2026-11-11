@@ -6,6 +6,7 @@ import android.media.AudioFormat
 import android.media.AudioTrack
 import android.net.Uri
 import android.util.Log
+import com.Atom2Universe.app.audioeditor.dsp.Limiter
 import com.Atom2Universe.app.midi.service.MidiEngine
 import com.Atom2Universe.app.midi.sf2.MidiEqualizerEngine
 import com.Atom2Universe.app.midi.visualizer.MidiEventDispatcher
@@ -37,12 +38,16 @@ import java.util.concurrent.atomic.AtomicLong
  * - Low-latency audio output via Oboe
  * - MIDI file playback via FluidSynth's player
  */
-class FluidSynthEngine(private val context: Context) : MidiEngine, MidiEventDispatcher.ChannelControlListener {
+class FluidSynthEngine(
+    private val context: Context,
+    private val playbackGain: Float? = null
+) : MidiEngine, MidiEventDispatcher.ChannelControlListener {
+
+    private val synthGain = playbackGain ?: 0.5f
 
     companion object {
         private const val TAG = "FluidSynthEngine"
         private const val POSITION_UPDATE_INTERVAL_MS = 100L
-        private const val DEFAULT_GAIN = 0.5f  // FluidSynth default is 0.2, we use slightly higher
 
         // Audio rendering constants
         private const val SAMPLE_RATE = 48000
@@ -172,7 +177,7 @@ class FluidSynthEngine(private val context: Context) : MidiEngine, MidiEventDisp
             }
 
             // Set initial gain
-            FluidSynthNative.setGain(synthHandle, DEFAULT_GAIN * volume)
+            FluidSynthNative.setGain(synthHandle, synthGain * volume)
 
             // Enable reverb by default
             FluidSynthNative.setReverbOn(synthHandle, true)
@@ -187,7 +192,8 @@ class FluidSynthEngine(private val context: Context) : MidiEngine, MidiEventDisp
 
             // La sortie audio n'est ouverte qu'à la lecture (ensureAudioOutput) : un pilote
             // ouvert calcule du silence sans fin tant que rien ne joue
-            useManualRendering = false
+            // Le lecteur (y compris hybride) limite les crêtes avant conversion en PCM 16 bits.
+            useManualRendering = playbackGain != null
 
             currentSoundFontPath = soundFontPath
 
@@ -490,7 +496,7 @@ class FluidSynthEngine(private val context: Context) : MidiEngine, MidiEventDisp
     override fun setVolume(volume: Float) {
         this.volume = volume.coerceIn(0f, 1f)
         if (synthHandle != 0L) {
-            FluidSynthNative.setGain(synthHandle, DEFAULT_GAIN * this.volume)
+            FluidSynthNative.setGain(synthHandle, synthGain * this.volume)
         }
     }
 
@@ -1152,7 +1158,7 @@ class FluidSynthEngine(private val context: Context) : MidiEngine, MidiEventDisp
 
     /**
      * Ouvre la sortie audio si elle est fermée : pilote Oboe de FluidSynth, ou rendu manuel
-     * (AudioTrack) si le pilote échoue ou si l'égaliseur est actif.
+     * (AudioTrack) pour le lecteur MIDI, pour l'égaliseur ou en cas d'échec du pilote.
      */
     private fun ensureAudioOutput() {
         if (synthHandle == 0L || settingsHandle == 0L) return
@@ -1231,18 +1237,25 @@ class FluidSynthEngine(private val context: Context) : MidiEngine, MidiEventDisp
 
         renderThread = Thread({
             Log.d(TAG, "Audio rendering thread started")
-            val buffer = ShortArray(FRAMES_PER_BUFFER * 2)  // Stereo = 2 samples per frame
+            val stereo = Array(2) { FloatArray(FRAMES_PER_BUFFER) }
+            val buffer = ShortArray(FRAMES_PER_BUFFER * 2)
+            val limiter = Limiter().apply { start(2, SAMPLE_RATE) }
 
             while (isRendering.get() && !Thread.currentThread().isInterrupted) {
                 try {
                     if (synthHandle != 0L) {
                         // Render audio from FluidSynth
-                        val framesRendered = FluidSynthNative.writeStereoShort(
-                            synthHandle, buffer, 0, FRAMES_PER_BUFFER
+                        val framesRendered = FluidSynthNative.writeStereoFloat(
+                            synthHandle, stereo[0], stereo[1], FRAMES_PER_BUFFER
                         )
 
                         if (framesRendered > 0) {
-                            eq.processInterleaved(buffer, framesRendered)
+                            eq.process(stereo[0], stereo[1], framesRendered)
+                            limiter.process(stereo, framesRendered)
+                            for (i in 0 until framesRendered) {
+                                buffer[2 * i] = (stereo[0][i] * 32767f).toInt().toShort()
+                                buffer[2 * i + 1] = (stereo[1][i] * 32767f).toInt().toShort()
+                            }
                             audioTrack?.write(buffer, 0, framesRendered * 2)
                         }
                     }
@@ -1323,7 +1336,7 @@ class FluidSynthEngine(private val context: Context) : MidiEngine, MidiEventDisp
             ensureAudioOutput()
         }
 
-        Log.d(TAG, "Switched to manual rendering for EQ support")
+        Log.d(TAG, "Switched to floating-point rendering for output processing")
     }
 
     // ==================== ChannelControlListener Implementation ====================

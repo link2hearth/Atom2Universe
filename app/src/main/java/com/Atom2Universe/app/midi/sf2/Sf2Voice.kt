@@ -2,6 +2,7 @@ package com.Atom2Universe.app.midi.sf2
 
 import kotlin.math.max
 import kotlin.math.min
+import com.Atom2Universe.app.studio.dsp.PolySynth
 
 /**
  * Velocity curve types for different playing feel.
@@ -20,7 +21,8 @@ enum class VelocityCurve {
  * Voices are pooled and reused to avoid allocations during playback.
  */
 class Sf2Voice(
-    private val sampleRate: Int = 44100
+    private val sampleRate: Int = 44100,
+    orchestral: Boolean = false
 ) {
     companion object {
         // Default velocity curve for all voices
@@ -122,6 +124,7 @@ class Sf2Voice(
 
     // Sample playback state
     private var samplePosition: Double = 0.0
+    private val orchestralNote = if (orchestral) PolySynth.OrchestralNote(sampleRate, BLOCK_SIZE) else null
     private var playbackRate: Double = 1.0
 
     // Envelope (volume: dB-linear decay and release)
@@ -255,6 +258,13 @@ class Sf2Voice(
         // Calculate gain from velocity using the selected curve
         // Concave curves provide more expressive control at low velocities
         velocityGain = calculateVelocityGain(effectiveVelocity)
+        region.orchestralProgram?.let { program ->
+            val source = checkNotNull(orchestralNote)
+            source.start(program.number, program.profile(), note, effectiveVelocity / 127f)
+            // Studio applique déjà sa réponse à la vélocité. Seul l'écart à la courbe standard reste à appliquer.
+            velocityGain /= PitchLookupTable.velocityToGain(effectiveVelocity, VelocityCurve.CONCAVE)
+            playbackRate = 1.0 // Le générateur a déjà accordé la note, seul le bend/vibrato reste à appliquer.
+        }
 
         // Calculate base gain from region attenuation
         baseGain = region.calculateGain()
@@ -339,12 +349,14 @@ class Sf2Voice(
         }
         pendingReleaseFrame = -1
         loopReleased = true
+        val nativeRelease = region?.orchestralProgram != null
+        if (nativeRelease) orchestralNote?.release()
         if (releaseCapped) {
             // Force faster release when voice count is very high
             envelope.releaseWithCap(cappedReleaseSamples)
             modEnvelope.releaseWithCap(cappedReleaseSamples)
         } else {
-            envelope.release()
+            envelope.release(handledBySource = nativeRelease)
             modEnvelope.release()
         }
     }
@@ -427,6 +439,7 @@ class Sf2Voice(
         if (!isActive) return
 
         val reg = region ?: return
+        val nativeNote = if (reg.orchestralProgram != null) orchestralNote else null
 
         // Note programmée plus loin dans ce buffer (ou dans un suivant) : rien à rendre avant
         var startFrame = 0
@@ -587,12 +600,14 @@ class Sf2Voice(
             lastLevelRight = levelRightEnd
 
             // --- Inner loop: per-sample processing (tight loop) ---
+            if (nativeNote != null && !nativeNote.render(blockLen, effectiveRate.toFloat())) {
+                isActive = false
+                return
+            }
             for (i in offset until blockEnd) {
-                // Sample interpolation (cubic or linear depending on quality mode)
-                var sample = getSampleInterpolated(sf2File, reg, looping)
-
-                // SF2 low-pass timbre filter (per-sample, IIR state-dependent)
-                sample = filter.process(sample)
+                // Les voix de Studio ont déjà leur propre filtre de timbre.
+                var sample = if (nativeNote != null) nativeNote.samples[i - offset]
+                    else filter.process(getSampleInterpolated(sf2File, reg, looping))
 
                 // Declick ramp when an audible slot had to be reused directly
                 if (declickSamplesRemaining > 0) {
@@ -626,6 +641,7 @@ class Sf2Voice(
                 }
 
                 // Advance sample position (constant rate within block)
+                if (nativeNote != null) continue
                 samplePosition += effectiveRate
 
                 // Loop/end handling (pre-computed loop parameters, O(1) modulo wrap)
@@ -676,8 +692,6 @@ class Sf2Voice(
             return s1 + (s2 - s1) * frac
         }
 
-        // Cubic Hermite interpolation (Catmull-Rom spline) via pre-computed lookup table
-        // Table replaces inline coefficient calculation (~16 float ops) with 4 multiply-adds
         val s0 = sf2File.getSample(absolutePos - 1)
         val s1 = sf2File.getSample(absolutePos)
         val s2 = sf2File.getSample(absolutePos + 1)

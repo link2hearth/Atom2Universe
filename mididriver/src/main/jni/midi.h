@@ -39,7 +39,7 @@ jboolean midi_init();
 jboolean midi_write(EAS_U8 *bytes, jint length);
 
 // set EAS master volume
-jboolean midi_setVolume(jint volume);
+jboolean midi_setVolume(jint volume, bool limitPlaybackPeaks);
 
 // set EAS reverb preset
 jboolean midi_setReverb(jint preset);

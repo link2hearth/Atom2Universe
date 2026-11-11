@@ -1637,7 +1637,7 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
         try {
             val settingsRepository = SettingsRepository(context)
             val synthMode = settingsRepository.getSynthMode()
-            val soundFontPath = settingsRepository.getSoundFontPath()
+            val soundFontPath = settingsRepository.getPlaybackBank(synthMode)
 
             return when (synthMode) {
                 SettingsRepository.SYNTH_MODE_SONIVOX -> {
@@ -1645,9 +1645,9 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
                     SynthLoadResult(SonivoxPracticeSynth(context).also { it.initialize() })
                 }
 
-                SettingsRepository.SYNTH_MODE_SF2 -> {
+                SettingsRepository.SYNTH_MODE_SF2, SettingsRepository.SYNTH_MODE_ORCHESTRAL -> {
                     // SF2 mode - use SF2 only, NO fallback to Sonivox
-                    if (!soundFontPath.isNullOrBlank() && File(soundFontPath).exists()) {
+                    if (!soundFontPath.isNullOrBlank() && (synthMode == SettingsRepository.SYNTH_MODE_ORCHESTRAL || File(soundFontPath).exists())) {
                         val sf2Synth = Sf2PracticeSynth(context, soundFontPath)
                         if (sf2Synth.initialize()) {
                             SynthLoadResult(sf2Synth)

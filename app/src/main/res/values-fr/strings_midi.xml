@@ -107,6 +107,7 @@ Le fichier a été importé mais certains instruments pourraient ne pas fonction
     <string name="midi_scanning_folder">Scan du dossier MIDI…</string>
     <string name="midi_synth_sonivox">Sonivox (intégré)</string>
     <string name="midi_synth_sonivox_desc">Synthétiseur embarqué léger avec sons General MIDI. Aucun fichier externe requis.</string>
+    <string name="midi_synth_orchestral_desc">Moteur SF2 A2U avec les 128 instruments intégrés de Studio.</string>
     <string name="midi_synth_sf2_tip">💡 Conseil : Pour de meilleurs résultats, utilisez un fichier SF2 de qualité avec des échantillons 44 kHz. Préférez un SoundFont entre 100 et 500 Mo selon votre appareil. Les petits SoundFonts compressés peuvent avoir des problèmes audio sur les passages rapides.</string>
     <string name="midi_synth_import_sf2">Importer SF2</string>
     <string name="midi_synth_remove_sf2">Supprimer</string>

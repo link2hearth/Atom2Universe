@@ -123,6 +123,7 @@ The file was imported but some instruments may not work correctly.</string>
     <string name="midi_synthesizer_selection">Synthesizer</string>
     <string name="midi_synth_sonivox">Sonivox (built-in)</string>
     <string name="midi_synth_sonivox_desc">Lightweight built-in synthesizer with General MIDI sounds. No external files required.</string>
+    <string name="midi_synth_orchestral_desc">A2U SF2 engine with Studio’s 128 built-in instruments.</string>
     <string name="midi_synth_sf2_tip">💡 Tip: For best results, use a quality SF2 file with 44kHz samples. Prefer SoundFonts between 100 and 500 MB depending on your device. Small compressed SoundFonts may have audio issues on fast passages.</string>
     <string name="midi_synth_import_sf2">Import SF2</string>
     <string name="midi_synth_change_sf2">Change SF2</string>

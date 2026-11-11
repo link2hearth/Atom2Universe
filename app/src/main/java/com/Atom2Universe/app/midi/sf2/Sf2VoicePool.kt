@@ -10,7 +10,8 @@ import java.util.concurrent.locks.LockSupport
  */
 class Sf2VoicePool(
     private val maxVoices: Int = 128,
-    private val sampleRate: Int = 44100
+    private val sampleRate: Int = 44100,
+    orchestral: Boolean = false
 ) {
     companion object {
         private const val PERCUSSION_CHANNEL = 9
@@ -48,7 +49,7 @@ class Sf2VoicePool(
         private const val FADE_SPARE_VOICES = 16
     }
     // Pre-allocated voice pool (maxVoices playing + spare slots for voices fading out)
-    private val voices: Array<Sf2Voice> = Array(maxVoices + FADE_SPARE_VOICES) { Sf2Voice(sampleRate) }
+    private val voices: Array<Sf2Voice> = Array(maxVoices + FADE_SPARE_VOICES) { Sf2Voice(sampleRate, orchestral) }
 
     // Allocation tracking
     private var voiceAllocationOrder = 0L

@@ -122,6 +122,10 @@ typedef struct s_eas_data_tag
 
     EAS_U32                         renderTime;
     EAS_I16                         masterGain;
+    EAS_BOOL8                       limitPlaybackPeaks;
+    float                           limiterGain;
+    float                           bufferedGainLimit;
+    float                           delayedMix[BUFFER_SIZE_IN_MONO_SAMPLES * NUM_OUTPUT_CHANNELS];
     EAS_U8                          masterVolume;
     EAS_BOOL8                       staticMemoryModel;
 #ifdef FILE_HEADER_SEARCH

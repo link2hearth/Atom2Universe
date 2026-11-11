@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 /**
  * Dialog pour sélectionner le moteur de synthèse MIDI.
  *
- * Affiche 3 cartes moteur :
+ * Affiche les moteurs et la banque Orchestral intégrée :
  * - Sonivox : synthétiseur intégré, toujours disponible
  * - A2U : moteur SF2 maison, nécessite un SoundFont
  * - FluidSynth : moteur SF2 open-source, nécessite un SoundFont
@@ -43,11 +43,13 @@ class SynthesizerSelectionDialog : DialogFragment() {
 
     // Engine cards
     private lateinit var cardSonivox: MaterialCardView
+    private lateinit var cardOrchestral: MaterialCardView
     private lateinit var cardA2u: MaterialCardView
     private lateinit var cardFluidsynth: MaterialCardView
 
     // Active badges
     private lateinit var badgeSonivox: TextView
+    private lateinit var badgeOrchestral: TextView
     private lateinit var badgeA2u: TextView
     private lateinit var badgeFluidsynth: TextView
 
@@ -83,6 +85,7 @@ class SynthesizerSelectionDialog : DialogFragment() {
 
     // Callbacks
     var onSonivoxSelected: (() -> Unit)? = null
+    var onOrchestralSelected: (() -> Unit)? = null
     var onImportSf2Requested: (() -> Unit)? = null
     var onSf2Selected: ((String) -> Unit)? = null
     var onSf2Removed: (() -> Unit)? = null
@@ -132,16 +135,19 @@ class SynthesizerSelectionDialog : DialogFragment() {
     private fun setupViews(view: View) {
         // Engine cards
         cardSonivox = view.findViewById(R.id.card_sonivox)
+        cardOrchestral = view.findViewById(R.id.card_orchestral)
         cardA2u = view.findViewById(R.id.card_a2u)
         cardFluidsynth = view.findViewById(R.id.card_fluidsynth)
 
         // Badges
         badgeSonivox = view.findViewById(R.id.badge_sonivox)
+        badgeOrchestral = view.findViewById(R.id.badge_orchestral)
         badgeA2u = view.findViewById(R.id.badge_a2u)
         badgeFluidsynth = view.findViewById(R.id.badge_fluidsynth)
 
         // Apply accent-colored rounded background to badges
         setupBadge(badgeSonivox)
+        setupBadge(badgeOrchestral)
         setupBadge(badgeA2u)
         setupBadge(badgeFluidsynth)
 
@@ -165,6 +171,7 @@ class SynthesizerSelectionDialog : DialogFragment() {
 
         // Engine card click listeners
         cardSonivox.setOnClickListener { selectEngine(SettingsRepository.SYNTH_MODE_SONIVOX) }
+        cardOrchestral.setOnClickListener { selectEngine(SettingsRepository.SYNTH_MODE_ORCHESTRAL) }
         cardA2u.setOnClickListener { selectEngine(SettingsRepository.SYNTH_MODE_SF2) }
         cardFluidsynth.setOnClickListener { selectEngine(SettingsRepository.SYNTH_MODE_FLUIDSYNTH) }
 
@@ -268,11 +275,13 @@ class SynthesizerSelectionDialog : DialogFragment() {
     private fun updateActiveCard() {
         // Deselect all cards
         deselectCard(cardSonivox, badgeSonivox)
+        deselectCard(cardOrchestral, badgeOrchestral)
         deselectCard(cardA2u, badgeA2u)
         deselectCard(cardFluidsynth, badgeFluidsynth)
 
         // Select the active card based on current mode
         when (currentSynthMode) {
+            SettingsRepository.SYNTH_MODE_ORCHESTRAL -> selectCardVisual(cardOrchestral, badgeOrchestral)
             SettingsRepository.SYNTH_MODE_SONIVOX -> {
                 selectCardVisual(cardSonivox, badgeSonivox)
             }
@@ -345,7 +354,7 @@ class SynthesizerSelectionDialog : DialogFragment() {
                 buttonHybridMode.setTextColor(accentColor)
                 buttonHybridMode.iconTint = ColorStateList.valueOf(accentColor)
             }
-            isSonivoxMode || !hasSf2 -> {
+            isSonivoxMode || currentSynthMode == SettingsRepository.SYNTH_MODE_ORCHESTRAL || !hasSf2 -> {
                 // Sonivox mode or no SF2: grayed out, non-clickable
                 buttonHybridMode.isClickable = false
                 buttonHybridMode.isFocusable = false
@@ -383,6 +392,7 @@ class SynthesizerSelectionDialog : DialogFragment() {
             currentSynthMode = mode
 
             when (mode) {
+                SettingsRepository.SYNTH_MODE_ORCHESTRAL -> onOrchestralSelected?.invoke()
                 SettingsRepository.SYNTH_MODE_SONIVOX -> {
                     onSonivoxSelected?.invoke()
                 }
@@ -448,11 +458,15 @@ class SynthesizerSelectionDialog : DialogFragment() {
     private fun removeSf2() {
         lifecycleScope.launch {
             soundFontManager.removeSoundFont()
+            currentSf2Path = null
+            currentSf2Label = null
+            if (currentSynthMode == SettingsRepository.SYNTH_MODE_ORCHESTRAL) {
+                updateUI()
+                return@launch
+            }
             settingsRepository.setSynthMode(SettingsRepository.SYNTH_MODE_SONIVOX)
             settingsRepository.setHybridModeEnabled(false)
 
-            currentSf2Path = null
-            currentSf2Label = null
             currentSynthMode = SettingsRepository.SYNTH_MODE_SONIVOX
 
             updateUI()

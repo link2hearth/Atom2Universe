@@ -563,7 +563,7 @@ Java_org_billthefarmer_mididriver_MidiDriver_write(JNIEnv *env,
 }
 
 // set EAS master volume
-jboolean midi_setVolume(jint volume)
+jboolean midi_setVolume(jint volume, bool limitPlaybackPeaks)
 {
     EAS_RESULT result;
 
@@ -576,6 +576,8 @@ jboolean midi_setVolume(jint volume)
         return JNI_FALSE;
     }
 
+    if (limitPlaybackPeaks)
+        EAS_EnablePlaybackLimiter(pEASData);
     result = EAS_SetVolume(pEASData, NULL, (EAS_I32) volume);
 
     // unlock
@@ -592,7 +594,13 @@ Java_org_billthefarmer_mididriver_MidiDriver_setVolume(JNIEnv *env,
                                                        jobject obj,
                                                        jint volume)
 {
-    return midi_setVolume(volume);
+    return midi_setVolume(volume, false);
+}
+
+JNIEXPORT jboolean JNICALL
+Java_org_billthefarmer_mididriver_MidiDriver_setPlaybackVolume(JNIEnv *, jobject, jint volume)
+{
+    return midi_setVolume(volume, true);
 }
 
 // Set EAS reverb (caller holds the lock and has checked pEASData)

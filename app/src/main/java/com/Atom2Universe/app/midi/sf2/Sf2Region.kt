@@ -45,7 +45,8 @@ data class Sf2Region(
     val forcedVelocity: Int?,           // Forces velocity value (for fixed-velocity samples)
     // sampleModes 3 : la boucle ne tourne que tant que la touche est enfoncée, puis la lecture
     // continue jusqu'à la fin de l'échantillon
-    val loopUntilRelease: Boolean = false
+    val loopUntilRelease: Boolean = false,
+    val orchestralProgram: OrchestralProgram? = null
 ) {
     /**
      * Checks if this region matches the given key and velocity

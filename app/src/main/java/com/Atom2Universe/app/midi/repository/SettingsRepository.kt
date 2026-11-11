@@ -3,6 +3,7 @@ package com.Atom2Universe.app.midi.repository
 import android.content.Context
 import com.Atom2Universe.app.midi.data.AppSettings
 import com.Atom2Universe.app.midi.data.MidiDatabase
+import com.Atom2Universe.app.midi.sf2.OrchestralSoundBank
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
@@ -46,6 +47,7 @@ class SettingsRepository(private val context: Context) {
         const val KEY_SYNTH_MODE = "synth_mode"
         const val SYNTH_MODE_SONIVOX = "sonivox"
         const val SYNTH_MODE_SF2 = "sf2"
+        const val SYNTH_MODE_ORCHESTRAL = "orchestral"
         const val SYNTH_MODE_HYBRID = "hybrid"
         const val SYNTH_MODE_FLUIDSYNTH = "fluidsynth"
 
@@ -69,6 +71,10 @@ class SettingsRepository(private val context: Context) {
             settingsDao.getSetting(KEY_SOUNDFONT_PATH)
         }
     }
+
+    /** L'import garde son propre chemin quand on choisit une banque embarquée. */
+    suspend fun getPlaybackBank(mode: String): String? =
+        if (mode == SYNTH_MODE_ORCHESTRAL) OrchestralSoundBank.ID else getSoundFontPath()
 
     /**
      * Sauvegarde le chemin du SoundFont

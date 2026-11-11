@@ -211,6 +211,8 @@ EAS_PUBLIC EAS_RESULT EAS_SetTransposition (EAS_DATA_HANDLE pEASData, EAS_HANDLE
  *----------------------------------------------------------------------------
 */
 EAS_PUBLIC EAS_RESULT EAS_SetVolume (EAS_DATA_HANDLE pEASData, EAS_HANDLE streamHandle, EAS_I32 volume);
+/* Enable one mix block of lookahead for MIDI player output. */
+EAS_PUBLIC void EAS_EnablePlaybackLimiter(EAS_DATA_HANDLE pEASData);
 
 /*----------------------------------------------------------------------------
  * EAS_OpenFile()

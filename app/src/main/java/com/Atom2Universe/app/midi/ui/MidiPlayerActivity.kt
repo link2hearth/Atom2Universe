@@ -28,6 +28,7 @@ import com.Atom2Universe.app.midi.data.MidiDatabase
 import com.Atom2Universe.app.midi.repository.MidiRepository
 import com.Atom2Universe.app.midi.repository.PlaylistRepository
 import com.Atom2Universe.app.midi.repository.SettingsRepository
+import com.Atom2Universe.app.midi.sf2.OrchestralSoundBank
 import com.Atom2Universe.app.midi.scanner.MidiLibraryScanner
 import com.Atom2Universe.app.midi.scanner.SoundFontManager
 import com.Atom2Universe.app.midi.service.MidiAudioMixer
@@ -673,7 +674,8 @@ class MidiPlayerActivity : AudioThemedActivity() {
      */
     private fun checkSoundFontConfiguration() {
         lifecycleScope.launch {
-            val isConfigured = soundFontManager.isSoundFontConfigured()
+            val isConfigured = settingsRepository.getSynthMode() == SettingsRepository.SYNTH_MODE_ORCHESTRAL ||
+                soundFontManager.isSoundFontConfigured()
             viewModel.setSoundFontConfigured(isConfigured)
 
             if (!isConfigured) {
@@ -738,6 +740,13 @@ class MidiPlayerActivity : AudioThemedActivity() {
 
                     viewModel.setSoundFontConfigured(true)
 
+                    val dialog = supportFragmentManager.findFragmentByTag(SynthesizerSelectionDialog.TAG)
+                        as? SynthesizerSelectionDialog
+                    if (settingsRepository.getSynthMode() == SettingsRepository.SYNTH_MODE_ORCHESTRAL) {
+                        dialog?.refreshState()
+                        return@launch
+                    }
+
                     // Recharger le SoundFont dans le service
                     val intent = Intent(this@MidiPlayerActivity, MidiPlaybackService::class.java).apply {
                         action = MidiPlaybackService.ACTION_RELOAD_SOUNDFONT
@@ -752,8 +761,6 @@ class MidiPlayerActivity : AudioThemedActivity() {
                     ).show()
 
                     // Rafraîchir le dialogue de sélection s'il est ouvert
-                    val dialog = supportFragmentManager.findFragmentByTag(SynthesizerSelectionDialog.TAG)
-                            as? SynthesizerSelectionDialog
                     dialog?.refreshState()
                 }
                 is SoundFontManager.ImportResult.Error -> {
@@ -1252,6 +1259,16 @@ class MidiPlayerActivity : AudioThemedActivity() {
      */
     fun showSynthesizerSelectionDialog(onSettingsChanged: ((String, String?) -> Unit)? = null) {
         val dialog = SynthesizerSelectionDialog.newInstance()
+
+        dialog.onOrchestralSelected = {
+            viewModel.setSoundFontConfigured(true)
+            val intent = Intent(this, MidiPlaybackService::class.java).apply {
+                action = MidiPlaybackService.ACTION_RELOAD_SOUNDFONT
+                putExtra(MidiPlaybackService.EXTRA_SOUNDFONT_PATH, OrchestralSoundBank.ID)
+            }
+            startService(intent)
+            onSettingsChanged?.invoke(SettingsRepository.SYNTH_MODE_ORCHESTRAL, null)
+        }
 
         // Callback: Sonivox sélectionné
         dialog.onSonivoxSelected = {

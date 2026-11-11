@@ -5,6 +5,7 @@ import android.media.midi.MidiDeviceInfo
 import android.media.midi.MidiManager
 import com.Atom2Universe.app.midi.fluidsynth.FluidSynthEngine
 import com.Atom2Universe.app.midi.sf2.Sf2Engine
+import com.Atom2Universe.app.midi.sf2.OrchestralSoundBank
 
 /**
  * Smart synthesizer manager that routes between Sonivox, SF2, FluidSynth, and Hybrid engines
@@ -21,6 +22,12 @@ import com.Atom2Universe.app.midi.sf2.Sf2Engine
  * - DLS SoundFont loaded: Use Sonivox (only supports DLS format)
  */
 class MidiSynthesizerManager(private val context: Context) : MidiEngine {
+    private companion object {
+        // Marge en amont du mélange, même lorsque le gain du lecteur est à 100 %.
+        const val SOUNDFONT_GAIN = 0.2f
+    }
+
+    private var focusVolume = 1f
 
     /**
      * Operating mode for the synthesizer
@@ -81,7 +88,7 @@ class MidiSynthesizerManager(private val context: Context) : MidiEngine {
             } else {
                 // Fallback to Sonivox if any engine fails (not just SF2Engine)
                 android.util.Log.w("MidiSynthesizerManager", "initialize: $engineName failed, falling back to Sonivox")
-                if (activeEngine != sonivoxEngine) {
+                if (activeEngine != sonivoxEngine && soundFontPath != OrchestralSoundBank.ID) {
                     activeEngine = sonivoxEngine
                     val fallbackSuccess = sonivoxEngine.initialize("")
                     if (fallbackSuccess) {
@@ -94,7 +101,8 @@ class MidiSynthesizerManager(private val context: Context) : MidiEngine {
             return success
         } catch (e: Exception) {
             // Always fallback to Sonivox on any exception
-            android.util.Log.e("MidiSynthesizerManager", "initialize: exception, falling back to Sonivox", e)
+            android.util.Log.e("MidiSynthesizerManager", "initialize: engine failed", e)
+            if (soundFontPath == OrchestralSoundBank.ID) return false
             activeEngine = sonivoxEngine
             val fallbackSuccess = sonivoxEngine.initialize("")
             if (fallbackSuccess) {
@@ -119,6 +127,7 @@ class MidiSynthesizerManager(private val context: Context) : MidiEngine {
         // Re-apply reverb and chorus presets to the new engine
         engine.setReverb(storedReverbPreset)
         engine.setChorus(storedChorusPreset)
+        applyOutputGain()
     }
 
     /**
@@ -211,14 +220,15 @@ class MidiSynthesizerManager(private val context: Context) : MidiEngine {
             }
 
             OperatingMode.SF2_ONLY -> {
-                if (sf2Available) {
+                if (sf2Available || soundFontPath == OrchestralSoundBank.ID) {
                     try {
                         // Release previous SF2 engine if exists
                         sf2Engine?.release()
                         // Create new SF2 engine instance for this SoundFont
-                        sf2Engine = Sf2Engine(context)
+                        sf2Engine = newPlaybackSf2Engine()
                         Pair(sf2Engine!!, "SF2Engine")
-                    } catch (_: Exception) {
+                    } catch (e: Exception) {
+                        if (soundFontPath == OrchestralSoundBank.ID) throw e
                         operatingMode = OperatingMode.SONIVOX_ONLY
                         Pair(sonivoxEngine, "Sonivox")
                     }
@@ -234,14 +244,14 @@ class MidiSynthesizerManager(private val context: Context) : MidiEngine {
                         // Release previous FluidSynth engine if exists
                         fluidSynthEngine?.release()
                         // Create new FluidSynth engine instance
-                        fluidSynthEngine = FluidSynthEngine(context)
+                        fluidSynthEngine = FluidSynthEngine(context, SOUNDFONT_GAIN)
                         Pair(fluidSynthEngine!!, "FluidSynth")
                     } catch (e: Exception) {
                         android.util.Log.e("MidiSynthesizerManager", "FluidSynth init failed, falling back to SF2Engine", e)
                         // Fallback to SF2Engine if FluidSynth fails
                         operatingMode = OperatingMode.SF2_ONLY
                         sf2Engine?.release()
-                        sf2Engine = Sf2Engine(context)
+                        sf2Engine = newPlaybackSf2Engine()
                         Pair(sf2Engine!!, "SF2Engine")
                     }
                 } else if (sf2Available) {
@@ -249,7 +259,7 @@ class MidiSynthesizerManager(private val context: Context) : MidiEngine {
                     android.util.Log.w("MidiSynthesizerManager", "FluidSynth not supported, using SF2Engine")
                     operatingMode = OperatingMode.SF2_ONLY
                     sf2Engine?.release()
-                    sf2Engine = Sf2Engine(context)
+                    sf2Engine = newPlaybackSf2Engine()
                     Pair(sf2Engine!!, "SF2Engine")
                 } else {
                     operatingMode = OperatingMode.SONIVOX_ONLY
@@ -274,11 +284,11 @@ class MidiSynthesizerManager(private val context: Context) : MidiEngine {
 
             // Create a fresh SoundFont engine for hybrid use (the base chosen in the settings)
             val soundFontSide: HybridSoundFontSide = if (hybridUseFluidSynth && FluidSynthEngine.isSupported()) {
-                val newFluidSynthEngine = FluidSynthEngine(context)
+                val newFluidSynthEngine = FluidSynthEngine(context, SOUNDFONT_GAIN)
                 fluidSynthEngine = newFluidSynthEngine
                 FluidSynthHybridSide(newFluidSynthEngine)
             } else {
-                val newSf2Engine = Sf2Engine(context)
+                val newSf2Engine = newPlaybackSf2Engine()
                 sf2Engine = newSf2Engine
                 Sf2HybridSide(newSf2Engine)
             }
@@ -294,7 +304,7 @@ class MidiSynthesizerManager(private val context: Context) : MidiEngine {
         } catch (_: Exception) {
             operatingMode = OperatingMode.SF2_ONLY
             sf2Engine?.release()
-            sf2Engine = Sf2Engine(context)
+            sf2Engine = newPlaybackSf2Engine()
             return Pair(sf2Engine!!, "SF2Engine")
         }
     }
@@ -518,7 +528,17 @@ class MidiSynthesizerManager(private val context: Context) : MidiEngine {
     }
 
     override fun setVolume(volume: Float) {
-        activeEngine?.setVolume(volume)
+        focusVolume = volume
+        applyOutputGain()
+    }
+
+    fun applyOutputGain() {
+        activeEngine?.setVolume(focusVolume * MidiAudioMixer.getMasterGain())
+    }
+
+    private fun newPlaybackSf2Engine() = Sf2Engine(context).apply {
+        applyMixerGain = false // Le volume maître arrive déjà par setVolume.
+        setGlobalGain(SOUNDFONT_GAIN)
     }
 
     /**

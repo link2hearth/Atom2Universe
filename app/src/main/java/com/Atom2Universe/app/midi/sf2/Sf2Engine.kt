@@ -76,6 +76,7 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
 
     // SF2 components
     @Volatile private var sf2File: Sf2File? = null
+    private var orchestralBank: OrchestralSoundBank? = null
     @Volatile private var synthesizer: Sf2Synthesizer? = null
     @Volatile private var audioRenderer: AudioRenderer? = null
 
@@ -123,8 +124,7 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
     private var currentTempFile: File? = null
 
     /**
-     * Applique le gain des réglages audio (MidiAudioMixer) au signal. Désactivé par le mode
-     * hybride, qui l'applique déjà aux vélocités qu'il envoie.
+     * L'aperçu autonome lit le gain du mixeur ici. Le service MIDI le transmet via setVolume.
      */
     @Volatile var applyMixerGain: Boolean = true
 
@@ -146,13 +146,7 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
             var newAudioRenderer: AudioRenderer? = null
 
             try {
-                val file = File(soundFontPath)
-                if (!file.exists()) {
-                    notifyError("SoundFont file not found")
-                    return@safeOperation false
-                }
-
-                val newSf2File = Sf2FileCache.getMemoryMapped(soundFontPath)
+                val newSf2File = loadBank(soundFontPath)
                 if (newSf2File == null) {
                     notifyError("Failed to load SoundFont")
                     return@safeOperation false
@@ -227,6 +221,30 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
         old?.release()
     }
 
+    private fun loadBank(path: String): Sf2File? {
+        if (path == OrchestralSoundBank.ID) {
+            val bank = orchestralBank ?: OrchestralSoundBank().also { orchestralBank = it }
+            return bank.file
+        }
+        orchestralBank = null
+        return if (File(path).isFile) Sf2FileCache.getMemoryMapped(path) else null
+    }
+
+    private fun prepareOrchestralPrograms() {
+        val bank = orchestralBank ?: return
+        val channels = IntArray(16)
+        val used = mutableSetOf<Int>()
+        for (event in midiTimeline) {
+            if (event.channel == 9) continue
+            when (event.type) {
+                MidiEventType.PROGRAM_CHANGE -> channels[event.channel] = event.data1
+                MidiEventType.NOTE_ON -> used.add(channels[event.channel])
+                else -> Unit
+            }
+        }
+        bank.preparePrograms(used)
+    }
+
     private inline fun <T> safeOperation(
         @Suppress("UNUSED_PARAMETER") operationName: String,
         default: T,
@@ -283,6 +301,7 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
             midiFile = file.inputStream().use { MidiFile(it) }
 
             buildMidiTimeline()
+            prepareOrchestralPrograms()
 
             // La SoundFont est projetée en entier : le synthétiseur (et ses réglages) reste
             // le même d'un morceau à l'autre
@@ -512,6 +531,7 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
             // Fermer le fichier SF2 pour libérer les ressources memory-mapped
             sf2File?.close()
             sf2File = null
+            orchestralBank = null
 
             midiFile = null
             midiTimeline = emptyList()
@@ -701,15 +721,8 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
                 return@safeOperation false
             }
 
-            val file = File(soundFontPath)
-            if (!file.exists()) {
-                releaseSynthesis()
-                notifyError("SoundFont file not found")
-                return@safeOperation false
-            }
-
             try {
-                val newSf2File = Sf2FileCache.getMemoryMapped(soundFontPath)
+                val newSf2File = loadBank(soundFontPath)
                 if (newSf2File == null) {
                     releaseSynthesis()
                     notifyError("Failed to load SoundFont")
@@ -739,6 +752,7 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
                 updateState(MidiEngine.State.INITIALIZED)
 
                 if (hadMidiLoaded && midiTimeline.isNotEmpty()) {
+                    prepareOrchestralPrograms()
                     updateState(MidiEngine.State.MIDI_LOADED)
 
                     MidiEventDispatcher.resendCachedAnalysis()

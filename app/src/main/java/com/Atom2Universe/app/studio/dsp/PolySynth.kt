@@ -287,6 +287,32 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), 
     private val mixScratch = FloatArray(Instrument.MAX_CHUNK)
     private var closed = false
 
+    /** Une voix de Studio pilotée par le séquenceur, les contrôleurs et le mixeur du moteur SF2. */
+    internal class OrchestralNote(rate: Int, blockSize: Int) {
+        val samples = FloatArray(blockSize)
+        private val synth = PolySynth(rate, 1)
+        private val voice = synth.voices[0].apply { prepareOrchestral() }
+        private var lastPitch = 1f
+
+        fun start(program: Int, profile: OrchestralBank.Program?, note: Int, velocity: Float) {
+            synth.selectedBank = SynthBank.ORCHESTRAL
+            synth.orchestralProgram = program
+            voice.active = false
+            voice.start(note, velocity, synth.currentPatch(), 0L, profile)
+            lastPitch = 1f
+        }
+
+        fun release() = voice.release()
+
+        fun render(count: Int, pitch: Float): Boolean {
+            if (pitch != lastPitch) {
+                voice.tuneOrchestral(pitch)
+                lastPitch = pitch
+            }
+            return synth.renderStudio(samples, count)
+        }
+    }
+
     @Synchronized
     fun selectBank(bank: SynthBank, program: Int, midiChannel: Int, smoothBass: Boolean = false,
                    brightness: Float = 0.5f, attack: Float = 0.5f) {
@@ -459,6 +485,14 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), 
             if (!::orchestra.isInitialized) orchestra = OrchestralVoice(sampleRate)
         }
 
+        fun tuneOrchestral(multiplier: Float) {
+            when (p.wave) {
+                SynthPatch.WAVE_PIANO -> piano.tune(inc1 * multiplier, inc2 * multiplier)
+                SynthPatch.WAVE_VIBRAPHONE -> bar.tune(inc1 * multiplier, inc2 * multiplier)
+                SynthPatch.WAVE_ORCHESTRAL -> orchestra.tune(inc1 * multiplier)
+            }
+        }
+
         // Son enregistré : la position de lecture (en échantillons de la source), son pas, et le pas visé pendant un glissé
         private var smp: SynthSample? = null
         private var smpPos = 0.0
@@ -474,7 +508,7 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), 
 
         private fun freqOf(n: Int): Float = 440f * 2f.pow((n - 69) / 12f)
 
-        fun start(n: Int, velocity: Float, patch: SynthPatch, a: Long) {
+        fun start(n: Int, velocity: Float, patch: SynthPatch, a: Long, profile: OrchestralBank.Program? = null) {
             val wasActive = active
             val wasBar = wasActive && p.wave == SynthPatch.WAVE_VIBRAPHONE
             val wasPiano = wasActive && p.wave == SynthPatch.WAVE_PIANO
@@ -507,7 +541,7 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), 
             decayCoef = Fast.decayCoef(decayTime, sampleRate)
             releaseCoef = Fast.decayCoef(maxOf(patch.release, 0.005f), sampleRate)
             if (patch.wave == SynthPatch.WAVE_ORCHESTRAL) {
-                releaseCoef = Fast.decayCoef(orchestra.strike(orchestralProfile, n, velocity, wasOrchestral), sampleRate)
+                releaseCoef = Fast.decayCoef(orchestra.strike(profile ?: orchestralProfile, n, velocity, wasOrchestral), sampleRate)
                 orchestra.tune(inc1)
             }
             filterCoef = Fast.decayCoef(patch.filterDecay, sampleRate)

@@ -87,7 +87,7 @@ class Sf2Synthesizer(
     }
 
     // Voice pool (thread-safe access via voiceLock)
-    private val voicePool = Sf2VoicePool(maxVoices, sampleRate)
+    private val voicePool = Sf2VoicePool(maxVoices, sampleRate, sf2File.hasOrchestralVoices)
 
     // Lock for voice pool and channel state access
     private val voiceLock = Any()

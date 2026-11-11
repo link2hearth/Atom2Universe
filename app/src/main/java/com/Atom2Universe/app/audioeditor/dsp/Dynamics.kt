@@ -90,7 +90,7 @@ class Limiter(
 
     private fun lookahead(sampleRate: Int) = maxOf(1, (lookaheadMs * 0.001f * sampleRate).toInt())
 
-    override fun start(channels: Int, sampleRate: Int) {
+    public override fun start(channels: Int, sampleRate: Int) {
         look = lookahead(sampleRate)
         // Retard d'exactement `look` trames : l'échantillon lu à l'instant t est entré à t − look.
         delay = Array(channels) { FloatArray(look) }
@@ -104,7 +104,7 @@ class Limiter(
         prevGain = 1f
     }
 
-    override fun process(buf: Array<FloatArray>, n: Int) {
+    public override fun process(buf: Array<FloatArray>, n: Int) {
         val ch = buf.size
         val cap = dqIdx.size
         for (i in 0 until n) {
