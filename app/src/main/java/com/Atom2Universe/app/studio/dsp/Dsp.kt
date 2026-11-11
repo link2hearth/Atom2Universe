@@ -107,7 +107,7 @@ class Svf(private val sampleRate: Int) {
 }
 
 /**
- * Un instrument à une sortie : les sous-classes produisent du mono, la base le place (niveau, panoramique)
+ * Les sous-classes produisent le signal central et, pour un son stéréo, sa différence gauche/droite. La base les place
  * dans le mixage stéréo. [renderMono] est appelé par morceaux d'au plus [MAX_CHUNK] trames.
  */
 abstract class Instrument(protected val sampleRate: Int) {
@@ -140,14 +140,11 @@ abstract class Instrument(protected val sampleRate: Int) {
      * et, comme elle, garde le niveau du son. Lissée par échantillon : pas de saut audible.
      */
     @Volatile var liveDrive = 0f
-    private var liveDriveNow = 0f
 
     // Passe-bas du pad, après les effets du mixeur. Un pôle nul laisse passer exactement le signal d'entrée.
     private val liveFilterMaxPole = exp(-2.0 * PI * 200.0 / sampleRate).toFloat()
     private val liveFilterStep = 1f / (0.012f * sampleRate)
     @Volatile private var liveFilterTarget = 0f
-    private var liveFilterPole = 0f
-    private var liveFilterLast = 0f
 
     fun setLiveFilter(amount: Float) {
         val open = 1f - amount.coerceIn(0f, 1f)
@@ -164,14 +161,11 @@ abstract class Instrument(protected val sampleRate: Int) {
     protected var expressionNow = 1f
         private set
 
-    private val fxFilter = Svf(sampleRate)
-    private var fxFilterFor = 0f
-    private var crushCounter = 0
-    private var crushHeld = 0f
-    private var driveEnvIn = 1e-9f
-    private var driveEnvOut = 1e-9f
-
     private val scratch = FloatArray(MAX_CHUNK)
+    private val leftEffects = ChannelEffects()
+    private var rightEffects: ChannelEffects? = null
+    private var rightScratch: FloatArray? = null
+    protected open val stereoDifference: FloatArray? get() = null
 
     abstract fun noteOn(note: Int, velocity: Float)
 
@@ -218,42 +212,40 @@ abstract class Instrument(protected val sampleRate: Int) {
         val rs = level * reverbSend
         val ds = level * delaySend
         val audible = !muted
-        val fxOn = drive > FX_MIN || crush > FX_MIN || abs(filterSweep) > FX_MIN || liveDrive > FX_MIN || liveDriveNow > FX_MIN
-        val filterTarget = liveFilterTarget
         val depth = if (duck != null) pump.coerceIn(0f, 1f) * PUMP_DEPTH else 0f
         val exprTarget = expression.coerceIn(0f, 1f)
         var pos = from
         while (pos < to) {
             val c = min(to - pos, MAX_CHUNK)
-            var produced = renderMono(scratch, c)
-            if (fxOn) {
-                // Avec un effet, le silence passe aussi dans la chaîne : la queue du filtre et le résultat ne dépendent pas du découpage.
-                if (!produced) java.util.Arrays.fill(scratch, 0, c, 0f)
-                applyEffects(c)
-                produced = true
+            val hasSound = renderMono(scratch, c)
+            val side = stereoDifference
+            if (side != null && rightScratch == null) {
+                rightScratch = FloatArray(MAX_CHUNK)
+                rightEffects = ChannelEffects()
             }
-            if (filterTarget != 0f || liveFilterPole != 0f) {
-                if (!produced) java.util.Arrays.fill(scratch, 0, c, 0f)
-                applyLiveFilter(c, filterTarget)
-                produced = true
+            val other = rightScratch
+            if (hasSound && other != null) {
+                if (side == null) scratch.copyInto(other, 0, 0, c) else for (i in 0 until c) {
+                    other[i] = scratch[i] - side[i]
+                    scratch[i] += side[i]
+                }
             }
+            val produced = leftEffects.process(scratch, c, hasSound)
+            if (other != null) rightEffects!!.process(other, c, hasSound)
             // L'expression se lisse même en silence : la note suivante part du bon niveau
             var e = expressionNow
             val smoothing = e != exprTarget
             if (produced && audible) {
                 for (i in 0 until c) {
-                    var s = scratch[i]
-                    if (smoothing) {
-                        e += (exprTarget - e) * EXPRESSION_GLIDE
-                        s *= e
-                    } else if (e != 1f) {
-                        s *= e
-                    }
-                    if (depth > 0f) s *= 1f - depth * duck!![pos + i]
-                    left[pos + i] += s * gl
-                    right[pos + i] += s * gr
-                    reverbBus[pos + i] += s * rs
-                    delayBus[pos + i] += s * ds
+                    if (smoothing) e += (exprTarget - e) * EXPRESSION_GLIDE
+                    val gain = if (depth > 0f) e * (1f - depth * duck!![pos + i]) else e
+                    val l = scratch[i] * gain
+                    val r = other?.get(i)?.times(gain) ?: l
+                    left[pos + i] += l * gl
+                    right[pos + i] += r * gr
+                    val send = (l + r) * 0.5f
+                    reverbBus[pos + i] += send * rs
+                    delayBus[pos + i] += send * ds
                 }
             } else if (smoothing) {
                 for (i in 0 until c) e += (exprTarget - e) * EXPRESSION_GLIDE
@@ -264,69 +256,97 @@ abstract class Instrument(protected val sampleRate: Int) {
         }
     }
 
-    private fun applyLiveFilter(count: Int, target: Float) {
-        var pole = liveFilterPole
-        var last = if (pole == 0f) scratch[0] else liveFilterLast
-        for (i in 0 until count) {
-            pole += (target - pole).coerceIn(-liveFilterStep, liveFilterStep)
-            val input = scratch[i]
-            last = input + pole * (last - input)
-            scratch[i] = last
-        }
-        liveFilterLast = last
-        liveFilterPole = pole
-    }
+    private inner class ChannelEffects {
+        private val fxFilter = Svf(sampleRate)
+        private var fxFilterFor = 0f
+        private var crushCounter = 0
+        private var crushHeld = 0f
+        private var driveEnvIn = 1e-9f
+        private var driveEnvOut = 1e-9f
+        private var liveDriveNow = 0f
+        private var liveFilterPole = 0f
+        private var liveFilterLast = 0f
 
-    /** Dégradation, distorsion, filtre, sur les [count] premiers échantillons de [scratch]. */
-    private fun applyEffects(count: Int) {
-        val cr = crush
-        if (cr > FX_MIN) {
-            // De 16 à 5 bits et jusqu'à 1 échantillon sur 15 retenu : le grain des vieux échantillonneurs.
-            val levels = Math.pow(2.0, (15f - cr * 11f).toDouble()).toFloat()
-            val hold = 1 + (cr * cr * 14f).toInt()
+        fun process(scratch: FloatArray, count: Int, hasSound: Boolean): Boolean {
+            var produced = hasSound
+            if (drive > FX_MIN || crush > FX_MIN || abs(filterSweep) > FX_MIN || liveDrive > FX_MIN || liveDriveNow > FX_MIN) {
+                if (!produced) java.util.Arrays.fill(scratch, 0, count, 0f)
+                applyEffects(scratch, count)
+                produced = true
+            }
+            val target = liveFilterTarget
+            if (target != 0f || liveFilterPole != 0f) {
+                if (!produced) java.util.Arrays.fill(scratch, 0, count, 0f)
+                applyLiveFilter(scratch, count, target)
+                produced = true
+            }
+            return produced
+        }
+
+        private fun applyLiveFilter(scratch: FloatArray, count: Int, target: Float) {
+            var pole = liveFilterPole
+            var last = if (pole == 0f) scratch[0] else liveFilterLast
             for (i in 0 until count) {
-                if (--crushCounter <= 0) {
-                    crushCounter = hold
-                    crushHeld = Math.round(scratch[i] * levels) / levels
+                pole += (target - pole).coerceIn(-liveFilterStep, liveFilterStep)
+                val input = scratch[i]
+                last = input + pole * (last - input)
+                scratch[i] = last
+            }
+            liveFilterLast = last
+            liveFilterPole = pole
+        }
+
+        /** Dégradation, distorsion, filtre, sur les [count] premiers échantillons de [scratch]. */
+        private fun applyEffects(scratch: FloatArray, count: Int) {
+            val cr = crush
+            if (cr > FX_MIN) {
+                // De 16 à 5 bits et jusqu'à 1 échantillon sur 15 retenu : le grain des vieux échantillonneurs.
+                val levels = Math.pow(2.0, (15f - cr * 11f).toDouble()).toFloat()
+                val hold = 1 + (cr * cr * 14f).toInt()
+                for (i in 0 until count) {
+                    if (--crushCounter <= 0) {
+                        crushCounter = hold
+                        crushHeld = Math.round(scratch[i] * levels) / levels
+                    }
+                    scratch[i] = crushHeld
                 }
-                scratch[i] = crushHeld
             }
-        }
-        val d = drive
-        val live = liveDrive.coerceIn(0f, 1f)
-        if (d > FX_MIN || live > FX_MIN || liveDriveNow > FX_MIN) {
-            // Compensation qui suit le niveau : une distorsion rend un son doux bien plus fort qu'un son déjà fort,
-            // donc un retrait fixe ne convient pas. On garde le niveau d'entrée (suivi sur ~10 ms, par échantillon).
-            var ein = driveEnvIn
-            var eout = driveEnvOut
-            var ld = liveDriveNow
-            for (i in 0 until count) {
-                ld += (live - ld) * LIVE_DRIVE_GLIDE
-                // Le doigt pousse bien plus fort que le réglage du mixeur : l'effet doit s'entendre franchement sous le doigt
-                val g = 1f + d * 7f + ld * LIVE_DRIVE_GAIN
-                val x = scratch[i]
-                val y = Fast.tanh(x * g)
-                ein += (x * x - ein) * DRIVE_ENV
-                eout += (y * y - eout) * DRIVE_ENV
-                val comp = Math.sqrt((ein / eout).toDouble()).toFloat().coerceIn(0.05f, 1.5f)
-                scratch[i] = y * comp
+            val d = drive
+            val live = liveDrive.coerceIn(0f, 1f)
+            if (d > FX_MIN || live > FX_MIN || liveDriveNow > FX_MIN) {
+                // Compensation qui suit le niveau : une distorsion rend un son doux bien plus fort qu'un son déjà fort,
+                // donc un retrait fixe ne convient pas. On garde le niveau d'entrée (suivi sur ~10 ms, par échantillon).
+                var ein = driveEnvIn
+                var eout = driveEnvOut
+                var ld = liveDriveNow
+                for (i in 0 until count) {
+                    ld += (live - ld) * LIVE_DRIVE_GLIDE
+                    // Le doigt pousse bien plus fort que le réglage du mixeur : l'effet doit s'entendre franchement sous le doigt
+                    val g = 1f + d * 7f + ld * LIVE_DRIVE_GAIN
+                    val x = scratch[i]
+                    val y = Fast.tanh(x * g)
+                    ein += (x * x - ein) * DRIVE_ENV
+                    eout += (y * y - eout) * DRIVE_ENV
+                    val comp = Math.sqrt((ein / eout).toDouble()).toFloat().coerceIn(0.05f, 1.5f)
+                    scratch[i] = y * comp
+                }
+                driveEnvIn = ein
+                driveEnvOut = eout
+                liveDriveNow = if (live <= FX_MIN && ld < FX_MIN) 0f else ld
             }
-            driveEnvIn = ein
-            driveEnvOut = eout
-            liveDriveNow = if (live <= FX_MIN && ld < FX_MIN) 0f else ld
-        }
-        val fs = filterSweep
-        if (abs(fs) > FX_MIN) {
-            if (fs != fxFilterFor) {
-                fxFilterFor = fs
-                if (fs < 0f) fxFilter.set((18000.0 * Math.pow(200.0 / 18000.0, -fs.toDouble())).toFloat(), 0.9f)
-                else fxFilter.set((20.0 * Math.pow(8000.0 / 20.0, fs.toDouble())).toFloat(), 0.9f)
+            val fs = filterSweep
+            if (abs(fs) > FX_MIN) {
+                if (fs != fxFilterFor) {
+                    fxFilterFor = fs
+                    if (fs < 0f) fxFilter.set((18000.0 * Math.pow(200.0 / 18000.0, -fs.toDouble())).toFloat(), 0.9f)
+                    else fxFilter.set((20.0 * Math.pow(8000.0 / 20.0, fs.toDouble())).toFloat(), 0.9f)
+                }
+                if (fs < 0f) for (i in 0 until count) { fxFilter.tick(scratch[i]); scratch[i] = fxFilter.lp }
+                else for (i in 0 until count) { fxFilter.tick(scratch[i]); scratch[i] = fxFilter.hp }
+            } else if (fxFilterFor != 0f) {
+                fxFilterFor = 0f
+                fxFilter.reset()
             }
-            if (fs < 0f) for (i in 0 until count) { fxFilter.tick(scratch[i]); scratch[i] = fxFilter.lp }
-            else for (i in 0 until count) { fxFilter.tick(scratch[i]); scratch[i] = fxFilter.hp }
-        } else if (fxFilterFor != 0f) {
-            fxFilterFor = 0f
-            fxFilter.reset()
         }
     }
 

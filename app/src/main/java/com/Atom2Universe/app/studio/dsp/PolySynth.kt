@@ -4,6 +4,7 @@ import com.Atom2Universe.app.studio.engine.SynthBank
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.pow
+import kotlin.math.roundToInt
 import kotlin.math.sin
 
 /*
@@ -278,6 +279,10 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), 
     @Volatile private var fm: Ym2413Synth? = null
     @Volatile private var selectedBank = SynthBank.STUDIO
     @Volatile private var orchestralProgram = 0
+    private var stereoBank: OrchestralStereo? = null
+    private val difference = FloatArray(Instrument.MAX_CHUNK)
+    private var spatialBlock = false
+    override val stereoDifference get() = if (spatialBlock) difference else null
     @Volatile private lateinit var orchestralProfile: OrchestralBank.Program
     private fun currentPatch() = if (selectedBank == SynthBank.ORCHESTRAL) when (orchestralProgram) {
         0 -> SynthPresets.ACOUSTIC_PIANO
@@ -290,6 +295,7 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), 
     /** Une voix de Studio pilotée par le séquenceur, les contrôleurs et le mixeur du moteur SF2. */
     internal class OrchestralNote(rate: Int, blockSize: Int) {
         val samples = FloatArray(blockSize)
+        val differenceSamples: FloatArray? get() = synth.stereoDifference
         private val synth = PolySynth(rate, 1)
         private val voice = synth.voices[0].apply { prepareOrchestral() }
         private var lastPitch = 1f
@@ -297,6 +303,8 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), 
         fun start(program: Int, profile: OrchestralBank.Program?, note: Int, velocity: Float) {
             synth.selectedBank = SynthBank.ORCHESTRAL
             synth.orchestralProgram = program
+            // Les cordes 48 du lecteur possèdent déjà deux régions gauche/droite indépendantes.
+            synth.stereoBank = if (program == 48) null else OrchestralStereo.load(program)
             voice.active = false
             voice.start(note, velocity, synth.currentPatch(), 0L, profile)
             lastPitch = 1f
@@ -331,6 +339,7 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), 
             SynthBank.STUDIO -> Unit
             SynthBank.ORCHESTRAL -> {
                 val next = program.coerceIn(0, 127)
+                stereoBank = OrchestralStereo.load(next)
                 if (next != orchestralProgram && next != 0 && next != 11) {
                     orchestralProfile = OrchestralBank.load(next)
                     for (v in voices) v.prepareOrchestral()
@@ -380,6 +389,7 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), 
 
     override fun noteOn(note: Int, velocity: Float) {
         val bank = selectedBank
+        if (bank == SynthBank.ORCHESTRAL && !OrchestralRanges.contains(orchestralProgram, note, (velocity * 127).roundToInt())) return
         if (!bank.isGx) chip?.noteOff(note)
         if (bank != SynthBank.FM) fm?.noteOff(note)
         if (bank != SynthBank.STUDIO && bank != SynthBank.ORCHESTRAL) {
@@ -430,10 +440,15 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), 
     }
 
     private fun renderStudio(out: FloatArray, count: Int): Boolean {
+        spatialBlock = false
         var any = false
-        for (v in voices) if (v.active) { any = true; break }
+        for (v in voices) if (v.active) {
+            any = true
+            if (v.spatial != null) spatialBlock = true
+        }
         if (!any) return false
         java.util.Arrays.fill(out, 0, count, 0f)
+        if (spatialBlock) java.util.Arrays.fill(difference, 0, count, 0f)
         for (v in voices) if (v.active) v.render(out, count)
 
         // Distorsion et niveau du son, sur le mélange des voix.
@@ -449,10 +464,14 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), 
         } else if (p.volume != 1f) {
             for (i in 0 until count) out[i] *= p.volume
         }
+        if (spatialBlock) for (i in 0 until count) difference[i] *= p.volume
         return true
     }
 
     private inner class Voice {
+        var spatial: OrchestralStereo.Layer? = null
+        private var orchestralGain = 1f
+        private var sideVoice: OrchestralVoice? = null
         var active = false
         var held = false
         var note = 0
@@ -488,6 +507,7 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), 
         }
 
         fun tuneOrchestral(multiplier: Float) {
+            if (spatial != null) sideVoice?.tune(inc1 * multiplier)
             when (p.wave) {
                 SynthPatch.WAVE_PIANO -> piano.tune(inc1 * multiplier, inc2 * multiplier)
                 SynthPatch.WAVE_VIBRAPHONE -> bar.tune(inc1 * multiplier, inc2 * multiplier)
@@ -511,6 +531,17 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), 
         private fun freqOf(n: Int): Float = 440f * 2f.pow((n - 69) / 12f)
 
         fun start(n: Int, velocity: Float, patch: SynthPatch, a: Long, profile: OrchestralBank.Program? = null) {
+            val lastSpatial = spatial
+            // Écarts de niveau stables sur les notes et les accords de Perso.sf2, à trois vélocités.
+            orchestralGain = if (selectedBank == SynthBank.ORCHESTRAL) when (orchestralProgram) {
+                20 -> 0.178f // −15 dB
+                53 -> 0.398f // −8 dB
+                78 -> 0.126f // −18 dB
+                103 -> 0.141f // −17 dB
+                120 -> 0.251f // −12 dB
+                else -> 1f
+            } else 1f
+            spatial = if (selectedBank == SynthBank.ORCHESTRAL) stereoBank?.at(n, (velocity * 127).roundToInt()) else null
             val wasActive = active
             val wasBar = wasActive && p.wave == SynthPatch.WAVE_VIBRAPHONE
             val wasPiano = wasActive && p.wave == SynthPatch.WAVE_PIANO
@@ -527,6 +558,11 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), 
             val freq = freqOf(n)
             val half = 2f.pow(patch.detuneCents / 2400f)
             inc1 = freq / half / sampleRate
+            spatial?.let { layer ->
+                val side = sideVoice ?: OrchestralVoice(sampleRate).also { sideVoice = it }
+                side.strike(layer.difference, velocity, wasActive && lastSpatial != null, true)
+                side.tune(freq / sampleRate)
+            }
             inc2 = freq * half * 2f.pow(patch.interval / 12f) / sampleRate
             incSub = freq / 2f / sampleRate
             attackInc = 1f / (maxOf(patch.attack, 0.002f) * sampleRate)
@@ -606,6 +642,7 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), 
                         if (wave == SynthPatch.WAVE_VIBRAPHONE) bar.tune(inc1, inc2)
                         if (wave == SynthPatch.WAVE_PIANO) piano.tune(inc1, inc2)
                         if (wave == SynthPatch.WAVE_ORCHESTRAL) orchestra.tune(inc1)
+                        if (spatial != null) sideVoice?.tune(inc1)
                     }
                     var octaves = p.envOctaves * fEnv
                     if (p.lfoFilter != 0f) {
@@ -670,7 +707,14 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), 
                     (shape(p1, inc1, wave) + shape(p2, inc2, wave)) * 0.4f + sin(ps * TWO_PI) * sub * 0.5f
                 }
                 filter.tick(osc)
-                out[i] += filter.lp * level * vel * 0.5f
+                val amplitude = level * vel * orchestralGain
+                val mono = filter.lp * amplitude * 0.5f
+                val layout = spatial
+                if (layout == null) out[i] += mono else {
+                    val mid = mono * layout.mid
+                    out[i] += mid
+                    difference[i] += mid * layout.pan + sideVoice!!.next() * amplitude
+                }
                 fEnv *= filterCoef
             }
         }

@@ -1,6 +1,9 @@
 package com.Atom2Universe.app.midi.sf2
 
 import com.Atom2Universe.app.studio.dsp.PolySynth
+import com.Atom2Universe.app.studio.dsp.OrchestralAttack
+import com.Atom2Universe.app.studio.dsp.OrchestralBank
+import com.Atom2Universe.app.studio.dsp.OrchestralVoice
 import com.Atom2Universe.app.studio.engine.SynthBank
 import kotlin.math.abs
 import kotlin.math.sqrt
@@ -34,7 +37,7 @@ class OrchestralPlaybackTest {
         try {
             for (program in 0..127) {
                 bank.preparePrograms(setOf(program))
-                val profile = bank.file.getPreset(0, program)!!.regions.single().orchestralProgram!!.profile()
+                val profile = bank.file.getPreset(0, program)!!.regions.first().orchestralProgram!!.profile()
                 val key = if (profile == null) 64 else (profile.firstKey + profile.lastKey) / 2
                 synth.reset()
                 synth.programChange(0, program)
@@ -43,6 +46,53 @@ class OrchestralPlaybackTest {
                 assertTrue("GM $program", out.all(Float::isFinite) && out.maxOf { abs(it) } > 1e-5f)
             }
         } finally { synth.release() }
+    }
+
+    @Test fun stringEnsembleKeepsDistinctLeftAndRightVoices() {
+        val synth = newSynth()
+        try {
+            synth.programChange(0, 48)
+            synth.noteOn(0, 64, 88)
+            val left = FloatArray(512)
+            val right = FloatArray(512)
+            var ll = 0.0
+            var rr = 0.0
+            var lr = 0.0
+            repeat(48) {
+                left.fill(0f)
+                right.fill(0f)
+                synth.render(left, right, left.size)
+                for (i in left.indices) {
+                    ll += left[i] * left[i]
+                    rr += right[i] * right[i]
+                    lr += left[i] * right[i]
+                }
+            }
+            assertTrue(ll > 0.0 && rr > 0.0 && abs(lr / sqrt(ll * rr)) < 0.8)
+        } finally { synth.release() }
+    }
+
+    @Test fun preparedAttackMatchesLiveOscillatorsAcrossCacheEndAndPitchBend() {
+        val profile = OrchestralBank.load(48, OrchestralBank.Channel.LEFT)
+        val spectrum = profile.spectrum(69, 100)
+        val cycles = 440f / rate
+        for (bendAt in listOf(3841, 10000)) {
+            fun render(prepared: Boolean): FloatArray {
+                spectrum.attack = if (prepared) OrchestralAttack(rate, 69, false, spectrum, 8192) else null
+                val voice = OrchestralVoice(rate)
+                voice.strike(profile, 69, 100 / 127f, false)
+                voice.tune(cycles)
+                return FloatArray(12000) { i ->
+                    if (i == bendAt) voice.tune(cycles * 1.04f)
+                    voice.next()
+                }
+            }
+            try {
+                val original = render(false)
+                val prepared = render(true)
+                assertTrue(original.indices.all { abs(original[it] - prepared[it]) < 1e-4f })
+            } finally { spectrum.attack = null }
+        }
     }
 
     @Test fun pianoVibraphoneAndViolinMatchStudioAcrossBothKindsOfVoice() {

@@ -2,6 +2,8 @@ package com.Atom2Universe.app.studio
 
 import com.Atom2Universe.app.studio.data.StudioProject
 import com.Atom2Universe.app.studio.data.StudioSession
+import com.Atom2Universe.app.studio.dsp.OrchestralStereo
+import com.Atom2Universe.app.studio.dsp.PolySynth
 import com.Atom2Universe.app.studio.dsp.SynthPatch
 import com.Atom2Universe.app.studio.dsp.SynthPresets
 import com.Atom2Universe.app.studio.engine.Inst
@@ -162,17 +164,28 @@ class StudioNotesTest {
     }
 
     @Test
-    fun orchestralKeepsTheTwoApprovedModelsSampleForSample() {
+    fun orchestralKeepsTheApprovedModelsInTheStereoCenter() {
+        val count = rate / 4
         for ((program, preset) in listOf(0 to SynthPresets.ACOUSTIC_PIANO, 11 to SynthPresets.VIBRAPHONE)) {
-            val original = quietEngine()
-            original.synth.patch = preset
-            val orchestral = quietEngine()
-            orchestral.synth.selectBank(com.Atom2Universe.app.studio.engine.SynthBank.ORCHESTRAL, program, 0)
             for (key in listOf(48, 60, 67, 76)) {
-                original.trigger(Inst.SYNTH, key, 0.8f)
-                orchestral.trigger(Inst.SYNTH, key, 0.8f)
+                val expected = FloatArray(count)
+                val left = FloatArray(count)
+                val right = FloatArray(count)
+                val bus = FloatArray(count)
+                PolySynth(rate, 1).use { original ->
+                    original.patch = preset
+                    original.noteOn(key, 0.8f)
+                    original.render(expected, FloatArray(count), bus, bus, 0, count)
+                }
+                PolySynth(rate, 1).use { stereo ->
+                    stereo.selectBank(com.Atom2Universe.app.studio.engine.SynthBank.ORCHESTRAL, program, 0)
+                    stereo.noteOn(key, 0.8f)
+                    stereo.render(left, right, bus, bus, 0, count)
+                }
+                val mid = OrchestralStereo.load(program)!!.at(key, 102)!!.mid
+                assertTrue(expected.indices.all { abs((left[it] + right[it]) * 0.5f - expected[it] * mid) < 1e-5f })
+                assertTrue(left.indices.any { abs(left[it] - right[it]) > 1e-4f })
             }
-            assertTrue(render(original, rate / 2).first.contentEquals(render(orchestral, rate / 2).first))
         }
     }
 

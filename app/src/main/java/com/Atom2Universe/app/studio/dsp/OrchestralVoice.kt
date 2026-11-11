@@ -8,14 +8,25 @@ internal object OrchestralBank {
     val seconds = floatArrayOf(0.018f, 0.06f, 0.15f, 0.34f, 0.68f, 1.18f, 1.85f)
     class Spectrum(val tones: Int, val release: Float, val ratios: FloatArray, val levels: Array<FloatArray>,
                    val times: FloatArray, val movingRatios: Array<FloatArray>?, val maxVelocity: Int,
-                   val referenceVelocity: Int, val loopStart: Int, val loopEnd: Int)
+                   val referenceVelocity: Int, val loopStart: Int, val loopEnd: Int) {
+        @Volatile var attack: OrchestralAttack? = null
+    }
     class Program(val firstKey: Int, val lastKey: Int, val layers: Int, val limitedRange: Boolean,
-                  val spectra: Array<Spectrum>)
-    private val recent = LinkedHashMap<Int, Program>(8, 0.75f, true)
+                  val spectra: Array<Spectrum>, val rightChannel: Boolean) {
+        fun spectrum(key: Int, velocity: Int): Spectrum {
+            val index = (key.coerceIn(firstKey, lastKey) - firstKey) * layers
+            var layer = 0
+            while (layer < layers - 1 && velocity > spectra[index + layer].maxVelocity) layer++
+            return spectra[index + layer]
+        }
+    }
+    enum class Channel(val suffix: String) { MONO(""), LEFT("-left"), RIGHT("-right") }
+    private val recent = LinkedHashMap<String, Program>(8, 0.75f, true)
     private val amplitudes = FloatArray(111) { if (it == 110) 0f else 10f.pow(-it / 20f) }
-    @Synchronized fun load(program: Int): Program {
-        recent[program]?.let { return it }
-        val stream = checkNotNull(javaClass.getResourceAsStream("/studio/orchestral/$program.bin"))
+    @Synchronized fun load(program: Int, channel: Channel = Channel.MONO): Program {
+        val name = "$program${channel.suffix}"
+        recent[name]?.let { return it }
+        val stream = checkNotNull(javaClass.getResourceAsStream("/studio/orchestral/$name.bin"))
         val result = DataInputStream(stream.buffered()).use { input ->
             val format = input.readInt()
             require(format in 0x4f524332..0x4f524336)
@@ -53,10 +64,10 @@ internal object OrchestralBank {
                 }
                 Spectrum(tones, release, ratios, levels, times, trajectories, maxVelocity, reference, loopStart, loopEnd)
             }
-            Program(firstKey, lastKey, layers, mapped, spectra)
+            Program(firstKey, lastKey, layers, mapped, spectra, channel == Channel.RIGHT)
         }
         if (recent.size >= 4) recent.remove(recent.keys.first())
-        recent[program] = result
+        recent[name] = result
         return result
     }
 }
@@ -92,6 +103,8 @@ internal class OrchestralVoice(private val rate: Int) {
     private var ringDecay = 1f
     private var carry = 0f
     private var previous = 0f
+    private var attack: OrchestralAttack? = null
+    private var attackFrame = 0
     private val carryDecay = Fast.decayCoef(0.014f, rate)
     val finished get() = ring < 0.0001f
 
@@ -100,11 +113,13 @@ internal class OrchestralVoice(private val rate: Int) {
             ring = 0f
             return 0.04f
         }
-        val index = (key.coerceIn(program.firstKey, program.lastKey) - program.firstKey) * program.layers
-        val midiVelocity = (velocity * 127f).roundToInt()
-        var layer = 0
-        while (layer < program.layers - 1 && midiVelocity > program.spectra[index + layer].maxVelocity) layer++
-        sound = program.spectra[index + layer]
+        return strike(program.spectrum(key, (velocity * 127f).roundToInt()), velocity, retrigger, program.rightChannel)
+    }
+
+    fun strike(spectrum: OrchestralBank.Spectrum, velocity: Float, retrigger: Boolean, rightChannel: Boolean): Float {
+        sound = spectrum
+        attack = null
+        attackFrame = 0
         useResonances = sound.levels.size - sound.tones == ResonantNoise.BANDS
         if (useResonances) resonances.reset()
         for (i in sound.times.indices) breaks[i] = (sound.times[i] * rate).roundToInt()
@@ -126,7 +141,8 @@ internal class OrchestralVoice(private val rate: Int) {
         val drop = 10 * log10((last / before.coerceAtLeast(1e-12f)).coerceAtLeast(1e-9f))
         val interval = sound.times.last() - sound.times[sound.times.lastIndex - 1]
         ringDecay = if (drop < -2.2f * interval) Fast.decayCoef((-60f * interval / drop).coerceIn(0.12f, 25f), rate) else 1f
-        for (i in 0 until sound.tones) phase[i] = ((i+1)*(i+1)*0.193f) % 1f
+        val initialPhaseFactor = if (rightChannel) 0.317f else 0.193f
+        for (i in 0 until sound.tones) phase[i] = ((i+1)*(i+1)*initialPhaseFactor) % 1f
         noiseState.fill(0f)
         carry = if (retrigger) previous else 0f
         return sound.release
@@ -134,7 +150,9 @@ internal class OrchestralVoice(private val rate: Int) {
 
     fun tune(cycles: Float) {
         if (finished) return
+        if (attack != null && cycles != fundamental) leaveAttack()
         fundamental = cycles
+        if (age == 0 && segment == 0) attack = sound.attack?.takeIf { it.cycles == cycles && it.rate == rate }
         for (i in 0 until sound.tones) {
             step[i] = cycles * sound.ratios[i]
             weight[i] = ((0.5f - step[i]) / 0.05f).coerceIn(0f, 1f)
@@ -171,7 +189,35 @@ internal class OrchestralVoice(private val rate: Int) {
             }
             segment++
         }
+        val current = attack
+        if (current != null && attackFrame == current.samples.size) leaveAttack()
         if (segment < count) age++ else ring *= ringDecay
+        val cached = attack
+        val tones = if (cached == null) renderTones() else cached.samples[attackFrame++]
+        val hiss = if (useResonances) resonances.next(level, delta, sound.tones) else broadNoise()
+        previous = (tones + hiss) * gain * ring + carry
+        carry *= carryDecay
+        return previous
+    }
+
+    private fun leaveAttack() {
+        val cached = attack ?: return
+        val checkpoint = attackFrame / OrchestralAttack.STRIDE
+        val rest = attackFrame % OrchestralAttack.STRIDE
+        for (i in 0 until sound.tones) {
+            var p = cached.phases[checkpoint * sound.tones + i]
+            if (weight[i] > 0f) repeat(rest) {
+                p += step[i]
+                if (p >= 1f) p -= 1f
+            }
+            phase[i] = p
+            val frame = (segment - 1).coerceAtLeast(0)
+            level[i] = sound.levels[i][frame] + delta[i] * (age - breaks[frame]).coerceAtLeast(0)
+        }
+        attack = null
+    }
+
+    private fun renderTones(): Float {
         var sum = 0f
         for (i in 0 until sound.tones) {
             if (weight[i] > 0f) {
@@ -185,10 +231,7 @@ internal class OrchestralVoice(private val rate: Int) {
             level[i] += delta[i]
             step[i] += stepDelta[i]
         }
-        sum += if (useResonances) resonances.next(level, delta, sound.tones) else broadNoise()
-        previous = sum * gain * ring + carry
-        carry *= carryDecay
-        return previous
+        return sum
     }
 
     private fun broadNoise(): Float {
@@ -206,7 +249,7 @@ internal class OrchestralVoice(private val rate: Int) {
         return sum
     }
 
-    private companion object {
+    companion object {
         val sine = FloatArray(2049) { sin(it * 2.0 * PI / 2048).toFloat() }
     }
 }

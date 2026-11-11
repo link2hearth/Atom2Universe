@@ -227,6 +227,7 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
             val bank = orchestralBank ?: OrchestralSoundBank().also { orchestralBank = it }
             return bank.file
         }
+        orchestralBank?.clearAttacks()
         orchestralBank = null
         return if (File(path).isFile) Sf2FileCache.getMemoryMapped(path) else null
     }
@@ -239,15 +240,22 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
         val bank = orchestralBank ?: return
         val channels = IntArray(16)
         val used = mutableSetOf<Int>()
+        val notes = HashMap<Int, Int>()
         for (event in midiTimeline) {
             if (event.channel == 9) continue
             when (event.type) {
                 MidiEventType.PROGRAM_CHANGE -> channels[event.channel] = event.data1
-                MidiEventType.NOTE_ON -> used.add(channels[event.channel])
+                MidiEventType.NOTE_ON -> if (event.data2 > 0) {
+                    val program = channels[event.channel]
+                    used.add(program)
+                    val id = (program shl 14) or (event.data1 shl 7) or event.data2
+                    notes[id] = (notes[id] ?: 0) + 1
+                }
                 else -> Unit
             }
         }
         bank.preparePrograms(used)
+        bank.prepareAttacks(notes, SAMPLE_RATE)
     }
 
     private inline fun <T> safeOperation(
@@ -426,12 +434,8 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
             return@safeOperation false
         }
 
+        val previous = state
         try {
-            if (audioRenderer?.start() != true) {
-                notifyError("Failed to start audio")
-                return@safeOperation false
-            }
-
             if (playbackExecutor == null || playbackExecutor?.isShutdown == true) {
                 playbackExecutor = Executors.newScheduledThreadPool(2)
             }
@@ -444,12 +448,20 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
 
             newPlaybackGeneration()
             startMidiPlayback()
+            // Le verrou de commande reste tenu. Seul le fil audio peut maintenant avancer la timeline.
+            if (audioRenderer?.start {
+                    isOperationInProgress.set(false)
+                    updateState(MidiEngine.State.PLAYING)
+                } != true) {
+                updateState(previous)
+                notifyError("Failed to start audio")
+                return@safeOperation false
+            }
             startPositionUpdates()
-
-            updateState(MidiEngine.State.PLAYING)
             return@safeOperation true
 
         } catch (e: Exception) {
+            updateState(previous)
             // Nettoyer l'executor en cas d'erreur pour éviter fuite de ressources
             try {
                 playbackExecutor?.shutdownNow()
@@ -484,10 +496,11 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
 
         // Une fin signalée juste avant la pause (et ignorée depuis) le sera de nouveau
         newPlaybackGeneration()
-        audioRenderer?.resume()
         startMidiPlayback()
-        startPositionUpdates()
+        isOperationInProgress.set(false)
         updateState(MidiEngine.State.PLAYING)
+        audioRenderer?.resume()
+        startPositionUpdates()
     }
 
     private fun stopInternal() {
@@ -536,6 +549,7 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
             // Fermer le fichier SF2 pour libérer les ressources memory-mapped
             sf2File?.close()
             sf2File = null
+            orchestralBank?.clearAttacks()
             orchestralBank = null
 
             midiFile = null

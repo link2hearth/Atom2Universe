@@ -604,25 +604,30 @@ class Sf2Voice(
                 isActive = false
                 return
             }
+            val difference = nativeNote?.differenceSamples
             for (i in offset until blockEnd) {
                 // Les voix de Studio ont déjà leur propre filtre de timbre.
                 var sample = if (nativeNote != null) nativeNote.samples[i - offset]
                     else filter.process(getSampleInterpolated(sf2File, reg, looping))
+                var side = difference?.get(i - offset) ?: 0f
 
                 // Declick ramp when an audible slot had to be reused directly
                 if (declickSamplesRemaining > 0) {
                     val rampProgress = 1f - (declickSamplesRemaining.toFloat() / declickDurationSamples)
-                    sample *= rampProgress * rampProgress * (3f - 2f * rampProgress)
+                    val fade = rampProgress * rampProgress * (3f - 2f * rampProgress)
+                    sample *= fade
+                    side *= fade
                     declickSamplesRemaining--
                 }
 
                 // NaN/Inf protection
                 if (sample.isNaN() || sample.isInfinite()) sample = 0f
+                if (!side.isFinite()) side = 0f
 
                 levelLeft += incLeft
                 levelRight += incRight
-                val outL = sample * levelLeft
-                val outR = sample * levelRight
+                val outL = (sample + side) * levelLeft
+                val outR = (sample - side) * levelRight
 
                 // Mix into output
                 outputLeft[i] += outL

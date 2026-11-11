@@ -146,7 +146,7 @@ class AudioRenderer(
         listener.set(l)
     }
 
-    fun start(): Boolean {
+    fun start(beforeRender: (() -> Unit)? = null): Boolean {
         android.util.Log.d(TAG, "start: called, isReleased=${isReleased.get()} isRunning=${isRunning.get()}")
 
         if (isReleased.get()) {
@@ -154,7 +154,7 @@ class AudioRenderer(
             return false
         }
 
-        if (isRunning.get()) {
+        if (isRunning.get() && beforeRender == null) {
             android.util.Log.d(TAG, "start: already running")
             return true
         }
@@ -173,6 +173,8 @@ class AudioRenderer(
 
         try {
             if (isRunning.get()) {
+                beforeRender?.invoke()
+                if (beforeRender != null && isPaused.get()) resume()
                 return true
             }
 
@@ -187,6 +189,7 @@ class AudioRenderer(
                         // Reuse existing track - just restart it
                         android.util.Log.d(TAG, "start: reusing existing track")
                         existingTrack.play()
+                        beforeRender?.invoke()
                         isRunning.set(true)
                         isPaused.set(false)
 
@@ -222,6 +225,7 @@ class AudioRenderer(
             audioSessionId = newTrack.audioSessionId
 
             newTrack.play()
+            beforeRender?.invoke()
             isRunning.set(true)
             isPaused.set(false)
 
