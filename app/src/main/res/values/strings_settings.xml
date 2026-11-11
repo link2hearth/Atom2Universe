@@ -180,7 +180,9 @@
     <string name="about_credit_vsco_name">VSCO 2 Community Edition · VCSL</string>
     <string name="about_credit_vsco_desc">By Versilian Studios (Sam Gossner) and Ivy Audio (Simon Dalzell) - Orchestra and recorder recordings played by the Orchestral sound bank. CC0 (public domain).\nhttps://github.com/sgossner/VSCO-2-CE\nhttps://github.com/sgossner/VCSL</string>
     <string name="about_credit_freepats_name">FreePats · Karoryfer Samples</string>
-    <string name="about_credit_freepats_desc">By the FreePats project and Karoryfer Samples - Guitars, basses, old piano, accordion, tubular bells and synthesizers played by the Orchestral sound bank. CC0 (public domain).\nhttps://freepats.zenvoid.org\nhttps://github.com/sfzinstruments/karoryfer.meatbass</string>
+    <string name="about_credit_freepats_desc">By the FreePats project and Karoryfer Samples - Guitars, basses, old piano, electric organs, accordion, tubular bells, ocarina and synthesizers played by the Orchestral sound bank. CC0 (public domain).\nhttps://freepats.zenvoid.org\nhttps://github.com/sfzinstruments/karoryfer.meatbass</string>
+    <string name="about_credit_choir_name">epic-choir · VocalSet</string>
+    <string name="about_credit_choir_desc">Choir samples derived from VocalSet (Wilkins, Seetharaman, Wahl, Pardo 2018), CC BY 4.0, https://doi.org/10.5281/zenodo.1442513 — epic-choir by thepok. Shortened, looped and converted to mono for the Orchestral sound bank.\nhttps://github.com/thepok/epic-choir\nhttps://creativecommons.org/licenses/by/4.0/</string>
     <string name="settings_card_backs_blue_stars">Blue stars</string>
     <string name="settings_card_backs_rainbow">Rainbow</string>
     <string name="settings_card_backs_yellow_green">Yellow and green</string>
