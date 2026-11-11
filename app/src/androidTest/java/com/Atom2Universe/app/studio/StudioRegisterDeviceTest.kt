@@ -1,9 +1,12 @@
 package com.Atom2Universe.app.studio
 
 import android.content.Intent
+import android.graphics.Rect
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.CoordinatesProvider
+import androidx.test.espresso.action.GeneralClickAction
+import androidx.test.espresso.action.Tap
 import androidx.test.espresso.action.GeneralSwipeAction
 import androidx.test.espresso.action.Press
 import androidx.test.espresso.action.Swipe
@@ -17,6 +20,7 @@ import com.Atom2Universe.app.studio.data.PadPlayMode
 import com.Atom2Universe.app.studio.data.StudioLibrary
 import com.Atom2Universe.app.studio.data.StudioProject
 import com.Atom2Universe.app.studio.data.StudioSession
+import com.Atom2Universe.app.studio.engine.TrackKind
 import com.Atom2Universe.app.studio.engine.Inst
 import com.Atom2Universe.app.studio.engine.StudioEngine
 import com.Atom2Universe.app.studio.ui.KeyboardView
@@ -77,6 +81,62 @@ class StudioRegisterDeviceTest {
                 onView(withText(context.getString(R.string.studio_track_octave, lowerSharp))).check(matches(isDisplayed()))
                 notesTab.perform(click())
                 assertTrue("The indicated rhythm key must now be visible", 27 in checkRegister(3, 27))
+            }
+        } finally {
+            library.delete(song.id)
+        }
+    }
+
+    @Test fun padHeadersOpenIndependentPanelsAndNotesShowsTheEditedTrack() {
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        val library = StudioLibrary(File(context.filesDir, "studio/songs"))
+        val project = StudioEngine(48_000).use { engine ->
+            val session = StudioSession(engine, StudioProject.blank().copy(keyPc = 0))
+            session.addTrack(TrackKind.SYNTH)
+            session.project.copy(tracks = session.project.tracks.filter { it.melodic })
+        }
+        val (first, second) = project.tracks
+        val song = library.create("Pad panel test", project)
+        val intent = Intent(context, StudioActivity::class.java).putExtra(EXTRA_PROJECT_ID, song.id)
+        val notes = context.getString(R.string.studio_tab_notes)
+        val synth = context.getString(R.string.studio_lane_synth)
+        val keys = context.resources.getStringArray(R.array.studio_key_names)
+        fun title(n: Int) = context.getString(R.string.studio_panel_track, notes, "$synth $n")
+        fun octave(k: Int, n: Int) = context.getString(R.string.studio_track_octave, keys[k] + n)
+        fun panel(n: Int) = isDescendantOfA(withChild(withChild(withText(title(n)))))
+        val tab = withParent(isAssignableFrom(MaterialButtonToggleGroup::class.java))
+        try {
+            ActivityScenario.launch<StudioActivity>(intent).use {
+                onView(allOf(withText(R.string.studio_pads), tab)).perform(click())
+                val pads = onView(isAssignableFrom(PadsView::class.java))
+                fun open(track: Int) = pads.perform(GeneralClickAction(Tap.SINGLE, CoordinatesProvider { view ->
+                    val local = Rect()
+                    requireNotNull(view.accessibilityNodeProvider.createAccessibilityNodeInfo(2 * track)).getBoundsInParent(local)
+                    val origin = IntArray(2).also(view::getLocationOnScreen)
+                    floatArrayOf(origin[0] + local.left + 5f, origin[1] + local.exactCenterY())
+                }, Press.FINGER, 0, 0))
+                open(first.id)
+                open(second.id)
+                onView(allOf(withText(octave(0, 4)), panel(2))).perform(click())
+                onView(withText(keys[0] + "6")).perform(click())
+                onView(allOf(withText(keys[5]), panel(2))).perform(click())
+                onView(allOf(withText(octave(5, 4)), panel(1))).check(matches(isDisplayed()))
+                onView(allOf(withText(octave(5, 6)), panel(2))).check(matches(isDisplayed()))
+                pads.check { view, error ->
+                    if (error != null) throw error
+                    val tiles = (view as PadsView).tiles
+                    assertEquals(65, tiles.single { it.track == first.id }.levels!!.first())
+                    assertEquals(89, tiles.single { it.track == second.id }.levels!!.first())
+                }
+                onView(withContentDescription(context.getString(R.string.studio_close_panel, title(2)))).perform(click())
+                onView(withContentDescription(context.getString(R.string.studio_close_panel, title(1)))).perform(click())
+                onView(allOf(withText(notes), tab)).perform(click())
+                val firstChip = onView(allOf(withText("$synth 1"), isDisplayed()))
+                val secondChip = onView(allOf(withText("$synth 2"), isDisplayed()))
+                firstChip.check(matches(isSelected()))
+                secondChip.perform(click()).check(matches(isSelected()))
+                firstChip.check(matches(not(isSelected())))
+                checkRegister(5, 89)
             }
         } finally {
             library.delete(song.id)

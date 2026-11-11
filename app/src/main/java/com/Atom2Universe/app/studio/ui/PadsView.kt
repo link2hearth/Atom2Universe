@@ -7,7 +7,13 @@ import android.graphics.Color
 import android.graphics.LinearGradient
 import android.graphics.Matrix
 import android.graphics.Paint
+import android.graphics.Rect
 import android.graphics.RectF
+import android.os.Bundle
+import android.view.KeyEvent
+import androidx.core.view.ViewCompat
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
+import androidx.customview.widget.ExploreByTouchHelper
 import android.graphics.Shader
 import android.util.TypedValue
 import android.view.HapticFeedbackConstants
@@ -61,6 +67,7 @@ class PadsView(context: Context) : View(context) {
             }
             field = v
             if (!sameLayout) rebuildLayout()
+            headers.invalidateRoot()
             invalidate()
         }
 
@@ -69,6 +76,7 @@ class PadsView(context: Context) : View(context) {
             if (field == value) return
             releaseAll()
             field = value
+            headers.invalidateRoot()
             invalidate()
         }
     var onReorder: ((fromTrack: Int, toTrack: Int) -> Unit)? = null
@@ -84,6 +92,7 @@ class PadsView(context: Context) : View(context) {
     var onNoteDown: ((track: Int, pitch: Int) -> Unit)? = null
     var onNoteUp: ((track: Int, pitch: Int) -> Unit)? = null
     var onNoteEffect: ((track: Int, amount: Float) -> Unit)? = null
+    var onChooseNotes: ((track: Int, x: Int, y: Int) -> Unit)? = null
     var onChooseMode: ((track: Int, x: Int, y: Int) -> Unit)? = null
     var onGlide: ((track: Int, from: Int, to: Int) -> Unit)? = null
     var onThereminExpression: ((track: Int, amount: Float) -> Unit)? = null
@@ -95,7 +104,7 @@ class PadsView(context: Context) : View(context) {
     private class Hold(val tile: Int, var pitch: Int, val startY: Float, var effect: Float = 0f, var x: Float = 0f)
 
     private val held = HashMap<Int, Hold>()
-    private val modePresses = HashMap<Int, Int>()
+    private val headerPresses = HashMap<Int, Int>()
     private val mutedPointers = HashSet<Int>()
     internal val hasHeldDrum get() = held.values.any { it.pitch < 0 }
 
@@ -229,6 +238,7 @@ class PadsView(context: Context) : View(context) {
 
     private fun rebuildLayout() {
         areas = layoutOf(tiles.indices.toList())
+        headers.invalidateRoot()
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -265,12 +275,73 @@ class PadsView(context: Context) : View(context) {
     private fun keysTop(r: RectF): Float = r.top + minOf(dp(if (editing) 30f else 38f), r.height() * 0.35f)
 
     private fun modeLeft(r: RectF, mode: PadPlayMode): Float =
-        maxOf(r.left, r.right - maxOf(dp(48f), modeWidths.getValue(mode) + dp(26f)))
+        maxOf(r.left + minOf(dp(52f), r.width() / 2f), r.right - maxOf(dp(48f), modeWidths.getValue(mode) + dp(26f)))
 
-    private fun modeAt(i: Int, x: Float, y: Float): Boolean {
-        if (i < 0 || tiles[i].levels == null) return false
+    // Deux boutons virtuels par ID de piste, stables même après réorganisation des tuiles.
+    private fun headerIdAt(i: Int, x: Float, y: Float): Int {
+        val tile = tiles.getOrNull(i) ?: return ExploreByTouchHelper.INVALID_ID
+        if (editing || tile.levels == null) return ExploreByTouchHelper.INVALID_ID
         tileRect(i, rect)
-        return x >= modeLeft(rect, tiles[i].mode) && y <= keysTop(rect)
+        if (y > keysTop(rect)) return ExploreByTouchHelper.INVALID_ID
+        return tile.track * 2 + if (x >= modeLeft(rect, tile.mode)) 1 else 0
+    }
+
+    private fun openHeader(id: Int): Boolean {
+        val index = tiles.indexOfFirst { it.track == id / 2 }
+        if (editing || index !in areas.indices || tiles[index].levels == null) return false
+        val tile = tiles[index]
+        tileRect(index, rect)
+        val y = keysTop(rect).toInt()
+        if (id % 2 == 0) onChooseNotes?.invoke(tile.track, rect.left.toInt(), y)
+        else onChooseMode?.invoke(tile.track, modeLeft(rect, tile.mode).toInt(), y)
+        return true
+    }
+
+    private val headers = object : ExploreByTouchHelper(this) {
+        override fun getVirtualViewAt(x: Float, y: Float) = headerIdAt(indexAt(x, y), x, y)
+
+        override fun getVisibleVirtualViews(ids: MutableList<Int>) {
+            if (!editing) for (i in areas.indices) {
+                val tile = tiles[i]
+                if (tile.levels != null) {
+                    ids.add(2 * tile.track)
+                    ids.add(2 * tile.track + 1)
+                }
+            }
+        }
+
+        override fun onPopulateNodeForVirtualView(id: Int, node: AccessibilityNodeInfoCompat) {
+            val i = tiles.indexOfFirst { it.track == id / 2 }
+            val bounds = Rect()
+            node.contentDescription = ""
+            if (i in areas.indices) {
+                val t = tiles[i]
+                val notes = id % 2 == 0
+                tileRect(i, rect)
+                val split = modeLeft(rect, t.mode)
+                rect.bottom = keysTop(rect)
+                if (notes) rect.right = split else rect.left = split
+                rect.roundOut(bounds)
+                val label = if (notes) context.getString(R.string.studio_tab_notes) else modeNames.getValue(t.mode)
+                node.contentDescription = context.getString(R.string.studio_panel_track, label, t.name)
+                node.className = android.widget.Button::class.java.name
+                node.isClickable = true
+                node.addAction(AccessibilityNodeInfoCompat.ACTION_CLICK)
+            }
+            node.setBoundsInParent(bounds)
+        }
+
+        override fun onPerformActionForVirtualView(id: Int, action: Int, args: Bundle?): Boolean =
+            action == AccessibilityNodeInfoCompat.ACTION_CLICK && openHeader(id)
+    }
+
+    init { ViewCompat.setAccessibilityDelegate(this, headers) }
+
+    override fun dispatchHoverEvent(event: MotionEvent) = headers.dispatchHoverEvent(event) || super.dispatchHoverEvent(event)
+    override fun dispatchKeyEvent(event: KeyEvent) = headers.dispatchKeyEvent(event) || super.dispatchKeyEvent(event)
+    override fun onFocusChanged(gainFocus: Boolean, direction: Int, previouslyFocusedRect: Rect?) {
+        super.onFocusChanged(gainFocus, direction, previouslyFocusedRect)
+        headers.onFocusChanged(gainFocus, direction, previouslyFocusedRect)
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -370,14 +441,33 @@ class PadsView(context: Context) : View(context) {
         // Le dessin de l'instrument, petit, dans la bande du haut : on reconnaît la piste sans gêner les touches
         val top = keysTop(rect)
         val s = (top - rect.top) * 0.36f
-        val titleLeft = rect.left + dp(if (editing) 50f else 10f)
+        val titleLeft = rect.left + dp(if (editing) 50f else 6f)
         val titleRight = if (editing) rect.right - dp(36f) else modeLeft(rect, t.mode)
-        if (titleLeft + 2f * s < titleRight) {
-            InstrumentIcons.draw(canvas, t.icon, titleLeft + s, (rect.top + top) / 2f, s, Color.argb(220, 255, 255, 255))
+        val cy = (rect.top + top) / 2f
+        val compactTitle = !editing && titleRight - titleLeft < dp(84f)
+        val icon = if (compactTitle) minOf(s, dp(7f)) else s
+        val nameX = titleLeft + 2f * icon + dp(5f)
+        val name = if (compactTitle && label.measureText(t.name) > titleRight - nameX - dp(15f))
+            t.name.substringAfterLast(' ', "").takeIf { it.toIntOrNull() != null }.orEmpty() else t.name
+        val fits = label.measureText(name) <= titleRight - nameX - dp(if (editing) 3f else 15f)
+        val end = minOf(titleRight - dp(2f), nameX + (if (fits) label.measureText(name) else 0f) + dp(13f))
+        if (!editing) {
+            val radius = minOf(dp(12f), (top - rect.top) * 0.44f)
+            band.set(rect.left + dp(2f), cy - radius, end, cy + radius)
+            paint.color = Color.argb(85, 20, 20, 28)
+            canvas.drawRoundRect(band, radius, radius, paint)
+            val arrow = minOf(dp(3f), radius / 2f)
+            paint.color = Color.WHITE
+            paint.strokeWidth = dp(1.5f)
+            canvas.drawLine(end - dp(7f) - arrow, cy - arrow, end - dp(7f), cy, paint)
+            canvas.drawLine(end - dp(7f), cy, end - dp(7f) - arrow, cy + arrow, paint)
         }
-        if (top - rect.top >= label.textSize + dp(2f)) {
-            val titleY = (top + rect.top - label.ascent() - label.descent()) * 0.5f
-            drawTileName(canvas, t, titleLeft + dp(4f) + 2f * s, titleY, titleRight)
+        if (titleLeft + 2f * icon < titleRight) {
+            InstrumentIcons.draw(canvas, t.icon, titleLeft + icon, cy, icon, Color.argb(220, 255, 255, 255))
+        }
+        if (fits && top - rect.top >= label.textSize + dp(2f)) {
+            label.textAlign = Paint.Align.LEFT
+            canvas.drawText(name, nameX, cy - (label.ascent() + label.descent()) * 0.5f, label)
         }
         if (!editing) drawModeButton(canvas, t.mode, titleRight, top)
         val count = levels.size
@@ -601,8 +691,9 @@ class PadsView(context: Context) : View(context) {
                 val y = event.getY(idx)
                 val id = event.getPointerId(idx)
                 val tile = indexAt(x, y)
-                if (modeAt(tile, x, y)) {
-                    modePresses[id] = tile
+                val header = headerIdAt(tile, x, y)
+                if (header != ExploreByTouchHelper.INVALID_ID) {
+                    headerPresses[id] = header
                 } else if (tile >= 0) {
                     pitchAt(tile, x)?.let { pitch ->
                         performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
@@ -619,10 +710,10 @@ class PadsView(context: Context) : View(context) {
                     val y = event.getY(k)
                     val tile = indexAt(x, y)
                     if (id in mutedPointers) continue
-                    val button = modePresses[id]
+                    val button = headerPresses[id]
                     if (button != null) {
-                        if (tile != button || !modeAt(button, x, y)) {
-                            modePresses.remove(id)
+                        if (headerIdAt(tile, x, y) != button) {
+                            headerPresses.remove(id)
                             mutedPointers.add(id)
                         }
                         continue
@@ -671,13 +762,12 @@ class PadsView(context: Context) : View(context) {
             MotionEvent.ACTION_UP, MotionEvent.ACTION_POINTER_UP -> {
                 val idx = event.actionIndex
                 val id = event.getPointerId(idx)
-                val button = modePresses.remove(id)
+                val button = headerPresses.remove(id)
                 mutedPointers.remove(id)
-                if (button != null && indexAt(event.getX(idx), event.getY(idx)) == button && modeAt(button, event.getX(idx), event.getY(idx))) {
-                    onChooseMode?.invoke(tiles[button].track, modeLeft(rect, tiles[button].mode).toInt(), keysTop(rect).toInt())
-                } else {
-                    lift(id)
-                }
+                val x = event.getX(idx)
+                val y = event.getY(idx)
+                if (button != null && headerIdAt(indexAt(x, y), x, y) == button) openHeader(button)
+                else lift(id)
                 invalidate()
             }
             MotionEvent.ACTION_CANCEL -> releaseAll()
@@ -689,7 +779,7 @@ class PadsView(context: Context) : View(context) {
     fun releaseAll() {
         interrupted = true
         clearEdit()
-        modePresses.clear()
+        headerPresses.clear()
         mutedPointers.clear()
         for (id in held.keys.toList()) lift(id)
         invalidate()

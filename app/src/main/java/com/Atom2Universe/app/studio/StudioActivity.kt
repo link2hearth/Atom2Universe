@@ -14,6 +14,8 @@ import android.widget.SeekBar
 import android.widget.TextView
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.doOnNextLayout
+import androidx.core.graphics.ColorUtils
 import com.Atom2Universe.app.LocaleHelper
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.audio.AudioThemedActivity
@@ -192,11 +194,8 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
 
     // Notes
     private lateinit var roll: PianoRollView
-    private lateinit var keyLabel: TextView
-    private lateinit var tonicKeyboard: StudioTonicKeyboard
-    private lateinit var rhythmPitchButton: MaterialButton
-    private lateinit var scaleButton: MaterialButton
-    private lateinit var lockSwitch: SwitchCompat
+    private data class NotesPanelKey(val track: Int)
+    private var lastRevealedTrack = -1
     private lateinit var soundButton: MaterialButton
     private lateinit var keyboard: KeyboardView
     private lateinit var recordButton: MaterialButton
@@ -741,6 +740,7 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
                 }
             }
             onChooseMode = ::showPadModeMenu
+            onChooseNotes = { track, x, y -> showTrackNotes(padHeaderAnchor(x, y), track) }
             onGlide = ::glideLiveNote
             onThereminExpression = { track, amount ->
                 if (!session.isMuted(track)) {
@@ -777,11 +777,14 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         return pane
     }
 
+    private fun padHeaderAnchor(x: Int, y: Int): View = padModeAnchor.apply {
+        translationX = x.coerceIn(0, pads.width - 1).toFloat()
+        translationY = y.coerceIn(0, pads.height - 1).toFloat()
+    }
+
     private fun showPadModeMenu(id: Int, x: Int, y: Int) {
         val track = session.project.trackOrNull(id) ?: return
-        padModeAnchor.translationX = x.coerceIn(0, pads.width - 1).toFloat()
-        padModeAnchor.translationY = y.coerceIn(0, pads.height - 1).toFloat()
-        val menu = ImmersiveSupportPopupMenu(this, padModeAnchor)
+        val menu = ImmersiveSupportPopupMenu(this, padHeaderAnchor(x, y))
         for (mode in PadPlayMode.entries) {
             val name = getString(StudioNames.padMode(mode))
             val title = if (mode == PadPlayMode.THEREMIN) name else getString(R.string.studio_pad_mode_keyboard, name)
@@ -1341,6 +1344,77 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         }
     }
 
+    private fun showTrackNotes(anchor: View, trackId: Int) {
+        val track = session.project.trackOrNull(trackId)?.takeIf { it.melodic && !it.hidden } ?: return
+        val key = NotesPanelKey(trackId)
+        if (panels.raise(key)) return
+        val tuning = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dp(14), 0, dp(14), dp(10))
+        }
+        val tonicRow = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL }
+        val keyLabel = TextView(this).apply { textSize = 15f }
+        tonicRow.addView(keyLabel, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
+        val octaveButton = outlined(null).apply {
+            setIconResource(R.drawable.ic_chevron_down)
+            iconGravity = MaterialButton.ICON_GRAVITY_TEXT_END
+            iconSize = dp(16)
+            iconPadding = dp(4)
+            setOnClickListener { showRhythmOctaves(it, trackId) }
+        }
+        tonicRow.addView(octaveButton, wrap())
+        tuning.addView(tonicRow)
+        val tonicKeyboard = StudioTonicKeyboard(this).apply {
+            onKeySelected = { pitchClass ->
+                session.setKey(pitchClass)
+                changed()
+            }
+        }
+        tuning.addView(tonicKeyboard, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(6) })
+        val choices = FlowRow(this).apply { hGap = dp(8); vGap = dp(2) }
+        tuning.addView(choices)
+        val prefs = getSharedPreferences(PREFS, MODE_PRIVATE)
+        val scaleButton = outlined(null).also { it.setOnClickListener { v -> pickScale(v) } }
+        choices.addView(scaleButton, wrap(end = dp(8)))
+        val lockSwitch = SwitchCompat(this).apply {
+            setText(R.string.studio_lock)
+            textSize = 14f
+            isChecked = scaleLocked
+            setOnCheckedChangeListener { _, checked ->
+                if (checked == scaleLocked) return@setOnCheckedChangeListener
+                scaleLocked = checked
+                prefs.edit().putBoolean("lock_note_scale", checked).apply()
+                refreshRoll()
+                panels.refreshContents()
+            }
+        }
+        choices.addView(lockSwitch, wrap(end = dp(8)))
+        val dynamic = SwitchCompat(this).apply {
+            setText(R.string.studio_dynamic_touch)
+            isChecked = keyboard.dynamicTouch
+            setOnCheckedChangeListener { _, enabled ->
+                if (enabled == keyboard.dynamicTouch) return@setOnCheckedChangeListener
+                keyboard.dynamicTouch = enabled
+                prefs.edit().putBoolean("dynamic_touch", enabled).apply()
+                panels.refreshContents()
+            }
+        }
+        choices.addView(dynamic, wrap())
+        fun refresh(): String {
+            val project = session.project
+            keyLabel.text = getString(R.string.studio_key_label, resources.getStringArray(R.array.studio_key_names)[project.keyPc])
+            tonicKeyboard.keyPc = project.keyPc
+            octaveButton.text = getString(R.string.studio_track_octave, pitchName(session.rhythmEntryPitch(trackId)))
+            scaleButton.text = getString(R.string.studio_scale_label, getString(scaleName(project.scaleId)))
+            lockSwitch.isChecked = scaleLocked
+            dynamic.isChecked = keyboard.dynamicTouch
+            return getString(R.string.studio_panel_track, getString(R.string.studio_tab_notes), trackName(project.track(trackId)))
+        }
+        panels.show(key, refresh(), tuning, 350, anchor, accent = trackColor(track), refreshContent = ::refresh) {
+            session.project.trackOrNull(trackId)?.let { it.melodic && !it.hidden } == true
+        }
+    }
+
     private fun buildNotesPane(): LinearLayout {
         val outer = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
 
@@ -1357,64 +1431,14 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
 
         val header = flowRow(topMargin = dp(6))
         notesHeader = header
-        val tuning = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(dp(14), 0, dp(14), dp(10))
-        }
+        val prefs = getSharedPreferences(PREFS, MODE_PRIVATE)
+        scaleLocked = prefs.getBoolean("lock_note_scale", false)
         val tuningButton = outlined(R.string.studio_tab_notes).apply {
             setIconResource(R.drawable.ic_px_tune)
             setOnLongClickListener { showRegisterMenu(it); true }
-            setOnClickListener { anchor ->
-                (tuning.parent as? ViewGroup)?.removeView(tuning)
-                panels.show(R.string.studio_tab_notes, getString(R.string.studio_tab_notes), tuning, 350, anchor)
-            }
+            setOnClickListener { showTrackNotes(it, selectedTrack) }
         }
         header.addView(tuningButton, wrap())
-        val tonicRow = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL }
-        keyLabel = TextView(this).apply { textSize = 15f }
-        tonicRow.addView(keyLabel, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
-        rhythmPitchButton = outlined(null).apply {
-            visibility = View.GONE
-            setIconResource(R.drawable.ic_chevron_down)
-            iconGravity = MaterialButton.ICON_GRAVITY_TEXT_END
-            iconSize = dp(16)
-            iconPadding = dp(4)
-            setOnClickListener { showRhythmOctaves(it) }
-        }
-        tonicRow.addView(rhythmPitchButton, wrap())
-        tuning.addView(tonicRow)
-        tonicKeyboard = StudioTonicKeyboard(this).apply {
-            onKeySelected = { pitchClass ->
-                session.setKey(pitchClass)
-                changed()
-            }
-        }
-        tuning.addView(tonicKeyboard, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(6) })
-        val choices = FlowRow(this).apply { hGap = dp(8); vGap = dp(2) }
-        tuning.addView(choices)
-        val prefs = getSharedPreferences(PREFS, MODE_PRIVATE)
-        scaleLocked = prefs.getBoolean("lock_note_scale", false)
-        scaleButton = outlined(null).also { it.setOnClickListener { v -> pickScale(v) } }
-        choices.addView(scaleButton, wrap(end = dp(8)))
-        lockSwitch = SwitchCompat(this).apply {
-            setText(R.string.studio_lock)
-            textSize = 14f
-            isChecked = scaleLocked
-            setOnCheckedChangeListener { _, checked ->
-                scaleLocked = checked
-                prefs.edit().putBoolean("lock_note_scale", checked).apply()
-                refreshRoll()
-            }
-        }
-        choices.addView(lockSwitch, wrap(end = dp(8)))
-        choices.addView(SwitchCompat(this).apply {
-            setText(R.string.studio_dynamic_touch)
-            isChecked = prefs.getBoolean("dynamic_touch", false)
-            setOnCheckedChangeListener { _, enabled ->
-                keyboard.dynamicTouch = enabled
-                prefs.edit().putBoolean("dynamic_touch", enabled).apply()
-            }
-        }, wrap())
         soundButton = outlined(null).also { it.setOnClickListener { v -> showSoundPanel(v) } }
         header.addView(soundButton, wrap(end = dp(8)))
         arpButton = outlined(null).also { it.setOnClickListener { v -> showArpPanel(v) } }
@@ -2364,6 +2388,7 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         val padsTab = id == tabPadsId
         setPasteArmed(false)
         onNotesTab = notes
+        if (!notes) lastRevealedTrack = -1
         // Rien ne reste tenu sur la page qu'on quitte ; la prise aux pads s'arrête avec elle
         if (!padsTab) {
             cancelPadLaunch()
@@ -2662,10 +2687,9 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         refreshRoll()
     }
 
-    private fun showRhythmOctaves(anchor: View) {
-        val track = curTrack() ?: return
+    private fun showRhythmOctaves(anchor: View, trackId: Int) {
         val key = session.project.keyPc
-        val current = session.rhythmEntryPitch(track.id) / 12 - 1
+        val current = session.rhythmEntryPitch(trackId) / 12 - 1
         val menu = ImmersiveSupportPopupMenu(this, anchor)
         for (octave in -1..Track.maxRhythmOctave(key)) {
             menu.menu.add(0, octave + 1, octave + 1, pitchName((octave + 1) * 12 + key))
@@ -2674,9 +2698,12 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         menu.menu.findItem(current + 1).isChecked = true
         menu.setOnMenuItemClickListener { item ->
             val octave = item.itemId - 1
-            session.setRhythmOctave(track.id, octave)
-            register.setLow((octave + 1) * 12)
-            refreshRoll()
+            session.setRhythmOctave(trackId, octave)
+            if (trackId == selectedTrack) {
+                register.setLow((octave + 1) * 12)
+                refreshRoll()
+            }
+            panels.refreshContents()
             if (padsPane.visibility == View.VISIBLE) refreshPads()
             scheduleSave()
             true
@@ -3110,8 +3137,6 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         if (pitch == keyboard.rhythmPitch) return
         keyboard.rhythmPitch = pitch
         roll.rhythmPitch = pitch
-        rhythmPitchButton.visibility = if (pitch >= 0) View.VISIBLE else View.GONE
-        if (pitch >= 0) rhythmPitchButton.text = getString(R.string.studio_track_octave, pitchName(pitch))
     }
 
     private fun refreshRoll() {
@@ -3162,7 +3187,6 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
 
     private fun refreshNotesControls() {
         refreshSelectionBar()
-        val p = session.project
         val t = curTrack()
         val drumMode = editedDrum >= 0
         notesHeader.visibility = if (drumMode) View.GONE else View.VISIBLE
@@ -3172,11 +3196,7 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         drumPanel.visibility = if (drumMode) View.VISIBLE else View.GONE
         if (drumMode) refreshDrumPanel()
         refreshTrackStrip()
-        val keyNames = resources.getStringArray(R.array.studio_key_names)
-        keyLabel.text = getString(R.string.studio_key_label, keyNames[p.keyPc])
-        tonicKeyboard.keyPc = p.keyPc
-        scaleButton.text = getString(R.string.studio_scale_label, getString(scaleName(p.scaleId)))
-        if (lockSwitch.isChecked != scaleLocked) lockSwitch.isChecked = scaleLocked
+        panels.refreshContents()
         recordButton.setText(if (recorder.armed) R.string.studio_record_on else R.string.studio_record_off)
         recordButton.setBackgroundColor(if (recorder.armed) 0x66E74C3C else android.graphics.Color.TRANSPARENT)
         if (t == null) return
@@ -3730,7 +3750,8 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
     private fun refreshTrackStrip() {
         trackStrip.removeAllViews()
         for (t in session.project.tracks.filter { !it.hidden }) {
-            val c = chip(trackName(t)) {
+            val active = t.id == (if (editedDrum >= 0) editedDrum else selectedTrack)
+            val c = chip(trackName(t), if (active) R.drawable.ic_px_check else 0) {
                 keyboard.releaseAll()
                 theremin.finish()
                 setPasteArmed(false)
@@ -3744,20 +3765,37 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
                 refreshRoll()
                 refreshNotesControls()
             }
-            styleTrackChip(c, t, if (editedDrum >= 0) t.id == editedDrum else t.id == selectedTrack)
+            styleTrackChip(c, t, active)
             trackStrip.addView(c)
+            if (active && onNotesTab && lastRevealedTrack != t.id) {
+                lastRevealedTrack = t.id
+                trackStrip.doOnNextLayout {
+                    val selected = (0 until trackStrip.childCount).map(trackStrip::getChildAt).firstOrNull { it.isSelected }
+                    val scroller = trackStrip.parent as HorizontalScrollView
+                    if (selected != null) {
+                        if (selected.left < scroller.scrollX) scroller.scrollTo(selected.left - dp(3), 0)
+                        else if (selected.right > scroller.scrollX + scroller.width) scroller.scrollTo(selected.right - scroller.width + dp(3), 0)
+                    }
+                }
+            }
         }
         trackStrip.addView(chip(null, R.drawable.ic_px_add) { showAddTrackSheet() })
     }
 
-    /** Le contour d'une pastille de piste porte sa couleur ; la piste ouverte ([on]) a un trait plus épais et un fond teinté. */
-    private fun styleTrackChip(c: View, t: Track, on: Boolean) {
+    private fun styleTrackChip(c: TextView, t: Track, on: Boolean) {
         val color = trackColor(t)
         val raised = ContextCompat.getColor(this, R.color.audio_surface_raised)
+        c.isSelected = on
+        if (on) {
+            val ink = if (ColorUtils.calculateLuminance(color) > 0.179) android.graphics.Color.BLACK else android.graphics.Color.WHITE
+            c.setTextColor(ink)
+            c.compoundDrawableTintList = android.content.res.ColorStateList.valueOf(ink)
+            c.setTypeface(c.typeface, Typeface.BOLD)
+        }
         val shape = android.graphics.drawable.GradientDrawable().apply {
             cornerRadius = dp(17).toFloat()
-            setColor(if (on) androidx.core.graphics.ColorUtils.compositeColors((color and 0x00FFFFFF) or 0x40000000, raised) else raised)
-            setStroke(dp(if (on) 2 else 1), if (on) color else androidx.core.graphics.ColorUtils.blendARGB(raised, color, 0.48f))
+            setColor(if (on) color else raised)
+            setStroke(dp(1), if (on) color else ColorUtils.blendARGB(raised, color, 0.48f))
         }
         c.background = android.graphics.drawable.RippleDrawable(
             android.content.res.ColorStateList.valueOf(ContextCompat.getColor(this, R.color.audio_ripple)), shape, null,

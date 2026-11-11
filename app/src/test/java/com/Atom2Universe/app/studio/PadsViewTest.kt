@@ -174,6 +174,22 @@ class PadsViewTest {
         }
     }
 
+    @Test fun tappingTheNameOpensOnlyThatTrackAndSlidingOffTheHeaderIsSilent() {
+        val view = pads(melodic(PadPlayMode.CLEAN), PadsView.Tile(24, 0, 0, intArrayOf(60), padSize = PadSize.HALF))
+        val opened = mutableListOf<Int>()
+        val notes = mutableListOf<Int>()
+        view.onChooseNotes = { track, _, _ -> opened += track }
+        view.onNoteDown = { _, note -> notes += note }
+        view.touch(MotionEvent.ACTION_DOWN, 10, 8)
+        view.touch(MotionEvent.ACTION_MOVE, 10, 45)
+        view.touch(MotionEvent.ACTION_UP, 10, 45)
+        assertTrue(opened.isEmpty())
+        view.touch(MotionEvent.ACTION_DOWN, 10, 8)
+        view.touch(MotionEvent.ACTION_UP, 10, 8)
+        assertEquals(listOf(23), opened)
+        assertTrue(notes.isEmpty())
+    }
+
     @Test fun modeButtonOpensOnReleaseAndDraggingOffItNeverPlays() {
         val pads = pads(melodic(PadPlayMode.DRIVE))
         val chosen = mutableListOf<Int>()

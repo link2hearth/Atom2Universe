@@ -27,14 +27,15 @@ internal class StudioPanelHost(context: Context) : FrameLayout(context) {
     private val ink = if (dark) 0xFFF1F1F6.toInt() else 0xFF262630.toInt()
     private val margin = dp(6)
 
-    fun show(key: Int, title: String, content: View, widthDp: Int, anchor: View,
-             at: Pair<Float, Float>? = null, onHistory: (() -> Unit)? = null, valid: () -> Boolean = { true }) {
+    fun show(key: Any, title: String, content: View, widthDp: Int, anchor: View,
+             at: Pair<Float, Float>? = null, onHistory: (() -> Unit)? = null, accent: Int? = null,
+             refreshContent: (() -> String)? = null, valid: () -> Boolean = { true }) {
         val old = findViewWithTag<Card>(key)
         val where = IntArray(2)
         val origin = IntArray(2)
         getLocationOnScreen(origin)
         anchor.getLocationOnScreen(where)
-        val card = Card(widthDp, valid, onHistory).apply {
+        val card = Card(widthDp, valid, onHistory, refreshContent).apply {
             tag = key
             orientation = LinearLayout.VERTICAL
             elevation = dp(8).toFloat()
@@ -51,25 +52,33 @@ internal class StudioPanelHost(context: Context) : FrameLayout(context) {
             background = GradientDrawable().apply { cornerRadius = dp(2).toFloat(); setColor(ink) }
             alpha = 0.28f
         }, LayoutParams(dp(32), dp(3), Gravity.TOP or Gravity.CENTER_HORIZONTAL).apply { topMargin = dp(5) })
-        header.addView(TextView(context).apply {
-            text = title
+        header.addView(card.caption.apply {
             textSize = if (resources.configuration.smallestScreenWidthDp >= 600) 16f else 14f
             setTextColor(ink)
             setTypeface(typeface, Typeface.BOLD)
             maxLines = 1
             ellipsize = TextUtils.TruncateAt.END
             gravity = Gravity.CENTER_VERTICAL
+            if (accent != null) {
+                val dot = GradientDrawable().apply {
+                    shape = GradientDrawable.OVAL
+                    setColor(accent)
+                    setBounds(0, 0, dp(9), dp(9))
+                }
+                setCompoundDrawablesRelative(dot, null, null, null)
+                compoundDrawablePadding = dp(8)
+            }
         }, LayoutParams(LayoutParams.MATCH_PARENT, dp(44)).apply { leftMargin = dp(14); rightMargin = dp(48) })
-        header.addView(ImageButton(context).apply {
+        header.addView(card.dismiss.apply {
             setImageResource(R.drawable.ic_close)
             setColorFilter(ink)
             setPadding(dp(13), dp(13), dp(13), dp(13))
-            contentDescription = context.getString(R.string.studio_close_panel, title)
             val ripple = TypedValue()
             context.theme.resolveAttribute(android.R.attr.selectableItemBackgroundBorderless, ripple, true)
             setBackgroundResource(ripple.resourceId)
             setOnClickListener { close(card) }
         }, LayoutParams(dp(44), dp(44), Gravity.RIGHT))
+        card.setTitle(title)
         var dx = 0f
         var dy = 0f
         header.setOnTouchListener { _, e ->
@@ -102,7 +111,17 @@ internal class StudioPanelHost(context: Context) : FrameLayout(context) {
         onCountChanged(panelCount)
     }
 
-    private inner class Card(val widthDp: Int, val valid: () -> Boolean, val onHistory: (() -> Unit)?) : LinearLayout(context) {
+    private inner class Card(val widthDp: Int, val valid: () -> Boolean, val onHistory: (() -> Unit)?,
+                             val refreshContent: (() -> String)?) : LinearLayout(context) {
+        val caption = TextView(context)
+        val dismiss = ImageButton(context)
+
+        fun setTitle(title: String) {
+            if (caption.text == title) return
+            caption.text = title
+            dismiss.contentDescription = context.getString(R.string.studio_close_panel, title)
+        }
+
         override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
             val w = minOf(dp(widthDp), (this@StudioPanelHost.width - 2 * margin).coerceAtLeast(1))
             val h = (this@StudioPanelHost.height * 0.66f).roundToInt().coerceAtLeast(1)
@@ -144,6 +163,19 @@ internal class StudioPanelHost(context: Context) : FrameLayout(context) {
             card.x = next + gap
             spare -= gap
             next = card.x + card.width + margin
+        }
+    }
+
+    fun raise(key: Any): Boolean {
+        val card = findViewWithTag<Card>(key) ?: return false
+        card.bringToFront()
+        return true
+    }
+
+    fun refreshContents() {
+        for (i in 1 until childCount) {
+            val card = getChildAt(i) as Card
+            if (card.refreshContent != null && card.valid()) card.setTitle(card.refreshContent.invoke())
         }
     }
 
