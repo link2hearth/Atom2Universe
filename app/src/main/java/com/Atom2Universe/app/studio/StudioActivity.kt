@@ -143,6 +143,8 @@ class StudioActivity : AudioThemedActivity() {
     private lateinit var bufferButton: MaterialButton
     private lateinit var rhythmPane: LinearLayout
     private lateinit var notesPane: LinearLayout
+    private lateinit var padsBody: LinearLayout
+    private var padsShowXY = false
     private lateinit var mixerPane: LinearLayout
     private lateinit var padView: XyPadView
     private lateinit var patternGroup: MaterialButtonToggleGroup
@@ -246,7 +248,7 @@ class StudioActivity : AudioThemedActivity() {
             if (::padView.isInitialized) {
                 if (padView.isTouching) {
                     if (gestureTaking) session.recordGesture(engine.playPosition, engine.masterFilter, engine.spaceBoost)
-                } else if (mixerPane.visibility == View.VISIBLE) showPadPosition()
+                } else if (padView.isShown) showPadPosition()
             }
             if (playing || pads.hasHeldDrum) requestFrame()
         }
@@ -653,6 +655,15 @@ class StudioActivity : AudioThemedActivity() {
             }
         }, wrap(end = dp(8)))
         header.addView(rateButton)
+        header.addView(outlined(R.string.studio_pad_sounds).apply { setOnClickListener { showPadSounds(it) } })
+        header.addView(outlined(R.string.studio_xy_title).apply {
+            isCheckable = true
+            setOnClickListener {
+                padsShowXY = isChecked
+                placePerformancePad()
+                showPadPosition()
+            }
+        })
         pane.addView(header)
         pads = PadsView(this).apply {
             noteNames = resources.getStringArray(R.array.studio_key_names).toList()
@@ -665,8 +676,69 @@ class StudioActivity : AudioThemedActivity() {
             onNoteUp = { track, pitch -> padNoteUp(track, pitch) }
             onNoteEffect = { track, amount -> engine.setLiveDrive(track, amount) }
         }
-        pane.addView(pads, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f).apply { topMargin = dp(8) })
+        padsBody = LinearLayout(this).apply {
+            isMotionEventSplittingEnabled = true
+            addView(pads)
+        }
+        pane.addView(padsBody, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f).apply { topMargin = dp(8) })
         return pane
+    }
+
+    private fun showPadSounds(anchor: View) {
+        val tracks = visibleTracks()
+        dropdown(anchor, tracks.map(::trackName) + getString(R.string.studio_tracks_add)) { choice ->
+            val t = tracks.getOrNull(choice)
+            when {
+                t == null -> showAddTrackSheet()
+                t.melodic -> showSoundPanel(anchor, t.id)
+                else -> showDrumSound(anchor, t.id)
+            }
+        }
+    }
+
+    private fun showDrumSound(anchor: View, id: Int) {
+        val t = session.project.trackOrNull(id) ?: return
+        val box = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dp(14), dp(8), dp(14), dp(12))
+        }
+        val kits = resources.getStringArray(KIT_NAMES[t.voice])
+        val picker = outlined(null).apply {
+            text = if (t.sfKit >= 0) getString(R.string.studio_drum_soundfont) else kits[t.kit]
+            setOnClickListener { button ->
+                dropdown(button, kits.toList() + getString(R.string.studio_drum_soundfont)) { choice ->
+                    if (choice == kits.size) pickDrumKit(id) { showDrumSound(anchor, id) }
+                    else {
+                        val now = session.project.trackOrNull(id) ?: return@dropdown
+                        session.setDrumSoundfont(id, -1)
+                        session.setDrumVoice(id, choice, now.tune, now.length)
+                        previewTrack(id)
+                        scheduleSave()
+                        showDrumSound(anchor, id)
+                    }
+                }
+            }
+        }
+        box.addView(picker, wrap())
+        if (t.sfKit < 0) {
+            fun control(title: Int, max: Int, value: Int, change: (Track, Int) -> Unit) {
+                val bar = slider(max) { v ->
+                    session.project.trackOrNull(id)?.let { change(it, v) }
+                    scheduleSave()
+                }.apply { progress = value; contentDescription = getString(title) }
+                box.addView(labeled(title, bar))
+            }
+            control(R.string.studio_drum_tune, 24, t.tune + 12) { now, v -> session.setDrumVoice(id, now.kit, v - 12, now.length) }
+            control(R.string.studio_drum_length, 150, t.length - 50) { now, v -> session.setDrumVoice(id, now.kit, now.tune, v + 50) }
+        }
+        val actions = FlowRow(this).apply { hGap = dp(6) }
+        actions.addView(outlined(R.string.studio_drum_listen).apply { setOnClickListener { previewTrack(id) } })
+        actions.addView(outlined(R.string.studio_fx).apply { setOnClickListener { showFxPanel(it, id, trackName(t)) } })
+        actions.addView(outlined(R.string.studio_spread).apply { setOnClickListener { showSpread(it, id) } })
+        box.addView(actions)
+        panels.show(R.string.studio_sound_caption, getString(R.string.studio_panel_track,
+            getString(R.string.studio_sound_caption), trackName(t)), box, 320, anchor,
+            onHistory = { showDrumSound(anchor, id) }) { session.project.trackOrNull(id)?.hidden == false }
     }
 
     /** Les doigts posés sur les touches de chaque piste, et le retour au son net une fois tous levés. */
@@ -879,7 +951,7 @@ class StudioActivity : AudioThemedActivity() {
             mixerWide = wide
             if (::session.isInitialized && !building) rebuildMixer()
         }
-        mixerPadBox.layoutParams =
+        if (mixerPadBox.parent === mixerBody) mixerPadBox.layoutParams =
             if (wide) LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1f).apply {
                 marginStart = dp(24)
                 marginEnd = dp(16)
@@ -891,13 +963,32 @@ class StudioActivity : AudioThemedActivity() {
         mixerBody.requestLayout()
     }
 
+    /** Le même pad, le même maintien et la même prise de geste dans les deux onglets. */
+    private fun placePerformancePad() {
+        val docked = padsShowXY && padsPane.visibility == View.VISIBLE
+        val target = if (docked) padsBody else mixerBody
+        if (mixerPadBox.parent !== target) {
+            padView.finishTouch(false)
+            (mixerPadBox.parent as? ViewGroup)?.removeView(mixerPadBox)
+            target.addView(mixerPadBox)
+        }
+        val config = resources.configuration
+        val wide = config.screenWidthDp >= 650 && config.screenWidthDp > config.screenHeightDp
+        padsBody.orientation = if (wide) LinearLayout.HORIZONTAL else LinearLayout.VERTICAL
+        fun part(weight: Float) = if (wide) LinearLayout.LayoutParams(0, -1, weight) else LinearLayout.LayoutParams(-1, 0, weight)
+        pads.layoutParams = part(2f)
+        if (docked) mixerPadBox.layoutParams = part(1.2f).apply {
+            if (wide) marginStart = dp(12) else topMargin = dp(6)
+        } else applyMixerLayout()
+    }
+
     /** Vrai quand le mixeur est rangé côte à côte (tranches pleine hauteur, pad à droite). */
     private var mixerWide = false
 
     override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
         super.onConfigurationChanged(newConfig)
         if (::tabsGroup.isInitialized) layoutTabs()
-        if (::mixerBody.isInitialized) applyMixerLayout()
+        if (::mixerBody.isInitialized) { applyMixerLayout(); placePerformancePad() }
         applyNotesLayout()
         if (::theremin.isInitialized) {
             val low = register.low
@@ -1489,7 +1580,7 @@ class StudioActivity : AudioThemedActivity() {
     }
 
     /** La liste des kits de batterie du soundfont ; le choix remplace le son fabriqué de la piste. */
-    private fun pickDrumKit(trackId: Int) {
+    private fun pickDrumKit(trackId: Int, onPicked: () -> Unit = {}) {
         withSf2 { bridge ->
             val kits = bridge.drumKits
             if (kits.isEmpty()) {
@@ -1503,7 +1594,8 @@ class StudioActivity : AudioThemedActivity() {
                     session.setDrumSoundfont(trackId, kits[which].program)
                     scheduleSave()
                     refreshDrumPanel()
-                    listenDrum()
+                    previewTrack(trackId)
+                    onPicked()
                 }
                 .show()
         }
@@ -1737,6 +1829,12 @@ class StudioActivity : AudioThemedActivity() {
             }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(10) })
             box.addView(advanced)
         }
+        if (padsPane.visibility == View.VISIBLE) {
+            val actions = FlowRow(this).apply { hGap = dp(6) }
+            actions.addView(outlined(R.string.studio_fx).apply { setOnClickListener { showFxPanel(it, t.id, trackName(t)) } })
+            actions.addView(outlined(R.string.studio_arp_caption).apply { setOnClickListener { showArpPanel(it, t.id) } })
+            box.addView(actions)
+        }
         refreshPick()
         panels.show(R.string.studio_sound_caption, getString(R.string.studio_panel_track, getString(R.string.studio_sound_caption), trackName(t)), box, 340, anchor, onHistory = { showSoundPanel(anchor, t.id) }) { session.project.trackOrNull(t.id)?.hidden == false }
     }
@@ -1875,6 +1973,7 @@ class StudioActivity : AudioThemedActivity() {
         padsPane.visibility = if (padsTab) View.VISIBLE else View.GONE
         notesPane.visibility = if (notes) View.VISIBLE else View.GONE
         mixerPane.visibility = if (id == tabMixerId) View.VISIBLE else View.GONE
+        placePerformancePad()
         requestFrame()
         if (id == tabMixerId) refreshMixer()
         refreshSelectionBar()
