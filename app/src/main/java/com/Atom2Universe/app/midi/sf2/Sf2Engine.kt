@@ -159,7 +159,8 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
                 newAudioRenderer = AudioRenderer(
                     context = context,
                     sampleRate = SAMPLE_RATE,
-                    bufferSizeFrames = BUFFER_SIZE
+                    bufferSizeFrames = BUFFER_SIZE,
+                    playbackReserveFrames = playbackReserve(newSf2File)
                 )
 
                 // Tout est prêt : libérer les anciennes ressources puis assigner les nouvelles
@@ -207,7 +208,7 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
         val old: Sf2Synthesizer?
         synchronized(settingsLock) {
             newSynthesizer.masterVolume = volume
-            newSynthesizer.setForceSequentialRendering(isScreenOff)
+            newSynthesizer.setForceSequentialRendering(isScreenOff && orchestralBank == null)
             reverbPreset?.let { newSynthesizer.setReverbPreset(it) }
             chorusPreset?.let { newSynthesizer.setChorusPreset(it) }
             eqEnabled?.let { newSynthesizer.setEqEnabled(it) }
@@ -229,6 +230,10 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
         orchestralBank = null
         return if (File(path).isFile) Sf2FileCache.getMemoryMapped(path) else null
     }
+
+    // La lecture de fichiers peut préparer 256 ms d'audio pour les rafales de notes Orchestral.
+    // Les événements MIDI gardent leur précision dans les blocs de rendu de 512 trames.
+    private fun playbackReserve(bank: Sf2File) = if (bank.hasOrchestralVoices) SAMPLE_RATE * 256 / 1000 else 0
 
     private fun prepareOrchestralPrograms() {
         val bank = orchestralBank ?: return
@@ -744,7 +749,8 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
                 audioRenderer = AudioRenderer(
                     context = context,
                     sampleRate = SAMPLE_RATE,
-                    bufferSizeFrames = BUFFER_SIZE
+                    bufferSizeFrames = BUFFER_SIZE,
+                    playbackReserveFrames = playbackReserve(newSf2File)
                 )
                 configureRenderCallback()
 
@@ -793,15 +799,13 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
     /**
      * Signale que l'écran vient de s'éteindre (isOff=true) ou de s'allumer (isOff=false).
      *
-     * Quand l'écran est éteint, Android throttle le CPU (gouverneur powersave/ondemand),
-     * ce qui ralentit les threads workers du VoicePool (priorité THREAD_PRIORITY_AUDIO).
-     * En forçant le rendu séquentiel, seul le thread audio principal (THREAD_PRIORITY_URGENT_AUDIO)
-     * est utilisé — beaucoup plus résistant au throttling, élimine les craquements en background.
+     * Les échantillons SF2 se lisent sur le fil audio principal en arrière-plan.
+     * La banque Orchestral a aussi besoin des cœurs auxiliaires écran éteint.
      */
     fun setScreenOff(isOff: Boolean) {
         synchronized(settingsLock) {
             isScreenOff = isOff
-            synthesizer?.setForceSequentialRendering(isOff)
+            synthesizer?.setForceSequentialRendering(isOff && orchestralBank == null)
         }
     }
 

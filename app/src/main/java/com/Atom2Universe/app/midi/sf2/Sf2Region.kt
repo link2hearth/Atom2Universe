@@ -46,7 +46,9 @@ data class Sf2Region(
     // sampleModes 3 : la boucle ne tourne que tant que la touche est enfoncée, puis la lecture
     // continue jusqu'à la fin de l'échantillon
     val loopUntilRelease: Boolean = false,
-    val orchestralProgram: OrchestralProgram? = null
+    val orchestralProgram: OrchestralProgram? = null,
+    // Prises alternatives d'une même frappe du kit natif, jouées à tour de rôle.
+    val strikeVariants: List<Sf2Region> = emptyList()
 ) {
     /**
      * Checks if this region matches the given key and velocity

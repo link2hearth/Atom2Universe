@@ -6,6 +6,7 @@ import com.Atom2Universe.app.studio.dsp.Kick
 import com.Atom2Universe.app.studio.dsp.OrchestralBank
 import com.Atom2Universe.app.studio.dsp.Perc
 import com.Atom2Universe.app.studio.dsp.Snare
+import com.Atom2Universe.app.studio.dsp.Svf
 import com.Atom2Universe.app.studio.dsp.Tom
 import kotlin.math.roundToInt
 
@@ -25,12 +26,17 @@ internal class OrchestralSoundBank {
     companion object {
         const val ID = "builtin:orchestral"
         private const val DRUM_RATE = 24000
+        private const val SNARE_KEY = 40
 
         // Les percussions de Studio sont des frappes synthétisées. Les partager sous forme de PCM
         // permet au canal GM 10 de les jouer comme un kit SF2 ordinaire (hauteur et charlestons étouffés).
         private val drums by lazy {
-            val instruments = listOf(Kick(DRUM_RATE), Snare(DRUM_RATE), Clap(DRUM_RATE),
+            val kit = listOf(Kick(DRUM_RATE), Snare(DRUM_RATE), Clap(DRUM_RATE),
                 Hat(DRUM_RATE, false), Hat(DRUM_RATE, true), Tom(DRUM_RATE), Perc(DRUM_RATE))
+            // Quatre coups successifs de la caisse ample de Studio : le bruit du timbre
+            // continue d'un coup à l'autre. Les quatre prises sont calculées au chargement.
+            val rollSnare = Snare(DRUM_RATE).apply { setVoice(kit = 2, tune = 1, length = 110) }
+            val instruments = kit + List(4) { rollSnare }
             val samples = ArrayList<ShortArray>()
             val starts = IntArray(instruments.size)
             var size = 0
@@ -41,6 +47,15 @@ internal class OrchestralSoundBank {
                 instrument.pan = -1f
                 instrument.noteOn(60, 1f)
                 instrument.render(mono, other, other, other, 0, length)
+                if (instrument === rollSnare) {
+                    val lowPass = Svf(DRUM_RATE).apply { set(4400f, 0.707f) }
+                    val attackFrames = DRUM_RATE * 4 / 1000
+                    for (frame in mono.indices) {
+                        lowPass.tick(mono[frame])
+                        val attack = (frame.toFloat() / attackFrames).coerceAtMost(1f)
+                        mono[frame] = lowPass.lp * attack * attack * (3f - 2f * attack)
+                    }
+                }
                 val last = mono.indexOfLast { kotlin.math.abs(it) > 1f / 32768f }
                 val pcm = ShortArray((last + 2).coerceIn(2, length)) { frame ->
                     (mono[frame].coerceIn(-1f, 1f) * 32767).roundToInt().toShort()
@@ -51,10 +66,15 @@ internal class OrchestralSoundBank {
             }
             val pcm = ShortArray(size)
             samples.forEachIndexed { i, sample -> sample.copyInto(pcm, starts[i]) }
+            fun drumRegion(sound: Int, key: Int, root: Int = key) =
+                region(sound, key..key, DRUM_RATE, starts[sound].toLong(),
+                    (starts[sound] + samples[sound].size).toLong(), root, null)
+            val snareStrokes = (kit.size until instruments.size).map { drumRegion(it, SNARE_KEY) }
             val regions = (0..127).map { key ->
+                if (key == SNARE_KEY) return@map snareStrokes.first().copy(strikeVariants = snareStrokes)
                 val sound = when (key) {
                     35, 36 -> 0
-                    37, 38, 40 -> 1
+                    37, 38 -> 1
                     39 -> 2
                     42, 44, 54, 69, 70 -> 3
                     46, 49, 51, 52, 53, 55, 57, 59 -> 4
@@ -62,8 +82,7 @@ internal class OrchestralSoundBank {
                     else -> 6
                 }
                 val root = if (sound == 5) (if (key >= 60) 63 else 45) else key
-                region(sound, key..key, DRUM_RATE, starts[sound].toLong(),
-                    (starts[sound] + samples[sound].size).toLong(), root, null)
+                drumRegion(sound, key, root)
                     .copy(exclusiveClass = if (key == 42 || key == 44 || key == 46) 1 else 0)
             }
             pcm to Sf2Preset("Studio", 128, 0, regions)

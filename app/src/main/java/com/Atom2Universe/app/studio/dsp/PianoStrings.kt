@@ -88,24 +88,48 @@ internal class PianoStrings(private val rate: Int) {
         }
     }
 
-    fun next(): Float {
-        if (segment < 3 && frames == boundaries[segment + 1]) segment++
-        frames++
-        var sum = 0f
-        for (i in 0 until used) {
-            val p = partials[i]
-            if (p.bandGain > 0f) {
-                p.phase += p.step
-                if (p.phase >= 1f) p.phase -= 1f
-                p.secondPhase += p.secondStep
-                if (p.secondPhase >= 1f) p.secondPhase -= 1f
-                sum += (sine(p.phase) * 0.78f + sine(p.secondPhase) * 0.22f) * p.amplitude * p.bandGain
+    fun render(out: FloatArray, count: Int) {
+        out.fill(0f, 0, count)
+        var start = 0
+        while (start < count) {
+            if (segment < boundaries.lastIndex && frames == boundaries[segment + 1]) segment++
+            val end = if (segment == boundaries.lastIndex) count
+                else minOf(count, start + boundaries[segment + 1] - frames)
+            // Traiter chaque corde sur tout le bloc garde ses deux phases et son amplitude
+            // en registres. Les limites de segment conservent la décroissance à l'échantillon près.
+            for (i in 0 until used) {
+                val p = partials[i]
+                var amplitude = p.amplitude
+                val slope = if (segment < 0) 1f else p.slopes[segment]
+                if (p.bandGain > 0f) {
+                    var phase = p.phase
+                    var secondPhase = p.secondPhase
+                    val step = p.step
+                    val secondStep = p.secondStep
+                    val bandGain = p.bandGain
+                    for (j in start until end) {
+                        phase += step
+                        if (phase >= 1f) phase -= 1f
+                        secondPhase += secondStep
+                        if (secondPhase >= 1f) secondPhase -= 1f
+                        out[j] += (sine(phase) * 0.78f + sine(secondPhase) * 0.22f) * amplitude * bandGain
+                        amplitude *= slope
+                    }
+                    p.phase = phase
+                    p.secondPhase = secondPhase
+                } else {
+                    for (j in start until end) amplitude *= slope
+                }
+                p.amplitude = amplitude
             }
-            if (segment >= 0) p.amplitude *= p.slopes[segment]
+            frames += end - start
+            start = end
         }
-        previous = sum + carry
-        carry *= carryDecay
-        return previous
+        for (j in 0 until count) {
+            out[j] += carry
+            carry *= carryDecay
+        }
+        previous = out[count - 1]
     }
 
     private companion object {

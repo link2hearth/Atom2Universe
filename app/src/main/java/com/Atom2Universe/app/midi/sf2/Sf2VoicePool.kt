@@ -58,6 +58,10 @@ class Sf2VoicePool(
     // Hysteresis flag for parallel/sequential rendering mode switching
     // Prevents oscillation when voice count hovers around PARALLEL_THRESHOLD
     private var useParallelRendering = false
+    // Les modèles Orchestral additionnent des dizaines de partiels par voix.
+    // Quatre voix occupent déjà assez les cœurs pour amortir le réveil des workers.
+    private val parallelStart = if (orchestral) 4 else PARALLEL_THRESHOLD
+    private val parallelStop = if (orchestral) 2 else PARALLEL_THRESHOLD - 8
 
     // Parallel rendering workers (created lazily on first parallel render)
     // 0 on single-core devices (always sequential), 1-3 on multi-core
@@ -468,9 +472,9 @@ class Sf2VoicePool(
         useParallelRendering = if (forceSequentialRendering) {
             false
         } else if (useParallelRendering) {
-            count > (PARALLEL_THRESHOLD - 8)
+            count > parallelStop
         } else {
-            count >= PARALLEL_THRESHOLD
+            count >= parallelStart
         }
 
         val finalCount = if (useParallelRendering && workerCount > 0 && numSamples <= MAX_BUFFER_SIZE) {

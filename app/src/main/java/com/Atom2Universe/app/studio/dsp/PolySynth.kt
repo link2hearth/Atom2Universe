@@ -470,6 +470,7 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), 
         private var fEnv = 0f
         private var ctl = 0
         private var baseCutoff = 0f
+        private var lastCutoff = Float.NaN
         private var lfoPhase = 0f
         private var lfoInc = 0f
         private var p: SynthPatch = SynthPresets.BASS
@@ -480,6 +481,7 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), 
         private val filter = Svf(sampleRate)
         private val bar = VibraphoneBar(sampleRate)
         private val piano = PianoStrings(sampleRate)
+        private val pianoBlock = FloatArray(CONTROL_PERIOD)
         private lateinit var orchestra: OrchestralVoice
         fun prepareOrchestral() {
             if (!::orchestra.isInitialized) orchestra = OrchestralVoice(sampleRate)
@@ -546,6 +548,7 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), 
             }
             filterCoef = Fast.decayCoef(patch.filterDecay, sampleRate)
             baseCutoff = patch.cutoffHz * (freq / 261.63f).pow(patch.keyTrack)
+            lastCutoff = Float.NaN
             lfoInc = patch.lfoRate / sampleRate
             lfoPhase = 0f
             fEnv = 1f
@@ -582,6 +585,8 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), 
             val sus = p.sustain
             val wave = p.wave
             val s = smp
+            var pianoIndex = 0
+            var pianoCount = 0
             for (i in 0 until count) {
                 if (ctl <= 0) {
                     ctl = CONTROL_PERIOD
@@ -611,7 +616,11 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), 
                     // Le pad thérémine assombrit le son quand le doigt descend (jusqu'à trois octaves de filtre en moins)
                     val dim = expressionNow
                     if (dim < 0.999f) octaves -= (1f - dim) * 3f
-                    filter.set(baseCutoff * 2.0.pow(octaves.toDouble()).toFloat(), p.resonance)
+                    val cutoff = if (octaves == 0f) baseCutoff else baseCutoff * 2.0.pow(octaves.toDouble()).toFloat()
+                    if (cutoff != lastCutoff) {
+                        filter.set(cutoff, p.resonance)
+                        lastCutoff = cutoff
+                    }
                 }
                 ctl--
 
@@ -643,9 +652,16 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), 
                 } else if (wave == SynthPatch.WAVE_ORCHESTRAL) {
                     orchestra.next()
                 } else if (wave == SynthPatch.WAVE_PIANO) {
-                    piano.next() + sin(ps * TWO_PI) * sub * 0.5f
+                    if (pianoIndex == pianoCount) {
+                        // Arrêter le bloc au prochain changement de hauteur ou à la fin du rendu.
+                        pianoCount = minOf(ctl + 1, count - i)
+                        piano.render(pianoBlock, pianoCount)
+                        pianoIndex = 0
+                    }
+                    val dry = pianoBlock[pianoIndex++]
+                    if (sub == 0f) dry else dry + sin(ps * TWO_PI) * sub * 0.5f
                 } else if (wave == SynthPatch.WAVE_VIBRAPHONE) {
-                    bar.next() + sin(ps * TWO_PI) * sub * 0.5f
+                    if (sub == 0f) bar.next() else bar.next() + sin(ps * TWO_PI) * sub * 0.5f
                 } else {
                     p1 += inc1
                     if (p1 >= 1f) p1 -= 1f

@@ -361,6 +361,7 @@ class Sf2Synthesizer(
 
     // Réutilisée par noteOn sous voiceLock
     private val regionScratch = ArrayList<Sf2Region>(16)
+    private var nextSnareStroke = 0
 
     /**
      * Fills [out] with fallback regions when the primary lookup fails.
@@ -428,7 +429,14 @@ class Sf2Synthesizer(
             val voice = voicePool.allocateVoice(channel) ?: return
 
             // Trigger the voice
-            voice.trigger(channel, note, velocity, regions[i], frameOffset)
+            val region = regions[i]
+            val variants = region.strikeVariants
+            val strike = if (variants.isEmpty()) region else {
+                val selected = variants[nextSnareStroke % variants.size]
+                nextSnareStroke = (nextSnareStroke + 1) % variants.size
+                selected
+            }
+            voice.trigger(channel, note, velocity, strike, frameOffset)
         }
     }
 
@@ -1010,6 +1018,7 @@ class Sf2Synthesizer(
             synchronized(voiceLock) {
                 voicePool.stopAll()
 
+                nextSnareStroke = 0
                 for (ch in 0 until NUM_CHANNELS) {
                     channelProgram[ch] = 0
                     channelBank[ch] = if (ch == PERCUSSION_CHANNEL) Sf2Preset.PERCUSSION_BANK else 0

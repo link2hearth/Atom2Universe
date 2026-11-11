@@ -41,7 +41,8 @@ class AudioRenderer(
     val sampleRate: Int = 48000,  // Changed to 48000Hz to match most device DACs and avoid SRC
     private val bufferSizeFrames: Int = 512,
     private val lowLatency: Boolean = false,
-    private val forceSpeaker: Boolean = false  // Force audio to built-in speaker (for practice mode)
+    private val forceSpeaker: Boolean = false,  // Force audio to built-in speaker (for practice mode)
+    private val playbackReserveFrames: Int = 0
 ) {
     companion object {
         private const val TAG = "AudioRenderer"
@@ -479,7 +480,8 @@ class AudioRenderer(
         // conserver la précision MIDI. En mode lowLatency (clavier), on garde 1× pour
         // minimiser la latence interactive.
         val hardwareMultiplier = if (lowLatency) 1 else 4
-        val bufferSizeBytes = max(minBufferSize, bufferSizeFrames * 2 * 4 * hardwareMultiplier)
+        val hardwareFrames = max(bufferSizeFrames * hardwareMultiplier, playbackReserveFrames)
+        val bufferSizeBytes = max(minBufferSize, hardwareFrames * 2 * 4)
 
         val builder = AudioTrack.Builder()
             .setAudioAttributes(

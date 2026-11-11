@@ -538,7 +538,8 @@ class MidiSynthesizerManager(private val context: Context) : MidiEngine {
 
     private fun newPlaybackSf2Engine() = Sf2Engine(context).apply {
         applyMixerGain = false // Le volume maître arrive déjà par setVolume.
-        setGlobalGain(SOUNDFONT_GAIN)
+        // Les modèles Studio ont déjà leur niveau de sortie calibré. Garder de la marge pour les tutti.
+        setGlobalGain(if (currentSoundFontPath == OrchestralSoundBank.ID) 0.4f else SOUNDFONT_GAIN)
     }
 
     /**

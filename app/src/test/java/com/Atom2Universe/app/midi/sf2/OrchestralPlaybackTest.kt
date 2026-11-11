@@ -73,6 +73,25 @@ class OrchestralPlaybackTest {
         }
     }
 
+    @Test fun pianoChordKeepsEveryVoiceWhenSwitchingBetweenOneAndSeveralThreads() {
+        fun passage(sequential: Boolean): FloatArray {
+            val synth = newSynth()
+            try {
+                synth.setForceSequentialRendering(sequential)
+                synth.noteOn(0, 48, 78)
+                val intro = record(synth, 2)
+                for (key in listOf(52, 55, 60, 64, 67)) synth.noteOn(0, key, 78)
+                val chord = record(synth, 16)
+                for (key in listOf(52, 55, 60, 64, 67)) synth.noteOff(0, key)
+                return intro + chord + record(synth, 60)
+            } finally { synth.release() }
+        }
+        val reference = passage(true)
+        val actual = passage(false)
+        assertTrue(reference.maxOf { abs(it) } > 0.01f)
+        assertTrue(reference.indices.all { abs(actual[it] - reference[it]) < 1e-5f })
+    }
+
     @Test fun aProgramChangeKeepsSoundingNotesAndOtherChannelsIntact() {
         bank.preparePrograms(setOf(0, 11, 40))
         val audio = (0..2).map { arrangement ->
@@ -122,6 +141,22 @@ class OrchestralPlaybackTest {
                 record(synth, 4).also { assertTrue(it.maxOf { x -> abs(x) } > 0.001f) }
             }
             assertEquals(4, sounds.map { it.contentHashCode() }.distinct().size)
+        } finally { synth.release() }
+    }
+
+    @Test fun repeatedSnareHitsCycleThroughFourStrokesEvenOnTheFallbackKit() {
+        val synth = newSynth()
+        try {
+            synth.programChange(9, 49) // Kit demandé par Pollen.
+            val hits = List(5) {
+                synth.noteOn(9, 40, 60)
+                val sound = record(synth, 4)
+                record(synth, 64) // Laisser mourir le timbre avant de comparer les prises.
+                sound
+            }
+            assertTrue(hits.all { hit -> hit.maxOf { abs(it) } > 0.001f })
+            assertEquals(4, hits.take(4).distinctBy { it.contentHashCode() }.size)
+            assertTrue(hits[0].contentEquals(hits[4]))
         } finally { synth.release() }
     }
 }
