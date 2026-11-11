@@ -53,15 +53,17 @@ class KeyboardView(context: Context) : View(context) {
             invalidate()
         }
     var accent: Int = 0xFF1ABC9C.toInt()
+    var rhythmPitch: Int = -1
+        set(value) {
+            if (field == value) return
+            field = value
+            invalidate()
+        }
     var noteNames: List<String> = listOf("C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B")
 
     private val dark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-    private val whiteKey = if (dark) 0xFFE9E9F0.toInt() else 0xFFFFFFFF.toInt()
-    private val whiteOut = if (dark) 0xFF5A5A64.toInt() else 0xFFC6C6CE.toInt()
-    private val blackKey = 0xFF1B1B22.toInt()
-    private val blackOut = 0xFF2E2E36.toInt()
+    private val colors = StudioKeyColors(dark)
     private val edge = if (dark) 0xFF14141A.toInt() else 0xFF8C8C96.toInt()
-    private val labelColor = 0xFF45454F.toInt()
 
     private val fill = Paint(Paint.ANTI_ALIAS_FLAG)
     private val stroke = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE }
@@ -139,25 +141,26 @@ class KeyboardView(context: Context) : View(context) {
             if (isBlack(pc)) continue
             val x = left0() + whiteIndex(p) * ww
             val isDown = p in pressed || (midiLights?.get(p) ?: 0) > 0
+            val rhythm = p == rhythmPitch
+            val enabled = active(p)
             val offset = if (isDown) dp(2f) else 0f
             rect.set(x + gap, top() + offset, x + ww - gap, height.toFloat() - dp(1f))
-            fill.color = when {
-                isDown -> accent
-                active(p) -> whiteKey
-                else -> whiteOut
-            }
+            fill.color = colors.face(p, false, enabled, rhythm, isDown, accent)
+            val ink = colors.ink(fill.color, false, enabled, rhythm || isDown)
             canvas.drawRoundRect(rect, dp(6f), dp(6f), fill)
             canvas.drawRoundRect(rect, dp(6f), dp(6f), stroke)
             val key = ((p - keyPc) % 12 + 12) % 12
             val inScale = Scales.contains(scale, keyPc, p)
-            if (inScale && active(p)) {
+            if (rhythm) {
+                drawRhythmMark(canvas, rect.centerX(), height - dp(34f), ink)
+            } else if (inScale) {
                 // Le point de la gamme ; plus grand sur la tonique
-                fill.color = if (isDown) 0xFFFFFFFF.toInt() else accent
+                fill.color = if (isDown) ink else accent
                 canvas.drawCircle(x + ww / 2f, height - dp(34f), if (key == 0) dp(5f) else dp(3f), fill)
             }
-            if (pc == 0 || ww >= dp(30f)) {
-                label.color = if (isDown) 0xFFFFFFFF.toInt() else labelColor
-                canvas.drawText(if (pc == 0) noteNames[pc] + (p / 12 - 1) else noteNames[pc], x + ww / 2f, height - dp(10f), label)
+            if (rhythm || pc == 0 || ww >= dp(30f)) {
+                label.color = ink
+                canvas.drawText(if (rhythm || pc == 0) noteNames[pc] + (p / 12 - 1) else noteNames[pc], x + ww / 2f, height - dp(10f), label)
             }
         }
 
@@ -167,19 +170,32 @@ class KeyboardView(context: Context) : View(context) {
             if (!isBlack(pc)) continue
             val x = blackLeft(p)
             val isDown = p in pressed || (midiLights?.get(p) ?: 0) > 0
+            val rhythm = p == rhythmPitch
+            val enabled = active(p)
             val offset = if (isDown) dp(2f) else 0f
             rect.set(x, top() + offset, x + blackW(), blackH())
-            fill.color = when {
-                isDown -> accent
-                active(p) -> blackKey
-                else -> blackOut
-            }
+            fill.color = colors.face(p, true, enabled, rhythm, isDown, accent)
+            val ink = colors.ink(fill.color, true, enabled, rhythm || isDown)
             canvas.drawRoundRect(rect, dp(5f), dp(5f), fill)
-            if (Scales.contains(scale, keyPc, p) && active(p)) {
-                fill.color = if (isDown) 0xFFFFFFFF.toInt() else accent
+            if (rhythm) {
+                drawRhythmMark(canvas, rect.centerX(), rect.bottom - dp(25f), ink)
+                val name = noteNames[pc] + (p / 12 - 1)
+                label.color = ink
+                label.textScaleX = ((rect.width() - dp(3f)) / label.measureText(name)).coerceIn(0.1f, 1f)
+                canvas.drawText(name, rect.centerX(), rect.bottom - dp(6f), label)
+                label.textScaleX = 1f
+            } else if (Scales.contains(scale, keyPc, p)) {
+                fill.color = if (isDown) ink else accent
                 canvas.drawCircle(rect.centerX(), blackH() - dp(12f), dp(3f), fill)
             }
         }
+    }
+
+    private fun drawRhythmMark(canvas: Canvas, x: Float, y: Float, color: Int) {
+        val halfWidth = min(dp(7f), rect.width() / 3f)
+        val radius = dp(1.5f)
+        fill.color = color
+        canvas.drawRoundRect(x - halfWidth, y - radius, x + halfWidth, y + radius, radius, radius, fill)
     }
 
     /** La touche sous le point ([x], [y]) : les noires ont la priorité sur la moitié haute. */

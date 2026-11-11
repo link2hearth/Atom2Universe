@@ -1088,12 +1088,25 @@ class StudioSession(
     private class Melody(val notes: List<Note>, steps: Int) {
         val velocity = FloatArray(steps)
         val tails = BooleanArray(steps)
+        private val octaveCounts = IntArray(11)
         init {
             for (note in notes) {
+                octaveCounts[note.pitch / 12]++
                 if (note.step !in velocity.indices) continue
                 velocity[note.step] = maxOf(velocity[note.step], note.velocity)
                 for (s in note.step + 1 until minOf(steps, note.step + note.length)) tails[s] = true
             }
+        }
+
+        fun entryOctave(reference: Int?): Int {
+            if (reference == null) return octaveCounts.indexOfFirst { it > 0 } * 12
+            var best = reference / 12
+            for (octave in octaveCounts.indices) {
+                val count = octaveCounts[octave]
+                if (count > octaveCounts[best] || (count == octaveCounts[best] &&
+                        abs(octave * 12 - reference) < abs(best * 12 - reference))) best = octave
+            }
+            return best * 12
         }
     }
 
@@ -1127,7 +1140,7 @@ class StudioSession(
             if (on) {
                 // Le prolongement d'une note longue n'est pas un pas libre : on la règle par sa bulle, pas en la touchant
                 if (isTail(track, step)) return
-                withNotes(project.pattern.notes + Note(step, defaultPitch(track), 1, LEVELS[0], track))
+                withNotes(project.pattern.notes + Note(step, rhythmEntryPitch(track), 1, LEVELS[0], track))
             } else {
                 withNotes(project.pattern.notes.filter { !(it.track == track && it.step == step) })
             }
@@ -1343,21 +1356,13 @@ class StudioSession(
         val notes = notesOf(track)
         return notes.firstOrNull { it.step == step }?.pitch
             ?: notes.firstOrNull { step > it.step && step < it.step + it.length }?.pitch
-            ?: defaultPitch(track)
+            ?: rhythmEntryPitch(track)
     }
 
-    private fun defaultPitch(track: Int): Int {
-        val notes = notesOf(track)
-        val chipOctave = StudioRegister.chipOctave(project.track(track))
-        val octave = when {
-            notes.isEmpty() -> chipOctave ?: 24
-            chipOctave == null -> notes.minOf { it.pitch } / 12 * 12
-            else -> {
-                val counts = IntArray(11)
-                for (n in notes) counts[n.pitch / 12]++
-                counts.indices.maxWith(compareBy<Int> { counts[it] }.thenBy { -abs(it * 12 - chipOctave) }) * 12
-            }
-        }
+    /** Hauteur réellement posée sur un pas vide de Rythme et repérée sur les claviers de Notes. */
+    internal fun rhythmEntryPitch(track: Int): Int {
+        val reference = StudioRegister.chipOctave(project.track(track))
+        val octave = melody(track)?.entryOctave(reference) ?: reference ?: StudioRegister.MIDDLE_C
         val pitch = octave + project.keyPc
         return if (pitch <= 127) pitch else pitch - 12
     }

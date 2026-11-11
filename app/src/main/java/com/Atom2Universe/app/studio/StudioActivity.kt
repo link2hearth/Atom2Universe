@@ -38,6 +38,7 @@ import com.Atom2Universe.app.audioeditor.AudioEditorLibraryActivity
 import com.Atom2Universe.app.audioeditor.EXTRA_IMPORT_NAME
 import com.Atom2Universe.app.audioeditor.EXTRA_IMPORT_URI
 import android.content.Intent
+import com.Atom2Universe.app.studio.ui.StudioTonicKeyboard
 import com.Atom2Universe.app.studio.ui.KeyboardView
 import com.Atom2Universe.app.studio.ui.XyPadView
 import com.Atom2Universe.app.studio.ui.FmPatchPadView
@@ -191,7 +192,9 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
 
     // Notes
     private lateinit var roll: PianoRollView
-    private lateinit var keyButton: MaterialButton
+    private lateinit var keyLabel: TextView
+    private lateinit var tonicKeyboard: StudioTonicKeyboard
+    private lateinit var rhythmPitchButton: MaterialButton
     private lateinit var scaleButton: MaterialButton
     private lateinit var lockSwitch: SwitchCompat
     private lateinit var soundButton: MaterialButton
@@ -228,11 +231,9 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         }
     }
     private var building = true
-    private var scaleLocked = true
+    private var scaleLocked = false
     private var requestedOctaves: Int? = null
-    private var manualRegister = false
     private lateinit var register: StudioRegister
-    private lateinit var registerButton: MaterialButton
     private var onNotesTab = false
 
     private val saveRunnable = Runnable { session.flush(); refreshPatterns() }
@@ -347,7 +348,6 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         recorder = LiveRecorder(session, { engine.playing }, { engine.playPosition }, { selectedTrack })
         ensureSelected()
         register = newRegister()
-        focusRegister()
 
         setContentView(buildContent())
         building = false
@@ -1173,7 +1173,7 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         if (::theremin.isInitialized) {
             val low = register.low
             register = newRegister()
-            if (manualRegister) register.setLow(low) else focusRegister()
+            register.setLow(low)
             refreshRoll()
         }
     }
@@ -1366,35 +1366,59 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
 
         val header = flowRow(topMargin = dp(6))
         notesHeader = header
-        val tuning = FlowRow(this).apply {
-            hGap = dp(6)
-            vGap = dp(4)
-            setPadding(dp(12), 0, dp(12), dp(12))
+        val tuning = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dp(14), 0, dp(14), dp(10))
         }
         val tuningButton = outlined(R.string.studio_tab_notes).apply {
             setIconResource(R.drawable.ic_px_tune)
+            setOnLongClickListener { showRegisterMenu(it); true }
             setOnClickListener { anchor ->
                 (tuning.parent as? ViewGroup)?.removeView(tuning)
                 panels.show(R.string.studio_tab_notes, getString(R.string.studio_tab_notes), tuning, 350, anchor)
             }
         }
         header.addView(tuningButton, wrap())
-        keyButton = outlined(null).also { it.setOnClickListener { v -> pickKey(v) } }
-        tuning.addView(keyButton, wrap(end = dp(8)))
+        val tonicRow = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL }
+        keyLabel = TextView(this).apply { textSize = 15f }
+        tonicRow.addView(keyLabel, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
+        rhythmPitchButton = outlined(null).apply {
+            visibility = View.GONE
+            setOnClickListener {
+                val pitch = keyboard.rhythmPitch
+                if (pitch >= 0) {
+                    register.reveal(pitch)
+                    refreshRoll()
+                }
+            }
+        }
+        tonicRow.addView(rhythmPitchButton, wrap())
+        tuning.addView(tonicRow)
+        tonicKeyboard = StudioTonicKeyboard(this).apply {
+            onKeySelected = { pitchClass ->
+                session.setKey(pitchClass)
+                changed()
+            }
+        }
+        tuning.addView(tonicKeyboard, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(6) })
+        val choices = FlowRow(this).apply { hGap = dp(8); vGap = dp(2) }
+        tuning.addView(choices)
+        val prefs = getSharedPreferences(PREFS, MODE_PRIVATE)
+        scaleLocked = prefs.getBoolean("lock_note_scale", false)
         scaleButton = outlined(null).also { it.setOnClickListener { v -> pickScale(v) } }
-        tuning.addView(scaleButton, wrap(end = dp(8)))
+        choices.addView(scaleButton, wrap(end = dp(8)))
         lockSwitch = SwitchCompat(this).apply {
             setText(R.string.studio_lock)
             textSize = 14f
             isChecked = scaleLocked
             setOnCheckedChangeListener { _, checked ->
                 scaleLocked = checked
+                prefs.edit().putBoolean("lock_note_scale", checked).apply()
                 refreshRoll()
             }
         }
-        tuning.addView(lockSwitch, wrap(end = dp(8)))
-        val prefs = getSharedPreferences(PREFS, MODE_PRIVATE)
-        tuning.addView(SwitchCompat(this).apply {
+        choices.addView(lockSwitch, wrap(end = dp(8)))
+        choices.addView(SwitchCompat(this).apply {
             setText(R.string.studio_dynamic_touch)
             isChecked = prefs.getBoolean("dynamic_touch", false)
             setOnCheckedChangeListener { _, enabled ->
@@ -1402,24 +1426,6 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
                 prefs.edit().putBoolean("dynamic_touch", enabled).apply()
             }
         }, wrap())
-        val octaves = LinearLayout(this).apply {
-            orientation = LinearLayout.HORIZONTAL
-            gravity = Gravity.CENTER_VERTICAL
-        }
-
-        octaves.addView(square(R.string.studio_tempo_less).also {
-            it.contentDescription = getString(R.string.studio_octave_down)
-            it.setOnClickListener { shiftRegister(-7) }
-        })
-        registerButton = outlined(null).apply {
-            setOnClickListener { showRegisterMenu(it) }
-        }
-        octaves.addView(registerButton)
-        octaves.addView(square(R.string.studio_tempo_more).also {
-            it.contentDescription = getString(R.string.studio_octave_up)
-            it.setOnClickListener { shiftRegister(7) }
-        })
-        tuning.addView(octaves, wrap(end = dp(8)))
         soundButton = outlined(null).also { it.setOnClickListener { v -> showSoundPanel(v) } }
         header.addView(soundButton, wrap(end = dp(8)))
         arpButton = outlined(null).also { it.setOnClickListener { v -> showArpPanel(v) } }
@@ -2172,10 +2178,6 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         // Garder les touches sous les doigts et la note tenue pendant un changement de son.
         if (hasLiveInput(id)) return
         val octave = StudioRegister.chipOctave(t)
-        if (id == selectedTrack && !manualRegister && octave != null && session.notesOf(id).isEmpty()) {
-            register.setLow(octave)
-            refreshRoll()
-        }
         if (padsPane.visibility == View.VISIBLE) refreshPads()
         if (!playing) {
             if (octave == null) auditionPreset(id, t.synth) else auditionNote(id, octave, 500L)
@@ -2404,7 +2406,6 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         refreshSelectionBar()
         if (notes) {
             ensureSelected()
-            if (!manualRegister) focusRegister()
             refreshRoll()
             refreshNotesControls()
         }
@@ -2440,13 +2441,6 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
     private fun previewTrack(id: Int) {
         val t = session.project.trackOrNull(id) ?: return
         if (t.melodic) previewPitch((register.low + (session.project.keyPc - register.low % 12 + 12) % 12), 0.9f, 450, track = id) else engine.trigger(id, 60, 1f, recordHit = false)
-    }
-
-    private fun pickKey(anchor: View) {
-        dropdown(anchor, resources.getStringArray(R.array.studio_key_names).toList()) { which ->
-            session.setKey(which)
-            changed()
-        }
     }
 
     private fun pickScale(anchor: View) {
@@ -2646,6 +2640,7 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
     }
 
     private fun scheduleSave() {
+        refreshRhythmPitch()
         val pending = engine.pendingPadLoop
         if (pending >= 0 && queuedPattern !== session.project.patterns[pending]) cancelPadLaunch()
         panels.prune()
@@ -2659,18 +2654,15 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
     private fun newRegister() = resources.configuration.let { StudioRegister(it.screenWidthDp, it.screenHeightDp, requestedOctaves) }
 
     private fun focusRegister() {
-        manualRegister = false
         register.focus(session.notesOf(selectedTrack), curTrack()?.let { StudioRegister.chipOctave(it) })
     }
 
     private fun shiftRegister(keys: Int) {
-        manualRegister = true
         register.shift(keys)
         refreshRoll()
     }
 
     private fun revealNote(note: Note) {
-        manualRegister = true
         register.reveal(note.pitch)
         roll.ensureVisible(note.step)
         refreshRoll()
@@ -2695,7 +2687,6 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
                 val low = register.low
                 register = newRegister()
                 register.setLow(low)
-                if (!manualRegister) focusRegister()
                 refreshRoll()
                 return@dropdown
             }
@@ -2909,7 +2900,6 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         selectPadLoop(slot)
         if (track.melodic) {
             editedDrum = -1
-            if (selectedTrack != track.id) manualRegister = false
             selectedTrack = track.id
             tabsGroup.check(tabNotesId)
         } else {
@@ -3098,6 +3088,16 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         if (padsPane.visibility == View.VISIBLE) refreshPads()
     }
 
+    private fun refreshRhythmPitch() {
+        if (!::keyboard.isInitialized) return
+        val pitch = curTrack()?.takeIf { it.melodic }?.let { session.rhythmEntryPitch(it.id) } ?: -1
+        if (pitch == keyboard.rhythmPitch) return
+        keyboard.rhythmPitch = pitch
+        roll.rhythmPitch = pitch
+        rhythmPitchButton.visibility = if (pitch >= 0) View.VISIBLE else View.GONE
+        if (pitch >= 0) rhythmPitchButton.text = getString(R.string.studio_rhythm_pitch, pitchName(pitch))
+    }
+
     private fun refreshRoll() {
         displayMidiLights()
         val p = session.project
@@ -3106,7 +3106,7 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         roll.scale = scale
         roll.scaleLocked = scaleLocked
         roll.rows = (register.low..register.high).toList().toIntArray()
-        registerButton.text = getString(R.string.studio_register_range, pitchName(register.low), pitchName(register.high))
+        refreshRhythmPitch()
         if (roll.pasteArmed) updatePasteTarget()
         roll.invalidate()
         keyboard.keyPc = p.keyPc
@@ -3115,7 +3115,7 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         keyboard.high = register.high
         keyboard.locked = scaleLocked
         theremin.keyPc = p.keyPc
-        theremin.pitches = roll.rows.filter { Scales.contains(scale, p.keyPc, it) }.toIntArray()
+        theremin.pitches = if (scaleLocked) roll.rows.filter { Scales.contains(scale, p.keyPc, it) }.toIntArray() else roll.rows
     }
 
     /** Le clavier ou le thérémine, sous le piano roll. */
@@ -3157,7 +3157,8 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         if (drumMode) refreshDrumPanel()
         refreshTrackStrip()
         val keyNames = resources.getStringArray(R.array.studio_key_names)
-        keyButton.text = getString(R.string.studio_key_label, keyNames[p.keyPc])
+        keyLabel.text = getString(R.string.studio_key_label, keyNames[p.keyPc])
+        tonicKeyboard.keyPc = p.keyPc
         scaleButton.text = getString(R.string.studio_scale_label, getString(scaleName(p.scaleId)))
         if (lockSwitch.isChecked != scaleLocked) lockSwitch.isChecked = scaleLocked
         recordButton.setText(if (recorder.armed) R.string.studio_record_on else R.string.studio_record_off)
@@ -3678,7 +3679,6 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         val t = p.trackOrNull(selectedTrack)
         if (t == null || !t.melodic || t.hidden) {
             selectedTrack = p.tracks.firstOrNull { it.melodic && !it.hidden }?.id ?: -1
-            manualRegister = false
         }
         // Une piste de batterie ouverte qui a disparu (ou qu'on a cachée) : retour aux notes
         if (editedDrum >= 0 && p.trackOrNull(editedDrum)?.let { it.kind == TrackKind.DRUM && !it.hidden } != true) editedDrum = -1
@@ -3721,10 +3721,7 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
                 roll.clearSelection()
                 if (t.melodic) {
                     editedDrum = -1
-                    if (selectedTrack != t.id) {
-                        selectedTrack = t.id
-                        focusRegister()
-                    }
+                    selectedTrack = t.id
                 } else {
                     editedDrum = t.id
                 }
@@ -3799,7 +3796,6 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         if (id < 0) return
         if (kind != TrackKind.DRUM) {
             selectedTrack = id
-            focusRegister()
         }
         changed()
     }

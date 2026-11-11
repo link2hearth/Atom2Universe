@@ -78,6 +78,12 @@ class PianoRollView(context: Context) : View(context) {
     var keyPc: Int = 9
     var scale: Scale = Scales.MINOR_PENT
     var accent: Int = 0xFF1ABC9C.toInt()
+    var rhythmPitch: Int = -1
+        set(value) {
+            if (field == value) return
+            field = value
+            invalidate()
+        }
 
     /** Noms des douze notes d'une octave (do, do dièse, ré…), fournis par l'écran dans la langue de l'utilisateur. */
     var noteNames: List<String> = listOf("C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B")
@@ -95,6 +101,7 @@ class PianoRollView(context: Context) : View(context) {
         }
 
     private val dark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+    private val keyColors = StudioKeyColors(dark)
     private val rowIn = if (dark) 0xFF3B3B42.toInt() else 0xFFD8D8DE.toInt()
     private val rowInAlt = if (dark) 0xFF44444B.toInt() else 0xFFCFCFD6.toInt()
     private val rowOut = if (dark) 0xFF2A2A2F.toInt() else 0xFFE8E8EC.toInt()
@@ -482,26 +489,31 @@ class PianoRollView(context: Context) : View(context) {
             val pc = ((pitch % 12) + 12) % 12
             val black = pc == 1 || pc == 3 || pc == 6 || pc == 8 || pc == 10
             val pressedNow = pitch == pressedPitch || pitch in lit || (midiLights?.get(pitch) ?: 0) > 0
+            val rhythm = pitch == rhythmPitch
+            val enabled = !scaleLocked || inScale
             rect.set(0f, top + pad, keyW, top + rh - pad)
             fill.color = if (black) 0xFF24242B.toInt() else 0xFF14141A.toInt()
             canvas.drawRoundRect(rect, dp(4f), dp(4f), fill)
             val keyRight = if (black) keyW * 0.62f else keyW - dp(1f)
             rect.set(0f, top + pad, keyRight, top + rh - pad)
-            fill.color = when {
-                pressedNow -> accent
-                black -> if (inScale) 0xFF3A3A44.toInt() else 0xFF2C2C33.toInt()
-                else -> if (inScale) 0xFFF1F1F6.toInt() else 0xFF8A8A94.toInt()
-            }
+            fill.color = keyColors.face(pitch, black, enabled, rhythm, pressedNow, accent)
+            val ink = keyColors.ink(fill.color, black, enabled, rhythm || pressedNow)
             canvas.drawRoundRect(rect, dp(4f), dp(4f), fill)
-            if (isRoot && !black) {
-                fill.color = accent
-                canvas.drawCircle(keyW - dp(10f), top + rh / 2f, dp(3.5f), fill)
+            if (rhythm) {
+                fill.color = ink
+                canvas.drawRoundRect(keyRight - dp(6f), top + rh * 0.23f, keyRight - dp(3f), top + rh * 0.77f,
+                    dp(1.5f), dp(1.5f), fill)
+            } else if (isRoot) {
+                fill.color = if (pressedNow) ink else accent
+                canvas.drawCircle(keyRight - dp(8f), top + rh / 2f, dp(3f), fill)
             }
-            if (pc == 0 || rh >= label.textSize * 1.25f) {
-                val name = if (pc == 0) noteNames[pc] + (pitch / 12 - 1) else noteNames[pc]
-                label.color = if (pressedNow || black) 0xFFFFFFFF.toInt() else 0xFF45454F.toInt()
-                label.isFakeBoldText = pc == 0
+            if (rhythm || pc == 0 || rh >= label.textSize * 1.25f) {
+                val name = if (rhythm || pc == 0) noteNames[pc] + (pitch / 12 - 1) else noteNames[pc]
+                label.color = ink
+                label.isFakeBoldText = rhythm || pc == 0
+                if (rhythm) label.textScaleX = ((keyRight - dp(16f)) / label.measureText(name)).coerceIn(0.1f, 1f)
                 canvas.drawText(name, dp(8f), top + rh / 2f + label.textSize / 3f, label)
+                if (rhythm) label.textScaleX = 1f
             }
         }
     }

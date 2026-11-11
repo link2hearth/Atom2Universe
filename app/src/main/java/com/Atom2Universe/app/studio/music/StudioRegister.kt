@@ -11,7 +11,7 @@ internal class StudioRegister(widthDp: Int, heightDp: Int, chosenOctaves: Int? =
     val octaves = chosenOctaves ?: if (widthDp >= 680 && heightDp >= 720) 2 else 1
     val whiteCount = 7 * octaves + 1
     private val lastStart = whites.size - whiteCount
-    private var start = whites.indexOf(24)
+    private var start = whites.indexOf(MIDDLE_C)
     val low get() = whites[start]
     val high get() = whites[start + whiteCount - 1]
 
@@ -41,6 +41,7 @@ internal class StudioRegister(widthDp: Int, heightDp: Int, chosenOctaves: Int? =
     }
 
     companion object {
+        const val MIDDLE_C = 60
         val whites = (0..127).filter { it % 12 in listOf(0, 2, 4, 5, 7, 9, 11) }.toIntArray()
 
         /** Le do de référence de la préécoute, commun aux pistes vides et au jeu au doigt. */
@@ -52,7 +53,7 @@ internal class StudioRegister(widthDp: Int, heightDp: Int, chosenOctaves: Int? =
         }
 
         fun padPitches(notes: List<Note>, scale: Scale, keyPc: Int, emptyOctave: Int?): IntArray {
-            val low = notes.minOfOrNull { it.pitch } ?: emptyOctave?.plus(keyPc) ?: 48
+            val low = notes.minOfOrNull { it.pitch } ?: ((emptyOctave ?: MIDDLE_C) + keyPc)
             val tonic = (low - Math.floorMod(low - keyPc, 12)).coerceAtLeast(keyPc)
             return Scales.rows(scale, keyPc, tonic, 1, true)
         }

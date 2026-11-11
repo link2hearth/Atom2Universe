@@ -17,7 +17,21 @@ import org.junit.Test
 class StudioEditingTest {
     private fun session() = StudioSession(StudioEngine(48_000), StudioProject.blank())
 
-    @Test fun emptyChipKeyboardsOpenInTheSameRegisterAsTheAuditionForEveryKey() {
+    @Test fun middleCAnchorsTheKeyboardAndTheFirstNotesOfAnEmptyStudioTrack() {
+        val register = StudioRegister(360, 740)
+        assertEquals(60, register.low)
+        for (key in listOf(0, 6, 9)) {
+            val s = session()
+            s.setKey(key)
+            val rhythm = s.rhythmEntryPitch(Inst.SYNTH)
+            assertEquals(60 + key, rhythm)
+            assertEquals(rhythm, StudioRegister.padPitches(emptyList(), Scales.CHROMATIC, key, null).first())
+            s.setStep(Inst.SYNTH, 3, true)
+            assertEquals(rhythm, s.notesOf(Inst.SYNTH).single().pitch)
+        }
+    }
+
+    @Test fun chipReferencesForExplicitFocusAndPadPitchesAgreeForEveryKey() {
         val piano = Track.synth(7).copy(synthBank = SynthBank.SCC)
         val bass = piano.copy(synthBank = SynthBank.FAMICOM, program = 32)
         val r = StudioRegister(360, 740)
