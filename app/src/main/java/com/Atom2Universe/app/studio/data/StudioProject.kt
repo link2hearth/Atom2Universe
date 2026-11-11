@@ -275,6 +275,7 @@ object StudioProjectCodec {
             .put("voice", t.voice)
             .also { o ->
                 if (t.padOrder != Int.MAX_VALUE) o.put("padOrder", t.padOrder)
+                if (t.melodic && t.padPlayMode != PadPlayMode.DRIVE) o.put("padPlayMode", t.padPlayMode.key)
                 when (t.padSize) {
                     PadSize.WIDE -> o.put("padWide", true)
                     PadSize.HALF -> o.put("padHalf", true)
@@ -322,6 +323,7 @@ object StudioProjectCodec {
                 pump = a.optDouble(7, 0.0).toFloat().coerceIn(0f, 1f),
             ),
             padOrder = o.optInt("padOrder", Int.MAX_VALUE).coerceAtLeast(0),
+            padPlayMode = if (kind == TrackKind.DRUM) PadPlayMode.DRIVE else PadPlayMode.fromKey(o.optString("padPlayMode")),
             padSize = when {
                 o.optBoolean("padHalf") -> PadSize.HALF
                 o.optBoolean("padWide") -> PadSize.WIDE
@@ -658,9 +660,18 @@ class StudioSession(
 
     private fun togglePadSize(id: Int, size: PadSize) {
         val t = project.trackOrNull(id) ?: return
+        applyPadEdit(t.copy(padSize = if (t.padSize == size) PadSize.NORMAL else size))
+    }
+
+    fun setPadPlayMode(id: Int, mode: PadPlayMode) {
+        val t = project.trackOrNull(id) ?: return
+        if (t.melodic && t.padPlayMode != mode) applyPadEdit(t.copy(padPlayMode = mode))
+    }
+
+    private fun applyPadEdit(track: Track) {
         closeOpen()
         remember()
-        project = project.withTrack(t.copy(padSize = if (t.padSize == size) PadSize.NORMAL else size))
+        project = project.withTrack(track)
         closeOpen()
     }
 

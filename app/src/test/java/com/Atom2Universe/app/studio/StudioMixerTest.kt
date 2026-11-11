@@ -98,6 +98,30 @@ class StudioMixerTest {
     }
 
     @Test
+    fun liveFilterSweepsOneTrackAndReturnsToItsMixerSound() {
+        fun sustained() = dry().also { engine ->
+            engine.instrument(Inst.SYNTH)!!.filterSweep = 0.3f
+            engine.trigger(Inst.SYNTH, 81, 0.9f)
+            render(engine, rate / 8)
+        }
+        val plain = sustained()
+        val pad = sustained()
+        // Un geste sur une autre piste laisse le synthé intact.
+        pad.setLiveFilter(Inst.HAT, 1f)
+        assertTrue(render(plain, 1024).contentEquals(render(pad, 1024)))
+        pad.setLiveFilter(Inst.SYNTH, 1f)
+        val open = render(plain, 4096)
+        val closed = render(pad, 4096)
+        assertEquals(open[0], closed[0], 0f)
+        assertTrue(rms(closed, 1024) < rms(open, 1024) * 0.6)
+        pad.setLiveFilter(Inst.SYNTH, 0f)
+        val reference = render(plain, 4096)
+        val restored = render(pad, 4096)
+        for (i in 1024 until reference.size) assertEquals(reference[i], restored[i], 0f)
+        assertEquals(0.3f, pad.instrument(Inst.SYNTH)!!.filterSweep, 0f)
+    }
+
+    @Test
     fun highpassFilterRemovesLows() {
         val plain = hit(Inst.KICK)
         val thin = hit(Inst.KICK) { it.instrument(Inst.KICK)!!.filterSweep = 1f }

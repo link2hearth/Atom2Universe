@@ -1,6 +1,7 @@
 package com.Atom2Universe.app.studio
 
 import com.Atom2Universe.app.studio.data.Action
+import com.Atom2Universe.app.studio.data.PadPlayMode
 import com.Atom2Universe.app.studio.data.PadSize
 import com.Atom2Universe.app.studio.data.StudioHistory
 import com.Atom2Universe.app.studio.data.StudioProject
@@ -298,6 +299,42 @@ class StudioTracksTest {
         session.togglePadHalf(kick)
         session.resizePad(kick)
         assertEquals(PadSize.WIDE, session.project.track(kick).padSize)
+    }
+
+    @Test
+    fun melodicPadModesAreLocalToEachTrackAndRestoredByTheJournal() {
+        val s = session()
+        val synth = Inst.SYNTH
+        val initial = s.project
+        s.setPadPlayMode(synth, PadPlayMode.DRIVE)
+        s.setPadPlayMode(Inst.KICK, PadPlayMode.THEREMIN)
+        s.setPadPlayMode(-1, PadPlayMode.CLEAN)
+        assertFalse(s.canUndo)
+        assertTrue(initial === s.project)
+
+        val sf = s.addTrack(TrackKind.SF2, bank = 0, program = 8)
+        s.setPadPlayMode(sf, PadPlayMode.FILTER)
+        val before = s.project
+        s.setPadPlayMode(synth, PadPlayMode.CLEAN)
+        val after = s.project
+        s.setPadPlayMode(synth, PadPlayMode.CLEAN)
+        assertTrue(after === s.project)
+        val journal = listOf(StudioHistory.line(Action(StudioHistory.diff(before, after, true)), undoable = true))
+        val reopened = StudioHistory.replay(before, journal)
+        assertEquals(PadPlayMode.CLEAN, reopened.project.track(synth).padPlayMode)
+        s.undo()
+        assertEquals(PadPlayMode.DRIVE, s.project.track(synth).padPlayMode)
+        s.redo()
+        assertEquals(PadPlayMode.CLEAN, s.project.track(synth).padPlayMode)
+
+        s.setPadPlayMode(synth, PadPlayMode.THEREMIN)
+        val loaded = StudioProjectCodec.decode(StudioProjectCodec.encode(s.project))!!
+        assertEquals(PadPlayMode.THEREMIN, loaded.track(synth).padPlayMode)
+        assertEquals(PadPlayMode.FILTER, loaded.track(sf).padPlayMode)
+        val encoded = StudioProjectCodec.encodeTrack(loaded.track(synth))
+        assertEquals("theremin", encoded.getString("padPlayMode"))
+        encoded.put("padPlayMode", "unknown")
+        assertEquals(PadPlayMode.DRIVE, StudioProjectCodec.decodeTrack(encoded)!!.padPlayMode)
     }
 
     @Test

@@ -4,7 +4,9 @@ import android.app.Application
 import android.view.MotionEvent
 import com.Atom2Universe.app.studio.ui.PadsView
 import com.Atom2Universe.app.studio.data.PadSize
+import com.Atom2Universe.app.studio.data.PadPlayMode
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -148,5 +150,87 @@ class PadsViewTest {
         pads.touch(MotionEvent.ACTION_UP, 350, 70)
         assertEquals(listOf(60, 64), attacks)
         assertEquals(listOf(60, 64), releases)
+    }
+
+    private fun melodic(mode: PadPlayMode) =
+        PadsView.Tile(23, 0xFFE07744.toInt(), 0, intArrayOf(60, 64, 67), mode = mode)
+
+    @Test fun modeButtonOpensOnReleaseAndDraggingOffItNeverPlays() {
+        val pads = pads(melodic(PadPlayMode.DRIVE))
+        val chosen = mutableListOf<Int>()
+        val notes = mutableListOf<Int>()
+        pads.onChooseMode = { track, _, _ -> chosen += track }
+        pads.onNoteDown = { _, pitch -> notes += pitch }
+        pads.touch(MotionEvent.ACTION_DOWN, 380, 9)
+        pads.touch(MotionEvent.ACTION_MOVE, 350, 68)
+        pads.touch(MotionEvent.ACTION_UP, 380, 9)
+        assertTrue(chosen.isEmpty())
+        pads.touch(MotionEvent.ACTION_DOWN, 380, 9)
+        pads.touch(MotionEvent.ACTION_UP, 380, 9)
+        assertEquals(listOf(23), chosen)
+        assertTrue(notes.isEmpty())
+    }
+
+    @Test fun thereminGlidesWithoutRetriggerAndUsesAbsoluteHeightForExpression() {
+        val pads = pads(melodic(PadPlayMode.THEREMIN))
+        val events = mutableListOf<String>()
+        val expression = mutableListOf<Float>()
+        pads.onThereminExpression = { _, value -> events += "expression"; expression += value }
+        pads.onNoteDown = { _, pitch -> events += "on $pitch" }
+        pads.onGlide = { _, from, to -> events += "$from to $to" }
+        pads.onNoteUp = { _, pitch -> events += "off $pitch" }
+        pads.touch(MotionEvent.ACTION_DOWN, 28, 94)
+        pads.touch(MotionEvent.ACTION_MOVE, 188, 62)
+        pads.touch(MotionEvent.ACTION_MOVE, 188, 42)
+        pads.touch(MotionEvent.ACTION_CANCEL, 190, 42)
+        assertEquals(listOf("expression", "on 60", "expression", "60 to 64", "expression", "off 64"), events)
+        assertTrue(expression.first() < 0.3f && expression.last() > 0.8f)
+    }
+
+    @Test fun changingHeldModeReleasesTheOldVoiceAndCleanIgnoresVerticalTravel() {
+        val pads = pads(melodic(PadPlayMode.FILTER))
+        val modulations = mutableListOf<Float>()
+        val attacks = mutableListOf<Int>()
+        val releases = mutableListOf<Int>()
+        pads.onNoteEffect = { _, amount -> modulations += amount }
+        pads.onNoteDown = { _, pitch -> attacks += pitch }
+        pads.onNoteUp = { _, pitch -> releases += pitch }
+        pads.touch(MotionEvent.ACTION_DOWN, 30, 85)
+        pads.touch(MotionEvent.ACTION_MOVE, 30, 65)
+        pads.tiles = listOf(melodic(PadPlayMode.CLEAN))
+        pads.touch(MotionEvent.ACTION_MOVE, 190, 60)
+        pads.touch(MotionEvent.ACTION_UP, 190, 60)
+        pads.touch(MotionEvent.ACTION_DOWN, 190, 85)
+        pads.touch(MotionEvent.ACTION_MOVE, 190, 55)
+        pads.touch(MotionEvent.ACTION_UP, 190, 55)
+        assertEquals(listOf(60, 64), attacks)
+        assertEquals(attacks, releases)
+        assertEquals(1, modulations.size)
+    }
+
+    @Test fun thereminKeepsItsFirstFingerWhileAnotherPlaysDrums() {
+        val pads = pads(melodic(PadPlayMode.THEREMIN), drum(7))
+        val notes = mutableListOf<Int>()
+        val drums = mutableListOf<Int>()
+        pads.onNoteDown = { _, pitch -> notes += pitch }
+        pads.onNoteUp = { _, pitch -> notes += -pitch }
+        pads.onDown = { drums += it }
+        pads.onUp = { drums += -it }
+        fun fingers(action: Int, index: Int, vararg xs: Int) {
+            val props = Array(xs.size) { i -> MotionEvent.PointerProperties().apply { id = i; toolType = MotionEvent.TOOL_TYPE_FINGER } }
+            val coords = Array(xs.size) { i -> MotionEvent.PointerCoords().apply { x = xs[i].toFloat(); y = 70f } }
+            val e = MotionEvent.obtain(0, 10, action or (index shl MotionEvent.ACTION_POINTER_INDEX_SHIFT), xs.size,
+                props, coords, 0, 0, 1f, 1f, 0, 0, 0, 0)
+            try { pads.onTouchEvent(e) } finally { e.recycle() }
+        }
+        fingers(MotionEvent.ACTION_DOWN, 0, 20)
+        fingers(MotionEvent.ACTION_POINTER_DOWN, 1, 20, 170)
+        fingers(MotionEvent.ACTION_POINTER_DOWN, 2, 20, 170, 350)
+        fingers(MotionEvent.ACTION_MOVE, 0, 20, 100, 350)
+        fingers(MotionEvent.ACTION_POINTER_UP, 2, 20, 100, 350)
+        fingers(MotionEvent.ACTION_POINTER_UP, 1, 20, 100)
+        fingers(MotionEvent.ACTION_UP, 0, 20)
+        assertEquals(listOf(60, -60), notes)
+        assertEquals(listOf(7, -7), drums)
     }
 }

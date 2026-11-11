@@ -357,6 +357,10 @@ class StudioEngine(val sampleRate: Int) {
         instrument(id)?.liveDrive = value.coerceIn(0f, 1f)
     }
 
+    fun setLiveFilter(id: Int, amount: Float) {
+        instrument(id)?.setLiveFilter(amount)
+    }
+
     /** Le jeu en direct d'une piste (pad thérémine) : 1 = normal, vers 0 = plus doux et plus sourd. */
     fun setExpression(id: Int, value: Float) {
         instrument(id)?.expression = value.coerceIn(0f, 1f)

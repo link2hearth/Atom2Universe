@@ -11,6 +11,14 @@ import com.Atom2Universe.app.studio.engine.TrackSpec
 
 enum class PadSize { NORMAL, WIDE, HALF }
 
+enum class PadPlayMode(val key: String) {
+    DRIVE("drive"), FILTER("filter"), CLEAN("clean"), THEREMIN("theremin");
+
+    companion object {
+        fun fromKey(key: String): PadPlayMode = entries.firstOrNull { it.key == key } ?: DRIVE
+    }
+}
+
 /**
  * Une piste du projet : un son de batterie ([TrackKind.DRUM], une ligne de pas), le synthé maison ([TrackKind.SYNTH]) ou
  * un instrument de soundfont ([TrackKind.SF2]) ; les deux derniers jouent des notes. [id] relie la piste à ses pas et à ses
@@ -44,6 +52,7 @@ data class Track(
     val sfKit: Int = -1,
     val padOrder: Int = Int.MAX_VALUE,
     val padSize: PadSize = PadSize.NORMAL,
+    val padPlayMode: PadPlayMode = PadPlayMode.DRIVE,
 ) {
     val melodic: Boolean get() = kind != TrackKind.DRUM
 

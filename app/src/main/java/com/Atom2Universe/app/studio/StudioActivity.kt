@@ -51,6 +51,7 @@ import com.Atom2Universe.app.midi.input.MidiInputController
 import com.Atom2Universe.app.studio.engine.Inst
 import com.Atom2Universe.app.studio.engine.TrackKind
 import com.Atom2Universe.app.studio.data.Track
+import com.Atom2Universe.app.studio.data.PadPlayMode
 import com.Atom2Universe.app.studio.engine.PadPosition
 import com.Atom2Universe.app.studio.engine.Note
 import com.Atom2Universe.app.studio.engine.StudioAudioOutput
@@ -218,6 +219,8 @@ class StudioActivity : AudioThemedActivity() {
 
     // Pads de batterie (onglet Rythme) et leur enregistrement
     private lateinit var padsPane: LinearLayout
+    private lateinit var padsStage: FrameLayout
+    private lateinit var padModeAnchor: View
     private lateinit var pads: PadsView
 
     /** Vrai : rester sur une case de batterie la fait rejouer à chaque double-croche. */
@@ -233,7 +236,6 @@ class StudioActivity : AudioThemedActivity() {
     private var thereminTrack = -1
 
     /** Après une note du thérémine, la piste retrouve son expression normale (une fois la note éteinte). */
-    private val expressionReset = Runnable { if (thereminTrack >= 0) engine.setExpression(thereminTrack, 1f) }
 
     private lateinit var mySounds: MySounds
     private var shownCountIn = 0
@@ -359,6 +361,7 @@ class StudioActivity : AudioThemedActivity() {
         pads.releaseAll()
         keyboard.releaseAll()
         theremin.finish()
+        padExpressionResets.keys.toList().forEach(::clearPendingPadEffects)
         setPadsRecording(false)
         stopLive()
         handler.removeCallbacks(saveRunnable)
@@ -704,7 +707,21 @@ class StudioActivity : AudioThemedActivity() {
             onUp = { track -> engine.rollOff(track) }
             onNoteDown = { track, pitch -> padNoteDown(track, pitch) }
             onNoteUp = { track, pitch -> padNoteUp(track, pitch) }
-            onNoteEffect = { track, amount -> engine.setLiveDrive(track, amount) }
+            onNoteEffect = { track, amount ->
+                when (session.project.trackOrNull(track)?.padPlayMode) {
+                    PadPlayMode.DRIVE -> engine.setLiveDrive(track, amount)
+                    PadPlayMode.FILTER -> engine.setLiveFilter(track, amount)
+                    else -> Unit
+                }
+            }
+            onChooseMode = ::showPadModeMenu
+            onGlide = ::glideLiveNote
+            onThereminExpression = { track, amount ->
+                if (!session.isMuted(track)) {
+                    clearPendingPadEffects(track)
+                    engine.setExpression(track, amount)
+                }
+            }
             onReorder = { from, to ->
                 session.movePad(from, to)
                 refreshPads()
@@ -721,12 +738,42 @@ class StudioActivity : AudioThemedActivity() {
                 scheduleSave()
             }
         }
+        padModeAnchor = View(this).apply { importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO }
+        padsStage = FrameLayout(this).apply {
+            addView(pads, FrameLayout.LayoutParams(-1, -1))
+            addView(padModeAnchor, FrameLayout.LayoutParams(1, 1, Gravity.TOP or Gravity.LEFT))
+        }
         padsBody = LinearLayout(this).apply {
             isMotionEventSplittingEnabled = true
-            addView(pads)
+            addView(padsStage)
         }
         pane.addView(padsBody, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f).apply { topMargin = dp(8) })
         return pane
+    }
+
+    private fun showPadModeMenu(id: Int, x: Int, y: Int) {
+        val track = session.project.trackOrNull(id) ?: return
+        padModeAnchor.translationX = x.coerceIn(0, pads.width - 1).toFloat()
+        padModeAnchor.translationY = y.coerceIn(0, pads.height - 1).toFloat()
+        val menu = androidx.appcompat.widget.PopupMenu(this, padModeAnchor)
+        for (mode in PadPlayMode.entries) {
+            val name = getString(StudioNames.padMode(mode))
+            val title = if (mode == PadPlayMode.THEREMIN) name else getString(R.string.studio_pad_mode_keyboard, name)
+            menu.menu.add(0, mode.ordinal, mode.ordinal, title)
+        }
+        menu.menu.setGroupCheckable(0, true, true)
+        menu.menu.findItem(track.padPlayMode.ordinal).isChecked = true
+        menu.setOnMenuItemClickListener { item ->
+            val mode = PadPlayMode.entries[item.itemId]
+            if (track.padPlayMode != mode) {
+                session.setPadPlayMode(id, mode)
+                refreshPads()
+                clearPendingPadEffects(id)
+                scheduleSave()
+            }
+            true
+        }
+        menu.show()
     }
 
     private fun showPadSounds(anchor: View) {
@@ -790,16 +837,46 @@ class StudioActivity : AudioThemedActivity() {
     private val padFingers = HashMap<Int, Int>()
     private val padExpressionResets = HashMap<Int, Runnable>()
 
+    private fun neutralPadEffects(track: Int) {
+        engine.setLiveDrive(track, 0f)
+        engine.setLiveFilter(track, 0f)
+        engine.setExpression(track, 1f)
+    }
+
+    private fun clearPendingPadEffects(track: Int) {
+        val reset = padExpressionResets.remove(track) ?: return
+        handler.removeCallbacks(reset)
+        neutralPadEffects(track)
+    }
+
+    private fun resetAfterRelease(track: Int) {
+        padExpressionResets.remove(track)?.let { handler.removeCallbacks(it) }
+        val reset = Runnable {
+            padExpressionResets.remove(track)
+            neutralPadEffects(track)
+        }
+        padExpressionResets[track] = reset
+        handler.postDelayed(reset, 1500)
+    }
+
+    private fun glideLiveNote(track: Int, from: Int, to: Int) {
+        val position = engine.playPosition
+        endRecordedNote(track, from, position)
+        if (!session.isMuted(track)) {
+            engine.glide(track, from, to, 0.9f)
+            recorder.press(to, position, track, 0.9f)
+        }
+    }
+
     /**
      * Une note posée sur une case à notes : elle sonne tout de suite, avec le son normal (c'est le doigt qui bouge qui distord),
      * et s'enregistre sur sa piste si la prise est en cours.
      */
     private fun padNoteDown(track: Int, pitch: Int) {
         if (session.isMuted(track)) return
-        padExpressionResets.remove(track)?.let { handler.removeCallbacks(it) }
+        clearPendingPadEffects(track)
         val fingers = padFingers[track] ?: 0
         padFingers[track] = fingers + 1
-        if (fingers == 0) engine.setLiveDrive(track, 0f)
         engine.trigger(track, pitch, 0.9f)
         recorder.press(pitch, engine.playPosition, track, 0.9f)
     }
@@ -809,13 +886,10 @@ class StudioActivity : AudioThemedActivity() {
         endRecordedNote(track, pitch, engine.playPosition)
         roll.invalidate()
         val left = ((padFingers[track] ?: 1) - 1).coerceAtLeast(0)
-        padFingers[track] = left
         if (left == 0) {
-            // Plus aucun doigt : la piste retrouve son son net une fois la note éteinte (pas pendant sa queue)
-            val reset = Runnable { engine.setLiveDrive(track, 0f) }
-            padExpressionResets[track] = reset
-            handler.postDelayed(reset, 1500)
-        }
+            padFingers.remove(track)
+            resetAfterRelease(track)
+        } else padFingers[track] = left
     }
 
     /**
@@ -835,7 +909,7 @@ class StudioActivity : AudioThemedActivity() {
         if (!::pads.isInitialized) return
         pads.keyPc = session.project.keyPc
         pads.tiles = session.padTracks().filterNot { it.hidden }.map { t ->
-            PadsView.Tile(t.id, trackColor(t), InstrumentIcons.of(t), if (t.melodic) padLevels(t.id) else null, t.padSize, trackName(t))
+            PadsView.Tile(t.id, trackColor(t), InstrumentIcons.of(t), if (t.melodic) padLevels(t.id) else null, t.padSize, trackName(t), t.padPlayMode)
         }
     }
 
@@ -1023,7 +1097,7 @@ class StudioActivity : AudioThemedActivity() {
         val wide = config.screenWidthDp >= 650 && config.screenWidthDp > config.screenHeightDp
         padsBody.orientation = if (wide) LinearLayout.HORIZONTAL else LinearLayout.VERTICAL
         fun part(weight: Float) = if (wide) LinearLayout.LayoutParams(0, -1, weight) else LinearLayout.LayoutParams(-1, 0, weight)
-        pads.layoutParams = part(2f)
+        padsStage.layoutParams = part(2f)
         if (docked) mixerPadBox.layoutParams = part(1.2f).apply {
             if (wide) marginStart = dp(12) else topMargin = dp(6)
         } else applyMixerLayout()
@@ -1406,7 +1480,7 @@ class StudioActivity : AudioThemedActivity() {
         view.apply {
             noteNames = resources.getStringArray(R.array.studio_key_names).toList()
             onStart = { pitch, expression ->
-                handler.removeCallbacks(expressionReset)
+                clearPendingPadEffects(selectedTrack)
                 thereminTrack = selectedTrack
                 engine.setExpression(selectedTrack, expression)
                 roll.setLit(pitch, true)
@@ -1414,13 +1488,9 @@ class StudioActivity : AudioThemedActivity() {
             }
             onPitch = { from, to ->
                 val track = thereminTrack
-                if (track >= 0 && !session.isMuted(track)) engine.glide(track, from, to, 0.9f)
+                if (track >= 0) glideLiveNote(track, from, to)
                 roll.setLit(from, false)
                 roll.setLit(to, true)
-                // L'enregistreur voit deux notes : celle qu'on quitte se termine, la nouvelle commence
-                val position = engine.playPosition
-                endRecordedNote(track, from, position)
-                recorder.press(to, position, track, 0.9f)
                 roll.invalidate()
             }
             onExpression = { expression -> if (thereminTrack >= 0) engine.setExpression(thereminTrack, expression) }
@@ -1430,7 +1500,7 @@ class StudioActivity : AudioThemedActivity() {
                 endRecordedNote(thereminTrack, pitch, engine.playPosition)
                 roll.invalidate()
                 // La piste retrouve son niveau normal une fois la note éteinte (pas pendant sa queue)
-                handler.postDelayed(expressionReset, 1500)
+                if (thereminTrack >= 0) resetAfterRelease(thereminTrack)
             }
         }
     }
@@ -2178,6 +2248,7 @@ class StudioActivity : AudioThemedActivity() {
     /** Une touche (écran ou clavier MIDI) : le son part tout de suite ; l'enregistreur note l'instant. */
     private fun liveNoteOn(pitch: Int, velocity: Float, position: Double) {
         if (selectedTrack < 0 || session.isMuted(selectedTrack)) return
+        clearPendingPadEffects(selectedTrack)
         engine.trigger(selectedTrack, pitch, velocity)
         recorder.press(pitch, position, selectedTrack, velocity)
     }

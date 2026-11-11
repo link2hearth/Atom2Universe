@@ -4,32 +4,38 @@ import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.LinearGradient
+import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.RectF
+import android.graphics.Shader
 import android.util.TypedValue
 import android.view.HapticFeedbackConstants
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
 import com.Atom2Universe.app.studio.data.PadSize
+import com.Atom2Universe.app.studio.data.PadPlayMode
 import com.Atom2Universe.app.R
+import com.Atom2Universe.app.studio.StudioNames
 
 /**
  * Les pads, à jouer au doigt : une grande case par piste (sa couleur, son dessin), plusieurs doigts à la fois.
  *
  * - Une case de **batterie** frappe : [onDown] quand un doigt s'y pose, [onUp] quand il la quitte (le moteur fait le roulement
  *   entre les deux).
- * - Une case de **piste à notes** est un petit clavier : une touche debout par note de la gamme (le grave à gauche, l'aigu à
- *   droite). La note tient tant que le doigt reste ([onNoteDown], [onNoteUp]) ; glisser vers une autre touche change de note,
- *   deux doigts font un accord. Posé, le doigt joue le son normal ; c'est en bougeant (vers le haut ou vers le bas) qu'il le
- *   distord, d'autant plus qu'il s'éloigne de l'endroit où il s'est posé ([onNoteEffect], de 0 à 1).
+ * - Une piste mélodique présente un clavier polyphonique ou un thérémine monodique.
+ *   Les notes de la gamme montent de gauche à droite ; le geste vertical module le son selon le mode choisi.
  *
  * Les cases remplissent toute la place, en carrés autant que possible.
  */
 class PadsView(context: Context) : View(context) {
 
     /** Une case : la piste, sa couleur, son dessin, et pour une piste à notes ses niveaux (hauteurs MIDI, du grave à l'aigu). */
-    class Tile(val track: Int, val color: Int, val icon: Int, val levels: IntArray? = null, val padSize: PadSize = PadSize.NORMAL, val name: String = "")
+    class Tile(
+        val track: Int, val color: Int, val icon: Int, val levels: IntArray? = null,
+        val padSize: PadSize = PadSize.NORMAL, val name: String = "", val mode: PadPlayMode = PadPlayMode.DRIVE,
+    )
 
     var tiles: List<Tile> = emptyList()
         set(v) {
@@ -44,7 +50,10 @@ class PadsView(context: Context) : View(context) {
                 for (pointer in held.keys.toList()) {
                     val h = held[pointer] ?: continue
                     val levels = v[h.tile].levels
-                    if (levels == null && h.pitch >= 0 || levels != null && h.pitch !in levels) lift(pointer)
+                    if (field[h.tile].mode != v[h.tile].mode || levels != null && h.pitch !in levels) {
+                        mutedPointers.add(pointer)
+                        lift(pointer)
+                    }
                 }
             }
             field = v
@@ -72,14 +81,19 @@ class PadsView(context: Context) : View(context) {
     var onNoteDown: ((track: Int, pitch: Int) -> Unit)? = null
     var onNoteUp: ((track: Int, pitch: Int) -> Unit)? = null
     var onNoteEffect: ((track: Int, amount: Float) -> Unit)? = null
+    var onChooseMode: ((track: Int, x: Int, y: Int) -> Unit)? = null
+    var onGlide: ((track: Int, from: Int, to: Int) -> Unit)? = null
+    var onThereminExpression: ((track: Int, amount: Float) -> Unit)? = null
 
     /**
      * Ce que tient chaque doigt : la case, sur une piste à notes la note (-1 : un coup de batterie), la hauteur où il s'est posé et
      * l'effet du moment (0 posé, jusqu'à 1 quand il s'est éloigné).
      */
-    private class Hold(val tile: Int, val pitch: Int, var startY: Float = 0f, var effect: Float = 0f)
+    private class Hold(val tile: Int, var pitch: Int, val startY: Float, var effect: Float = 0f, var x: Float = 0f)
 
     private val held = HashMap<Int, Hold>()
+    private val modePresses = HashMap<Int, Int>()
+    private val mutedPointers = HashSet<Int>()
     internal val hasHeldDrum get() = held.values.any { it.pitch < 0 }
 
     /** Éclat de chaque case (1 juste après un coup, puis s'éteint). */
@@ -96,6 +110,14 @@ class PadsView(context: Context) : View(context) {
     private val halfLabel = context.getString(R.string.studio_pad_half_size)
     private val halfPaint = Paint(label).apply { textAlign = Paint.Align.CENTER }
     private val halfLabelWidth = halfPaint.measureText(halfLabel)
+    private val modeNames = PadPlayMode.entries.associateWith { context.getString(StudioNames.padMode(it)) }
+    private val modePaint = Paint(label).apply {
+        textSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12f, resources.displayMetrics)
+        isFakeBoldText = false
+    }
+    private val modeWidths = modeNames.mapValues { modePaint.measureText(it.value) }
+    private val thereminShade = LinearGradient(0f, 0f, 0f, 1f, 0x30FFFFFF, 0x72000000, Shader.TileMode.CLAMP)
+    private val shadeMatrix = Matrix()
     private val rect = RectF()
     private val band = RectF()
     private val touchSlop = ViewConfiguration.get(context).scaledTouchSlop
@@ -237,7 +259,16 @@ class PadsView(context: Context) : View(context) {
     }
 
     /** Le haut des touches d'une case à notes : une petite bande au-dessus porte le dessin de l'instrument. */
-    private fun keysTop(r: RectF): Float = r.top + minOf(dp(30f), r.height() * 0.15f)
+    private fun keysTop(r: RectF): Float = r.top + minOf(dp(if (editing) 30f else 38f), r.height() * 0.35f)
+
+    private fun modeLeft(r: RectF, mode: PadPlayMode): Float =
+        maxOf(r.left, r.right - maxOf(dp(48f), modeWidths.getValue(mode) + dp(26f)))
+
+    private fun modeAt(i: Int, x: Float, y: Float): Boolean {
+        if (i < 0 || tiles[i].levels == null) return false
+        tileRect(i, rect)
+        return x >= modeLeft(rect, tiles[i].mode) && y <= keysTop(rect)
+    }
 
     override fun onDraw(canvas: Canvas) {
         val n = areas.size
@@ -337,7 +368,7 @@ class PadsView(context: Context) : View(context) {
         val top = keysTop(rect)
         val s = (top - rect.top) * 0.36f
         val titleLeft = rect.left + dp(if (editing) 50f else 10f)
-        val titleRight = rect.right - dp(if (editing) 36f else 6f)
+        val titleRight = if (editing) rect.right - dp(36f) else modeLeft(rect, t.mode)
         if (titleLeft + 2f * s < titleRight) {
             InstrumentIcons.draw(canvas, t.icon, titleLeft + s, (rect.top + top) / 2f, s, Color.argb(220, 255, 255, 255))
         }
@@ -345,8 +376,13 @@ class PadsView(context: Context) : View(context) {
             val titleY = (top + rect.top - label.ascent() - label.descent()) * 0.5f
             drawTileName(canvas, t, titleLeft + dp(4f) + 2f * s, titleY, titleRight)
         }
+        if (!editing) drawModeButton(canvas, t.mode, titleRight, top)
         val count = levels.size
         if (count == 0) return
+        if (t.mode == PadPlayMode.THEREMIN) {
+            drawTheremin(canvas, i, t, levels, top)
+            return
+        }
         val w = rect.width() / count
         val gap = dp(3f)
         for (k in 0 until count) {
@@ -365,12 +401,66 @@ class PadsView(context: Context) : View(context) {
                 label.textAlign = Paint.Align.CENTER
                 canvas.drawText(noteNames[((p % 12) + 12) % 12] + (p / 12 - 1), band.centerX(), band.bottom - dp(10f), label)
             }
-            // La touche tenue rougeoie d'autant plus que le doigt distord le son
+            // La teinte suit la modulation choisie.
             if (finger != null && finger.effect > 0f) {
-                paint.color = Color.argb((finger.effect * 150).toInt(), 255, 90, 40)
+                val alpha = (finger.effect * 150).toInt()
+                paint.color = if (t.mode == PadPlayMode.FILTER) Color.argb(alpha, 65, 170, 255) else Color.argb(alpha, 255, 90, 40)
                 canvas.drawRoundRect(band, dp(10f), dp(10f), paint)
             }
         }
+    }
+
+    private fun drawModeButton(canvas: Canvas, mode: PadPlayMode, left: Float, bottom: Float) {
+        val cy = (rect.top + bottom) / 2f
+        val radius = minOf(dp(12f), (bottom - rect.top) * 0.44f)
+        band.set(left + dp(2f), cy - radius, rect.right - dp(3f), cy + radius)
+        paint.color = Color.argb(130, 20, 20, 28)
+        canvas.drawRoundRect(band, radius, radius, paint)
+        val showName = modeWidths.getValue(mode) + dp(19f) <= band.width() && radius * 2f >= modePaint.textSize
+        if (showName) {
+            canvas.drawText(modeNames.getValue(mode), band.left + dp(7f), cy - (modePaint.ascent() + modePaint.descent()) / 2f, modePaint)
+        }
+        val cx = if (showName) band.right - dp(7f) else band.centerX()
+        val arrow = minOf(dp(3f), radius / 2f, band.width().coerceAtLeast(0f) / 4f)
+        paint.color = Color.WHITE
+        paint.strokeWidth = dp(1.5f)
+        canvas.drawLine(cx - arrow, cy - arrow / 2f, cx, cy + arrow / 2f, paint)
+        canvas.drawLine(cx, cy + arrow / 2f, cx + arrow, cy - arrow / 2f, paint)
+    }
+
+    private fun drawTheremin(canvas: Canvas, i: Int, tile: Tile, levels: IntArray, top: Float) {
+        val h = rect.bottom - top
+        band.set(rect.left, top, rect.right, rect.bottom)
+        paint.color = blend(base, tile.color, 0.58f)
+        canvas.drawRoundRect(band, dp(12f), dp(12f), paint)
+        shadeMatrix.setScale(1f, h)
+        shadeMatrix.postTranslate(0f, top)
+        thereminShade.setLocalMatrix(shadeMatrix)
+        paint.shader = thereminShade
+        canvas.drawRoundRect(band, dp(12f), dp(12f), paint)
+        paint.shader = null
+        val w = rect.width() / levels.size
+        for (k in levels.indices) {
+            val x = rect.left + k * w
+            val p = levels[k]
+            val tonic = p % 12 == keyPc
+            if (k > 0) {
+                paint.color = if (tonic) 0x77FFFFFF else 0x33FFFFFF
+                paint.strokeWidth = dp(1f)
+                canvas.drawLine(x, top + dp(5f), x, rect.bottom - dp(5f), paint)
+            }
+            if (tonic && noteNames.size == 12 && w > label.textSize * 1.6f && h > label.textSize * 2) {
+                label.textAlign = Paint.Align.CENTER
+                canvas.drawText(noteNames[keyPc] + (p / 12 - 1), x + w / 2f, rect.bottom - dp(10f), label)
+            }
+        }
+        val finger = held.values.firstOrNull { it.tile == i } ?: return
+        val radius = minOf(dp(10f), h / 2f, rect.width() / 2f)
+        val cx = finger.x.coerceIn(rect.left + radius, (rect.right - radius).coerceAtLeast(rect.left + radius))
+        val cy = (rect.bottom - h * (finger.effect - 0.15f) / 0.85f)
+            .coerceIn(top + radius, (rect.bottom - radius).coerceAtLeast(top + radius))
+        paint.color = Color.WHITE
+        canvas.drawCircle(cx, cy, radius, paint)
     }
 
     /** Fait briller la case de la piste [track] (un coup du roulement, par exemple). */
@@ -381,9 +471,23 @@ class PadsView(context: Context) : View(context) {
         postInvalidateOnAnimation()
     }
 
+    private fun expressionAt(i: Int, y: Float): Float {
+        tileRect(i, rect)
+        val height = (rect.bottom - keysTop(rect)).coerceAtLeast(1f)
+        return 0.15f + 0.85f * ((rect.bottom - y) / height).coerceIn(0f, 1f)
+    }
+
     private fun press(pointer: Int, h: Hold) {
-        held[pointer] = h
         val t = tiles[h.tile]
+        if (t.mode == PadPlayMode.THEREMIN && t.levels != null) {
+            if (held.values.any { it.tile == h.tile }) {
+                mutedPointers.add(pointer)
+                return
+            }
+            h.effect = expressionAt(h.tile, h.startY)
+            onThereminExpression?.invoke(t.track, h.effect)
+        }
+        held[pointer] = h
         if (h.pitch < 0) {
             glow[h.tile] = 1f
             onDown?.invoke(t.track)
@@ -491,11 +595,16 @@ class PadsView(context: Context) : View(context) {
                 parent?.requestDisallowInterceptTouchEvent(true)
                 val idx = event.actionIndex
                 val x = event.getX(idx)
-                val tile = indexAt(x, event.getY(idx))
-                val pitch = if (tile >= 0) pitchAt(tile, x) else null
-                if (pitch != null) {
-                    performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-                    press(event.getPointerId(idx), Hold(tile, pitch, event.getY(idx)))
+                val y = event.getY(idx)
+                val id = event.getPointerId(idx)
+                val tile = indexAt(x, y)
+                if (modeAt(tile, x, y)) {
+                    modePresses[id] = tile
+                } else if (tile >= 0) {
+                    pitchAt(tile, x)?.let { pitch ->
+                        performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                        press(id, Hold(tile, pitch, y, x = x))
+                    }
                 }
                 invalidate()
             }
@@ -506,11 +615,35 @@ class PadsView(context: Context) : View(context) {
                     val x = event.getX(k)
                     val y = event.getY(k)
                     val tile = indexAt(x, y)
+                    if (id in mutedPointers) continue
+                    val button = modePresses[id]
+                    if (button != null) {
+                        if (tile != button || !modeAt(button, x, y)) {
+                            modePresses.remove(id)
+                            mutedPointers.add(id)
+                        }
+                        continue
+                    }
                     val pitch = if (tile >= 0) pitchAt(tile, x) else null
                     val was = held[id]
+                    if (was != null && tile == was.tile && pitch != null && pitch >= 0 && tiles[tile].mode == PadPlayMode.THEREMIN) {
+                        val track = tiles[tile].track
+                        val expression = expressionAt(tile, y)
+                        if (expression != was.effect) {
+                            was.effect = expression
+                            onThereminExpression?.invoke(track, expression)
+                        }
+                        was.x = x
+                        if (pitch != was.pitch) {
+                            val from = was.pitch
+                            was.pitch = pitch
+                            onGlide?.invoke(track, from, pitch)
+                        }
+                        invalidate()
+                        continue
+                    }
                     if (was != null && tile == was.tile && pitch == was.pitch) {
-                        // Même touche : le doigt qui bouge distord le son
-                        if (was.pitch >= 0) {
+                        if (was.pitch >= 0 && tiles[tile].mode != PadPlayMode.CLEAN) {
                             val e = effectOf(was, y)
                             if (e != was.effect) {
                                 was.effect = e
@@ -523,20 +656,25 @@ class PadsView(context: Context) : View(context) {
                     if (pitch == null && was == null) continue
                     lift(id)
                     if (pitch != null) {
-                        val h = Hold(tile, pitch, y)
-                        // Glisser vers une autre touche de la même case garde l'élan : la distorsion continue
-                        if (was != null && was.tile == h.tile && h.pitch >= 0) {
-                            h.startY = was.startY
-                            h.effect = effectOf(h, y)
-                        }
+                        val previous = was?.takeIf { it.tile == tile && pitch >= 0 && tiles[tile].mode != PadPlayMode.CLEAN }
+                        val h = Hold(tile, pitch, previous?.startY ?: y, x = x)
+                        if (previous != null) h.effect = effectOf(h, y)
                         press(id, h)
-                        if (h.pitch >= 0 && h.effect > 0f) onNoteEffect?.invoke(tiles[h.tile].track, h.effect)
+                        if (previous != null && h.effect > 0f) onNoteEffect?.invoke(tiles[tile].track, h.effect)
                     }
                     invalidate()
                 }
             }
             MotionEvent.ACTION_UP, MotionEvent.ACTION_POINTER_UP -> {
-                lift(event.getPointerId(event.actionIndex))
+                val idx = event.actionIndex
+                val id = event.getPointerId(idx)
+                val button = modePresses.remove(id)
+                mutedPointers.remove(id)
+                if (button != null && indexAt(event.getX(idx), event.getY(idx)) == button && modeAt(button, event.getX(idx), event.getY(idx))) {
+                    onChooseMode?.invoke(tiles[button].track, modeLeft(rect, tiles[button].mode).toInt(), keysTop(rect).toInt())
+                } else {
+                    lift(id)
+                }
                 invalidate()
             }
             MotionEvent.ACTION_CANCEL -> releaseAll()
@@ -548,6 +686,8 @@ class PadsView(context: Context) : View(context) {
     fun releaseAll() {
         interrupted = true
         clearEdit()
+        modePresses.clear()
+        mutedPointers.clear()
         for (id in held.keys.toList()) lift(id)
         invalidate()
     }

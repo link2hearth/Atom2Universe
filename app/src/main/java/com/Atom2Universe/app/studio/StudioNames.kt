@@ -1,12 +1,20 @@
 package com.Atom2Universe.app.studio
 
 import com.Atom2Universe.app.R
+import com.Atom2Universe.app.studio.data.PadPlayMode
 import com.Atom2Universe.app.studio.data.Track
 import com.Atom2Universe.app.studio.engine.Inst
 import com.Atom2Universe.app.studio.engine.TrackKind
 
 /** Les noms et les couleurs que l'écran du Studio et la bibliothèque partagent. */
 object StudioNames {
+
+    fun padMode(mode: PadPlayMode): Int = when (mode) {
+        PadPlayMode.DRIVE -> R.string.studio_pad_mode_drive
+        PadPlayMode.FILTER -> R.string.studio_pad_mode_filter
+        PadPlayMode.CLEAN -> R.string.studio_pad_mode_clean
+        PadPlayMode.THEREMIN -> R.string.studio_pad_mode_theremin
+    }
 
     /** Le texte du nom d'un style de départ. */
     fun style(id: String): Int = when (id) {

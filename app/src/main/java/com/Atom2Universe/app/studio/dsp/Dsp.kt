@@ -142,6 +142,18 @@ abstract class Instrument(protected val sampleRate: Int) {
     @Volatile var liveDrive = 0f
     private var liveDriveNow = 0f
 
+    // Passe-bas du pad, après les effets du mixeur. Un pôle nul laisse passer exactement le signal d'entrée.
+    private val liveFilterMaxPole = exp(-2.0 * PI * 200.0 / sampleRate).toFloat()
+    private val liveFilterStep = 1f / (0.012f * sampleRate)
+    @Volatile private var liveFilterTarget = 0f
+    private var liveFilterPole = 0f
+    private var liveFilterLast = 0f
+
+    fun setLiveFilter(amount: Float) {
+        val open = 1f - amount.coerceIn(0f, 1f)
+        liveFilterTarget = liveFilterMaxPole * (1f - open * open * open)
+    }
+
     /**
      * Le jeu en direct (pad thérémine) : 1 = normal, vers 0 = plus doux (et plus sourd pour le synthé). Lissé par échantillon,
      * il ne fait jamais de saut audible.
@@ -207,6 +219,7 @@ abstract class Instrument(protected val sampleRate: Int) {
         val ds = level * delaySend
         val audible = !muted
         val fxOn = drive > FX_MIN || crush > FX_MIN || abs(filterSweep) > FX_MIN || liveDrive > FX_MIN || liveDriveNow > FX_MIN
+        val filterTarget = liveFilterTarget
         val depth = if (duck != null) pump.coerceIn(0f, 1f) * PUMP_DEPTH else 0f
         val exprTarget = expression.coerceIn(0f, 1f)
         var pos = from
@@ -217,6 +230,11 @@ abstract class Instrument(protected val sampleRate: Int) {
                 // Avec un effet, le silence passe aussi dans la chaîne : la queue du filtre et le résultat ne dépendent pas du découpage.
                 if (!produced) java.util.Arrays.fill(scratch, 0, c, 0f)
                 applyEffects(c)
+                produced = true
+            }
+            if (filterTarget != 0f || liveFilterPole != 0f) {
+                if (!produced) java.util.Arrays.fill(scratch, 0, c, 0f)
+                applyLiveFilter(c, filterTarget)
                 produced = true
             }
             // L'expression se lisse même en silence : la note suivante part du bon niveau
@@ -244,6 +262,19 @@ abstract class Instrument(protected val sampleRate: Int) {
             expressionNow = e
             pos += c
         }
+    }
+
+    private fun applyLiveFilter(count: Int, target: Float) {
+        var pole = liveFilterPole
+        var last = if (pole == 0f) scratch[0] else liveFilterLast
+        for (i in 0 until count) {
+            pole += (target - pole).coerceIn(-liveFilterStep, liveFilterStep)
+            val input = scratch[i]
+            last = input + pole * (last - input)
+            scratch[i] = last
+        }
+        liveFilterLast = last
+        liveFilterPole = pole
     }
 
     /** Dégradation, distorsion, filtre, sur les [count] premiers échantillons de [scratch]. */
