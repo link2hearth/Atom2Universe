@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="studio_clips">Clips</string>
+    <string name="studio_clips_follow">Suivre le motif</string>
+    <string name="studio_clip_edit">Modifier</string>
+    <string name="studio_clip_duplicate">Dupliquer vers…</string>
+    <string name="studio_clips_capture">Capturer…</string>
+    <string name="studio_clip_waiting">En attente</string>
+    <string name="studio_clip_pinned_letter">%1$s ●</string>
+    <string name="studio_clip_pinned">Épinglé</string>
+    <string name="studio_clip_following">Suit le motif</string>
+    <string name="studio_clip_idle">Disponible</string>
+    <string name="studio_clip_filled">Avec contenu</string>
+    <string name="studio_clip_empty">Vide</string>
+    <string name="studio_clip_label">%1$s · %2$s · %3$s · %4$s</string>
+    <string name="studio_clip_destination_free">%1$s · libre</string>
+    <string name="studio_clip_destination_replace">%1$s · remplacer</string>
+    <string name="studio_clip_help">Clips de piste · Dans Pads, chaque ligne joue les pas ou les notes de sa piste. Touche A, B, C ou D pour épingler un clip : un point marque sa lettre. En lecture, le changement se fait au début de la prochaine boucle. Retouche la lettre en attente pour annuler, ou la lettre épinglée pour suivre le motif. Les lettres pâles sont silencieuses. Maintiens une lettre pour modifier le clip dans Rythme ou Notes, ou pour le dupliquer vers une autre lettre de cette piste. Capturer écrit la combinaison active dans le motif choisi, avec Annuler pour la retrouver en cas de remplacement.</string>
+</resources>

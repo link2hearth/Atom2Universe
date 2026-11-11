@@ -166,6 +166,7 @@ object StudioProjectCodec {
                 JSONObject()
                     .put("i", lane.instrument)
                     .put("v", JSONArray().also { a -> lane.velocity.forEach { a.put(it.toDouble()) } })
+                    .also { o -> if (lane.gate != 0.9f) o.put("gate", lane.gate.toDouble()) }
                     // La hauteur de chaque pas, seulement si l'un d'eux n'est pas à 60 (la hauteur d'origine)
                     .also { o -> if (lane.note.any { it != 60 }) o.put("n", JSONArray().also { a -> lane.note.forEach { a.put(it) } }) }
                     // La durée de chaque coup, en pour cent, seulement si l'un d'eux n'est pas à 100
@@ -193,24 +194,24 @@ object StudioProjectCodec {
      */
     internal fun decodePattern(o: JSONObject, steps: Int, tracks: List<Track>): StepPattern? {
         val laneArray = o.getJSONArray("lanes")
-        val byId = HashMap<Int, FloatArray>()
-        val pitchById = HashMap<Int, IntArray>()
-        val holdById = HashMap<Int, FloatArray>()
-        val condById = HashMap<Int, IntArray>()
+        val byId = HashMap<Int, Lane>()
         for (k in 0 until laneArray.length()) {
             val l = laneArray.getJSONObject(k)
             val v = l.getJSONArray("v")
             if (v.length() != steps) return null
-            byId[l.getInt("i")] = FloatArray(steps) { v.getDouble(it).toFloat().coerceIn(0f, 1f) }
-            l.optJSONArray("n")?.takeIf { it.length() == steps }?.let { n -> pitchById[l.getInt("i")] = IntArray(steps) { n.getInt(it).coerceIn(36, 84) } }
-            l.optJSONArray("h")?.takeIf { it.length() == steps }?.let { h -> holdById[l.getInt("i")] = FloatArray(steps) { h.getInt(it).coerceIn(50, 200) / 100f } }
-            l.optJSONArray("c")?.takeIf { it.length() == steps }?.let { c -> condById[l.getInt("i")] = IntArray(steps) { c.getInt(it).coerceIn(0, StepCond.COUNT - 1) } }
+            val id = l.getInt("i")
+            val n = l.optJSONArray("n")?.takeIf { it.length() == steps }
+            val h = l.optJSONArray("h")?.takeIf { it.length() == steps }
+            val c = l.optJSONArray("c")?.takeIf { it.length() == steps }
+            byId[id] = Lane(
+                id, FloatArray(steps) { v.getDouble(it).toFloat().coerceIn(0f, 1f) },
+                IntArray(steps) { n?.getInt(it)?.coerceIn(36, 84) ?: 60 },
+                l.optDouble("gate", 0.9).toFloat().takeIf { it.isFinite() } ?: 0.9f,
+                FloatArray(steps) { if (h == null) 1f else h.getInt(it).coerceIn(50, 200) / 100f },
+                IntArray(steps) { c?.getInt(it)?.coerceIn(0, StepCond.COUNT - 1) ?: StepCond.ALWAYS },
+            )
         }
-        val lanes = ArrayList<Lane>()
-        for (t in tracks) if (!t.melodic) {
-            val velocity = byId[t.id] ?: FloatArray(steps)
-            lanes += Lane(t.id, velocity, pitchById[t.id] ?: IntArray(steps) { 60 }, hold = holdById[t.id] ?: FloatArray(steps) { 1f }, cond = condById[t.id] ?: IntArray(steps))
-        }
+        val lanes = tracks.filterNot { it.melodic }.map { byId[it.id] ?: Lane(it.id, FloatArray(steps)) }
         val melodic = tracks.filter { it.melodic }.map { it.id }.toSet()
         val notes = ArrayList<Note>()
         val na = o.getJSONArray("notes")
@@ -729,17 +730,24 @@ class StudioSession(
 
     fun isMuted(id: Int): Boolean = project.trackOrNull(id)?.muted == true
 
-    /** Remplace le motif en cours d'édition. */
-    private fun setPattern(pattern: StepPattern) {
+    /** Sans emplacement explicite, l'édition porte sur toute la vue (un ou plusieurs motifs). */
+    private fun setPattern(pattern: StepPattern, slot: Int? = null) {
         remember()
-        project = project.copy(pattern = pattern)
+        project = if (slot == null) project.copy(pattern = pattern) else {
+            project.copy(patterns = project.patterns.toMutableList().also { it[slot] = pattern })
+        }
         engine.pattern = project.pattern
         pushSong()
     }
 
+    internal fun recordingSlot(track: Int): Int? = engine.activeTrackClip(track).takeIf { it in project.patterns.indices }
+
+    internal fun patternAt(slot: Int?): StepPattern = if (slot == null) project.pattern else project.patterns[slot]
+
     /** Le moteur reçoit le morceau déjà résolu en motifs (ou rien : il boucle alors sur le motif en cours). */
     private fun pushSong() {
         val p = project
+        engine.trackClipPatterns = p.patterns
         engine.song = if (p.songMode && p.chain.isNotEmpty()) Array(p.chain.size) { p.patterns[p.chain[it]] } else null
     }
 
@@ -764,6 +772,54 @@ class StudioSession(
         val p = project.patterns[slot]
         return p.notes.isEmpty() && p.lanes.all { l -> l.velocity.all { it <= 0f } }
     }
+
+    fun hasTrackClip(track: Int, slot: Int): Boolean {
+        val pattern = project.patterns.getOrNull(slot) ?: return false
+        return when (project.trackOrNull(track)?.melodic) {
+            true -> pattern.notes.any { it.track == track }
+            false -> pattern.lane(track)?.velocity?.any { it > 0f } == true
+            null -> false
+        }
+    }
+
+    /** Fige la combinaison des clips sur la durée de la scène de base, avec son geste de pad. */
+    fun captureTrackClips(baseSlot: Int, overrides: Map<Int, Int>, destination: Int): Boolean {
+        val patterns = project.patterns
+        val base = patterns.getOrNull(baseSlot) ?: return false
+        val previous = patterns.getOrNull(destination) ?: return false
+        if (overrides.any { (track, slot) -> project.trackOrNull(track) == null || slot !in patterns.indices }) return false
+
+        val clips = overrides.filterValues { it != baseSlot }
+        val sources = clips.values.toSortedSet().associateWith { slot ->
+            val p = patterns[slot]
+            if (p.stepCount == base.stepCount) p else resize(p, base.stepCount)
+        }
+        val lanes = base.lanes.map { lane ->
+            val source = clips[lane.instrument]?.let(sources::get) ?: return@map lane
+            source.lane(lane.instrument) ?: Lane(lane.instrument, FloatArray(base.stepCount))
+        } + sources.flatMap { (slot, source) ->
+            source.lanes.filter { lane ->
+                clips[lane.instrument] == slot && base.lane(lane.instrument) == null &&
+                    project.track(lane.instrument).melodic == false
+            }
+        }
+        val notes = base.notes.filterNot { it.track in clips } + sources.flatMap { (slot, source) ->
+            source.notes.filter { clips[it.track] == slot }
+        }
+        val captured = base.copy(lanes = lanes, notes = notes)
+        if (previous.stepCount == captured.stepCount) {
+            if (previous.lanes == lanes && previous.notes == notes && previous.autoFilter === base.autoFilter && previous.autoSpace === base.autoSpace) return false
+            if (StudioProjectCodec.encodePattern(previous).toString() == StudioProjectCodec.encodePattern(captured).toString()) return false
+        }
+
+        closeOpen()
+        setPattern(captured, destination)
+        closeOpen()
+        return true
+    }
+
+    /** Duplique uniquement le clip de cette piste ; la destination garde ses autres pistes et son geste. */
+    fun copyTrackClip(track: Int, from: Int, to: Int): Boolean = captureTrackClips(to, mapOf(track to from), to)
 
     /** Copie le motif [from] dans l'emplacement [to] (geste du pad compris). */
     fun copyPattern(from: Int, to: Int) {
@@ -817,12 +873,13 @@ class StudioSession(
      * (en pas, rendue par le moteur au moment exact du coup). Un coup du décompte tombé juste avant le début compte pour le
      * premier pas ; plus tôt, il est ignoré.
      */
-    fun recordHit(track: Int, position: Double, velocity: Float) {
+    fun recordHit(track: Int, position: Double, velocity: Float, sourceSlot: Int = engine.activeTrackClip(track)) {
         if (project.trackOrNull(track)?.melodic != false || !position.isFinite()) return
         val r = Math.round(position)
         if (r < 0) return
-        val step = Math.floorMod(r, project.stepCount.toLong()).toInt()
-        withLane(track) { l ->
+        val slot = sourceSlot.takeIf { it in project.patterns.indices }
+        val step = Math.floorMod(r, patternAt(slot).stepCount.toLong()).toInt()
+        withLane(track, slot) { l ->
             val v = l.velocity.copyOf()
             v[step] = maxOf(v[step], velocity.coerceIn(0.1f, 1f))
             l.copy(velocity = v)
@@ -858,9 +915,10 @@ class StudioSession(
         pushSong()
     }
 
-    private fun withLane(track: Int, change: (Lane) -> Lane) {
-        val lanes = project.pattern.lanes.map { if (it.instrument == track) change(it) else it }
-        setPattern(project.pattern.copy(lanes = lanes))
+    private fun withLane(track: Int, slot: Int? = null, change: (Lane) -> Lane) {
+        val pattern = patternAt(slot)
+        val lanes = pattern.lanes.map { if (it.instrument == track) change(it) else it }
+        setPattern(pattern.copy(lanes = lanes), slot)
     }
 
     private fun withNotes(notes: List<Note>) = setPattern(project.pattern.copy(notes = notes))
@@ -1186,13 +1244,14 @@ class StudioSession(
         project.pattern.notes.firstOrNull { it.track == track && it.pitch == pitch && step >= it.step && step < it.step + it.length }
 
     /** Pose une note ; ce qu'elle recouvre à la même hauteur sur la même piste disparaît (le moteur relâche une note par sa hauteur). */
-    fun addNote(step: Int, pitch: Int, length: Int, velocity: Float = LEVELS[0], track: Int = Inst.SYNTH) {
-        if (step !in 0 until project.stepCount || !isMelodic(track)) return
-        val len = length.coerceIn(1, project.stepCount - step)
-        val kept = project.pattern.notes.filter { n ->
+    fun addNote(step: Int, pitch: Int, length: Int, velocity: Float = LEVELS[0], track: Int = Inst.SYNTH, slot: Int? = null) {
+        val pattern = patternAt(slot)
+        if (step !in 0 until pattern.stepCount || !isMelodic(track)) return
+        val len = length.coerceIn(1, pattern.stepCount - step)
+        val kept = pattern.notes.filter { n ->
             !(n.track == track && n.pitch == pitch && n.step < step + len && n.step + n.length > step)
         }
-        withNotes(kept + Note(step, pitch.coerceIn(0, 127), len, velocity, track))
+        setPattern(pattern.copy(notes = kept + Note(step, pitch.coerceIn(0, 127), len, velocity, track)), slot)
     }
 
     fun removeNote(note: Note) = withNotes(project.pattern.notes.filter {
@@ -1248,16 +1307,16 @@ class StudioSession(
     /** 16, 32 ou 64 pas : on allonge en répétant le motif, on réduit en gardant le début. */
     fun setStepCount(count: Int) {
         if (count == project.baseSteps || (count != 16 && count != 32 && count != 64)) return
-        val old = project.baseSteps
         remember()
         // Tous les motifs changent de longueur ensemble (le morceau les enchaîne : ils restent de même longueur)
-        val resized = project.patterns.map { resize(it, old, count) }
+        val resized = project.patterns.map { resize(it, count) }
         project = project.copy(patterns = resized)
         engine.pattern = project.pattern
         pushSong()
     }
 
-    private fun resize(source: StepPattern, old: Int, count: Int): StepPattern {
+    private fun resize(source: StepPattern, count: Int): StepPattern {
+        val old = source.stepCount
         val lanes = source.lanes.map { l ->
             Lane(
                 l.instrument, FloatArray(count) { l.velocity[it % old] }, IntArray(count) { l.note[it % old] }, l.gate,
@@ -1265,12 +1324,10 @@ class StudioSession(
             )
         }
         val notes = ArrayList<Note>()
-        if (count > old) {
-            // On répète le motif autant de fois que nécessaire (16 -> 64 : quatre fois)
-            for (k in 0 until count / old) for (n in source.notes) notes += Note(n.step + k * old, n.pitch, n.length, n.velocity, n.track)
-        } else {
-            for (n in source.notes) if (n.step < count) {
-                notes += Note(n.step, n.pitch, minOf(n.length, count - n.step), n.velocity, n.track)
+        for (start in 0 until count step old) {
+            for (n in source.notes) {
+                val step = start + n.step
+                if (step < count) notes += Note(step, n.pitch, minOf(n.length, count - step), n.velocity, n.track)
             }
         }
         fun resizeAuto(a: FloatArray?): FloatArray? =
@@ -1394,7 +1451,7 @@ class LiveRecorder(
     var armed = false
 
     /** Les notes en cours, par piste et hauteur (clé : piste × 128 + hauteur) : l'instant de l'appui. */
-    private class Attack(val start: Double, val velocity: Float, var holds: Int = 1)
+    private class Attack(val start: Double, val velocity: Float, val slot: Int?, var holds: Int = 1)
     private val pressed = HashMap<Int, Attack>()
 
     /** [at] : la position de lecture à l'instant de l'appui (par défaut : maintenant) ; [onTrack] : la piste qui reçoit la note. */
@@ -1402,7 +1459,8 @@ class LiveRecorder(
         if (!armed || !isPlaying() || onTrack < 0 || pitch !in 0..127 || at < -0.5) return
         val id = onTrack * 128 + pitch
         val held = pressed[id]
-        if (held == null) pressed[id] = Attack(at.coerceAtLeast(0.0), velocity.coerceIn(0f, 1f)) else held.holds++
+        if (held == null) pressed[id] = Attack(at.coerceAtLeast(0.0), velocity.coerceIn(0f, 1f), session.recordingSlot(onTrack))
+        else held.holds++
     }
 
     fun release(pitch: Int, at: Double = position(), onTrack: Int = track()): Boolean {
@@ -1415,10 +1473,10 @@ class LiveRecorder(
     }
 
     private fun write(pitch: Int, onTrack: Int, attack: Attack, at: Double) {
-        val steps = session.project.stepCount
+        val steps = session.patternAt(attack.slot).stepCount
         val step = Math.floorMod(Math.round(attack.start), steps.toLong()).toInt()
         val held = (at - attack.start).coerceIn(0.0, steps.toDouble())
-        session.addNote(step, pitch, Math.round(held).toInt().coerceAtLeast(1), attack.velocity, onTrack)
+        session.addNote(step, pitch, Math.round(held).toInt().coerceAtLeast(1), attack.velocity, onTrack, attack.slot)
     }
 
     /** Les notes encore tenues quand l'enregistrement s'arrête sont terminées là. */

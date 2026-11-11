@@ -283,6 +283,7 @@ class StudioEngine(val sampleRate: Int) {
                 create(spec)
             }
         }
+        for (id in old.indices) if (old[id] != null && next[id] == null) forgetTrackClip(id)
         table = next
     }
 
@@ -383,6 +384,86 @@ class StudioEngine(val sampleRate: Int) {
     }
 
     private val padLoop = AtomicReference<PadLoop?>(null)
+    /** Motifs A–D du projet édité. Le fil de l'interface remplace la liste portant les nouvelles versions immuables. */
+    @Volatile var trackClipPatterns: List<StepPattern> = emptyList()
+
+    /** [next] est déjà prêt à jouer : au premier pas de la boucle, un seul échange publie tous les lancements ensemble. */
+    private class ClipAssignments(val slots: IntArray, val revision: Long, val next: ClipAssignments? = null) {
+        val sourceMask = slots.fold(0) { mask, slot -> if (slot < 0) mask else mask or (1 shl slot) }
+    }
+
+    private val followScene = IntArray(MAX_TRACKS) { -1 }
+    private val clips = AtomicReference(ClipAssignments(followScene, 0))
+    private var lastClipSlots = followScene
+    private val clipStartTick = LongArray(MAX_TRACKS)
+    private var clipTick = 0L
+
+    val trackClipRevision: Long get() = clips.get().revision
+    fun activeTrackClip(track: Int): Int = clips.get().slots.getOrElse(track) { -1 }
+
+    fun pendingTrackClip(track: Int): Int? {
+        val current = clips.get()
+        val target = current.next?.slots?.getOrNull(track) ?: return null
+        return target.takeIf { it != current.slots[track] }
+    }
+
+    fun activeTrackClips(): Map<Int, Int> {
+        val slots = clips.get().slots
+        return buildMap { for (id in slots.indices) if (slots[id] >= 0) put(id, slots[id]) }
+    }
+
+    private inline fun updateClipAssignments(change: (ClipAssignments) -> ClipAssignments) {
+        do {
+            val old = clips.get()
+            val updated = change(old)
+            if (old === updated) return
+        } while (!clips.compareAndSet(old, updated))
+    }
+
+    private fun clipAssignments(active: IntArray, next: IntArray?, revision: Long): ClipAssignments {
+        val pending = if (next == null || next.contentEquals(active)) null else ClipAssignments(next, revision + 1)
+        return ClipAssignments(active, revision, pending)
+    }
+
+    /** -1 suit la scène. Un second toucher sur le choix en attente l'annule pour cette piste seulement. */
+    fun launchTrackClip(track: Int, slot: Int) {
+        if (table.getOrNull(track) == null || slot !in -1..3) return
+        if (slot >= 0 && trackClipPatterns.getOrNull(slot)?.stepCount?.let { it > 0 } != true) return
+        updateClipAssignments { old ->
+            val active = old.slots[track]
+            val proposed = old.next?.slots ?: old.slots
+            val selected = if (slot == proposed[track]) active else slot
+            if (proposed[track] == selected) old else {
+                val updated = proposed.copyOf().also { it[track] = selected }
+                if (playRequested) clipAssignments(old.slots, updated, old.revision + 1)
+                else ClipAssignments(updated, old.revision + 1)
+            }
+        }
+    }
+
+    fun cancelPendingTrackClips() = updateClipAssignments { old ->
+        if (old.next == null) old else ClipAssignments(old.slots, old.revision + 1)
+    }
+
+    /** Rend toutes les pistes à la scène ensemble à la prochaine frontière, ou immédiatement à l'arrêt. */
+    fun followSceneClips() = updateClipAssignments { old ->
+        if (!playRequested || old.sourceMask == 0) {
+            if (old.sourceMask == 0 && old.next == null) old else ClipAssignments(followScene, old.revision + 1)
+        } else if (old.next?.sourceMask == 0) old else clipAssignments(old.slots, followScene, old.revision + 1)
+    }
+
+    fun resetTrackClips() = updateClipAssignments { old ->
+        if (old.next == null && old.sourceMask == 0) old else ClipAssignments(followScene, old.revision + 1)
+    }
+
+    private fun forgetTrackClip(track: Int) = updateClipAssignments { old ->
+        val pending = old.next?.slots
+        if (old.slots[track] < 0 && (pending == null || pending[track] < 0)) old else {
+            val active = old.slots.copyOf().also { it[track] = -1 }
+            val next = pending?.copyOf()?.also { it[track] = -1 }
+            clipAssignments(active, next, old.revision + 1)
+        }
+    }
     // Ces deux champs appartiennent au fil qui pilote le transport (l'interface, ou le rendu hors ligne).
     private var playRequested = false
     private var unreportedPadSlot = -1
@@ -499,6 +580,7 @@ class StudioEngine(val sampleRate: Int) {
     fun stop() {
         playRequested = false
         cancelPadLoop()
+        cancelPendingTrackClips()
         push(CMD_STOP, 0, 0, 0f)
     }
 
@@ -548,14 +630,19 @@ class StudioEngine(val sampleRate: Int) {
     private val hitTrack = IntArray(HIT_RING)
     private val hitPos = DoubleArray(HIT_RING)
     private val hitVel = FloatArray(HIT_RING)
+    private val hitClipSlot = IntArray(HIT_RING)
     @Volatile private var hitHead = 0
     @Volatile private var hitTail = 0
 
     /** Donne chaque coup noté depuis le dernier appel : piste, position de lecture en pas (avec décimales) et force. */
-    fun takeLiveHits(each: (track: Int, position: Double, velocity: Float) -> Unit) {
+    fun takeLiveHits(each: (track: Int, position: Double, velocity: Float) -> Unit) =
+        takeLiveHitsWithSlot { track, position, velocity, _ -> each(track, position, velocity) }
+
+    /** Le slot est celui qui jouait quand le son est parti, même si l'écran lit cette frappe après un changement de clip. */
+    fun takeLiveHitsWithSlot(each: (track: Int, position: Double, velocity: Float, slot: Int) -> Unit) {
         var h = hitHead
         while (h != hitTail) {
-            each(hitTrack[h], hitPos[h], hitVel[h])
+            each(hitTrack[h], hitPos[h], hitVel[h], hitClipSlot[h])
             h = (h + 1) % HIT_RING
         }
         hitHead = h
@@ -570,6 +657,7 @@ class StudioEngine(val sampleRate: Int) {
         // À l'arrêt, le coup n'a pas de place dans la boucle (il sert seulement à faire briller son pad)
         hitPos[t] = if (running) positionAt(frame) else Double.NEGATIVE_INFINITY
         hitVel[t] = velocity
+        hitClipSlot[t] = lastClipSlots[track]
         hitTail = next
     }
 
@@ -914,6 +1002,9 @@ class StudioEngine(val sampleRate: Int) {
     }
 
     private fun startSequencer(blockStart: Long, countIn: Boolean = false) {
+        clipTick = 0L
+        clipStartTick.fill(0L)
+        lastClipSlots = clips.get().slots
         songPosition = 0
         running = true
         playing = true
@@ -1012,13 +1103,14 @@ class StudioEngine(val sampleRate: Int) {
             if (stepIndex == 0) countInBeats = 0
             return
         }
+        val boundary = step % max(activePattern().stepCount, 1) == 0
+        val assignments = trackClipsAtStep(boundary)
         val queued = padLoop.get() as? PadLoop.Queued
-        if (queued != null && step % max(activePattern().stepCount, 1) == 0 && padLoop.compareAndSet(queued, queued.target)) {
+        if (queued != null && boundary && padLoop.compareAndSet(queued, queued.target)) {
             // Le nouveau motif repart de son premier pas. L'horloge en échantillons garde le tempo des doigts et des roulements.
             step = 0
             playOrigin = straightTime
-            for (i in 0 until offCount) patternOff(offTrack[i], offNote[i])
-            offCount = 0
+            endPatternNotes { assignments.slots[it] < 0 }
         }
         val sg = song
         if (sg != null && sg.isNotEmpty()) {
@@ -1041,15 +1133,70 @@ class StudioEngine(val sampleRate: Int) {
         lastFireFrame = frame
         if (metronome && s % 4 == 0) click(s % 16 == 0)
 
-        // Boucles à indices : aucune allocation d'itérateur dans le fil audio.
-        val loop = step / max(p.stepCount, 1)
+        firePatternTracks(p, -1, assignments, step, frame, stepFrames)
+        if (assignments.sourceMask != 0) {
+            val bank = trackClipPatterns
+            for (slot in 0 until min(4, bank.size)) {
+                if (assignments.sourceMask and (1 shl slot) != 0) {
+                    firePatternTracks(bank[slot], slot, assignments, step, frame, stepFrames)
+                }
+            }
+        }
+        clipTick++
+        straightTime += stepFrames
+        stepIndex = step + 1
+        val swingOffset = if (stepIndex % 2 == 1) min(max(swing, 0f), 0.5f) * stepFrames else 0.0
+        nextStepTime = straightTime + swingOffset
+    }
+
+    private fun trackClipsAtStep(boundary: Boolean): ClipAssignments {
+        var current = clips.get()
+        val next = current.next
+        if (boundary && next != null) {
+            current = if (clips.compareAndSet(current, next)) next else clips.get()
+        }
+        val active = current.slots
+        if (active !== lastClipSlots) {
+            endPatternNotes { lastClipSlots[it] != active[it] }
+            for (id in active.indices) if (lastClipSlots[id] != active[id]) clipStartTick[id] = clipTick
+            lastClipSlots = active
+        }
+        return current
+    }
+
+    /** Coupe seulement les notes du séquenceur qui quittent leur ancien clip. Les doigts tenus restent prioritaires. */
+    private inline fun endPatternNotes(leaving: (Int) -> Boolean) {
+        var i = offCount - 1
+        while (i >= 0) {
+            if (leaving(offTrack[i])) {
+                patternOff(offTrack[i], offNote[i])
+                offCount--
+                offTrack[i] = offTrack[offCount]
+                offFrame[i] = offFrame[offCount]
+                offNote[i] = offNote[offCount]
+            }
+            i--
+        }
+    }
+
+    private fun firePatternTracks(
+        p: StepPattern, source: Int, assignments: ClipAssignments, step: Int, frame: Long, stepFrames: Double,
+    ) {
+        val count = max(p.stepCount, 1)
+        val sceneStep = step % count
+        val sceneLoop = step / count
         val lanes = p.lanes
         for (i in 0 until lanes.size) {
             val lane = lanes[i]
+            val track = lane.instrument
+            if (track !in assignments.slots.indices || assignments.slots[track] != source) continue
+            val local = if (source < 0) 0L else clipTick - clipStartTick[track]
+            val s = if (source < 0) sceneStep else (local % count).toInt()
             if (s >= lane.velocity.size) continue
             val v = lane.velocity[s]
             if (v <= 0f) continue
             val c = if (s < lane.cond.size) lane.cond[s] else StepCond.ALWAYS
+            val loop = if (source < 0) sceneLoop else (local / count).toInt()
             if (c != StepCond.ALWAYS && !StepCond.plays(c, loop, if (c == StepCond.RANDOM) nextCoin() else 0f)) continue
             val slot = table.getOrNull(lane.instrument) ?: continue
             if (slot.melody == null) {
@@ -1060,6 +1207,8 @@ class StudioEngine(val sampleRate: Int) {
         val notes = p.notes
         for (i in 0 until notes.size) {
             val n = notes[i]
+            if (n.track !in assignments.slots.indices || assignments.slots[n.track] != source) continue
+            val s = if (source < 0) sceneStep else ((clipTick - clipStartTick[n.track]) % count).toInt()
             if (n.step != s) continue
             val m = table.getOrNull(n.track)?.melody ?: continue
             m.on(n.pitch, n.velocity, frame)
@@ -1073,10 +1222,6 @@ class StudioEngine(val sampleRate: Int) {
             scheduleOff(max(frame + 1L, offAt), n.track, n.pitch)
         }
 
-        straightTime += stepFrames
-        stepIndex = step + 1
-        val swingOffset = if (stepIndex % 2 == 1) min(max(swing, 0f), 0.5f) * stepFrames else 0.0
-        nextStepTime = straightTime + swingOffset
     }
 
     private fun fire(slot: Slot, note: Int, velocity: Float) {

@@ -67,6 +67,7 @@ import com.Atom2Universe.app.studio.ui.InstrumentIcons
 import com.Atom2Universe.app.studio.ui.PianoRollView
 import com.Atom2Universe.app.studio.ui.StepGridView
 import com.Atom2Universe.app.studio.ui.ChainView
+import com.Atom2Universe.app.studio.ui.TrackClipsView
 import com.Atom2Universe.app.studio.ui.PadsView
 import com.Atom2Universe.app.studio.ui.ThereminView
 import com.Atom2Universe.app.studio.data.MySounds
@@ -156,6 +157,8 @@ class StudioActivity : AudioThemedActivity() {
     private var shownPadLoop = -2
     private var shownPendingLoop = -2
     private var launchEnabled = false
+    private var clipPanel: TrackClipsView? = null
+    private var shownClipRevision = -1L
     private var queuedPattern: com.Atom2Universe.app.studio.engine.StepPattern? = null
     private lateinit var patternGroup: MaterialButtonToggleGroup
     private var songBlocks: ChainView? = null
@@ -279,9 +282,9 @@ class StudioActivity : AudioThemedActivity() {
     private fun drainPadHits() {
         // Les coups joués aux pads pendant l'enregistrement s'écrivent dans la grille
         var wrote = false
-        engine.takeLiveHits { track, position, velocity ->
+        engine.takeLiveHitsWithSlot { track, position, velocity, slot ->
             if (padsRecording) {
-                session.recordHit(track, position, velocity)
+                session.recordHit(track, position, velocity, slot)
                 wrote = true
             }
             if (::pads.isInitialized) pads.flash(track)
@@ -692,6 +695,7 @@ class StudioActivity : AudioThemedActivity() {
             }
         }, wrap(end = dp(8)))
         header.addView(rateButton)
+        header.addView(outlined(R.string.studio_clips).apply { setOnClickListener { showTrackClips(it) } })
         header.addView(outlined(R.string.studio_pad_sounds).apply { setOnClickListener { showPadSounds(it) } })
         header.addView(outlined(R.string.studio_pad_arrange).apply {
             isCheckable = true
@@ -919,7 +923,10 @@ class StudioActivity : AudioThemedActivity() {
      */
     private fun setPadsRecording(on: Boolean) {
         if (!::padsRecordButton.isInitialized) return
-        if (on) cancelPadLaunch()
+        if (on) {
+            cancelPadLaunch()
+            engine.cancelPendingTrackClips()
+        }
         if (padsRecording != on) drainPadHits()
         padsRecording = on
         padsRecordButton.setText(if (on) R.string.studio_record_on else R.string.studio_record_off)
@@ -1783,6 +1790,7 @@ class StudioActivity : AudioThemedActivity() {
     /** Le texte du bouton « ? » : comment ça marche, puis le lexique (chaque mot en gras, sa phrase à côté). */
     private fun helpText(): CharSequence {
         val b = android.text.SpannableStringBuilder(getString(R.string.studio_help_text))
+        b.append("\n\n").append(getString(R.string.studio_clip_help))
         fun bold(start: Int, end: Int) = b.setSpan(android.text.style.StyleSpan(Typeface.BOLD), start, end, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         b.append("\n\n")
         val titleStart = b.length
@@ -2187,6 +2195,7 @@ class StudioActivity : AudioThemedActivity() {
         notesPane.visibility = if (notes) View.VISIBLE else View.GONE
         mixerPane.visibility = if (id == tabMixerId) View.VISIBLE else View.GONE
         placePerformancePad()
+        panels.prune()
         requestFrame()
         if (id == tabMixerId) refreshMixer()
         refreshSelectionBar()
@@ -2318,6 +2327,7 @@ class StudioActivity : AudioThemedActivity() {
     }
 
     private fun toggleRecord() {
+        if (!recorder.armed) engine.cancelPendingTrackClips()
         finishTakeSegment()
         recorder.armed = !recorder.armed
         refreshMetronome()
@@ -2426,6 +2436,7 @@ class StudioActivity : AudioThemedActivity() {
         val pending = engine.pendingPadLoop
         if (pending >= 0 && queuedPattern !== session.project.patterns[pending]) cancelPadLaunch()
         panels.prune()
+        if (clipPanel != null) refreshPadLauncher(force = true)
         refreshSpread?.invoke()
         refreshHistory()
         handler.removeCallbacks(saveRunnable)
@@ -2642,6 +2653,69 @@ class StudioActivity : AudioThemedActivity() {
         }.start()
     }
 
+    private fun currentPadScene(): Int {
+        val p = session.project
+        return when {
+            playing && p.songMode -> p.chain.getOrNull(engine.songPosition) ?: p.current
+            playing && p.view.isNotEmpty() -> p.view.getOrNull(engine.currentStep.coerceAtLeast(0) / p.baseSteps) ?: p.current
+            else -> p.current
+        }
+    }
+
+    private fun showTrackClips(anchor: View) {
+        val panel = TrackClipsView(this, session, engine, ::outlined, ::trackName, ::showTrackClipActions, ::captureTrackClips)
+        panel.refresh(currentPadScene(), !recorder.armed && !gestureTaking)
+        panel.addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
+            override fun onViewAttachedToWindow(v: View) { clipPanel = panel }
+            override fun onViewDetachedFromWindow(v: View) { if (clipPanel === panel) clipPanel = null }
+        })
+        panels.show(R.string.studio_clips, getString(R.string.studio_clips), panel, 360, anchor,
+            valid = { padsPane.visibility == View.VISIBLE })
+    }
+
+    private fun showTrackClipActions(anchor: View, track: Track, slot: Int) {
+        val actions = listOf(getString(R.string.studio_clip_edit), getString(R.string.studio_clip_duplicate))
+        dropdown(anchor, actions, enabled = { it == 0 || session.hasTrackClip(track.id, slot) }) { choice ->
+            if (choice == 0) editTrackClip(track, slot)
+            else {
+                val labels = clipDestinations { !session.hasTrackClip(track.id, it) }
+                dropdown(anchor, labels, enabled = { it != slot }) { destination ->
+                    if (session.copyTrackClip(track.id, slot, destination)) changed()
+                }
+            }
+        }
+    }
+
+    private fun clipDestinations(empty: (Int) -> Boolean) = loopNames.mapIndexed { slot, letter ->
+        getString(if (empty(slot)) R.string.studio_clip_destination_free else R.string.studio_clip_destination_replace, letter)
+    }
+
+    private fun editTrackClip(track: Track, slot: Int) {
+        cancelPadLaunch()
+        engine.resetTrackClips()
+        selectPadLoop(slot)
+        if (track.melodic) {
+            editedDrum = -1
+            selectedTrack = track.id
+            tabsGroup.check(tabNotesId)
+        } else {
+            tabsGroup.check(tabRhythmId)
+        }
+    }
+
+    private fun captureTrackClips(anchor: View) {
+        acceptPadLaunch()
+        val base = currentPadScene()
+        val clips = engine.activeTrackClips()
+        if (clips.isEmpty()) return
+        dropdown(anchor, clipDestinations(session::isPatternEmpty)) { destination ->
+            cancelPadLaunch()
+            session.captureTrackClips(base, clips, destination)
+            engine.resetTrackClips()
+            selectPadLoop(destination)
+        }
+    }
+
     private fun launchPadLoop(slot: Int) {
         acceptPadLaunch()
         val project = session.project
@@ -2680,14 +2754,14 @@ class StudioActivity : AudioThemedActivity() {
     }
 
     private fun refreshPadLauncher(force: Boolean = false) {
-        val p = session.project
-        val active = when {
-            playing && p.songMode -> p.chain.getOrNull(engine.songPosition) ?: p.current
-            playing && p.view.isNotEmpty() -> p.view.getOrNull(engine.currentStep.coerceAtLeast(0) / p.baseSteps) ?: p.current
-            else -> p.current
-        }
+        val active = currentPadScene()
         val pending = engine.pendingPadLoop
         val enabled = !recorder.armed && !gestureTaking
+        val revision = engine.trackClipRevision
+        if (force || active != shownPadLoop || enabled != launchEnabled || revision != shownClipRevision) {
+            shownClipRevision = revision
+            clipPanel?.refresh(active, enabled)
+        }
         if (!force && active == shownPadLoop && pending == shownPendingLoop && enabled == launchEnabled) return
         shownPadLoop = active
         shownPendingLoop = pending

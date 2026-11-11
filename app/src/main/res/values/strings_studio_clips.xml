@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="studio_clips">Clips</string>
+    <string name="studio_clips_follow">Follow pattern</string>
+    <string name="studio_clip_edit">Edit</string>
+    <string name="studio_clip_duplicate">Duplicate to…</string>
+    <string name="studio_clips_capture">Capture…</string>
+    <string name="studio_clip_waiting">Queued</string>
+    <string name="studio_clip_pinned_letter">%1$s ●</string>
+    <string name="studio_clip_pinned">Pinned</string>
+    <string name="studio_clip_following">Follows pattern</string>
+    <string name="studio_clip_idle">Available</string>
+    <string name="studio_clip_filled">Has content</string>
+    <string name="studio_clip_empty">Empty</string>
+    <string name="studio_clip_label">%1$s · %2$s · %3$s · %4$s</string>
+    <string name="studio_clip_destination_free">%1$s · free</string>
+    <string name="studio_clip_destination_replace">%1$s · replace</string>
+    <string name="studio_clip_help">Track clips · In Pads, each row plays the steps or notes of its track. Tap A, B, C or D to pin a clip. A dot marks its letter. During playback it switches at the start of the next loop. Tap a queued letter again to cancel, or the pinned letter to follow the pattern. Dim letters are silent. Hold a letter to edit its clip in Rhythm or Notes, or duplicate it to another letter on that track. Capture writes the active combination to the pattern you choose. Undo restores the previous pattern.</string>
+</resources>
