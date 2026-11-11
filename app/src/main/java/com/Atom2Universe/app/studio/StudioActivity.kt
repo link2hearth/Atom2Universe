@@ -1396,17 +1396,6 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
             }
         }
         choices.addView(lockSwitch, wrap(end = dp(8)))
-        val dynamic = SwitchCompat(this).apply {
-            setText(R.string.studio_dynamic_touch)
-            isChecked = keyboard.dynamicTouch
-            setOnCheckedChangeListener { _, enabled ->
-                if (enabled == keyboard.dynamicTouch) return@setOnCheckedChangeListener
-                keyboard.dynamicTouch = enabled
-                prefs.edit().putBoolean("dynamic_touch", enabled).apply()
-                panels.refreshContents()
-            }
-        }
-        choices.addView(dynamic, wrap())
         fun refresh(): String {
             val project = session.project
             keyLabel.text = getString(R.string.studio_key_label, resources.getStringArray(R.array.studio_key_names)[project.keyPc])
@@ -1414,7 +1403,6 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
             octaveButton.text = getString(R.string.studio_track_octave, pitchName(session.rhythmEntryPitch(trackId)))
             scaleButton.text = getString(R.string.studio_scale_label, getString(scaleName(project.scaleId)))
             lockSwitch.isChecked = scaleLocked
-            dynamic.isChecked = keyboard.dynamicTouch
             return getString(R.string.studio_panel_track, getString(R.string.studio_tab_notes), trackName(project.track(trackId)))
         }
         panels.show(key, refresh(), tuning, 350, anchor, accent = trackColor(track), refreshContent = ::refresh) {
@@ -1521,7 +1509,7 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         pane.addView(roll, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(8) })
 
         keyboard = KeyboardView(this).apply {
-            dynamicTouch = prefs.getBoolean("dynamic_touch", false)
+            dynamicTouch = prefs.getBoolean(PREF_DYNAMIC_TOUCH, dynamicTouch)
             accent = LANE_COLORS[Inst.SYNTH]
             noteNames = resources.getStringArray(R.array.studio_key_names).toList()
             listener = object : KeyboardView.Listener {
@@ -2372,6 +2360,14 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         }
         box.addView(steps, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(12) })
 
+        box.addView(SwitchCompat(this).apply {
+            setText(R.string.studio_dynamic_touch)
+            isChecked = keyboard.dynamicTouch
+            setOnCheckedChangeListener { _, enabled ->
+                keyboard.dynamicTouch = enabled
+                getSharedPreferences(PREFS, MODE_PRIVATE).edit().putBoolean(PREF_DYNAMIC_TOUCH, enabled).apply()
+            }
+        }, wrap())
         val actions = FlowRow(this).apply { hGap = dp(8); vGap = dp(8) }
         actions.addView(outlined(R.string.studio_pattern_copy).apply { setOnClickListener { showCopyMenu(it) } })
         actions.addView(outlined(R.string.studio_output).apply { setOnClickListener { showOutputMenu(it) } })
@@ -4120,6 +4116,7 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
 
         /** Les réglages du Studio gardés d'une fois sur l'autre (pas ceux d'un morceau). */
         const val PREFS = "studio_prefs"
+        const val PREF_DYNAMIC_TOUCH = "dynamic_touch"
         const val PREF_ROLL_RATE = "pads_roll_rate"
         const val PREF_PADS_ROLL = "pads_roll"
         const val PREF_PADS_SHOW_XY = "pads_show_xy"

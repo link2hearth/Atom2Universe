@@ -26,7 +26,7 @@ class KeyboardView(context: Context) : View(context) {
         fun onKeyUp(pitch: Int)
     }
 
-    var dynamicTouch = false
+    var dynamicTouch = true
     var listener: Listener? = null
 
     /** La première touche : un do (hauteur MIDI multiple de 12). Le clavier montre ensuite autant d'octaves que la place le permet. */

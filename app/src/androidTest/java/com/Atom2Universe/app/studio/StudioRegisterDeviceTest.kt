@@ -11,6 +11,7 @@ import androidx.test.espresso.action.GeneralSwipeAction
 import androidx.test.espresso.action.Press
 import androidx.test.espresso.action.Swipe
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -134,6 +135,7 @@ class StudioRegisterDeviceTest {
                 onView(withContentDescription(context.getString(R.string.studio_close_panel, sound))).perform(click())
                 open(first.id)
                 open(second.id)
+                onView(withText(R.string.studio_dynamic_touch)).check(doesNotExist())
                 onView(allOf(withText(octave(0, 4)), panel(2))).perform(click())
                 onView(withText(keys[0] + "6")).perform(click())
                 onView(allOf(withText(keys[5]), panel(2))).perform(click())
@@ -148,6 +150,9 @@ class StudioRegisterDeviceTest {
                 onView(withContentDescription(context.getString(R.string.studio_close_panel, title(2)))).perform(click())
                 onView(withContentDescription(context.getString(R.string.studio_close_panel, title(1)))).perform(click())
                 onView(allOf(withText(notes), tab)).perform(click())
+                onView(withContentDescription(R.string.studio_settings)).perform(click())
+                onView(withText(R.string.studio_dynamic_touch)).check(matches(isDisplayed()))
+                onView(withContentDescription(context.getString(R.string.studio_close_panel, context.getString(R.string.studio_settings)))).perform(click())
                 val firstChip = onView(allOf(withText(names[0]), isDisplayed()))
                 val secondChip = onView(allOf(withText(names[1]), isDisplayed()))
                 firstChip.check(matches(isSelected()))

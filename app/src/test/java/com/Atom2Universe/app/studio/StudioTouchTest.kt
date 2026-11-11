@@ -41,12 +41,12 @@ class StudioTouchTest {
         }
         tap(24f)
         tap(180f)
-        keyboard.dynamicTouch = true
+        keyboard.dynamicTouch = false
         tap(24f)
         tap(180f)
         assertEquals(listOf(60, 60, 60, 60), releases)
-        assertEquals(attacks[0], attacks[1], 0f)
-        assertTrue(attacks[2] < 0.5f && attacks[3] > 0.9f)
+        assertTrue(attacks[0] < 0.5f && attacks[1] > 0.9f)
+        assertEquals(attacks[2], attacks[3], 0f)
     }
 
     @Test fun narrowingTheDeskKeepsSideBySidePanelsApart() {
