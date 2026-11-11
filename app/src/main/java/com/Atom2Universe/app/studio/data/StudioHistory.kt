@@ -139,6 +139,7 @@ object StudioHistory {
                         kind = core.kind, voice = core.voice, bank = core.bank, program = core.program,
                         synthBank = core.synthBank,
                         chipProgramAssigned = core.chipProgramAssigned, chipSmoothBass = core.chipSmoothBass,
+                        fmProgram = core.fmProgram, fmBrightness = core.fmBrightness, fmAttack = core.fmAttack,
                         kit = core.kit, tune = core.tune, length = core.length, sfKit = core.sfKit,
                         padOrder = core.padOrder, padSize = core.padSize, padPlayMode = core.padPlayMode,
                     )

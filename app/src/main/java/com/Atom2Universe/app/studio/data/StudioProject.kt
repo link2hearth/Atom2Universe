@@ -290,6 +290,9 @@ object StudioProjectCodec {
                 if (t.kind == TrackKind.SYNTH && t.synthBank != SynthBank.STUDIO) o.put("synthBank", t.synthBank.name)
                 if (t.chipProgramAssigned) o.put("chipProgramAssigned", true)
                 if (t.chipSmoothBass) o.put("chipSmoothBass", true)
+                if (t.fmProgram != Track.DEFAULT_FM_PROGRAM) o.put("fmProgram", t.fmProgram)
+                if (t.fmBrightness != Track.DEFAULT_FM_BRIGHTNESS) o.put("fmBrightness", t.fmBrightness.toDouble())
+                if (t.fmAttack != Track.DEFAULT_FM_ATTACK) o.put("fmAttack", t.fmAttack.toDouble())
                 if (t.padOrder != Int.MAX_VALUE) o.put("padOrder", t.padOrder)
                 if (t.melodic && t.padPlayMode != PadPlayMode.DRIVE) o.put("padPlayMode", t.padPlayMode.key)
                 when (t.padSize) {
@@ -319,6 +322,9 @@ object StudioProjectCodec {
         if (id !in 0 until StudioEngine.MAX_TRACKS) return null
         val kind = o.getInt("kind")
         if (kind != TrackKind.DRUM && kind != TrackKind.SYNTH && kind != TrackKind.SF2) return null
+        val synthBank = if (kind == TrackKind.SYNTH) {
+            SynthBank.entries.firstOrNull { it.name == o.optString("synthBank") } ?: SynthBank.STUDIO
+        } else SynthBank.STUDIO
         val voice = o.getInt("voice")
         if (kind == TrackKind.DRUM && voice !in 0 until Inst.DRUM_COUNT) return null
         val a = o.getJSONArray("mix")
@@ -349,11 +355,13 @@ object StudioProjectCodec {
             muted = o.optBoolean("muted", false),
             solo = o.optBoolean("solo", false) && !o.optBoolean("hidden", false),
             synth = if (kind == TrackKind.SYNTH) decodeSynth(o.getJSONObject("synth")) else SynthPresets.BASS,
-            synthBank = if (kind == TrackKind.SYNTH) {
-                SynthBank.entries.firstOrNull { it.name == o.optString("synthBank") } ?: SynthBank.STUDIO
-            } else SynthBank.STUDIO,
-            chipProgramAssigned = kind == TrackKind.SYNTH && o.optBoolean("chipProgramAssigned", o.has("synthBank") || o.optInt("program") != 0),
+            synthBank = synthBank,
+            chipProgramAssigned = kind == TrackKind.SYNTH && o.optBoolean("chipProgramAssigned",
+                synthBank.isGx || o.optInt("program") != 0),
             chipSmoothBass = kind == TrackKind.SYNTH && o.optBoolean("chipSmoothBass"),
+            fmProgram = o.optInt("fmProgram", Track.DEFAULT_FM_PROGRAM).coerceIn(0, 15),
+            fmBrightness = readFmAxis(o, "fmBrightness", Track.DEFAULT_FM_BRIGHTNESS),
+            fmAttack = readFmAxis(o, "fmAttack", Track.DEFAULT_FM_ATTACK),
             bank = o.optInt("bank", 0).coerceIn(0, 16383),
             program = o.optInt("program", 0).coerceIn(0, 127),
             arpMode = arp.getInt(0).coerceIn(0, 4),
@@ -365,6 +373,9 @@ object StudioProjectCodec {
             sfKit = if (kind == TrackKind.DRUM) (drum?.optInt(3, -1) ?: -1).coerceIn(-1, 127) else -1,
         )
     }
+
+    private fun readFmAxis(o: JSONObject, key: String, fallback: Float): Float =
+        o.optDouble(key, fallback.toDouble()).toFloat().takeIf { it.isFinite() }?.coerceIn(0f, 1f) ?: fallback
 
     internal fun writePad(o: JSONObject, position: PadPosition?) {
         if (position != null) o.put("heldPad", JSONArray().put(position.filter.toDouble()).put(position.space.toDouble()))
@@ -471,6 +482,9 @@ class StudioSession(
     private val past = ArrayDeque<Action>()
     private val future = ArrayDeque<Action>()
     private var openStart: StudioProject? = null
+    private var fmPadTrack = -1
+    private var fmPadBrightness = 0f
+    private var fmPadAttack = 0f
     private var lastEditAt = 0L
 
     /** Ce que le journal contient déjà (le morceau de départ plus toutes les lignes écrites). */
@@ -509,6 +523,7 @@ class StudioSession(
     }
 
     fun undo() {
+        endFmPad()
         closeOpen()
         val action = past.removeLastOrNull() ?: return
         future.addLast(action)
@@ -520,6 +535,7 @@ class StudioSession(
     }
 
     fun redo() {
+        endFmPad()
         closeOpen()
         val action = future.removeLastOrNull() ?: return
         past.addLast(action)
@@ -535,6 +551,7 @@ class StudioSession(
      * À appeler peu après chaque modification et en quittant l'écran.
      */
     fun flush() {
+        endFmPad()
         closeOpen()
         val rest = StudioHistory.diff(persisted, project, undoableOnly = false)
         if (rest.isNotEmpty()) {
@@ -591,7 +608,10 @@ class StudioSession(
         engine.applyMix(t.id, t.mix)
         engine.synthOf(t.id)?.apply {
             patch = t.synth
-            selectBank(t.synthBank, t.program, project.midiChannel(t.id), t.chipSmoothBass)
+            val program = if (t.synthBank == SynthBank.FM) t.fmProgram else t.program
+            val brightness = if (t.id == fmPadTrack) fmPadBrightness else t.fmBrightness
+            val attack = if (t.id == fmPadTrack) fmPadAttack else t.fmAttack
+            selectBank(t.synthBank, program, project.midiChannel(t.id), t.chipSmoothBass, brightness, attack)
         }
         engine.setArp(t.id, t.arpMode, ARP_DIVISIONS[t.arpRate.coerceIn(0, 2)], t.arpOctaves)
         engine.setVoice(t.id, t.kit, t.tune, t.length)
@@ -637,6 +657,7 @@ class StudioSession(
     /** Retire une piste, ses pas et ses notes (un pas en arrière les rend). */
     fun removeTrack(id: Int) {
         if (project.trackOrNull(id) == null) return
+        if (id == fmPadTrack) endFmPad()
         remember()
         val patterns = project.patterns.map { p ->
             p.copy(lanes = p.lanes.filter { it.instrument != id }, notes = p.notes.filter { it.track != id })
@@ -709,21 +730,56 @@ class StudioSession(
 
     fun setSynthBank(id: Int, bank: SynthBank) {
         editSynthSound(id) { t ->
-            if (bank != SynthBank.STUDIO && !t.chipProgramAssigned) {
+            if (bank.isGx && !t.chipProgramAssigned) {
                 t.copy(synthBank = bank, program = SynthPresets.chipProgram(t.synth), chipProgramAssigned = true)
             } else t.copy(synthBank = bank)
         }
     }
 
     fun setChipProgram(id: Int, program: Int) {
-        editSynthSound(id) { if (it.synthBank == SynthBank.STUDIO) it else it.copy(program = program.coerceIn(0, 127), chipProgramAssigned = true) }
+        editSynthSound(id) { if (it.synthBank.isGx) it.copy(program = program.coerceIn(0, 127), chipProgramAssigned = true) else it }
     }
 
     fun setChipSmoothBass(id: Int, enabled: Boolean) {
-        editSynthSound(id) { if (it.synthBank == SynthBank.STUDIO) it else it.copy(chipSmoothBass = enabled) }
+        editSynthSound(id) { if (it.synthBank.isGx) it.copy(chipSmoothBass = enabled) else it }
+    }
+
+    fun setFmProgram(id: Int, program: Int) {
+        editSynthSound(id) { if (it.synthBank == SynthBank.FM) it.copy(fmProgram = program.coerceIn(0, 15)) else it }
+    }
+
+    /** En jeu, les mouvements vont directement aux registres. Seul le point de relâchement entre dans le projet. */
+    fun setFmPad(id: Int, brightness: Float, attack: Float) {
+        if (id < 0 || !brightness.isFinite() || !attack.isFinite()) return
+        val x = brightness.coerceIn(0f, 1f)
+        val y = attack.coerceIn(0f, 1f)
+        if (fmPadTrack == id) {
+            if (x == fmPadBrightness && y == fmPadAttack) return
+        } else {
+            val track = project.trackOrNull(id) ?: return
+            if (track.synthBank != SynthBank.FM || track.fmProgram != 0) return
+            endFmPad()
+            if (x == track.fmBrightness && y == track.fmAttack) return
+        }
+        fmPadTrack = id
+        fmPadBrightness = x
+        fmPadAttack = y
+        engine.synthOf(id)?.setFmPad(x, y)
+    }
+
+    fun endFmPad() {
+        if (fmPadTrack == -1) return
+        val track = project.trackOrNull(fmPadTrack)
+        fmPadTrack = -1
+        if (track == null || track.fmBrightness == fmPadBrightness && track.fmAttack == fmPadAttack) return
+        closeOpen()
+        remember()
+        project = project.withTrack(track.copy(fmBrightness = fmPadBrightness, fmAttack = fmPadAttack))
+        closeOpen()
     }
 
     private inline fun editSynthSound(id: Int, edit: (Track) -> Track) {
+        if (id == fmPadTrack) endFmPad()
         val before = project.trackOrNull(id) ?: return
         if (before.kind != TrackKind.SYNTH) return
         val after = edit(before)

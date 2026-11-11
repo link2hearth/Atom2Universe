@@ -40,6 +40,7 @@ import com.Atom2Universe.app.audioeditor.EXTRA_IMPORT_URI
 import android.content.Intent
 import com.Atom2Universe.app.studio.ui.KeyboardView
 import com.Atom2Universe.app.studio.ui.XyPadView
+import com.Atom2Universe.app.studio.ui.FmPatchPadView
 import android.widget.HorizontalScrollView
 import android.widget.ImageButton
 import androidx.activity.OnBackPressedCallback
@@ -154,6 +155,7 @@ class StudioActivity : AudioThemedActivity() {
     private var padsShowXY = false
     private lateinit var mixerPane: LinearLayout
     private lateinit var padView: XyPadView
+    private var fmSoundPad: XyPadView? = null
     private lateinit var padLoopRow: LinearLayout
     private lateinit var loopNames: Array<String>
     private var shownPadLoop = -2
@@ -204,6 +206,10 @@ class StudioActivity : AudioThemedActivity() {
 
     private val handler = Handler(Looper.getMainLooper())
     private var playing = false
+        set(value) {
+            if (value) stopSoundAudition()
+            field = value
+        }
     private var bufferBlocks = 2
     private var screenActive = false
     private var framePending = false
@@ -366,10 +372,12 @@ class StudioActivity : AudioThemedActivity() {
         cancelPadLaunch()
         // Rien ne reste tenu : pads, thérémine, enregistrement des pads
         padView.finishTouch(false)
+        fmSoundPad?.finishTouch(false)
         pads.releaseAll()
         keyboard.releaseAll()
         theremin.finish()
         padExpressionResets.keys.toList().forEach(::clearPendingPadEffects)
+        stopSoundAudition()
         for (release in presetReleases.values.toList()) {
             handler.removeCallbacks(release)
             release.run()
@@ -383,6 +391,11 @@ class StudioActivity : AudioThemedActivity() {
         refreshTransport()
         output.stop()
         super.onPause()
+    }
+
+    override fun onDestroy() {
+        if (::engine.isInitialized) engine.close()
+        super.onDestroy()
     }
 
     // ---- Construction de l'écran ---------------------------------------------------------------
@@ -707,6 +720,7 @@ class StudioActivity : AudioThemedActivity() {
         pads = PadsView(this).apply {
             noteNames = resources.getStringArray(R.array.studio_key_names).toList()
             onDown = { track ->
+                stopSoundAudition()
                 if (padsRoll) engine.rollOn(track, 1f, 1 shl rollRate) else engine.trigger(track, 60, 1f)
                 requestFrame()
             }
@@ -880,6 +894,7 @@ class StudioActivity : AudioThemedActivity() {
      */
     private fun padNoteDown(track: Int, pitch: Int) {
         if (session.isMuted(track)) return
+        stopSoundAudition()
         clearPendingPadEffects(track)
         val fingers = padFingers[track] ?: 0
         padFingers[track] = fingers + 1
@@ -973,7 +988,7 @@ class StudioActivity : AudioThemedActivity() {
                     recording = true
                 }
             }
-            onMove = { x, y ->
+            onMove = XyPadView.MoveListener { x, y ->
                 engine.masterFilter = 1f - x
                 engine.spaceBoost = y
             }
@@ -1840,7 +1855,8 @@ class StudioActivity : AudioThemedActivity() {
         fun patch() = session.project.trackOrNull(t.id)?.synth ?: t.synth
         val synthTrack = t.kind == TrackKind.SYNTH
         val studioSynth = synthTrack && t.synthBank == SynthBank.STUDIO
-        val chipSynth = synthTrack && !studioSynth
+        val fmSynth = synthTrack && t.synthBank == SynthBank.FM
+        val chipSynth = synthTrack && t.synthBank.isGx
         if (synthTrack) {
             box.addView(MaterialButtonToggleGroup(this).apply {
                 isSingleSelection = true
@@ -1859,6 +1875,7 @@ class StudioActivity : AudioThemedActivity() {
                 addOnButtonCheckedListener { group, id, checked ->
                     if (checked) {
                         val bank = group.findViewById<View>(id).tag as SynthBank
+                        fmSoundPad?.finishTouch(false)
                         session.setSynthBank(t.id, bank)
                         scheduleSave()
                         showSoundPanel(anchor, t.id)
@@ -1869,11 +1886,13 @@ class StudioActivity : AudioThemedActivity() {
         }
         val pick = outlined(null)
         val forget = outlined(R.string.studio_forget_sound)
+        var personalPad: XyPadView? = null
         var waveGroup: MaterialButtonToggleGroup? = null
         var refreshingWave = false
         fun refreshPick() {
             val now = session.project.trackOrNull(t.id) ?: return
             pick.text = instrumentName(now)
+            personalPad?.visibility = if (now.fmProgram == 0) View.VISIBLE else View.GONE
             forget.visibility = if (studioSynth && now.synth.id.startsWith(SynthPatch.MINE_PREFIX)) View.VISIBLE else View.GONE
             if (studioSynth) {
                 refreshingWave = true
@@ -1887,13 +1906,25 @@ class StudioActivity : AudioThemedActivity() {
             refreshNotesControls()
         }
         fun chooseProgram(program: Int) {
-            session.setChipProgram(t.id, program)
+            personalPad?.finishTouch(false)
+            if (fmSynth) session.setFmProgram(t.id, program) else session.setChipProgram(t.id, program)
             scheduleSave()
             refreshPick()
             refreshChipKeyboard(t.id)
         }
         pick.setOnClickListener {
-            if (chipSynth) {
+            if (fmSynth) {
+                val current = session.project.trackOrNull(t.id) ?: return@setOnClickListener
+                val popup = androidx.appcompat.widget.PopupMenu(this, pick)
+                fmProgramNames.forEachIndexed { index, name ->
+                    popup.menu.add(name).apply {
+                        isCheckable = true
+                        isChecked = index == current.fmProgram
+                        setOnMenuItemClickListener { chooseProgram(index); true }
+                    }
+                }
+                popup.show()
+            } else if (chipSynth) {
                 val current = session.project.trackOrNull(t.id) ?: return@setOnClickListener
                 pickChipProgram(pick, current.program, ::chooseProgram)
             } else if (studioSynth) {
@@ -1914,12 +1945,15 @@ class StudioActivity : AudioThemedActivity() {
                 }
             }
         }
-        if (chipSynth) {
+        if (chipSynth || fmSynth) {
             val programRow = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL }
             fun step(label: Int, description: Int, delta: Int) = square(label).apply {
                 contentDescription = getString(description)
                 setOnClickListener {
-                    session.project.trackOrNull(t.id)?.let { chooseProgram(Math.floorMod(it.program + delta, 128)) }
+                    val now = session.project.trackOrNull(t.id) ?: return@setOnClickListener
+                    val current = if (fmSynth) now.fmProgram else now.program
+                    val count = if (fmSynth) fmProgramNames.size else chipProgramNames.size
+                    chooseProgram(Math.floorMod(current + delta, count))
                 }
             }
             programRow.addView(step(R.string.studio_tempo_less, R.string.studio_program_previous, -1))
@@ -1927,7 +1961,11 @@ class StudioActivity : AudioThemedActivity() {
             programRow.addView(pick, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
             programRow.addView(step(R.string.studio_tempo_more, R.string.studio_program_next, 1))
             box.addView(programRow, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(8) })
-            box.addView(SwitchCompat(this).apply {
+            if (fmSynth) {
+                val pad = personalFmPad(t)
+                personalPad = pad
+                box.addView(pad, LinearLayout.LayoutParams(-1, dp(132)).apply { topMargin = dp(8) })
+            } else box.addView(SwitchCompat(this).apply {
                 setText(R.string.studio_chip_smooth_bass)
                 minimumHeight = dp(48)
                 switchPadding = dp(8)
@@ -2073,13 +2111,60 @@ class StudioActivity : AudioThemedActivity() {
         panels.show(R.string.studio_sound_caption, getString(R.string.studio_panel_track, getString(R.string.studio_sound_caption), trackName(t)), box, 340, anchor, onHistory = { showSoundPanel(anchor, t.id) }) { session.project.trackOrNull(t.id)?.hidden == false }
     }
 
-    /** La note précédente ne doit pas écourter le son suivant quand on parcourt rapidement la banque. */
     private val presetReleases = mutableMapOf<Int, Runnable>()
+
+    /** Une audition FM cède sa place avant l'attaque suivante, même si la touche vient du thread MIDI. */
+    private val auditionLock = Any()
+    private var heldMidiNotes = 0
+    private var auditionTrack = -1
+    private var auditionPitch = 60
+    private var auditionOwner: XyPadView? = null
+    private val stopAuditionTask = Runnable { stopSoundAudition() }
+
+    private fun stopSoundAudition(owner: XyPadView? = null): Unit = synchronized(auditionLock) {
+        if (auditionTrack >= 0 && (owner == null || auditionOwner === owner)) {
+            handler.removeCallbacks(stopAuditionTask)
+            engine.release(auditionTrack, auditionPitch)
+            auditionTrack = -1
+            auditionOwner = null
+        }
+    }
+
+    private fun personalFmPad(track: Track) = FmPatchPadView(this).apply {
+        accent = trackColor(track)
+        showAt(track.fmBrightness, track.fmAttack)
+        describePosition()
+        var firstPosition = false
+        var heldPreview = false
+        onPress = {
+            fmSoundPad = this
+            firstPosition = true
+            handler.removeCallbacks(saveRunnable)
+        }
+        onMove = XyPadView.MoveListener { brightness, attack ->
+            session.setFmPad(track.id, brightness, attack)
+            if (firstPosition) {
+                firstPosition = false
+                heldPreview = isTouching
+                auditionFmNote(track.id, 60 + session.project.keyPc, 0.9f, if (heldPreview) 0L else 450L, this)
+            }
+        }
+        onRelease = { completed ->
+            if (heldPreview) stopSoundAudition(this)
+            if (fmSoundPad === this) fmSoundPad = null
+            session.endFmPad()
+            describePosition()
+            if (completed) scheduleSave() else handler.post { if (screenActive) scheduleSave() }
+        }
+    }
+
+    private fun hasLiveInput(id: Int): Boolean =
+        id in keyboardTracks.values || padFingers.containsKey(id) || id == thereminTrack || midiLights[id]?.any { it > 0 } == true
 
     private fun refreshChipKeyboard(id: Int) {
         val t = session.project.trackOrNull(id) ?: return
         // Garder les touches sous les doigts et la note tenue pendant un changement de son.
-        if (id in keyboardTracks.values || padFingers.containsKey(id) || id == thereminTrack || midiLights[id]?.any { it > 0 } == true) return
+        if (hasLiveInput(id)) return
         val octave = StudioRegister.chipOctave(t)
         if (id == selectedTrack && !manualRegister && octave != null && session.notesOf(id).isEmpty()) {
             register.setLow(octave)
@@ -2101,6 +2186,11 @@ class StudioActivity : AudioThemedActivity() {
         if (session.isMuted(track)) return
         presetReleases.remove(track)?.let { handler.removeCallbacks(it); it.run() }
         val pitch = octave + session.project.keyPc
+        if (session.project.trackOrNull(track)?.synthBank == SynthBank.FM) {
+            auditionFmNote(track, pitch, 0.9f, durationMs)
+            return
+        }
+        stopSoundAudition()
         engine.trigger(track, pitch, 0.9f, recordHit = false)
         val release = Runnable {
             engine.release(track, pitch)
@@ -2109,6 +2199,19 @@ class StudioActivity : AudioThemedActivity() {
         presetReleases[track] = release
         handler.postDelayed(release, durationMs)
     }
+
+    private fun auditionFmNote(track: Int, pitch: Int, velocity: Float, durationMs: Long, owner: XyPadView? = null): Unit =
+        synchronized(auditionLock) {
+            if (session.isMuted(track) || heldMidiNotes > 0 || keyboardTracks.isNotEmpty() ||
+                padFingers.isNotEmpty() || thereminTrack >= 0) return@synchronized
+            if (owner != null && (playing || recorder.armed || padsRecording || pads.hasHeldDrum)) return@synchronized
+            stopSoundAudition()
+            auditionTrack = track
+            auditionPitch = pitch
+            auditionOwner = owner
+            engine.trigger(track, auditionPitch, velocity, recordHit = false)
+            if (durationMs > 0L) handler.postDelayed(stopAuditionTask, durationMs)
+        }
 
     private fun pickChipProgram(anchor: View, program: Int, onPick: (Int) -> Unit) {
         val popup = androidx.appcompat.widget.PopupMenu(this, anchor)
@@ -2315,6 +2418,11 @@ class StudioActivity : AudioThemedActivity() {
 
     private fun previewPitch(pitch: Int, velocity: Float = 0.9f, holdMs: Long = 250, track: Int = selectedTrack) {
         if (track < 0 || session.isMuted(track)) return
+        if (session.project.trackOrNull(track)?.synthBank == SynthBank.FM) {
+            auditionFmNote(track, pitch, velocity, holdMs)
+            return
+        }
+        stopSoundAudition()
         engine.trigger(track, pitch, velocity)
         handler.postDelayed({ engine.release(track, pitch) }, holdMs)
     }
@@ -2437,6 +2545,7 @@ class StudioActivity : AudioThemedActivity() {
     /** Une touche (écran ou clavier MIDI) : le son part tout de suite ; l'enregistreur note l'instant. */
     private fun liveNoteOn(pitch: Int, velocity: Float, position: Double) {
         if (selectedTrack < 0 || session.isMuted(selectedTrack)) return
+        stopSoundAudition()
         clearPendingPadEffects(selectedTrack)
         engine.trigger(selectedTrack, pitch, velocity)
         recorder.press(pitch, position, selectedTrack, velocity)
@@ -2470,6 +2579,10 @@ class StudioActivity : AudioThemedActivity() {
             onPress = { track, pitch, velocity ->
                 val revision = takeRevision
                 val at = engine.playPosition
+                synchronized(auditionLock) {
+                    heldMidiNotes++
+                    stopSoundAudition()
+                }
                 engine.trigger(track, pitch, velocity)
                 handler.post {
                     if (midiPerformance === keys) {
@@ -2481,7 +2594,10 @@ class StudioActivity : AudioThemedActivity() {
             onRelease = { track, pitch ->
                 val revision = takeRevision
                 val at = engine.playPosition
-                engine.release(track, pitch)
+                synchronized(auditionLock) {
+                    engine.release(track, pitch)
+                    heldMidiNotes--
+                }
                 handler.post {
                     if (midiPerformance === keys) {
                         midiLight(track, pitch, false)
@@ -3070,10 +3186,12 @@ class StudioActivity : AudioThemedActivity() {
     private fun trackColor(t: Track): Int = StudioColors.of(t)
 
     private val chipProgramNames by lazy { resources.getStringArray(R.array.gm_instruments) }
+    private val fmProgramNames by lazy { resources.getStringArray(R.array.studio_fm_programs) }
 
     private fun instrumentName(t: Track): String = when {
         t.kind != TrackKind.SYNTH -> sf2ProgramName(t)
         t.synthBank == SynthBank.STUDIO -> soundName(t.synth)
+        t.synthBank == SynthBank.FM -> fmProgramNames[t.fmProgram]
         else -> chipProgramNames[t.program]
     }
 
@@ -3081,6 +3199,7 @@ class StudioActivity : AudioThemedActivity() {
         SynthBank.STUDIO -> R.string.studio_title
         SynthBank.SCC -> R.string.studio_bank_scc
         SynthBank.FAMICOM -> R.string.studio_bank_famicom
+        SynthBank.FM -> R.string.studio_bank_fm
     }
 
     private fun sf2ProgramName(t: Track): String =

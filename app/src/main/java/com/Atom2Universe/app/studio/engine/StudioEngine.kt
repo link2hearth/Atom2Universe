@@ -62,7 +62,11 @@ object TrackKind {
     const val SF2 = 2
 }
 
-enum class SynthBank { STUDIO, SCC, FAMICOM }
+enum class SynthBank {
+    STUDIO, SCC, FAMICOM, FM;
+
+    val isGx get() = this == SCC || this == FAMICOM
+}
 
 /**
  * Ce que le moteur doit savoir d'une piste pour fabriquer son instrument. [id] (0 à [StudioEngine.MAX_TRACKS] − 1) relie la
@@ -234,7 +238,7 @@ class StepPattern(
  * Les pistes sont libres ([setTracks]) : chacune a son numéro, son instrument et, si elle joue des notes, son propre
  * arpégiateur. Les autres fils ne touchent au moteur que par les champs @Volatile et par la file de commandes.
  */
-class StudioEngine(val sampleRate: Int) {
+class StudioEngine(val sampleRate: Int) : AutoCloseable {
 
     /** Une piste en marche : son instrument et, si elle joue des notes, l'état de ses notes tenues et de son arpège. */
     private inner class Slot(val spec: TrackSpec, val instrument: Instrument, val melody: Melody?)
@@ -287,6 +291,16 @@ class StudioEngine(val sampleRate: Int) {
         }
         for (id in old.indices) if (old[id] != null && next[id] == null) forgetTrackClip(id)
         table = next
+        for (id in old.indices) {
+            val retired = old[id]?.instrument as? PolySynth ?: continue
+            if (retired !== next[id]?.instrument) retired.close()
+        }
+    }
+
+    override fun close() {
+        val old = table
+        table = arrayOfNulls(MAX_TRACKS)
+        for (slot in old) (slot?.instrument as? PolySynth)?.close()
     }
 
     /** Le son enregistré au micro pour le synthé (patch « Mon son ») ; `null` : aucun. */

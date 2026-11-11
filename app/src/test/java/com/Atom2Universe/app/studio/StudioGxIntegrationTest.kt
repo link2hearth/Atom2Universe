@@ -146,7 +146,7 @@ class StudioGxIntegrationTest {
     }
 
     @Test fun liveAudioMatchesExportAndMidiCarriesTheProgram() {
-        val rendered = SynthBank.entries.map { bank ->
+        val rendered = listOf(SynthBank.STUDIO, SynthBank.SCC, SynthBank.FAMICOM).map { bank ->
             val engine = StudioEngine(rate)
             val session = StudioSession(engine, StudioProject.blank())
             session.setSynthBank(track, bank)

@@ -43,9 +43,10 @@ internal class StudioRegister(widthDp: Int, heightDp: Int, chosenOctaves: Int? =
     companion object {
         val whites = (0..127).filter { it % 12 in listOf(0, 2, 4, 5, 7, 9, 11) }.toIntArray()
 
-        /** Le do de référence de la préécoute GXSCC, commun aux pistes vides et au jeu au doigt. */
+        /** Le do de référence de la préécoute, commun aux pistes vides et au jeu au doigt. */
         fun chipOctave(track: Track): Int? = when {
             track.kind != TrackKind.SYNTH || track.synthBank == SynthBank.STUDIO -> null
+            track.synthBank == SynthBank.FM -> if (track.fmProgram in 13..14) 36 else 60
             track.program in 32..39 -> 36
             else -> 60
         }

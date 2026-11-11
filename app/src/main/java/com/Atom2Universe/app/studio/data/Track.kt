@@ -56,8 +56,12 @@ data class Track(
     val padSize: PadSize = PadSize.NORMAL,
     val padPlayMode: PadPlayMode = PadPlayMode.DRIVE,
     val synthBank: SynthBank = SynthBank.STUDIO,
-    val chipProgramAssigned: Boolean = kind == TrackKind.SYNTH && (synthBank != SynthBank.STUDIO || program != 0),
+    val chipProgramAssigned: Boolean = kind == TrackKind.SYNTH && (synthBank.isGx || program != 0),
     val chipSmoothBass: Boolean = false,
+    /** 1–15 : voix du YM2413. 0 : instrument personnel de cette piste. */
+    val fmProgram: Int = DEFAULT_FM_PROGRAM,
+    val fmBrightness: Float = DEFAULT_FM_BRIGHTNESS,
+    val fmAttack: Float = DEFAULT_FM_ATTACK,
 ) {
     val melodic: Boolean get() = kind != TrackKind.DRUM
 
@@ -66,6 +70,10 @@ data class Track(
         else TrackSpec(id, kind, voice, bank, program)
 
     companion object {
+        const val DEFAULT_FM_PROGRAM = 3 // Piano
+        const val DEFAULT_FM_BRIGHTNESS = 0.5f
+        const val DEFAULT_FM_ATTACK = 0.5f
+
         /** Le nombre de variantes du son de chaque instrument de batterie. */
         const val KIT_COUNT = 3
 

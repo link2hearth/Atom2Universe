@@ -14,9 +14,14 @@ import com.Atom2Universe.app.R
  * Un pad à deux axes pour jouer des effets du doigt. [onMove] reçoit x (0 à gauche, 1 à droite) et y (0 en bas, 1 en
  * haut) tant que le doigt est posé. Le mixeur décide de la position au relâchement.
  */
-class XyPadView(context: Context) : View(context) {
+open class XyPadView(
+    context: Context,
+    private val horizontalLabel: String = "← " + context.getString(R.string.studio_fx_filter),
+    private val verticalLabel: String = "↑ " + context.getString(R.string.studio_space),
+) : View(context) {
 
-    var onMove: ((x: Float, y: Float) -> Unit)? = null
+    fun interface MoveListener { fun moved(x: Float, y: Float) }
+    var onMove: MoveListener? = null
     var onRelease: ((completed: Boolean) -> Unit)? = null
     var accent: Int = 0xFF7C8CFF.toInt()
 
@@ -59,10 +64,7 @@ class XyPadView(context: Context) : View(context) {
     private val axisPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         textSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12f, resources.displayMetrics)
     }
-    private val filterAxis = "← " + context.getString(R.string.studio_fx_filter)
-    private val spaceAxis = "↑ " + context.getString(R.string.studio_space)
-
-    private val axisWidth = maxOf(axisPaint.measureText(filterAxis), axisPaint.measureText(spaceAxis))
+    private val axisWidth = maxOf(axisPaint.measureText(horizontalLabel), axisPaint.measureText(verticalLabel))
 
     private fun dp(v: Float) = v * resources.displayMetrics.density
 
@@ -81,8 +83,8 @@ class XyPadView(context: Context) : View(context) {
         val margin = dp(12f)
         if (height > 2f * (margin + axisPaint.textSize) && width > margin * 2 + axisWidth) {
             axisPaint.color = if (dark || recording) 0xFFB9B9C5.toInt() else 0xFF51515F.toInt()
-            canvas.drawText(spaceAxis, margin, margin - axisPaint.ascent(), axisPaint)
-            canvas.drawText(filterAxis, margin, height - margin, axisPaint)
+            canvas.drawText(verticalLabel, margin, margin - axisPaint.ascent(), axisPaint)
+            canvas.drawText(horizontalLabel, margin, height - margin, axisPaint)
         }
 
         paint.color = accent
@@ -103,7 +105,7 @@ class XyPadView(context: Context) : View(context) {
         if (width <= 0 || height <= 0) return
         padX = (event.x / width).coerceIn(0f, 1f)
         padY = (1f - event.y / height).coerceIn(0f, 1f)
-        onMove?.invoke(padX, padY)
+        onMove?.moved(padX, padY)
         invalidate()
     }
 

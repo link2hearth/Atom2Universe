@@ -7,6 +7,7 @@ import com.Atom2Universe.app.studio.data.StudioProject
 import com.Atom2Universe.app.studio.data.StudioSession
 import com.Atom2Universe.app.studio.engine.Inst
 import com.Atom2Universe.app.studio.engine.StudioEngine
+import com.Atom2Universe.app.studio.engine.SynthBank
 import com.Atom2Universe.app.studio.export.StudioExporter
 import com.Atom2Universe.app.studio.music.Styles
 import org.junit.Assert.assertEquals
@@ -98,7 +99,7 @@ class StudioExportTest {
     }
 
     /** Lecteur minimal : rend, par canal, les notes allumées, et le tempo. */
-    private class Midi(val format: Int, val tracks: Int, val division: Int, val noteOns: Map<Int, Int>, val tempo: Int, val lastTick: Int)
+    private class Midi(val format: Int, val tracks: Int, val division: Int, val noteOns: Map<Int, Int>, val programs: Map<Int, Int>, val tempo: Int, val lastTick: Int)
 
     private fun parse(b: ByteArray): Midi {
         assertEquals("MThd", String(b, 0, 4))
@@ -107,6 +108,7 @@ class StudioExportTest {
         val division = ((b[12].toInt() and 0xFF) shl 8) or (b[13].toInt() and 0xFF)
         var pos = 14
         val ons = HashMap<Int, Int>()
+        val programs = HashMap<Int, Int>()
         var tempo = 0
         var lastTick = 0
         repeat(tracks) {
@@ -132,6 +134,7 @@ class StudioExportTest {
                     val ch = status and 0x0F
                     val oneByte = status and 0xF0 == 0xC0 || status and 0xF0 == 0xD0 // changement de programme
                     val vel = if (oneByte) 0 else b[i + 1].toInt() and 0xFF
+                    if (status and 0xF0 == 0xC0) programs[ch] = b[i].toInt() and 0x7F
                     if (status and 0xF0 == 0x90 && vel > 0) ons[ch] = (ons[ch] ?: 0) + 1
                     i += if (oneByte) 1 else 2
                     lastTick = maxOf(lastTick, tick)
@@ -141,7 +144,19 @@ class StudioExportTest {
             pos = end
         }
         assertEquals("rien après la dernière piste", b.size, pos)
-        return Midi(format, tracks, division, ons, tempo, lastTick)
+        return Midi(format, tracks, division, ons, programs, tempo, lastTick)
+    }
+
+    @Test
+    fun midiUsesTheGmEquivalentOfTheFmInstrument() {
+        val project = project()
+        val track = project.track(Inst.SYNTH)
+        val channel = project.midiChannel(track.id)
+        for ((fm, gm) in listOf(0 to 81, 1 to 40, 3 to 0, 12 to 11, 14 to 32, 15 to 27)) {
+            val fmTrack = track.copy(synthBank = SynthBank.FM, fmProgram = fm, program = 75)
+            val midi = parse(StudioExporter.midiBytes(project.withTrack(fmTrack)))
+            assertEquals("Programme ROM $fm", gm, midi.programs[channel])
+        }
     }
 
     @Test

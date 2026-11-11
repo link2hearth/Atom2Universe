@@ -59,8 +59,7 @@ object StudioExporter {
         sf2Factory: ((sampleRate: Int, bank: Int, program: Int) -> ExternalSynth?)? = null,
         sounds: Sounds = Sounds(),
         onProgress: (Float) -> Boolean = { true },
-    ): Boolean {
-        val engine = StudioEngine(sampleRate)
+    ): Boolean = StudioEngine(sampleRate).use { engine ->
         engine.sf2Factory = sf2Factory
         // Avant les pistes : les instruments fabriqués par la session reçoivent déjà ces sons
         engine.setPercSample(sounds.perc, sounds.percRate)
@@ -92,10 +91,10 @@ object StudioExporter {
             }
             out.write(bytes, 0, n * 4)
             done += n
-            if (!onProgress(done.toFloat() / total)) return false
+            if (!onProgress(done.toFloat() / total)) return@use false
         }
         out.flush()
-        return true
+        true
     }
 
     private fun toPcm(v: Float): Int = (v.coerceIn(-1f, 1f) * 32767f).roundToInt()
@@ -128,6 +127,9 @@ object StudioExporter {
 
     /** Programme GM donné aux pistes du synthé maison (« lead scie »). */
     private const val SYNTH_PROGRAM = 81
+
+    // General MIDI n'encode pas les registres Yamaha. Choisir le timbre équivalent pour chaque son ROM.
+    private val FM_GM_PROGRAMS = intArrayOf(81, 40, 24, 0, 73, 71, 68, 56, 16, 60, 81, 6, 11, 38, 32, 27)
 
     private class Ev(val tick: Int, val order: Int, val bytes: ByteArray)
 
@@ -171,7 +173,12 @@ object StudioExporter {
         // Au début de chaque piste mélodique : l'instrument (banque puis programme)
         for ((index, track) in melodic.withIndex()) {
             val ch = channels[index]
-            val program = if (track.kind == TrackKind.SYNTH && track.synthBank == SynthBank.STUDIO) SYNTH_PROGRAM else track.program
+            val program = when {
+                track.kind != TrackKind.SYNTH -> track.program
+                track.synthBank == SynthBank.FM -> FM_GM_PROGRAMS[track.fmProgram.coerceIn(0, 15)]
+                track.synthBank == SynthBank.STUDIO -> SYNTH_PROGRAM
+                else -> track.program
+            }
             if (track.kind == TrackKind.SF2) {
                 melodies[index] += Ev(0, -3, byteArrayOf((0xB0 or ch).toByte(), 0, ((track.bank shr 7) and 0x7F).toByte()))
                 melodies[index] += Ev(0, -2, byteArrayOf((0xB0 or ch).toByte(), 32, (track.bank and 0x7F).toByte()))

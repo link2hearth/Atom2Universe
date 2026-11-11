@@ -235,7 +235,7 @@ object SynthPresets {
     fun byId(id: String): SynthPatch = if (id == MY_VOICE.id) MY_VOICE else ALL.firstOrNull { it.id == id } ?: BASS
 }
 
-class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate) {
+class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), AutoCloseable {
 
     @Volatile var patch: SynthPatch = SynthPresets.BASS
 
@@ -245,27 +245,51 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate) {
     private val voices = Array(voiceCount) { Voice() }
     private var age = 0L
 
-    // Construit sur le fil des réglages. Les queues des deux instruments passent par le même mixage de piste.
-    private class Chip(sampleRate: Int) {
-        val synth = GxSynth(sampleRate)
-        val scratch = FloatArray(Instrument.MAX_CHUNK)
+    // Les moteurs sont créés sur le fil des réglages ; les notes déjà lancées finissent sur leur moteur.
+    @Volatile private var chip: GxSynth? = null
+    @Volatile private var fm: Ym2413Synth? = null
+    @Volatile private var selectedBank = SynthBank.STUDIO
+    private val mixScratch = FloatArray(Instrument.MAX_CHUNK)
+    private var closed = false
+
+    @Synchronized
+    fun selectBank(bank: SynthBank, program: Int, midiChannel: Int, smoothBass: Boolean = false,
+                   brightness: Float = 0.5f, attack: Float = 0.5f) {
+        if (closed) return
+        when (bank) {
+            SynthBank.FM -> {
+                val source = fm ?: Ym2413Synth(sampleRate).also { fm = it }
+                source.select(program, brightness, attack)
+            }
+            SynthBank.SCC, SynthBank.FAMICOM -> {
+                val source = chip ?: GxSynth(sampleRate).also { chip = it }
+                source.midiChannel = midiChannel
+                source.smoothBass = smoothBass
+                source.select(bank == SynthBank.FAMICOM, program)
+            }
+            SynthBank.STUDIO -> Unit
+        }
+        selectedBank = bank
     }
 
-    @Volatile private var chip: Chip? = null
-    @Volatile private var selectedChip: GxSynth? = null
+    fun setFmPad(brightness: Float, attack: Float) {
+        fm?.select(0, brightness, attack)
+    }
 
-    fun selectBank(bank: SynthBank, program: Int, midiChannel: Int, smoothBass: Boolean = false) {
-        selectedChip = if (bank == SynthBank.STUDIO) null else {
-            val source = chip ?: Chip(sampleRate).also { chip = it }
-            source.synth.midiChannel = midiChannel
-            source.synth.smoothBass = smoothBass
-            source.synth.select(bank == SynthBank.FAMICOM, program)
-            source.synth
-        }
+    @Synchronized
+    override fun close() {
+        closed = true
+        fm?.close()
+        fm = null
     }
 
     override fun glide(from: Int, to: Int, velocity: Float) {
-        val gx = chip?.synth
+        val ym = fm
+        if (ym != null && ym.holds(from)) {
+            ym.glide(from, to, velocity)
+            return
+        }
+        val gx = chip
         if (gx != null && gx.holds(from)) {
             gx.glide(from, to, velocity)
             return
@@ -282,17 +306,18 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate) {
         get() {
             var n = 0
             for (v in voices) if (v.active) n++
-            return n + (chip?.synth?.activeVoices ?: 0)
+            return n + (chip?.activeVoices ?: 0) + (fm?.activeVoices ?: 0)
         }
 
     override fun noteOn(note: Int, velocity: Float) {
-        val gx = selectedChip
-        if (gx != null) {
+        val bank = selectedBank
+        if (!bank.isGx) chip?.noteOff(note)
+        if (bank != SynthBank.FM) fm?.noteOff(note)
+        if (bank != SynthBank.STUDIO) {
             for (v in voices) if (v.active && v.held && v.note == note) v.release()
-            gx.noteOn(note, velocity)
+            if (bank == SynthBank.FM) fm?.noteOn(note, velocity) else chip?.noteOn(note, velocity)
             return
         }
-        chip?.synth?.noteOff(note)
         // Une même note rejouée reprend sa voix (sinon deux voix identiques s'additionnent).
         var chosen: Voice? = null
         for (v in voices) if (v.active && v.note == note && v.held) chosen = v
@@ -311,22 +336,27 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate) {
     }
 
     override fun noteOff(note: Int) {
-        chip?.synth?.noteOff(note)
+        chip?.noteOff(note)
+        fm?.noteOff(note)
         for (v in voices) if (v.active && v.held && v.note == note) v.release()
     }
 
     override fun allOff() {
-        chip?.synth?.allOff()
+        chip?.allOff()
+        fm?.allOff()
         for (v in voices) if (v.active && v.held) v.release()
     }
 
     override fun renderMono(out: FloatArray, count: Int): Boolean {
-        val studio = renderStudio(out, count)
-        val source = chip ?: return studio
-        if (!studio) return source.synth.renderMono(out, count)
-        if (source.synth.renderMono(source.scratch, count)) {
-            for (i in 0 until count) out[i] += source.scratch[i]
-        }
+        var mixed = renderStudio(out, count)
+        chip?.let { mixed = mixSource(out, count, mixed, it::renderMono) }
+        fm?.let { mixed = mixSource(out, count, mixed, it::renderMono) }
+        return mixed
+    }
+
+    private inline fun mixSource(out: FloatArray, count: Int, mixed: Boolean, render: (FloatArray, Int) -> Boolean): Boolean {
+        if (!mixed) return render(out, count)
+        if (render(mixScratch, count)) for (i in 0 until count) out[i] += mixScratch[i]
         return true
     }
 
