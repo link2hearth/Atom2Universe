@@ -1487,7 +1487,7 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
 
                 override fun onRevealNote(note: Note) = revealNote(note)
 
-                override fun onPreview(pitch: Int) = previewPitch(pitch)
+                override fun onPreview(pitch: Int) = previewEditedPitch(pitch)
 
                 override fun onSelectionChanged() = refreshSelectionBar()
 
@@ -2125,7 +2125,7 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
 
     private val presetReleases = mutableMapOf<Int, Runnable>()
 
-    /** Une audition FM cède sa place avant l'attaque suivante, même si la touche vient du thread MIDI. */
+    /** Une préécoute tenue cède sa place avant l'attaque suivante, même si la touche vient du thread MIDI. */
     private val auditionLock = Any()
     private var heldMidiNotes = 0
     private var auditionTrack = -1
@@ -2158,7 +2158,7 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
             if (firstPosition) {
                 firstPosition = false
                 heldPreview = isTouching
-                auditionFmNote(track.id, 60 + session.project.keyPc, 0.9f, if (heldPreview) 0L else 450L, this)
+                auditionHeldNote(track.id, 60 + session.project.keyPc, 0.9f, if (heldPreview) 0L else 450L, this)
             }
         }
         onRelease = { completed ->
@@ -2195,7 +2195,7 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         presetReleases.remove(track)?.let { handler.removeCallbacks(it); it.run() }
         val pitch = octave + session.project.keyPc
         if (session.project.trackOrNull(track)?.synthBank == SynthBank.FM) {
-            auditionFmNote(track, pitch, 0.9f, durationMs)
+            auditionHeldNote(track, pitch, 0.9f, durationMs)
             return
         }
         stopSoundAudition()
@@ -2208,7 +2208,7 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         handler.postDelayed(release, durationMs)
     }
 
-    private fun auditionFmNote(track: Int, pitch: Int, velocity: Float, durationMs: Long, owner: XyPadView? = null): Unit =
+    private fun auditionHeldNote(track: Int, pitch: Int, velocity: Float, durationMs: Long, owner: XyPadView? = null): Unit =
         synchronized(auditionLock) {
             if (session.isMuted(track) || heldMidiNotes > 0 || keyboardTracks.isNotEmpty() ||
                 padFingers.isNotEmpty() || thereminTrack >= 0) return@synchronized
@@ -2412,21 +2412,26 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
     }
 
     private fun previewLane(trackId: Int, step: Int) {
+        if (playing) return
         val t = session.project.trackOrNull(trackId) ?: return
         if (t.muted) return
         val v = session.velocity(trackId, step).takeIf { it > 0f } ?: 1f
         if (t.melodic) {
-            previewPitch(session.rhythmPreviewPitch(trackId, step), v, track = trackId)
+            previewEditedPitch(session.rhythmPreviewPitch(trackId, step), v, trackId)
         } else {
             val info = session.stepInfo(trackId, step)
             engine.trigger(trackId, info?.pitch ?: 60, v, (info?.hold ?: 100) / 100f, recordHit = false)
         }
     }
 
+    private fun previewEditedPitch(pitch: Int, velocity: Float = 0.9f, track: Int = selectedTrack) {
+        if (!playing && track >= 0) auditionHeldNote(track, pitch, velocity, 250L)
+    }
+
     private fun previewPitch(pitch: Int, velocity: Float = 0.9f, holdMs: Long = 250, track: Int = selectedTrack) {
         if (track < 0 || session.isMuted(track)) return
         if (session.project.trackOrNull(track)?.synthBank == SynthBank.FM) {
-            auditionFmNote(track, pitch, velocity, holdMs)
+            auditionHeldNote(track, pitch, velocity, holdMs)
             return
         }
         stopSoundAudition()
@@ -3264,7 +3269,7 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         }
         fun preview() {
             val n = targetNote()
-            if (n == null) previewLane(trackId, step) else previewPitch(n.pitch, n.velocity, track = trackId)
+            if (n == null) previewLane(trackId, step) else previewEditedPitch(n.pitch, n.velocity, trackId)
         }
         if (info() == null) return
         val box = LinearLayout(this).apply {
