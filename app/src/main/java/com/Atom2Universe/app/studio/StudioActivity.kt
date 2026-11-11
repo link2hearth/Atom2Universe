@@ -51,6 +51,7 @@ import com.Atom2Universe.app.midi.input.MidiInputController
 import com.Atom2Universe.app.studio.engine.Inst
 import com.Atom2Universe.app.studio.engine.TrackKind
 import com.Atom2Universe.app.studio.data.Track
+import com.Atom2Universe.app.studio.engine.PadPosition
 import com.Atom2Universe.app.studio.engine.Note
 import com.Atom2Universe.app.studio.engine.StudioAudioOutput
 import com.Atom2Universe.app.studio.engine.StudioEngine
@@ -149,6 +150,7 @@ class StudioActivity : AudioThemedActivity() {
     private lateinit var songButton: MaterialButton
     private var songDefaultColor = 0
     private val patternIds = List(StudioProject.SLOTS) { View.generateViewId() }
+    private lateinit var holdPadSwitch: SwitchCompat
     private lateinit var gestureRecordButton: MaterialButton
     private lateinit var gestureClearButton: MaterialButton
     private var gestureArmed = false
@@ -244,13 +246,7 @@ class StudioActivity : AudioThemedActivity() {
             if (::padView.isInitialized) {
                 if (padView.isTouching) {
                     if (gestureTaking) session.recordGesture(engine.playPosition, engine.masterFilter, engine.spaceBoost)
-                } else if (playing && mixerPane.visibility == View.VISIBLE) {
-                    // Sans doigt, le repère suit le geste enregistré (celui du motif qui joue, morceau compris)
-                    val pat = engine.displayPattern()
-                    val f = pat.filterAt(engine.playPosition)
-                    val s = pat.spaceAt(engine.playPosition)
-                    padView.showAt(1f - (f ?: 0f), s ?: 0f)
-                }
+                } else if (mixerPane.visibility == View.VISIBLE) showPadPosition()
             }
             if (playing || pads.hasHeldDrum) requestFrame()
         }
@@ -346,6 +342,7 @@ class StudioActivity : AudioThemedActivity() {
         grid.removeCallbacks(frameTick)
         handler.removeCallbacks(statsTick)
         // Rien ne reste tenu : pads, thérémine, enregistrement des pads
+        padView.finishTouch(false)
         pads.releaseAll()
         keyboard.releaseAll()
         theremin.finish()
@@ -781,7 +778,11 @@ class StudioActivity : AudioThemedActivity() {
                 engine.masterFilter = 1f - x
                 engine.spaceBoost = y
             }
-            onRelease = {
+            onRelease = { completed ->
+                if (completed && session.project.heldPad != null) {
+                    session.setHeldPad(PadPosition(engine.masterFilter, engine.spaceBoost))
+                    scheduleSave()
+                }
                 engine.masterFilter = 0f
                 engine.spaceBoost = 0f
                 engine.padActive = false
@@ -792,6 +793,7 @@ class StudioActivity : AudioThemedActivity() {
                     refreshGestureButtons()
                     scheduleSave()
                 }
+                showPadPosition()
             }
         }
         padView = pad
@@ -804,10 +806,33 @@ class StudioActivity : AudioThemedActivity() {
         })
         xyBox.addView(pad, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f))
         val gestureRow = FlowRow(this).apply { hGap = dp(8); vGap = dp(4) }
+        holdPadSwitch = SwitchCompat(this).apply {
+            setText(R.string.studio_pad_hold)
+            isChecked = session.project.heldPad != null
+            setOnClickListener {
+                val fixed = if (isChecked) PadPosition(1f - pad.padX, pad.padY) else null
+                pad.finishTouch(false)
+                if (fixed != null) {
+                    gestureArmed = false
+                    gestureRecordButton.isChecked = false
+                }
+                session.setHeldPad(fixed)
+                showPadPosition()
+                scheduleSave()
+            }
+        }
+        gestureRow.addView(holdPadSwitch)
         gestureRecordButton = outlined(R.string.studio_gesture_record).apply {
             isCheckable = true
             setOnClickListener {
+                pad.finishTouch(false)
                 gestureArmed = isChecked
+                if (gestureArmed && session.project.heldPad != null) {
+                    session.setHeldPad(null)
+                    holdPadSwitch.isChecked = false
+                    showPadPosition()
+                    scheduleSave()
+                }
                 if (gestureArmed && !playing) {
                     // Pour enregistrer, il faut que ça tourne : on lance la lecture
                     playing = true
@@ -1022,6 +1047,15 @@ class StudioActivity : AudioThemedActivity() {
         panels.show(R.string.studio_fx, getString(R.string.studio_panel_track, getString(R.string.studio_fx), title), box, 400, anchor, onHistory = { showFxPanel(anchor, lane, title) }) { session.project.trackOrNull(lane)?.hidden == false }
     }
 
+    private fun showPadPosition() {
+        val fixed = session.project.heldPad
+        val pattern = if (fixed == null && playing) engine.displayPattern() else null
+        val at = engine.playPosition
+        val filter = fixed?.filter ?: pattern?.filterAt(at) ?: 0f
+        val space = fixed?.space ?: pattern?.spaceAt(at) ?: 0f
+        padView.showAt(1f - filter, space)
+    }
+
     private fun refreshGestureButtons() {
         if (!::gestureClearButton.isInitialized) return
         gestureClearButton.isEnabled = session.project.pattern.hasAutomation
@@ -1030,6 +1064,10 @@ class StudioActivity : AudioThemedActivity() {
 
     private fun refreshMixer() {
         refreshGestureButtons()
+        if (::holdPadSwitch.isInitialized) {
+            holdPadSwitch.isChecked = session.project.heldPad != null
+            showPadPosition()
+        }
         for (i in 0 until mixerIds.size) {
             val id = mixerIds[i]
             val m = session.project.trackOrNull(id)?.mix ?: continue
@@ -1823,6 +1861,7 @@ class StudioActivity : AudioThemedActivity() {
             pads.releaseAll()
             if (padsRecording) setPadsRecording(false)
         }
+        if (id != tabMixerId) padView.finishTouch(false)
         if (!notes) { keyboard.releaseAll(); theremin.finish() }
         // Les coups des pads reviennent à l'écran (pour briller, et pour s'écrire pendant l'enregistrement)
         engine.recordHits = padsTab

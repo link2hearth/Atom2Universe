@@ -58,6 +58,7 @@ object StudioHistory {
     private fun coreMeta(p: StudioProject) = JSONObject().put("style", p.styleId).put("key", p.keyPc).put("scale", p.scaleId).toString()
 
     private fun mixMeta(p: StudioProject) = JSONObject()
+        .also { StudioProjectCodec.writePad(it, p.heldPad) }
         .put("bpm", p.bpm).put("swing", p.swing.toDouble()).put("space", p.space.toDouble()).put("echo", p.echo.toDouble()).toString()
 
     private fun navMeta(p: StudioProject) = JSONObject()
@@ -107,6 +108,7 @@ object StudioHistory {
                 project = when (c.key) {
                     "m.core" -> project.copy(styleId = o.getString("style"), keyPc = o.getInt("key").coerceIn(0, 11), scaleId = o.getString("scale"))
                     "m.mix" -> project.copy(
+                        heldPad = StudioProjectCodec.readPad(o),
                         bpm = o.getInt("bpm").coerceIn(40, 220), swing = o.getDouble("swing").toFloat().coerceIn(0f, 0.5f),
                         space = o.getDouble("space").toFloat().coerceIn(0f, 1f), echo = o.getDouble("echo").toFloat().coerceIn(0f, 1f),
                     )

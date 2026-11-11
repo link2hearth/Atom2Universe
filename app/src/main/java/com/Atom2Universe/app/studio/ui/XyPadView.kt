@@ -10,17 +10,18 @@ import android.view.View
 
 /**
  * Un pad à deux axes pour jouer des effets du doigt. [onMove] reçoit x (0 à gauche, 1 à droite) et y (0 en bas, 1 en
- * haut) tant que le doigt est posé ; [onRelease] quand il se lève (le pad revient alors à sa position de repos : à droite,
- * en bas).
+ * haut) tant que le doigt est posé. Le mixeur décide de la position au relâchement.
  */
 class XyPadView(context: Context) : View(context) {
 
     var onMove: ((x: Float, y: Float) -> Unit)? = null
-    var onRelease: (() -> Unit)? = null
+    var onRelease: ((completed: Boolean) -> Unit)? = null
     var accent: Int = 0xFF7C8CFF.toInt()
 
-    private var x = 1f
-    private var y = 0f
+    var padX = 1f
+        private set
+    var padY = 0f
+        private set
     private var touching = false
 
     /** Vrai tant qu'un doigt est posé. */
@@ -42,9 +43,9 @@ class XyPadView(context: Context) : View(context) {
         val nx = fx.coerceIn(0f, 1f)
         val ny = fy.coerceIn(0f, 1f)
         // Appelé à chaque image pendant la lecture : on ne redessine que si le repère bouge (sans geste enregistré, il ne bouge pas)
-        if (nx == x && ny == y) return
-        x = nx
-        y = ny
+        if (nx == padX && ny == padY) return
+        padX = nx
+        padY = ny
         invalidate()
     }
 
@@ -61,8 +62,8 @@ class XyPadView(context: Context) : View(context) {
         paint.color = if (recording) 0xFF4A2A2E.toInt() else bg
         canvas.drawRoundRect(rect, dp(14f), dp(14f), paint)
 
-        val px = x * width
-        val py = (1f - y) * height
+        val px = padX * width
+        val py = (1f - padY) * height
         paint.color = lineColor
         paint.strokeWidth = dp(1.5f)
         canvas.drawLine(px, 0f, px, height.toFloat(), paint)
@@ -70,28 +71,40 @@ class XyPadView(context: Context) : View(context) {
 
         paint.color = accent
         paint.alpha = if (touching) 255 else 140
-        canvas.drawCircle(px.coerceIn(dp(14f), width - dp(14f)), py.coerceIn(dp(14f), height - dp(14f)), if (touching) dp(18f) else dp(12f), paint)
+        val inset = minOf(dp(14f), width / 2f, height / 2f)
+        canvas.drawCircle(px.coerceIn(inset, width - inset), py.coerceIn(inset, height - inset), if (touching) dp(18f) else dp(12f), paint)
         paint.alpha = 255
+    }
+
+    fun finishTouch(completed: Boolean) {
+        if (!touching) return
+        touching = false
+        onRelease?.invoke(completed)
+        invalidate()
+    }
+
+    private fun moveTo(event: MotionEvent) {
+        if (width <= 0 || height <= 0) return
+        padX = (event.x / width).coerceIn(0f, 1f)
+        padY = (1f - event.y / height).coerceIn(0f, 1f)
+        onMove?.invoke(padX, padY)
+        invalidate()
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.actionMasked) {
-            MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE -> {
+            MotionEvent.ACTION_DOWN -> {
                 parent?.requestDisallowInterceptTouchEvent(true)
                 if (!touching) onPress?.invoke()
                 touching = true
-                x = (event.x / width).coerceIn(0f, 1f)
-                y = (1f - event.y / height).coerceIn(0f, 1f)
-                onMove?.invoke(x, y)
-                invalidate()
+                moveTo(event)
             }
-            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                touching = false
-                x = 1f
-                y = 0f
-                onRelease?.invoke()
-                invalidate()
+            MotionEvent.ACTION_MOVE -> if (touching) moveTo(event)
+            MotionEvent.ACTION_UP -> if (touching) {
+                moveTo(event)
+                finishTouch(true)
             }
+            MotionEvent.ACTION_CANCEL -> finishTouch(false)
         }
         return true
     }

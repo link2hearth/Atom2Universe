@@ -4,6 +4,7 @@ import com.Atom2Universe.app.studio.dsp.SynthPatch
 import com.Atom2Universe.app.studio.dsp.SynthPresets
 import com.Atom2Universe.app.studio.engine.Inst
 import com.Atom2Universe.app.studio.engine.Lane
+import com.Atom2Universe.app.studio.engine.PadPosition
 import com.Atom2Universe.app.studio.engine.Note
 import com.Atom2Universe.app.studio.engine.StepCond
 import com.Atom2Universe.app.studio.engine.StepPattern
@@ -45,6 +46,7 @@ class StudioProject(
      * leur mise bout à bout : on l'édite, on l'entend et on l'exporte comme un seul motif long.
      */
     val view: List<Int> = emptyList(),
+    val heldPad: PadPosition? = null,
 ) {
     /** Les emplacements affichés, dans l'ordre de la vue. */
     val viewSlots: List<Int> get() = view.ifEmpty { listOf(current) }
@@ -92,6 +94,7 @@ class StudioProject(
         chain: List<Int> = this.chain,
         songMode: Boolean = this.songMode,
         view: List<Int> = this.view,
+        heldPad: PadPosition? = this.heldPad,
     ): StudioProject {
         val all = when {
             pattern == null -> patterns
@@ -107,7 +110,7 @@ class StudioProject(
                 out
             }
         }
-        return StudioProject(styleId, bpm, swing, tracks, space, echo, keyPc, scaleId, all, current, chain, songMode, view)
+        return StudioProject(styleId, bpm, swing, tracks, space, echo, keyPc, scaleId, all, current, chain, songMode, view, heldPad)
     }
 
     /** Remplace une piste (même numéro). */
@@ -326,7 +329,20 @@ object StudioProjectCodec {
         )
     }
 
+    internal fun writePad(o: JSONObject, position: PadPosition?) {
+        if (position != null) o.put("heldPad", JSONArray().put(position.filter.toDouble()).put(position.space.toDouble()))
+    }
+
+    internal fun readPad(o: JSONObject): PadPosition? {
+        val pair = o.optJSONArray("heldPad") ?: return null
+        val filter = pair.optDouble(0)
+        val space = pair.optDouble(1)
+        if (!filter.isFinite() || !space.isFinite()) return null
+        return PadPosition(filter.toFloat().coerceIn(0f, 1f), space.toFloat().coerceIn(0f, 1f))
+    }
+
     fun encode(p: StudioProject): String = JSONObject()
+        .also { writePad(it, p.heldPad) }
         .put("version", VERSION)
         .put("style", p.styleId)
         .put("bpm", p.bpm)
@@ -374,6 +390,7 @@ object StudioProjectCodec {
                 }
             }
             StudioProject(
+                heldPad = readPad(o),
                 styleId = o.getString("style"),
                 bpm = o.getInt("bpm").coerceIn(40, 220),
                 swing = o.getDouble("swing").toFloat().coerceIn(0f, 0.5f),
@@ -526,6 +543,7 @@ class StudioSession(
         pushSong()
         engine.bpm = p.bpm.toFloat()
         engine.swing = p.swing
+        engine.heldPad = p.heldPad
         engine.spaceAmount = p.space
         engine.echoAmount = p.echo
         for (t in p.tracks) pushTrack(t)
@@ -1246,6 +1264,7 @@ class StudioSession(
             if (t.id == target?.id && t.kind == TrackKind.SYNTH) t.copy(synth = SynthPresets.byId(style.patchId)) else t
         }
         project = fresh.copy(
+            heldPad = project.heldPad,
             tracks = tracks,
             patterns = project.patterns.toMutableList().also { it[project.current] = adapt(fresh.pattern, project.patterns[project.current], project.baseSteps) },
             current = project.current, chain = project.chain, songMode = project.songMode,
@@ -1279,6 +1298,12 @@ class StudioSession(
     fun setSwing(swing: Float) {
         project = project.copy(swing = swing.coerceIn(0f, 0.5f))
         engine.swing = project.swing
+    }
+
+    fun setHeldPad(position: PadPosition?) {
+        if (position == project.heldPad) return
+        project = project.copy(heldPad = position)
+        engine.heldPad = position
     }
 
     fun setSpace(v: Float) {

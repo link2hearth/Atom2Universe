@@ -1,5 +1,8 @@
 package com.Atom2Universe.app.studio
 
+import com.Atom2Universe.app.studio.data.StudioHistory
+import com.Atom2Universe.app.studio.data.StudioProjectCodec
+import com.Atom2Universe.app.studio.engine.PadPosition
 import com.Atom2Universe.app.studio.data.StudioProject
 import com.Atom2Universe.app.studio.data.StudioSession
 import com.Atom2Universe.app.studio.engine.Inst
@@ -23,6 +26,28 @@ class StudioExportTest {
         val engine = StudioEngine(48_000)
         val s = StudioSession(engine, StudioProject.fromStyle(Styles.HOUSE))
         return s.project
+    }
+
+    @Test
+    fun heldPadSurvivesJournalAndOverridesPatternGesturesInTheAudioExport() {
+        val original = project()
+        val session = StudioSession(StudioEngine(48_000), original)
+        session.beginGesture()
+        session.recordGesture(0.0, 0.9f, 0.8f)
+        session.endGesture()
+        val automated = session.project
+        val held = PadPosition(0.75f, 0.25f)
+        session.setHeldPad(held)
+        val restored = StudioHistory.apply(automated, StudioHistory.diff(automated, session.project, false), true)
+        assertEquals(held, restored.heldPad)
+        assertEquals(held, StudioProjectCodec.decode(StudioProjectCodec.encode(restored))!!.heldPad)
+
+        fun wav(p: StudioProject) = ByteArrayOutputStream().also { StudioExporter.renderWav(p, 24000, it) }.toByteArray()
+        val fixed = wav(restored)
+        assertTrue(fixed.contentEquals(wav(original.copy(heldPad = held))))
+        session.setHeldPad(null)
+        assertFalse(fixed.contentEquals(wav(session.project)))
+        assertTrue(session.project.pattern.hasAutomation)
     }
 
     @Test

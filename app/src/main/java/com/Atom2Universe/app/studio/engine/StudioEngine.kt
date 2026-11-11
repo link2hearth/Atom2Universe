@@ -76,6 +76,8 @@ data class TrackSpec(val id: Int, val kind: Int, val voice: Int = 0, val bank: I
     }
 }
 
+data class PadPosition(val filter: Float, val space: Float)
+
 /**
  * Une ligne rythmique : pour chaque pas, une vélocité (0 = silence). [instrument] est le numéro de la piste. Le tableau
  * [note] ne sert qu'aux instruments qui jouent une hauteur (aucun pour l'instant) ; [gate] est gardé pour les évolutions.
@@ -399,6 +401,8 @@ class StudioEngine(val sampleRate: Int) {
     /** Vrai tant qu'un doigt tient le pad : ses valeurs priment alors sur le geste enregistré. */
     @Volatile var padActive: Boolean = false
 
+    @Volatile var heldPad: PadPosition? = null
+
     /** Pas en cours de lecture (pour l'affichage). */
     @Volatile var currentStep: Int = -1
         private set
@@ -643,13 +647,19 @@ class StudioEngine(val sampleRate: Int) {
         }
 
         // Retours d'effets (l'écho suit le tempo : une croche pointée), puis mixage final.
-        // Le doigt sur le pad l'emporte ; sinon, pendant la lecture, c'est le geste enregistré dans le motif.
+        // Le doigt pilote les effets en direct, puis la position maintenue ou le geste du motif prend le relais.
         var filterTarget = masterFilter
         var boostTarget = spaceBoost
-        if (!padActive && running) {
-            val pat = activePattern()
-            pat.filterAt(playPosition)?.let { filterTarget = it }
-            pat.spaceAt(playPosition)?.let { boostTarget = it }
+        if (!padActive) {
+            val fixed = heldPad
+            if (fixed != null) {
+                filterTarget = fixed.filter
+                boostTarget = fixed.space
+            } else if (running) {
+                val pat = activePattern()
+                pat.filterAt(playPosition)?.let { filterTarget = it }
+                pat.spaceAt(playPosition)?.let { boostTarget = it }
+            }
         }
         spaceBoostNow += (boostTarget.coerceIn(0f, 1f) - spaceBoostNow) * 0.2f
         val space = (spaceAmount.coerceIn(0f, 1f) + spaceBoostNow * 0.8f).coerceAtMost(1f)
