@@ -41,6 +41,7 @@ class PadsView(context: Context) : View(context) {
     class Tile(
         val track: Int, val color: Int, val icon: Int, val levels: IntArray? = null,
         val padSize: PadSize = PadSize.NORMAL, val name: String = "", val mode: PadPlayMode = PadPlayMode.DRIVE,
+        val soundName: String = "",
     ) {
         internal val piano = if (mode != PadPlayMode.THEREMIN && levels != null && levels.isNotEmpty()) PadPiano(levels) else null
     }
@@ -95,6 +96,7 @@ class PadsView(context: Context) : View(context) {
     var onNoteUp: ((track: Int, pitch: Int) -> Unit)? = null
     var onNoteEffect: ((track: Int, amount: Float) -> Unit)? = null
     var onChooseNotes: ((track: Int, x: Int, y: Int) -> Unit)? = null
+    var onChooseSound: ((track: Int, x: Int, y: Int) -> Unit)? = null
     var onChooseMode: ((track: Int, x: Int, y: Int) -> Unit)? = null
     var onGlide: ((track: Int, from: Int, to: Int) -> Unit)? = null
     var onThereminExpression: ((track: Int, amount: Float) -> Unit)? = null
@@ -131,6 +133,7 @@ class PadsView(context: Context) : View(context) {
         textSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12f, resources.displayMetrics)
         isFakeBoldText = false
     }
+    private val speaker = requireNotNull(context.getDrawable(R.drawable.ic_volume_up_24)).mutate().apply { alpha = 215 }
     private val modeWidths = modeNames.mapValues { modePaint.measureText(it.value) }
     private val thereminShade = LinearGradient(0f, 0f, 0f, 1f, 0x30FFFFFF, 0x72000000, Shader.TileMode.CLAMP)
     private val shadeMatrix = Matrix()
@@ -282,26 +285,62 @@ class PadsView(context: Context) : View(context) {
     /** Le haut des touches d'une case à notes : une petite bande au-dessus porte le dessin de l'instrument. */
     private fun keysTop(r: RectF): Float = r.top + minOf(dp(if (editing) 30f else 38f), r.height() * 0.35f)
 
-    private fun modeLeft(r: RectF, mode: PadPlayMode): Float =
-        maxOf(r.left + minOf(dp(52f), r.width() / 2f), r.right - maxOf(dp(48f), modeWidths.getValue(mode) + dp(26f)))
+    internal enum class HeaderAction {
+        NOTES, SOUND, MODE;
 
-    // Deux boutons virtuels par ID de piste, stables même après réorganisation des tuiles.
+        fun id(track: Int) = track * entries.size + ordinal
+    }
+
+    private fun modeLeft(r: RectF, mode: PadPlayMode): Float =
+        maxOf(r.left + minOf(dp(96f), r.width() * 2f / 3f), r.right - maxOf(dp(48f), modeWidths.getValue(mode) + dp(26f)))
+
+    private fun soundLeft(r: RectF, tile: Tile): Float {
+        val available = modeLeft(r, tile.mode) - r.left
+        val nameWidth = dp(28f) + (keysTop(r) - r.top) * 0.72f + label.measureText(tile.name)
+        return r.left + minOf(nameWidth, available - minOf(dp(72f), available * 0.53f))
+    }
+
     private fun headerIdAt(i: Int, x: Float, y: Float): Int {
         val tile = tiles.getOrNull(i) ?: return ExploreByTouchHelper.INVALID_ID
         if (editing || tile.levels == null) return ExploreByTouchHelper.INVALID_ID
         tileRect(i, rect)
         if (y > keysTop(rect)) return ExploreByTouchHelper.INVALID_ID
-        return tile.track * 2 + if (x >= modeLeft(rect, tile.mode)) 1 else 0
+        val action = when {
+            x >= modeLeft(rect, tile.mode) -> HeaderAction.MODE
+            x >= soundLeft(rect, tile) -> HeaderAction.SOUND
+            else -> HeaderAction.NOTES
+        }
+        return action.id(tile.track)
+    }
+
+    /** Même découpage pour le dessin, le toucher, l’ancrage des bulles et les boutons accessibles. */
+    private fun headerBounds(i: Int, action: HeaderAction, out: RectF) {
+        tileRect(i, out)
+        val top = keysTop(out)
+        val tile = tiles[i]
+        val sound = soundLeft(out, tile)
+        val mode = modeLeft(out, tile.mode)
+        when (action) {
+            HeaderAction.NOTES -> out.right = sound
+            HeaderAction.SOUND -> { out.left = sound; out.right = mode }
+            HeaderAction.MODE -> out.left = mode
+        }
+        out.bottom = top
     }
 
     private fun openHeader(id: Int): Boolean {
-        val index = tiles.indexOfFirst { it.track == id / 2 }
-        if (editing || index !in areas.indices || tiles[index].levels == null) return false
-        val tile = tiles[index]
-        tileRect(index, rect)
-        val y = keysTop(rect).toInt()
-        if (id % 2 == 0) onChooseNotes?.invoke(tile.track, rect.left.toInt(), y)
-        else onChooseMode?.invoke(tile.track, modeLeft(rect, tile.mode).toInt(), y)
+        if (id < 0 || editing) return false
+        val actions = HeaderAction.entries
+        val index = tiles.indexOfFirst { it.track == id / actions.size }
+        if (index !in areas.indices || tiles[index].levels == null) return false
+        val action = actions[id % actions.size]
+        headerBounds(index, action, rect)
+        val open = when (action) {
+            HeaderAction.NOTES -> onChooseNotes
+            HeaderAction.SOUND -> onChooseSound
+            HeaderAction.MODE -> onChooseMode
+        } ?: return false
+        open(tiles[index].track, rect.left.toInt(), rect.bottom.toInt())
         return true
     }
 
@@ -311,26 +350,25 @@ class PadsView(context: Context) : View(context) {
         override fun getVisibleVirtualViews(ids: MutableList<Int>) {
             if (!editing) for (i in areas.indices) {
                 val tile = tiles[i]
-                if (tile.levels != null) {
-                    ids.add(2 * tile.track)
-                    ids.add(2 * tile.track + 1)
-                }
+                if (tile.levels != null) for (action in HeaderAction.entries) ids.add(action.id(tile.track))
             }
         }
 
         override fun onPopulateNodeForVirtualView(id: Int, node: AccessibilityNodeInfoCompat) {
-            val i = tiles.indexOfFirst { it.track == id / 2 }
+            val actions = HeaderAction.entries
+            val i = tiles.indexOfFirst { it.track == id / actions.size }
             val bounds = Rect()
             node.contentDescription = ""
-            if (i in areas.indices) {
+            if (id >= 0 && i in areas.indices && tiles[i].levels != null) {
                 val t = tiles[i]
-                val notes = id % 2 == 0
-                tileRect(i, rect)
-                val split = modeLeft(rect, t.mode)
-                rect.bottom = keysTop(rect)
-                if (notes) rect.right = split else rect.left = split
+                val action = actions[id % actions.size]
+                headerBounds(i, action, rect)
                 rect.roundOut(bounds)
-                val label = if (notes) context.getString(R.string.studio_tab_notes) else modeNames.getValue(t.mode)
+                val label = when (action) {
+                    HeaderAction.NOTES -> context.getString(R.string.studio_tab_notes)
+                    HeaderAction.SOUND -> context.getString(R.string.studio_sound_label, t.soundName)
+                    HeaderAction.MODE -> modeNames.getValue(t.mode)
+                }
                 node.contentDescription = context.getString(R.string.studio_panel_track, label, t.name)
                 node.className = android.widget.Button::class.java.name
                 node.isClickable = true
@@ -450,7 +488,7 @@ class PadsView(context: Context) : View(context) {
         val top = keysTop(rect)
         val s = (top - rect.top) * 0.36f
         val titleLeft = rect.left + dp(if (editing) 50f else 6f)
-        val titleRight = if (editing) rect.right - dp(36f) else modeLeft(rect, t.mode)
+        val titleRight = if (editing) rect.right - dp(36f) else soundLeft(rect, t)
         val cy = (rect.top + top) / 2f
         val compactTitle = !editing && titleRight - titleLeft < dp(84f)
         val icon = if (compactTitle) minOf(s, dp(7f)) else s
@@ -477,7 +515,11 @@ class PadsView(context: Context) : View(context) {
             label.textAlign = Paint.Align.LEFT
             canvas.drawText(name, nameX, cy - (label.ascent() + label.descent()) * 0.5f, label)
         }
-        if (!editing) drawModeButton(canvas, t.mode, titleRight, top)
+        if (!editing) {
+            val mode = modeLeft(rect, t.mode)
+            drawSoundButton(canvas, t.soundName, titleRight, mode, top)
+            drawModeButton(canvas, t.mode, mode, top)
+        }
         val count = levels.size
         if (count == 0) return
         if (t.mode == PadPlayMode.THEREMIN) {
@@ -510,6 +552,24 @@ class PadsView(context: Context) : View(context) {
             pianoLabel.color = pianoColors.ink(face, key.black, true, tonic || finger != null)
             canvas.drawText(name, band.centerX(), band.bottom - minOf(dp(8f), band.height() / 10), pianoLabel)
         }
+    }
+
+    private fun drawSoundButton(canvas: Canvas, name: String, left: Float, right: Float, bottom: Float) {
+        val width = right - left
+        val cy = (rect.top + bottom) / 2f
+        val size = minOf(dp(16f), (bottom - rect.top) * 0.7f, width * 0.65f)
+        val textX = left + dp(5f) + size + dp(4f)
+        val available = right - dp(4f) - textX
+        val full = modePaint.measureText(name) <= available
+        val count = if (full) name.length else modePaint.breakText(name, true,
+            (available - modePaint.measureText("…")).coerceAtLeast(0f), null)
+        val iconX = if (count > 0) left + dp(5f) else left + (width - size) / 2f
+        speaker.setBounds(iconX.toInt(), (cy - size / 2f).toInt(), (iconX + size).toInt(), (cy + size / 2f).toInt())
+        speaker.draw(canvas)
+        if (count == 0 || bottom - rect.top < modePaint.textSize) return
+        val y = cy - (modePaint.ascent() + modePaint.descent()) / 2f
+        canvas.drawText(name, 0, count, textX, y, modePaint)
+        if (!full) canvas.drawText("…", textX + modePaint.measureText(name, 0, count), y, modePaint)
     }
 
     private fun drawModeButton(canvas: Canvas, mode: PadPlayMode, left: Float, bottom: Float) {

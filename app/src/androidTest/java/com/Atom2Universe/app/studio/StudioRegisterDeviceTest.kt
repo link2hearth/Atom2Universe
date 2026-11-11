@@ -97,6 +97,8 @@ class StudioRegisterDeviceTest {
             session.setSynthBank(Inst.SYNTH, SynthBank.SCC)
             val secondId = session.addTrack(TrackKind.SYNTH)
             session.setSynthBank(secondId, SynthBank.FAMICOM)
+            session.setChipProgram(Inst.SYNTH, 0)
+            session.setChipProgram(secondId, 0)
             session.project.copy(tracks = session.project.tracks.filter { it.melodic })
         }
         val (first, second) = project.tracks
@@ -114,12 +116,22 @@ class StudioRegisterDeviceTest {
             ActivityScenario.launch<StudioActivity>(intent).use {
                 onView(allOf(withText(R.string.studio_pads), tab)).perform(click())
                 val pads = onView(isAssignableFrom(PadsView::class.java))
-                fun open(track: Int) = pads.perform(GeneralClickAction(Tap.SINGLE, CoordinatesProvider { view ->
+                fun open(track: Int, action: PadsView.HeaderAction = PadsView.HeaderAction.NOTES) = pads.perform(GeneralClickAction(Tap.SINGLE, CoordinatesProvider { view ->
                     val local = Rect()
-                    requireNotNull(view.accessibilityNodeProvider.createAccessibilityNodeInfo(2 * track)).getBoundsInParent(local)
+                    requireNotNull(view.accessibilityNodeProvider.createAccessibilityNodeInfo(action.id(track))).getBoundsInParent(local)
                     val origin = IntArray(2).also(view::getLocationOnScreen)
                     floatArrayOf(origin[0] + local.left + 5f, origin[1] + local.exactCenterY())
                 }, Press.FINGER, 0, 0))
+                val programs = context.resources.getStringArray(R.array.gm_instruments)
+                open(second.id, PadsView.HeaderAction.SOUND)
+                val sound = context.getString(R.string.studio_panel_track, context.getString(R.string.studio_sound_caption), names[1])
+                onView(withText(sound)).check(matches(isDisplayed()))
+                onView(withContentDescription(R.string.studio_program_next)).perform(click())
+                pads.check { view, error ->
+                    if (error != null) throw error
+                    assertEquals(listOf(programs[0], programs[1]), (view as PadsView).tiles.map { it.soundName })
+                }
+                onView(withContentDescription(context.getString(R.string.studio_close_panel, sound))).perform(click())
                 open(first.id)
                 open(second.id)
                 onView(allOf(withText(octave(0, 4)), panel(2))).perform(click())

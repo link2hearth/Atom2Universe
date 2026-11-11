@@ -191,6 +191,28 @@ class PadsViewTest {
         assertTrue(notes.isEmpty())
     }
 
+    @Test fun soundShortcutStaysSeparateFromNotesAndModeEvenOnANarrowTile() {
+        val view = pads(PadsView.Tile(7, 0, 0, intArrayOf(60), name = "SCC 1", soundName = "Acoustic grand piano"))
+        val opened = mutableListOf<String>()
+        view.onChooseSound = { id, _, _ -> opened += "sound $id" }
+        view.onChooseMode = { id, _, _ -> opened += "mode $id" }
+        view.onChooseNotes = { id, _, _ -> opened += "notes $id" }
+        view.onNoteDown = { _, _ -> error("A header gesture played a note") }
+        for (width in listOf(110, 400)) {
+            view.layout(0, 0, width, 100)
+            val middle = width / 2
+            view.touch(MotionEvent.ACTION_DOWN, middle, 9)
+            view.touch(MotionEvent.ACTION_MOVE, middle, 78)
+            view.touch(MotionEvent.ACTION_UP, middle, 78)
+            for (x in listOf(10, middle, width - 10)) {
+                view.touch(MotionEvent.ACTION_DOWN, x, 9)
+                view.touch(MotionEvent.ACTION_UP, x, 9)
+            }
+            assertEquals(listOf("notes 7", "sound 7", "mode 7"), opened)
+            opened.clear()
+        }
+    }
+
     @Test fun modeButtonOpensOnReleaseAndDraggingOffItNeverPlays() {
         val pads = pads(melodic(PadPlayMode.DRIVE))
         val chosen = mutableListOf<Int>()

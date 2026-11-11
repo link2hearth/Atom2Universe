@@ -741,6 +741,7 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
             }
             onChooseMode = ::showPadModeMenu
             onChooseNotes = { track, x, y -> showTrackNotes(padHeaderAnchor(x, y), track) }
+            onChooseSound = { track, x, y -> showSoundPanel(padHeaderAnchor(x, y), track) }
             onGlide = ::glideLiveNote
             onThereminExpression = { track, amount ->
                 if (!session.isMuted(track)) {
@@ -925,7 +926,8 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         if (!::pads.isInitialized) return
         pads.keyPc = session.project.keyPc
         pads.tiles = session.padTracks().filterNot { it.hidden }.map { t ->
-            PadsView.Tile(t.id, trackColor(t), InstrumentIcons.of(t), if (t.melodic) session.padPitches(t.id) else null, t.padSize, trackName(t), t.padPlayMode)
+            PadsView.Tile(t.id, trackColor(t), InstrumentIcons.of(t), if (t.melodic) session.padPitches(t.id) else null,
+                t.padSize, trackName(t), t.padPlayMode, soundName = if (t.melodic) instrumentName(t) else "")
         }
     }
 
@@ -1922,7 +1924,9 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         var refreshingWave = false
         fun refreshPick() {
             val now = session.project.trackOrNull(t.id) ?: return
-            pick.text = instrumentName(now)
+            val sound = instrumentName(now)
+            pick.text = sound
+            if (padsPane.visibility == View.VISIBLE && pads.tiles.any { it.track == now.id && it.soundName != sound }) refreshPads()
             personalPad?.visibility = if (now.fmProgram == 0) View.VISIBLE else View.GONE
             forget.visibility = if (studioSynth && now.synth.id.startsWith(SynthPatch.MINE_PREFIX)) View.VISIBLE else View.GONE
             if (studioSynth) {
@@ -2197,7 +2201,6 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         // Garder les touches sous les doigts et la note tenue pendant un changement de son.
         if (hasLiveInput(id)) return
         val octave = StudioRegister.chipOctave(t)
-        if (padsPane.visibility == View.VISIBLE) refreshPads()
         if (!playing) {
             if (octave == null) auditionPreset(id, t.synth) else auditionNote(id, octave, 500L)
         }
