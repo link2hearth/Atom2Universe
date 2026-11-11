@@ -15,6 +15,7 @@ import com.Atom2Universe.app.studio.dsp.Snare
 import com.Atom2Universe.app.studio.dsp.SynthSample
 import com.Atom2Universe.app.studio.dsp.StereoReverb
 import com.Atom2Universe.app.studio.dsp.Tom
+import java.util.concurrent.atomic.AtomicReference
 import kotlin.math.abs
 import kotlin.math.ceil
 import kotlin.math.max
@@ -372,13 +373,25 @@ class StudioEngine(val sampleRate: Int) {
         instrument(id)?.muted = muted
     }
 
+    private sealed interface PadLoop {
+        class Playing(val slot: Int, val pattern: StepPattern) : PadLoop
+        class Queued(val target: Playing) : PadLoop
+    }
+
+    private val padLoop = AtomicReference<PadLoop?>(null)
+    // Ces deux champs appartiennent au fil qui pilote le transport (l'interface, ou le rendu hors ligne).
+    private var playRequested = false
+    private var unreportedPadSlot = -1
+
     @Volatile var pattern: StepPattern = StepPattern(16, emptyList())
+        get() = (padLoop.get() as? PadLoop.Playing)?.pattern ?: field
 
     /**
      * Le morceau : une suite de motifs de même longueur, joués l'un après l'autre (à chaque tour de boucle), puis on
      * recommence. `null` : on boucle simplement sur [pattern].
      */
     @Volatile var song: Array<StepPattern>? = null
+        get() = if (padLoop.get() is PadLoop.Playing) null else field
 
     /** Rang, dans [song], du motif en cours (pour l'affichage). */
     @Volatile var songPosition: Int = 0
@@ -474,8 +487,47 @@ class StudioEngine(val sampleRate: Int) {
     }
 
     /** Lance la lecture ; avec [countIn], une mesure de clics la précède (le temps de se préparer à enregistrer). */
-    fun play(countIn: Boolean = false) = push(CMD_PLAY, if (countIn) 1 else 0, 0, 0f)
-    fun stop() = push(CMD_STOP, 0, 0, 0f)
+    fun play(countIn: Boolean = false) {
+        playRequested = true
+        push(CMD_PLAY, if (countIn) 1 else 0, 0, 0f)
+    }
+
+    fun stop() {
+        playRequested = false
+        cancelPadLoop()
+        push(CMD_STOP, 0, 0, 0f)
+    }
+
+    /** Le dernier choix avant le premier pas du tour suivant gagne. Pendant le décompte, ce sera le premier pas joué. */
+    fun queuePadLoop(slot: Int, pattern: StepPattern) {
+        if (playRequested && slot >= 0 && pattern.stepCount > 0) {
+            replacePadLoop(PadLoop.Queued(PadLoop.Playing(slot, pattern)))
+        }
+    }
+
+    val pendingPadLoop: Int get() = (padLoop.get() as? PadLoop.Queued)?.target?.slot ?: -1
+
+    fun cancelPadLoop() = replacePadLoop(null)
+
+    /** Emplacement effectivement lancé à reporter dans le projet, une seule fois (fil de l'interface). */
+    fun takeLaunchedPadLoop(): Int {
+        if (padLoop.get() is PadLoop.Playing) replacePadLoop(null)
+        val slot = unreportedPadSlot
+        unreportedPadSlot = -1
+        return slot
+    }
+
+    private fun replacePadLoop(next: PadLoop.Queued?) {
+        do {
+            val old = padLoop.get()
+            // Si le fil audio a franchi la frontière, une annulation ou un nouveau choix ne peut effacer ce lancement.
+            if (old is PadLoop.Playing) {
+                pattern = old.pattern
+                song = null
+                unreportedPadSlot = old.slot
+            }
+        } while (!padLoop.compareAndSet(old, next))
+    }
 
     /** La note tenue [from] de la piste [track] devient [to], en glissant si l'instrument le sait (pad thérémine). */
     fun glide(track: Int, from: Int, to: Int, velocity: Float = 1f) =
@@ -529,10 +581,11 @@ class StudioEngine(val sampleRate: Int) {
      * Joue la piste [track] tout de suite (au début du prochain bloc) : pads tactiles, clavier. [hold] : la durée du coup d'une
      * piste de batterie (1 = celle du son), pour faire entendre le réglage d'un pas.
      */
-    fun trigger(track: Int, note: Int = 60, velocity: Float = 1f, hold: Float = 1f) {
+    fun trigger(track: Int, note: Int = 60, velocity: Float = 1f, hold: Float = 1f, recordHit: Boolean = true) {
         // La piste (moins de 64) et la durée en pour cent se partagent les 16 bits du premier champ de la commande.
         val holdPct = Math.round(hold * 100f).coerceIn(1, 1000)
-        push(CMD_TRIGGER, (track and 0x3F) or (holdPct shl 6), note.coerceIn(0, 127), velocity)
+        val command = if (recordHit) CMD_TRIGGER else CMD_PREVIEW
+        push(command, (track and 0x3F) or (holdPct shl 6), note.coerceIn(0, 127), velocity)
     }
 
     fun release(track: Int, note: Int) = push(CMD_RELEASE, track, note.coerceIn(0, 127), 0f)
@@ -801,14 +854,14 @@ class StudioEngine(val sampleRate: Int) {
             when (kind) {
                 CMD_PLAY -> startSequencer(blockStart, countIn = a == 1)
                 CMD_STOP -> stopSequencer()
-                CMD_TRIGGER -> table.getOrNull(a and 0x3F)?.let { s ->
+                CMD_TRIGGER, CMD_PREVIEW -> table.getOrNull(a and 0x3F)?.let { s ->
                     if (s.melody != null) {
                         liveHeld[(a and 0x3F) * 128 + b]++
                         s.melody.on(b, f, blockStart)
                     } else {
                         s.instrument.hold = (a ushr 6) / 100f
                         fire(s, b, f)
-                        noteHit(a and 0x3F, blockStart, f)
+                        if (kind == CMD_TRIGGER) noteHit(a and 0x3F, blockStart, f)
                     }
                 }
                 CMD_RELEASE -> table.getOrNull(a)?.let { s ->
@@ -938,7 +991,7 @@ class StudioEngine(val sampleRate: Int) {
     }
 
     private fun fireStep(frame: Long) {
-        val step = stepIndex
+        var step = stepIndex
         if (step < 0) {
             // Décompte : un clic par temps, rien d'autre (le premier, plus aigu, marque le début de la mesure)
             val stepFrames = stepFramesNow()
@@ -954,6 +1007,14 @@ class StudioEngine(val sampleRate: Int) {
             nextStepTime = straightTime
             if (stepIndex == 0) countInBeats = 0
             return
+        }
+        val queued = padLoop.get() as? PadLoop.Queued
+        if (queued != null && step % max(activePattern().stepCount, 1) == 0 && padLoop.compareAndSet(queued, queued.target)) {
+            // Le nouveau motif repart de son premier pas. L'horloge en échantillons garde le tempo des doigts et des roulements.
+            step = 0
+            playOrigin = straightTime
+            for (i in 0 until offCount) patternOff(offTrack[i], offNote[i])
+            offCount = 0
         }
         val sg = song
         if (sg != null && sg.isNotEmpty()) {
@@ -1227,6 +1288,7 @@ class StudioEngine(val sampleRate: Int) {
         private const val CMD_GLIDE = 5
         private const val CMD_ROLL_ON = 6
         private const val CMD_ROLL_OFF = 7
+        private const val CMD_PREVIEW = 8
 
         /** Le décompte avant un enregistrement : une mesure (seize pas, quatre clics). */
         const val COUNT_IN_STEPS = 16

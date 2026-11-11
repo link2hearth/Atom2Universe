@@ -147,6 +147,12 @@ class StudioActivity : AudioThemedActivity() {
     private var padsShowXY = false
     private lateinit var mixerPane: LinearLayout
     private lateinit var padView: XyPadView
+    private lateinit var padLoopRow: LinearLayout
+    private lateinit var loopNames: Array<String>
+    private var shownPadLoop = -2
+    private var shownPendingLoop = -2
+    private var launchEnabled = false
+    private var queuedPattern: com.Atom2Universe.app.studio.engine.StepPattern? = null
     private lateinit var patternGroup: MaterialButtonToggleGroup
     private var songBlocks: ChainView? = null
     private lateinit var songButton: MaterialButton
@@ -235,6 +241,10 @@ class StudioActivity : AudioThemedActivity() {
     private val frameTick = object : Runnable {
         override fun run() {
             framePending = false
+            if (padLoopRow.visibility == View.VISIBLE) {
+                acceptPadLaunch()
+                refreshPadLauncher()
+            }
             val step = if (playing) engine.currentStep else -1
             songBlocks?.playingIndex = if (playing && session.project.songMode) engine.songPosition else -1
             if (onNotesTab) roll.playhead = step else if (rhythmPane.visibility == View.VISIBLE) grid.playhead = step
@@ -343,6 +353,7 @@ class StudioActivity : AudioThemedActivity() {
         framePending = false
         grid.removeCallbacks(frameTick)
         handler.removeCallbacks(statsTick)
+        cancelPadLaunch()
         // Rien ne reste tenu : pads, thérémine, enregistrement des pads
         padView.finishTouch(false)
         pads.releaseAll()
@@ -494,6 +505,21 @@ class StudioActivity : AudioThemedActivity() {
             }
         }
         transport.addView(patternGroup, wrap(end = dp(8)))
+        loopNames = names
+        padLoopRow = LinearLayout(this).apply {
+            visibility = View.GONE
+            names.forEachIndexed { slot, name ->
+                addView(outlined(null).apply {
+                    text = name
+                    minWidth = dp(44)
+                    minimumWidth = dp(44)
+                    isCheckable = true
+                    setPadding(dp(6), 0, dp(6), 0)
+                    setOnClickListener { launchPadLoop(slot) }
+                }, wrap(end = dp(2)))
+            }
+        }
+        transport.addView(padLoopRow, wrap(end = dp(8)))
         selectToggle = buildSelectToggle()
         transport.addView(selectToggle, wrap(end = dp(8)))
         songButton = outlined(R.string.studio_song).apply { setOnClickListener { showSongPanel(it) } }
@@ -814,6 +840,7 @@ class StudioActivity : AudioThemedActivity() {
      */
     private fun setPadsRecording(on: Boolean) {
         if (!::padsRecordButton.isInitialized) return
+        if (on) cancelPadLaunch()
         if (padsRecording != on) drainPadHits()
         padsRecording = on
         padsRecordButton.setText(if (on) R.string.studio_record_on else R.string.studio_record_off)
@@ -855,6 +882,7 @@ class StudioActivity : AudioThemedActivity() {
                 engine.padActive = true
                 // Prise : le geste s'écrit dans la boucle tant que le doigt reste (seulement pendant la lecture)
                 if (gestureArmed && playing) {
+                    cancelPadLaunch()
                     session.beginGesture()
                     gestureTaking = true
                     recording = true
@@ -1558,7 +1586,7 @@ class StudioActivity : AudioThemedActivity() {
                     handler.postAtTime({
                         if (box.isShown && hasWindowFocus() && valid() && !padsRecording) {
                             val info = session.stepInfo(track, i)
-                            engine.trigger(track, info?.pitch ?: 60, info?.velocity ?: 1f, (info?.hold ?: 100) / 100f)
+                            engine.trigger(track, info?.pitch ?: 60, info?.velocity ?: 1f, (info?.hold ?: 100) / 100f, recordHit = false)
                         }
                     }, playback, start + delay.toLong())
                 }
@@ -1616,7 +1644,7 @@ class StudioActivity : AudioThemedActivity() {
     }
 
     private fun listenDrum() {
-        if (editedDrum >= 0) engine.trigger(editedDrum, 60, 1f)
+        if (editedDrum >= 0) engine.trigger(editedDrum, 60, 1f, recordHit = false)
     }
 
     /** Remet le panneau d'accord avec la piste de batterie ouverte. */
@@ -1932,6 +1960,7 @@ class StudioActivity : AudioThemedActivity() {
                 if (checked) {
                     val n = when (id) { ids[2] -> 64; ids[1] -> 32; else -> 16 }
                     if (n != session.project.baseSteps) {
+                        cancelPadLaunch()
                         finishTakeSegment()
                         session.setStepCount(n)
                         grid.clearSelection()
@@ -1954,6 +1983,7 @@ class StudioActivity : AudioThemedActivity() {
     // ---- Actions ---------------------------------------------------------------------------------
 
     private fun togglePlay() {
+        if (playing) cancelPadLaunch()
         if (playing && recorder.armed) {
             setPadsRecording(false)
             refreshNotesControls()
@@ -1970,6 +2000,7 @@ class StudioActivity : AudioThemedActivity() {
         onNotesTab = notes
         // Rien ne reste tenu sur la page qu'on quitte ; la prise aux pads s'arrête avec elle
         if (!padsTab) {
+            cancelPadLaunch()
             pads.releaseAll()
             if (padsRecording) setPadsRecording(false)
         }
@@ -1977,7 +2008,11 @@ class StudioActivity : AudioThemedActivity() {
         if (!notes) { keyboard.releaseAll(); theremin.finish() }
         // Les coups des pads reviennent à l'écran (pour briller, et pour s'écrire pendant l'enregistrement)
         engine.recordHits = padsTab
+        patternGroup.visibility = if (padsTab) View.GONE else View.VISIBLE
+        padLoopRow.visibility = if (padsTab) View.VISIBLE else View.GONE
         if (padsTab) {
+            if (recorder.armed && !padsRecording) setPadsRecording(true)
+            refreshPadLauncher(force = true)
             setSelectMode(false)
             ensureSelected()
             refreshRoll()
@@ -2009,7 +2044,7 @@ class StudioActivity : AudioThemedActivity() {
             previewPitch(pitch, v, track = trackId)
         } else {
             val info = session.stepInfo(trackId, step)
-            engine.trigger(trackId, info?.pitch ?: 60, v, (info?.hold ?: 100) / 100f)
+            engine.trigger(trackId, info?.pitch ?: 60, v, (info?.hold ?: 100) / 100f, recordHit = false)
         }
     }
 
@@ -2025,7 +2060,7 @@ class StudioActivity : AudioThemedActivity() {
     /** Une note d'essai sur la piste [id] (une frappe pour la batterie). */
     private fun previewTrack(id: Int) {
         val t = session.project.trackOrNull(id) ?: return
-        if (t.melodic) previewPitch((register.low + (session.project.keyPc - register.low % 12 + 12) % 12), 0.9f, 450, track = id) else engine.trigger(id, 60, 1f)
+        if (t.melodic) previewPitch((register.low + (session.project.keyPc - register.low % 12 + 12) % 12), 0.9f, 450, track = id) else engine.trigger(id, 60, 1f, recordHit = false)
     }
 
     private fun pickKey(anchor: View) {
@@ -2062,6 +2097,7 @@ class StudioActivity : AudioThemedActivity() {
     }
 
     private fun stepHistory(redo: Boolean) {
+        cancelPadLaunch()
         setPasteArmed(false)
         finishTakeSegment()
         if (redo) session.redo() else session.undo()
@@ -2222,6 +2258,8 @@ class StudioActivity : AudioThemedActivity() {
     }
 
     private fun scheduleSave() {
+        val pending = engine.pendingPadLoop
+        if (pending >= 0 && queuedPattern !== session.project.patterns[pending]) cancelPadLaunch()
         panels.prune()
         refreshSpread?.invoke()
         refreshHistory()
@@ -2439,6 +2477,67 @@ class StudioActivity : AudioThemedActivity() {
         }.start()
     }
 
+    private fun launchPadLoop(slot: Int) {
+        acceptPadLaunch()
+        val project = session.project
+        if (!playing) {
+            selectPadLoop(slot)
+        } else if (slot == engine.pendingPadLoop ||
+            (!project.songMode && project.view.isEmpty() && slot == project.current)) {
+            cancelPadLaunch()
+        } else {
+            val next = project.patterns[slot]
+            queuedPattern = next
+            engine.queuePadLoop(slot, next)
+        }
+        refreshPadLauncher(force = true)
+    }
+
+    private fun selectPadLoop(slot: Int) {
+        if (session.project.songMode) session.setSongMode(false)
+        session.selectPattern(slot)
+        grid.clearSelection()
+        roll.clearSelection()
+        changed()
+    }
+
+    private fun acceptPadLaunch() {
+        val slot = engine.takeLaunchedPadLoop()
+        if (slot < 0) return
+        if (engine.pendingPadLoop < 0) queuedPattern = null
+        selectPadLoop(slot)
+    }
+
+    private fun cancelPadLaunch() {
+        engine.cancelPadLoop()
+        queuedPattern = null
+        acceptPadLaunch()
+    }
+
+    private fun refreshPadLauncher(force: Boolean = false) {
+        val p = session.project
+        val active = when {
+            playing && p.songMode -> p.chain.getOrNull(engine.songPosition) ?: p.current
+            playing && p.view.isNotEmpty() -> p.view.getOrNull(engine.currentStep.coerceAtLeast(0) / p.baseSteps) ?: p.current
+            else -> p.current
+        }
+        val pending = engine.pendingPadLoop
+        val enabled = !recorder.armed && !gestureTaking
+        if (!force && active == shownPadLoop && pending == shownPendingLoop && enabled == launchEnabled) return
+        shownPadLoop = active
+        shownPendingLoop = pending
+        launchEnabled = enabled
+        for (i in loopNames.indices) {
+            val button = padLoopRow.getChildAt(i) as MaterialButton
+            val waiting = i == pending
+            button.isChecked = i == active
+            button.strokeWidth = dp(if (i == active || waiting) 2 else 1)
+            button.text = if (waiting) getString(R.string.studio_loop_queued, loopNames[i]) else loopNames[i]
+            button.contentDescription = getString(if (waiting) R.string.studio_loop_waiting else R.string.studio_loop_launch, loopNames[i])
+            button.isEnabled = enabled
+        }
+    }
+
     private fun refreshPatterns() {
         if (!::patternGroup.isInitialized) return
         val p = session.project
@@ -2517,6 +2616,7 @@ class StudioActivity : AudioThemedActivity() {
         box.addView(adds)
         playSwitch.setOnCheckedChangeListener { _, on ->
             if (on != session.project.songMode) {
+                cancelPadLaunch()
                 session.setSongMode(on)
                 refreshPatterns()
                 scheduleSave()
@@ -3130,7 +3230,7 @@ class StudioActivity : AudioThemedActivity() {
     }
 
     private fun triggerPerc() {
-        session.project.tracks.firstOrNull { it.kind == TrackKind.DRUM && it.voice == Inst.PERC }?.let { engine.trigger(it.id, 60, 1f) }
+        session.project.tracks.firstOrNull { it.kind == TrackKind.DRUM && it.voice == Inst.PERC }?.let { engine.trigger(it.id, 60, 1f, recordHit = false) }
     }
 
     /** La ligne de pastilles de l'onglet Notes : une par piste à notes (sa couleur, son nom), et « + » pour en ajouter. */
