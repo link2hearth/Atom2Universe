@@ -150,14 +150,14 @@ class StudioNotesTest {
     }
 
     @Test
-    fun timpaniSoundOnlyInsideTheReferenceKeyboardRange() {
+    fun sampledTimpaniSoundOnTheWholeKeyboard() {
         for (note in listOf(37, 38, 54, 55, 60, 61)) {
             for (velocity in listOf(24, 50, 96, 125)) {
                 val engine = quietEngine()
                 engine.synth.selectBank(com.Atom2Universe.app.studio.engine.SynthBank.ORCHESTRAL, 47, 0)
                 engine.trigger(Inst.SYNTH, note, velocity / 127f)
                 val signal = render(engine, rate / 5).first
-                assertEquals("Note $note à vélocité $velocity", note in 38..60, signal.any { abs(it) > 0.00001f })
+                assertTrue("Note $note à vélocité $velocity", signal.any { abs(it) > 0.00001f })
             }
         }
     }

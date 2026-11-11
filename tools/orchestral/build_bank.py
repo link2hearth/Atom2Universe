@@ -4,9 +4,10 @@
 
 Deux sources :
 - PROGRAMS : programmes repris du SoundFont (le piano, en CC0) ;
-- WAVES : notes tenues de VSCO 2 Community Edition (CC0, github.com/sgossner/VSCO-2-CE), une prise
-  par tierce. Chaque prise est mise en mono, accordée, coupée après l'attaque puis bouclée sur une
-  seconde environ, vibrato compris.
+- WAVES : prises de VSCO 2 Community Edition (CC0, github.com/sgossner/VSCO-2-CE), une par tierce
+  environ, la nuance la plus forte. Chaque prise est mise en mono et accordée. Une note tenue est
+  coupée après l'attaque puis bouclée sur une seconde environ, vibrato compris ; une note frappée
+  ou pincée garde sa résonance, raccourcie.
 Les autres instruments d'Orchestral restent recalculés par l'application.
 
 Pour chaque programme retenu :
@@ -19,6 +20,7 @@ Le résultat est un SF2 ordinaire. Les modulateurs ne sont pas recopiés (le mot
 """
 import math
 import mmap
+import re
 import struct
 import sys
 from pathlib import Path
@@ -30,12 +32,49 @@ from scipy.signal import resample_poly
 OUT = Path(__file__).resolve().parents[2] / "app/src/main/resources/studio/orchestral/bank.sf2"
 PROGRAMS = {0: 25}          # programme -> atténuation du preset en centibels (niveau égal au SF2 d'origine)
 # programme -> prises de VSCO 2 CE. Tout le clavier joue : hors de l'étendue de l'instrument, la prise
-# la plus proche est transposée (le lecteur ne retombe pas sur le piano). release : extinction en secondes ;
-# gain : décibels ajoutés au niveau commun (niveau égal au SF2 de référence sur une phrase).
+# la plus proche est transposée (le lecteur ne retombe pas sur le piano).
+# folders : dossiers de prises, les suivants l'emportent sur les précédents pour une même note ;
+# keep : durée gardée d'une note frappée, en secondes (absent : note tenue, bouclée) ;
+# release : extinction en secondes ; gain : décibels ajoutés au niveau commun (niveau égal au SF2
+# de référence sur une phrase) ; same : programme dont les prises sont reprises telles quelles ;
+# numbered : pour des fichiers numérotés par touche, la note du fichier 0 ; only : texte que le nom
+# des prises doit contenir ; octave : décalage des notes écrites quand la mesure ne peut pas le
+# trouver ; pitches : hauteur donnée à la main (début du nom -> note MIDI décimale), pour les
+# timbales, dont le son est inharmonique (note = premier mode de la peau, relevé au spectre).
+STRINGS = ["Strings/Solo Contrabass/SusVib", "Strings/Cello Section/susvib", "Strings/Viola Section/susvib",
+           "Strings/Violin Section/susVib"]
 WAVES = {
-    40: dict(name="Violin", folder="Strings/Solo Violin/Arco Vib", ending="_f.wav", release=0.5, gain=1.0),
-    73: dict(name="Flute", folder="Woodwinds/Flute/susvib", ending="_1.wav", release=0.5, gain=3.5),
+    9: dict(name="Glockenspiel", folders=["Percussion/Glock"], keep=2.0, release=1.0, gain=-7.3),
+    12: dict(name="Marimba", folders=["Percussion/Marimba"], keep=1.5, release=0.8, gain=8.0),
+    13: dict(name="Xylophone", folders=["Percussion/Xylo"], keep=1.0, release=0.6, gain=4.5),
+    19: dict(name="Church Organ", folders=["Keys/Organ/Loud"], only="Man3Open", numbered=35, release=0.6, gain=-0.5),
+    40: dict(name="Violin", folders=["Strings/Solo Violin/Arco Vib"], release=0.5, gain=1.0),
+    41: dict(name="Viola", folders=["Strings/Viola Section/susvib"], release=0.5, gain=2.5),
+    42: dict(name="Cello", folders=["Strings/Cello Section/susvib"], release=0.5, gain=8.0),
+    43: dict(name="Contrabass", folders=["Strings/Solo Contrabass/SusVib"], release=0.5, gain=8.0),
+    44: dict(name="Tremolo Strings", folders=["Strings/Violin Section/Trem"], release=0.5, gain=2.6),
+    45: dict(name="Pizzicato Strings", folders=["Strings/Solo Contrabass/Pizz", "Strings/Cello Section/pizzT",
+                                               "Strings/Viola Section/pizz", "Strings/Violin Section/Pizz"],
+             octave=12, keep=1.2, release=0.6, gain=-0.7),
+    46: dict(name="Harp", folders=["Strings/Harp"], keep=2.5, release=1.5, gain=5.3),
+    47: dict(name="Timpani", folders=["Percussion/Timpani"], keep=2.5, release=2.0, gain=7.9,
+             pitches={"Timpani1": 41.45, "Timpani2": 46.8, "Timpani3": 49.45, "Timpani4": 52.4, "Timpani5": 54.6}),
+    48: dict(name="String Ensemble 1", folders=STRINGS, release=0.6, gain=5.4),
+    49: dict(name="String Ensemble 2", same=48),
+    56: dict(name="Trumpet", folders=["Brass/Trumpet/sus"], release=0.3, gain=0.3),
+    57: dict(name="Trombone", folders=["Brass/Tenor Trombone/sus"], release=0.3, gain=0.3),
+    58: dict(name="Tuba", folders=["Brass/Tuba/sus"], release=0.3, gain=0.7),
+    59: dict(name="Muted Trumpet", folders=["Brass/Trumpet/harmonM-sus"], release=0.3, gain=1.4),
+    60: dict(name="French Horn", folders=["Brass/F Horn/sus"], release=0.4, gain=4.4),
+    68: dict(name="Oboe", folders=["Woodwinds/Oboe/Sus"], release=0.4, gain=1.3),
+    70: dict(name="Bassoon", folders=["Woodwinds/Bassoon/sus"], release=0.4, gain=7.2),
+    71: dict(name="Clarinet", folders=["Woodwinds/Clarinet/susLong"], release=0.4, gain=7.4),
+    72: dict(name="Piccolo", folders=["Woodwinds/Piccolo/Sus"], release=0.4, gain=8.0),
+    73: dict(name="Flute", folders=["Woodwinds/Flute/susvib"], release=0.5, gain=3.3),
 }
+DYNAMICS = {"pp": 0, "p": 1, "mp": 2, "mf": 3, "f": 4, "ff": 5}
+NOTE = re.compile(r"(?<![A-Za-z])([A-G])(#?)(\d)(?![0-9])")
+STEPS = {"C": 0, "D": 2, "E": 4, "F": 5, "G": 7, "A": 9, "B": 11}
 WAVE_LEVEL = 3300           # niveau efficace commun des notes tenues (-20 dB)
 NO_SHORTENING = range(112, 128)   # percussions et bruitages : sons qui évoluent, jamais bouclés ici
 BRIGHT_DB = -15.0           # part d'énergie au-dessus de 9,5 kHz à partir de laquelle la fréquence est gardée
@@ -179,10 +218,11 @@ def rms(signal):
 
 
 def pitch(signal, rate):
-    """Hauteur d'une note tenue, en numéro MIDI décimal (autocorrélation)."""
+    """Hauteur d'une note, en numéro MIDI décimal (autocorrélation). Peu sûre à l'octave près, et fausse sur
+    les sons inharmoniques : tuning() la recoupe avec la note écrite dans le nom du fichier."""
     spectrum = np.fft.rfft(signal * np.hanning(len(signal)), 1 << 17)
     correlation = np.fft.irfft(np.abs(spectrum) ** 2)
-    low, high = rate // 4500, rate // 60
+    low, high = rate // 4500, rate // 28
     lag = low + int(np.argmax(correlation[low:high]))
     top = correlation[lag]
     for divisor in (4, 3, 2):       # la vraie période est le plus petit sous-multiple encore fort
@@ -193,12 +233,58 @@ def pitch(signal, rate):
                 lag = near
                 break
     a, b, c = correlation[lag - 1], correlation[lag], correlation[lag + 1]
-    exact = lag + 0.5 * (a - c) / (a - 2 * b + c)
-    return 69 + 12 * math.log2(rate / exact / 440)
+    exact = lag + 0.5 * (a - c) / (a - 2 * b + c) if a - 2 * b + c else lag
+    return 69 + 12 * math.log2(rate / max(exact, 1.0) / 440)
 
 
-def sustained(path, gain):
-    """Prépare une note tenue. Retourne (signal, début, fin de boucle, fréquence, note, correction en cents)."""
+def tuning(prepared, numbered, octave):
+    """Note et correction en cents de chaque prise d'un dossier. prepared : [(chemin, hauteur mesurée)].
+    Le nom du fichier donne la note ; l'octave d'écriture, variable d'un dossier à l'autre, est celle
+    que confirme le plus grand nombre de mesures. La mesure n'accorde que si elle tombe sur cette note."""
+    written = []
+    for path, measured in prepared:
+        note = NOTE.search(path.stem)
+        number = re.search(r"_(\d+)$", path.stem)
+        if note:
+            written.append(12 * (int(note.group(3)) + 1) + STEPS[note.group(1)] + len(note.group(2)))
+        elif numbered is not None and number:
+            written.append(numbered + int(number.group(1)))
+        else:
+            written.append(None)
+    votes = {}
+    for (path, measured), nominal in zip(prepared, written):
+        if nominal is not None and numbered is None:
+            octaves = round((measured - nominal) / 12)
+            if abs(measured - nominal - 12 * octaves) < 0.5:
+                votes[octaves] = votes.get(octaves, 0) + 1
+    shift = 12 * max(votes, key=votes.get) if votes else octave
+    result = []
+    for (path, measured), nominal in zip(prepared, written):
+        root = int(round(measured)) if nominal is None else nominal + shift
+        cents = (root - measured) * 100
+        result.append((root, int(round(cents)) if abs(cents) <= 50 else 0))
+    return result
+
+
+def takes(folder, only, pitches):
+    """Les prises à garder d'un dossier : par note écrite dans le nom, la nuance la plus forte, première prise."""
+    best = {}
+    for path in sorted(folder.glob("*.wav")):
+        stem = path.stem
+        if only and only not in stem:
+            continue
+        note = NOTE.search(stem)
+        layer = re.search(r"_v(\d)", stem)
+        dynamic = re.search(r"_(pp|p|mp|mf|f|ff)(?:_|$)", stem)
+        rank = int(layer.group(1)) if layer else DYNAMICS[dynamic.group(1)] if dynamic else 0
+        key = note.group(0) if note else next((name for name in pitches if stem.startswith(name)), stem)
+        if key not in best or rank > best[key][0]:
+            best[key] = (rank, path)
+    return [path for _, path in best.values()]
+
+
+def recording(path):
+    """Lit une prise : mono, à demi-fréquence si rien d'audible ne s'y perd. Retourne (signal, fréquence, niveaux par 5 ms)."""
     stereo, rate = soundfile.read(str(path), always_2d=True)
     waves = [stereo[:, c] * 32768 for c in range(stereo.shape[1])]
     mono = sum(waves) / len(waves)
@@ -209,26 +295,36 @@ def sustained(path, gain):
         rate //= 2
     hop = rate // 200
     levels = np.array([rms(mono[i:i + hop]) for i in range(0, len(mono) - hop, hop)])
+    return mono, rate, levels
+
+
+def sustained(path, gain):
+    """Prépare une note tenue. Retourne (signal, début, fin de boucle, fréquence, hauteur mesurée)."""
+    mono, rate, levels = recording(path)
+    hop = rate // 200
     first = int(np.argmax(levels > 0.05 * levels.max()))
     body_level = float(np.median(levels[first + 100:first + 500]))
     onset = max(0, (int(np.argmax(levels > 0.1 * body_level)) - 1) * hop)
     measured = pitch(mono[onset + int(0.6 * rate):onset + int(1.1 * rate)], rate)
-    root = int(round(measured))
     fade = rate // 10
     best = None
-    for delay in (0.6, 0.75, 0.9):
-        start = onset + int(delay * rate)
-        low, high = start + int(0.9 * rate), start + int(1.5 * rate)
-        if high > len(mono) - rate:
-            continue
-        before = mono[start - fade:start]
-        zone = mono[low - fade:high]
-        match = np.correlate(zone, before, "valid")
-        energy = np.convolve(zone * zone, np.ones(fade), "valid")
-        likeness = match / np.sqrt(energy * float(np.dot(before, before)) + 1e-9)
-        index = int(np.argmax(likeness))
-        if best is None or likeness[index] > best[0]:
-            best = (float(likeness[index]), start, low + index)
+    # Une boucle d'une seconde et plus ; pour une prise courte, une demi-seconde.
+    for shortest, longest, margin in ((0.9, 1.5, 1.0), (0.4, 0.9, 0.3)):
+        for delay in (0.6, 0.75, 0.9):
+            start = onset + int(delay * rate)
+            low, high = start + int(shortest * rate), start + int(longest * rate)
+            if high > len(mono) - int(margin * rate):
+                continue
+            before = mono[start - fade:start]
+            zone = mono[low - fade:high]
+            match = np.correlate(zone, before, "valid")
+            energy = np.convolve(zone * zone, np.ones(fade), "valid")
+            likeness = match / np.sqrt(energy * float(np.dot(before, before)) + 1e-9)
+            index = int(np.argmax(likeness))
+            if best is None or likeness[index] > best[0]:
+                best = (float(likeness[index]), start, low + index)
+        if best:
+            break
     if best is None:
         raise ValueError(f"{path.name} : note trop courte pour être bouclée")
     likeness, start, end = best
@@ -242,9 +338,27 @@ def sustained(path, gain):
     signal[:hop] *= np.linspace(0, 1, hop)
     signal *= min(WAVE_LEVEL * 10 ** (gain / 20) / rms(body), 30000 / float(np.abs(signal).max()))
     rise = int(np.argmax(levels[onset // hop:] > 0.7 * body_level)) * hop / rate
-    print(f"    {path.name:30s} note {measured:6.2f}  boucle {(end - start) / rate:4.2f} s  "
+    print(f"    {path.name:40s} note {measured:6.2f}  boucle {(end - start) / rate:4.2f} s  "
           f"ressemblance {likeness:4.2f}  montée {rise * 1000:4.0f} ms")
-    return signal, start - onset, end - onset, rate, root, int(round((root - measured) * 100))
+    return signal, start - onset, end - onset, rate, measured
+
+
+def struck(path, gain, keep):
+    """Prépare une note frappée ou pincée, sans boucle. Même retour que sustained."""
+    mono, rate, levels = recording(path)
+    hop = rate // 200
+    onset = max(0, (int(np.argmax(levels > 0.05 * levels.max())) - 1) * hop)
+    length = min(int(keep * rate), trimmed_length(mono[onset:], rate))
+    signal = mono[onset:onset + length].copy()
+    fade = len(signal) // 4
+    signal[-fade:] *= np.linspace(1, 0, fade) ** 2
+    signal[:hop // 2] *= np.linspace(0, 1, hop // 2)
+    measured = pitch(mono[onset + int(0.03 * rate):onset + int(0.35 * rate)], rate)
+    window = rate // 20
+    loud = max(rms(signal[i:i + window]) for i in range(0, min(len(signal) - window, rate // 3), window // 2))
+    signal *= min(WAVE_LEVEL * 10 ** (gain / 20) / loud, 30000 / float(np.abs(signal).max()))
+    print(f"    {path.name:40s} note {measured:6.2f}  durée {len(signal) / rate:4.2f} s")
+    return signal, 0, len(signal), rate, measured
 
 
 class Bank:
@@ -256,6 +370,7 @@ class Bank:
         self.sounds = {}        # clé d'échantillon -> (numéro, informations de boucle)
         self.instruments = {}   # instrument d'origine -> numéro
         self.instrument_zones = []  # (nom, [zones])
+        self.wave_instruments = {}  # programme de WAVES -> numéro d'instrument
 
     def wave(self, sample, start, end):
         return np.frombuffer(self.sf["data"], dtype="<i2", count=end - start,
@@ -432,29 +547,39 @@ class Bank:
         return self.instruments[index]
 
     def waves(self, program, folder):
-        """Un programme fait de notes tenues enregistrées. Retourne le preset."""
+        """Un programme fait de prises enregistrées. Retourne le preset."""
         spec = WAVES[program]
+        if "same" in spec:
+            return spec["name"], program, [[(G_INSTRUMENT, self.wave_instruments[spec["same"]])]]
+        looped = "keep" not in spec
         made = {}
-        for path in sorted((folder / spec["folder"]).glob("*" + spec["ending"])):
-            signal, loop_start, loop_end, rate, root, correction = sustained(path, spec["gain"])
-            if root in made:
-                continue
-            made[root] = len(self.headers)
+        for source in spec["folders"]:
+            pitches = spec.get("pitches", {})
+            paths = takes(folder / source, spec.get("only"), pitches)
+            sounds = [sustained(path, spec["gain"]) if looped else struck(path, spec["gain"], spec["keep"])
+                      for path in paths]
+            measured = [next((pitches[name] for name in pitches if path.stem.startswith(name)), sound[4])
+                        for path, sound in zip(paths, sounds)]
+            tuned = tuning(list(zip(paths, measured)), spec.get("numbered"), spec.get("octave", 0))
+            for sound, (root, correction) in zip(sounds, tuned):
+                made[root] = (*sound[:4], correction)
+            print("    notes :", " ".join(f"{root}{correction:+d}" for root, correction in sorted(tuned)))
+        zones_ = []
+        roots = sorted(made)
+        for i, root in enumerate(roots):
+            signal, loop_start, loop_end, rate, correction = made[root]
+            low = 0 if i == 0 else (roots[i - 1] + root) // 2 + 1
+            high = 127 if i == len(roots) - 1 else (root + roots[i + 1]) // 2
+            zones_.append([(G_KEYS, low | high << 8), (G_RELEASE, timecents(spec["release"], 8000)),
+                           (G_MODES, 1 if looped else 0), (G_SAMPLE, len(self.headers))])
             self.headers.append((f"{spec['name']} {root}", self.position, self.position + len(signal),
                                  self.position + loop_start, self.position + loop_end, rate, root, correction))
             self.pcm.append(np.clip(np.round(signal), -32768, 32767).astype("<i2"))
             self.pcm.append(np.zeros(46, dtype="<i2"))
             self.position += len(signal) + 46
-        roots = sorted(made)
-        zones_ = []
-        for i, root in enumerate(roots):
-            low = 0 if i == 0 else (roots[i - 1] + root) // 2 + 1
-            high = 127 if i == len(roots) - 1 else (root + roots[i + 1]) // 2
-            zones_.append([(G_KEYS, low | high << 8), (G_RELEASE, timecents(spec["release"], 8000)),
-                           (G_MODES, 1), (G_SAMPLE, made[root])])
-        number = len(self.instrument_zones)
+        self.wave_instruments[program] = len(self.instrument_zones)
         self.instrument_zones.append((spec["name"], zones_))
-        return spec["name"], program, [[(G_INSTRUMENT, number)]]
+        return spec["name"], program, [[(G_INSTRUMENT, self.wave_instruments[program])]]
 
     def build(self, recordings=None):
         sf = self.sf
