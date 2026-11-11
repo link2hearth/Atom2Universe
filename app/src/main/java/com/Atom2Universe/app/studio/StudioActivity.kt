@@ -2398,7 +2398,7 @@ class StudioActivity : AudioThemedActivity() {
         refreshSelectionBar()
         if (notes) {
             ensureSelected()
-            focusRegister()
+            if (!manualRegister) focusRegister()
             refreshRoll()
             refreshNotesControls()
         }
@@ -2439,7 +2439,6 @@ class StudioActivity : AudioThemedActivity() {
     private fun pickKey(anchor: View) {
         dropdown(anchor, resources.getStringArray(R.array.studio_key_names).toList()) { which ->
             session.setKey(which)
-            focusRegister()
             changed()
         }
     }
@@ -2904,6 +2903,7 @@ class StudioActivity : AudioThemedActivity() {
         selectPadLoop(slot)
         if (track.melodic) {
             editedDrum = -1
+            if (selectedTrack != track.id) manualRegister = false
             selectedTrack = track.id
             tabsGroup.check(tabNotesId)
         } else {
@@ -3670,7 +3670,10 @@ class StudioActivity : AudioThemedActivity() {
     private fun ensureSelected() {
         val p = session.project
         val t = p.trackOrNull(selectedTrack)
-        if (t == null || !t.melodic || t.hidden) selectedTrack = p.tracks.firstOrNull { it.melodic && !it.hidden }?.id ?: -1
+        if (t == null || !t.melodic || t.hidden) {
+            selectedTrack = p.tracks.firstOrNull { it.melodic && !it.hidden }?.id ?: -1
+            manualRegister = false
+        }
         // Une piste de batterie ouverte qui a disparu (ou qu'on a cachée) : retour aux notes
         if (editedDrum >= 0 && p.trackOrNull(editedDrum)?.let { it.kind == TrackKind.DRUM && !it.hidden } != true) editedDrum = -1
     }
