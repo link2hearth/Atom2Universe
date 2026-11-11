@@ -207,6 +207,31 @@ object SynthPresets {
     val PLUCKS = listOf(ARP, PLUCK, BELL, MALLET, KALIMBA)
     val ALL = BASSES + KEYS + LEADS + PADS + PLUCKS
 
+    /** Programme General MIDI proposé au premier passage en SCC/Famicom sur cette piste. */
+    fun chipProgram(patch: SynthPatch): Int = when (patch.id) {
+        BASS.id, ACID.id, SUB.id -> 38 // Synth Bass 1
+        DIST_BASS.id, WOBBLE.id, OCTAVE_BASS.id -> 39
+        PICK_BASS.id -> 34
+        ORGAN.id -> 16
+        TINES.id -> 4
+        HARPSICHORD.id -> 6
+        STRINGS.id -> 48
+        PAD.id -> 89
+        DRONE.id -> 88
+        GLASS_PAD.id -> 92
+        FIFTH_PAD.id -> 86
+        BRASS.id -> 61
+        FLUTE.id -> 73
+        CLARINET.id -> 71
+        ARP.id, ARCADE.id -> 80
+        LEAD.id -> 81
+        PLUCK.id -> 24
+        BELL.id -> 10
+        MALLET.id -> 12
+        KALIMBA.id -> 108
+        else -> 0
+    }
+
     fun byId(id: String): SynthPatch = if (id == MY_VOICE.id) MY_VOICE else ALL.firstOrNull { it.id == id } ?: BASS
 }
 
@@ -229,10 +254,11 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate) {
     @Volatile private var chip: Chip? = null
     @Volatile private var selectedChip: GxSynth? = null
 
-    fun selectBank(bank: SynthBank, program: Int, midiChannel: Int) {
+    fun selectBank(bank: SynthBank, program: Int, midiChannel: Int, smoothBass: Boolean = false) {
         selectedChip = if (bank == SynthBank.STUDIO) null else {
             val source = chip ?: Chip(sampleRate).also { chip = it }
             source.synth.midiChannel = midiChannel
+            source.synth.smoothBass = smoothBass
             source.synth.select(bank == SynthBank.FAMICOM, program)
             source.synth
         }

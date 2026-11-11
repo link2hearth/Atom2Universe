@@ -1,6 +1,9 @@
 package com.Atom2Universe.app.studio.music
 
 import com.Atom2Universe.app.studio.engine.Note
+import com.Atom2Universe.app.studio.data.Track
+import com.Atom2Universe.app.studio.engine.SynthBank
+import com.Atom2Universe.app.studio.engine.TrackKind
 import kotlin.math.abs
 
 /** Une même fenêtre MIDI pour les deux claviers, toujours bordée de touches blanches. */
@@ -23,8 +26,11 @@ internal class StudioRegister(widthDp: Int, heightDp: Int, chosenOctaves: Int? =
 
     fun shift(whiteKeys: Int) { start = (start + whiteKeys).coerceIn(0, lastStart) }
 
-    fun focus(notes: List<Note>) {
-        if (notes.isEmpty()) return
+    fun focus(notes: List<Note>, emptyOctave: Int? = null) {
+        if (notes.isEmpty()) {
+            if (emptyOctave != null) setLow(emptyOctave)
+            return
+        }
         val pitches = IntArray(128)
         for (n in notes) if (n.pitch in pitches.indices) pitches[n.pitch]++
         for (p in 1..127) pitches[p] += pitches[p - 1]
@@ -36,5 +42,18 @@ internal class StudioRegister(widthDp: Int, heightDp: Int, chosenOctaves: Int? =
 
     companion object {
         val whites = (0..127).filter { it % 12 in listOf(0, 2, 4, 5, 7, 9, 11) }.toIntArray()
+
+        /** Le do de référence de la préécoute GXSCC, commun aux pistes vides et au jeu au doigt. */
+        fun chipOctave(track: Track): Int? = when {
+            track.kind != TrackKind.SYNTH || track.synthBank == SynthBank.STUDIO -> null
+            track.program in 32..39 -> 36
+            else -> 60
+        }
+
+        fun padPitches(notes: List<Note>, scale: Scale, keyPc: Int, emptyOctave: Int?): IntArray {
+            val low = notes.minOfOrNull { it.pitch } ?: emptyOctave?.plus(keyPc) ?: 48
+            val tonic = (low - Math.floorMod(low - keyPc, 12)).coerceAtLeast(keyPc)
+            return Scales.rows(scale, keyPc, tonic, 1, true)
+        }
     }
 }

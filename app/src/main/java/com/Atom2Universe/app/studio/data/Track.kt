@@ -56,6 +56,8 @@ data class Track(
     val padSize: PadSize = PadSize.NORMAL,
     val padPlayMode: PadPlayMode = PadPlayMode.DRIVE,
     val synthBank: SynthBank = SynthBank.STUDIO,
+    val chipProgramAssigned: Boolean = kind == TrackKind.SYNTH && (synthBank != SynthBank.STUDIO || program != 0),
+    val chipSmoothBass: Boolean = false,
 ) {
     val melodic: Boolean get() = kind != TrackKind.DRUM
 

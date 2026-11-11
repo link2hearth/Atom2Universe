@@ -2,9 +2,12 @@ package com.Atom2Universe.app.studio
 
 import com.Atom2Universe.app.studio.data.StudioProject
 import com.Atom2Universe.app.studio.data.StudioSession
+import com.Atom2Universe.app.studio.data.Track
 import com.Atom2Universe.app.studio.engine.Inst
 import com.Atom2Universe.app.studio.engine.Note
 import com.Atom2Universe.app.studio.engine.StudioEngine
+import com.Atom2Universe.app.studio.engine.SynthBank
+import com.Atom2Universe.app.studio.music.Scales
 import com.Atom2Universe.app.studio.music.StudioRegister
 import com.Atom2Universe.app.studio.music.TapTempo
 import com.Atom2Universe.app.studio.ui.gridStep
@@ -13,6 +16,34 @@ import org.junit.Test
 
 class StudioEditingTest {
     private fun session() = StudioSession(StudioEngine(48_000), StudioProject.blank())
+
+    @Test fun emptyChipKeyboardsOpenInTheSameRegisterAsTheAuditionForEveryKey() {
+        val piano = Track.synth(7).copy(synthBank = SynthBank.SCC)
+        val bass = piano.copy(synthBank = SynthBank.FAMICOM, program = 32)
+        val r = StudioRegister(360, 740)
+        for ((track, expectedC) in listOf(piano to 60, bass to 36)) {
+            val octave = StudioRegister.chipOctave(track)
+            r.setLow(108)
+            r.focus(emptyList(), octave)
+            for (key in 0..11) {
+                val tonic = expectedC + key
+                assertTrue(tonic in r.low..r.high)
+                assertEquals(tonic, StudioRegister.padPitches(emptyList(), Scales.MAJOR, key, octave).first())
+            }
+        }
+        r.focus(emptyList(), StudioRegister.chipOctave(Track.synth(7)))
+        assertEquals(36, r.low)
+    }
+
+    @Test fun existingChipNotesKeepTheirRegisterAndThePadStopsAtMidi127() {
+        val notes = listOf(Note(0, 124), Note(4, 127))
+        val r = StudioRegister(360, 740)
+        r.focus(notes, 36)
+        assertTrue(notes.all { it.pitch in r.low..r.high })
+        val pad = StudioRegister.padPitches(notes, Scales.CHROMATIC, 9, 36)
+        assertTrue(notes.all { it.pitch in pad })
+        assertEquals(127, pad.last())
+    }
 
     @Test fun scrollAndRevealCoverEveryMidiPitchOnPhoneAndTablet() {
         for (width in listOf(360, 870)) {

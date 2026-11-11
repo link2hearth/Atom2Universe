@@ -40,7 +40,7 @@ object Scales {
      */
     fun rows(scale: Scale, keyPc: Int, low: Int, octaves: Int, locked: Boolean): IntArray {
         val out = ArrayList<Int>()
-        for (p in low..low + 12 * octaves) if (!locked || contains(scale, keyPc, p)) out += p
+        for (p in low.coerceAtLeast(0)..minOf(127, low + 12 * octaves)) if (!locked || contains(scale, keyPc, p)) out += p
         return out.toIntArray()
     }
 }

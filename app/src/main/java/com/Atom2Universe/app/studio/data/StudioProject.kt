@@ -13,6 +13,7 @@ import com.Atom2Universe.app.studio.engine.TrackKind
 import com.Atom2Universe.app.studio.engine.SynthBank
 import com.Atom2Universe.app.studio.engine.TrackMix
 import com.Atom2Universe.app.studio.music.Style
+import com.Atom2Universe.app.studio.music.StudioRegister
 import com.Atom2Universe.app.studio.music.Styles
 import org.json.JSONArray
 import org.json.JSONException
@@ -287,6 +288,8 @@ object StudioProjectCodec {
             .put("voice", t.voice)
             .also { o ->
                 if (t.kind == TrackKind.SYNTH && t.synthBank != SynthBank.STUDIO) o.put("synthBank", t.synthBank.name)
+                if (t.chipProgramAssigned) o.put("chipProgramAssigned", true)
+                if (t.chipSmoothBass) o.put("chipSmoothBass", true)
                 if (t.padOrder != Int.MAX_VALUE) o.put("padOrder", t.padOrder)
                 if (t.melodic && t.padPlayMode != PadPlayMode.DRIVE) o.put("padPlayMode", t.padPlayMode.key)
                 when (t.padSize) {
@@ -349,6 +352,8 @@ object StudioProjectCodec {
             synthBank = if (kind == TrackKind.SYNTH) {
                 SynthBank.entries.firstOrNull { it.name == o.optString("synthBank") } ?: SynthBank.STUDIO
             } else SynthBank.STUDIO,
+            chipProgramAssigned = kind == TrackKind.SYNTH && o.optBoolean("chipProgramAssigned", o.has("synthBank") || o.optInt("program") != 0),
+            chipSmoothBass = kind == TrackKind.SYNTH && o.optBoolean("chipSmoothBass"),
             bank = o.optInt("bank", 0).coerceIn(0, 16383),
             program = o.optInt("program", 0).coerceIn(0, 127),
             arpMode = arp.getInt(0).coerceIn(0, 4),
@@ -586,7 +591,7 @@ class StudioSession(
         engine.applyMix(t.id, t.mix)
         engine.synthOf(t.id)?.apply {
             patch = t.synth
-            selectBank(t.synthBank, t.program, project.midiChannel(t.id))
+            selectBank(t.synthBank, t.program, project.midiChannel(t.id), t.chipSmoothBass)
         }
         engine.setArp(t.id, t.arpMode, ARP_DIVISIONS[t.arpRate.coerceIn(0, 2)], t.arpOctaves)
         engine.setVoice(t.id, t.kit, t.tune, t.length)
@@ -703,11 +708,19 @@ class StudioSession(
     }
 
     fun setSynthBank(id: Int, bank: SynthBank) {
-        editSynthSound(id) { it.copy(synthBank = bank) }
+        editSynthSound(id) { t ->
+            if (bank != SynthBank.STUDIO && !t.chipProgramAssigned) {
+                t.copy(synthBank = bank, program = SynthPresets.chipProgram(t.synth), chipProgramAssigned = true)
+            } else t.copy(synthBank = bank)
+        }
     }
 
     fun setChipProgram(id: Int, program: Int) {
-        editSynthSound(id) { if (it.synthBank == SynthBank.STUDIO) it else it.copy(program = program.coerceIn(0, 127)) }
+        editSynthSound(id) { if (it.synthBank == SynthBank.STUDIO) it else it.copy(program = program.coerceIn(0, 127), chipProgramAssigned = true) }
+    }
+
+    fun setChipSmoothBass(id: Int, enabled: Boolean) {
+        editSynthSound(id) { if (it.synthBank == SynthBank.STUDIO) it else it.copy(chipSmoothBass = enabled) }
     }
 
     private inline fun editSynthSound(id: Int, edit: (Track) -> Track) {
@@ -1269,11 +1282,28 @@ class StudioSession(
         return next
     }
 
-    /** Hauteur d'une nouvelle note posée depuis la grille rythmique : la tonique, dans l'octave des notes déjà là. */
+    /** Une attaque est prioritaire sur une note tenue. Une case libre fait entendre la note que le prochain appui y pose. */
+    internal fun rhythmPreviewPitch(track: Int, step: Int): Int {
+        val notes = notesOf(track)
+        return notes.firstOrNull { it.step == step }?.pitch
+            ?: notes.firstOrNull { step > it.step && step < it.step + it.length }?.pitch
+            ?: defaultPitch(track)
+    }
+
     private fun defaultPitch(track: Int): Int {
         val notes = notesOf(track)
-        val octave = if (notes.isEmpty()) 24 else notes.minOf { it.pitch } / 12 * 12
-        return octave + project.keyPc
+        val chipOctave = StudioRegister.chipOctave(project.track(track))
+        val octave = when {
+            notes.isEmpty() -> chipOctave ?: 24
+            chipOctave == null -> notes.minOf { it.pitch } / 12 * 12
+            else -> {
+                val counts = IntArray(11)
+                for (n in notes) counts[n.pitch / 12]++
+                counts.indices.maxWith(compareBy<Int> { counts[it] }.thenBy { -abs(it * 12 - chipOctave) }) * 12
+            }
+        }
+        val pitch = octave + project.keyPc
+        return if (pitch <= 127) pitch else pitch - 12
     }
 
     // ---- Notes d'une piste mélodique ---------------------------------------------------------------------------

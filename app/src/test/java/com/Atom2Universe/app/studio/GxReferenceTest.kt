@@ -1,7 +1,9 @@
 package com.Atom2Universe.app.studio
 
 import com.Atom2Universe.app.studio.dsp.GxSynth
+import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import kotlin.math.PI
 import kotlin.math.cos
@@ -13,6 +15,37 @@ import kotlin.math.sqrt
 class GxReferenceTest {
     private val rate = 48000
     private val programs = listOf(0, 24, 32, 40, 80) // Piano, guitare nylon, basse, violon, lead carré.
+
+    @Test fun softBassSuppressesTheTwoMeasuredImagesOnLowA() {
+        val pitch = 261.63 * 2.0.pow((33 - 60) / 12.0 - 14.0 / 1200.0)
+        val plain = GxSynth(rate)
+        val soft = GxSynth(rate).also { it.smoothBass = true }
+        fun render(synth: GxSynth): FloatArray {
+            synth.select(false, 0)
+            synth.noteOn(33, 1f)
+            return FloatArray(rate / 2).also { synth.renderMono(it, it.size) }
+        }
+        val a = render(plain)
+        val b = render(soft)
+        val fundamental = magnitude(a, pitch)
+        assertEquals(1.0, magnitude(b, pitch) / fundamental, 0.01)
+        for (harmonic in listOf(31, 33)) {
+            val image = magnitude(a, pitch * harmonic)
+            assertTrue("La référence doit contenir H$harmonic", image / fundamental > 0.02)
+            val ratio = magnitude(b, pitch * harmonic) / image
+            assertTrue("H$harmonic après lissage : $ratio", ratio < 0.125)
+        }
+        // Le glissé ne retrigger pas la note. À do4 et au-dessus la phase et les échantillons redeviennent identiques.
+        for (note in listOf(60, 81)) {
+            plain.glide(if (note == 60) 33 else 60, note, 1f)
+            soft.glide(if (note == 60) 33 else 60, note, 1f)
+            plain.renderMono(a, rate / 20)
+            soft.renderMono(b, rate / 20)
+            plain.renderMono(a, a.size)
+            soft.renderMono(b, b.size)
+            assertArrayEquals(a, b, 0f)
+        }
+    }
 
     @Test fun timbresEtNiveauxRelatifsDuTemoinScc() = checkBank(
         false,

@@ -902,12 +902,9 @@ class StudioActivity : AudioThemedActivity() {
      * Les niveaux d'une case à notes : une octave de la gamme, de tonique à tonique, dans le registre de la piste (celui de
      * ses notes ; sans note, l'octave du milieu pour un synthé de mélodie).
      */
-    private fun padLevels(trackId: Int): IntArray {
+    private fun padLevels(track: Track): IntArray {
         val p = session.project
-        val notes = session.notesOf(trackId)
-        val low = notes.minOfOrNull { it.pitch } ?: 48
-        val tonic = (low - Math.floorMod(low - p.keyPc, 12)).coerceIn(p.keyPc, 108 + p.keyPc)
-        return Scales.rows(Scales.byId(p.scaleId), p.keyPc, tonic, 1, true)
+        return StudioRegister.padPitches(session.notesOf(track.id), Scales.byId(p.scaleId), p.keyPc, StudioRegister.chipOctave(track))
     }
 
     /** Les cases : une par piste visible (batterie ou notes), dans l'ordre des pistes. */
@@ -915,7 +912,7 @@ class StudioActivity : AudioThemedActivity() {
         if (!::pads.isInitialized) return
         pads.keyPc = session.project.keyPc
         pads.tiles = session.padTracks().filterNot { it.hidden }.map { t ->
-            PadsView.Tile(t.id, trackColor(t), InstrumentIcons.of(t), if (t.melodic) padLevels(t.id) else null, t.padSize, trackName(t), t.padPlayMode)
+            PadsView.Tile(t.id, trackColor(t), InstrumentIcons.of(t), if (t.melodic) padLevels(t) else null, t.padSize, trackName(t), t.padPlayMode)
         }
     }
 
@@ -1542,6 +1539,7 @@ class StudioActivity : AudioThemedActivity() {
                 roll.invalidate()
                 // La piste retrouve son niveau normal une fois la note éteinte (pas pendant sa queue)
                 if (thereminTrack >= 0) resetAfterRelease(thereminTrack)
+                thereminTrack = -1
             }
         }
     }
@@ -1864,7 +1862,7 @@ class StudioActivity : AudioThemedActivity() {
                         session.setSynthBank(t.id, bank)
                         scheduleSave()
                         showSoundPanel(anchor, t.id)
-                        if (!playing) auditionSynthTrack(t.id)
+                        refreshChipKeyboard(t.id)
                     }
                 }
             }, wrap())
@@ -1892,7 +1890,7 @@ class StudioActivity : AudioThemedActivity() {
             session.setChipProgram(t.id, program)
             scheduleSave()
             refreshPick()
-            if (!playing) auditionSynthTrack(t.id)
+            refreshChipKeyboard(t.id)
         }
         pick.setOnClickListener {
             if (chipSynth) {
@@ -1929,6 +1927,16 @@ class StudioActivity : AudioThemedActivity() {
             programRow.addView(pick, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
             programRow.addView(step(R.string.studio_tempo_more, R.string.studio_program_next, 1))
             box.addView(programRow, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(8) })
+            box.addView(SwitchCompat(this).apply {
+                setText(R.string.studio_chip_smooth_bass)
+                minimumHeight = dp(48)
+                switchPadding = dp(8)
+                isChecked = t.chipSmoothBass
+                setOnCheckedChangeListener { _, checked ->
+                    session.setChipSmoothBass(t.id, checked)
+                    scheduleSave()
+                }
+            }, wrap())
         } else if (studioSynth) {
             box.addView(FlowRow(this).apply {
                 hGap = dp(8)
@@ -2068,10 +2076,19 @@ class StudioActivity : AudioThemedActivity() {
     /** La note précédente ne doit pas écourter le son suivant quand on parcourt rapidement la banque. */
     private val presetReleases = mutableMapOf<Int, Runnable>()
 
-    private fun auditionSynthTrack(id: Int) {
+    private fun refreshChipKeyboard(id: Int) {
         val t = session.project.trackOrNull(id) ?: return
-        if (t.synthBank == SynthBank.STUDIO) auditionPreset(id, t.synth)
-        else auditionNote(id, if (t.program in 32..39) 36 else 60, 500L)
+        // Garder les touches sous les doigts et la note tenue pendant un changement de son.
+        if (id in keyboardTracks.values || padFingers.containsKey(id) || id == thereminTrack || midiLights[id]?.any { it > 0 } == true) return
+        val octave = StudioRegister.chipOctave(t)
+        if (id == selectedTrack && !manualRegister && octave != null && session.notesOf(id).isEmpty()) {
+            register.setLow(octave)
+            refreshRoll()
+        }
+        if (padsPane.visibility == View.VISIBLE) refreshPads()
+        if (!playing) {
+            if (octave == null) auditionPreset(id, t.synth) else auditionNote(id, octave, 500L)
+        }
     }
 
     private fun auditionPreset(track: Int, patch: SynthPatch) {
@@ -2289,9 +2306,7 @@ class StudioActivity : AudioThemedActivity() {
         if (t.muted) return
         val v = session.velocity(trackId, step).takeIf { it > 0f } ?: 1f
         if (t.melodic) {
-            val pitch = session.project.pattern.notes.firstOrNull { it.track == trackId && it.step == step }?.pitch
-                ?: (24 + session.project.keyPc)
-            previewPitch(pitch, v, track = trackId)
+            previewPitch(session.rhythmPreviewPitch(trackId, step), v, track = trackId)
         } else {
             val info = session.stepInfo(trackId, step)
             engine.trigger(trackId, info?.pitch ?: 60, v, (info?.hold ?: 100) / 100f, recordHit = false)
@@ -2524,7 +2539,7 @@ class StudioActivity : AudioThemedActivity() {
 
     private fun focusRegister() {
         manualRegister = false
-        register.focus(session.notesOf(selectedTrack))
+        register.focus(session.notesOf(selectedTrack), curTrack()?.let { StudioRegister.chipOctave(it) })
     }
 
     private fun shiftRegister(keys: Int) {

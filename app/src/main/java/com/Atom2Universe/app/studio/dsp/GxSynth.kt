@@ -21,6 +21,14 @@ internal class GxWave(gain: Int, val octave: Int, points: ByteArray) {
         val startArea = integral[first] + (phase - first) * levels[first]
         return ((endArea - startArea) / width).toFloat()
     }
+
+    fun smoothSample(phase: Double, width: Double): Float {
+        // Relier les centres des paliers garde la phase de la fondamentale lors du fondu.
+        val midpoint = phase + width * 0.5 + 31.5
+        val cell = midpoint.toInt()
+        val start = levels[cell and 31]
+        return (start + (midpoint - cell) * (levels[(cell + 1) and 31] - start)).toFloat()
+    }
 }
 
 /** Durées en trames de sortie (également à 48 kHz). Un maintien sans extinction a une durée nulle. */
@@ -32,6 +40,8 @@ internal class GxEnvelope(
 class GxSynth(sampleRate: Int, voiceCount: Int = 8, midiChannel: Int = 0) : Instrument(sampleRate) {
     private val voices = Array(voiceCount.coerceAtLeast(1)) { Voice(it + 1) }
     @Volatile var midiChannel: Int = midiChannel
+    @Volatile var smoothBass: Boolean = false
+    private val smoothingStep = 1f / (sampleRate * 0.005f).coerceAtLeast(1f)
     private val channelTuning = DoubleArray(16) { channel ->
         // Profil « Max 14cent » : la même piste garde son propre décalage pour toutes ses notes.
         val cents = 3 * (channel % 4) + channel / 4 - 14
@@ -111,6 +121,10 @@ class GxSynth(sampleRate: Int, voiceCount: Int = 8, midiChannel: Int = 0) : Inst
         private var targetWidth = 0.0
         private var widthDelta = 0.0
         private var glideLeft = 0
+        private var smoothMix = 0f
+        private var bassWeight = 0f
+        private var upperBassWidth = 0.0
+        private var bassWidthSpan = 0.0
         private var velocity = 0f
         private var stage = Stage.HOLD
         private var increment = 0
@@ -146,6 +160,10 @@ class GxSynth(sampleRate: Int, voiceCount: Int = 8, midiChannel: Int = 0) : Inst
             active = true
             velocity = strength
             width = phaseWidth(note)
+            upperBassWidth = phaseWidth(60)
+            bassWidthSpan = upperBassWidth - phaseWidth(48)
+            bassWeight = bassWeightAt(width)
+            smoothMix = if (smoothBass) 1f else 0f
             phase = 0.0
             glideLeft = 0
             sustain = env.sustain shl 14
@@ -177,6 +195,9 @@ class GxSynth(sampleRate: Int, voiceCount: Int = 8, midiChannel: Int = 0) : Inst
             glideLeft = glideFrames
         }
 
+        private fun bassWeightAt(step: Double): Float =
+            ((upperBassWidth - step) / bassWidthSpan).coerceIn(0.0, 1.0).toFloat()
+
         fun release() {
             held = false
             if (level <= 0 || env.release == 0) { stop(); return }
@@ -191,6 +212,7 @@ class GxSynth(sampleRate: Int, voiceCount: Int = 8, midiChannel: Int = 0) : Inst
         }
 
         fun render(out: FloatArray, count: Int) {
+            val smoothTarget = if (smoothBass) 1f else 0f
             for (i in 0 until count) {
                 when (stage) {
                     Stage.ATTACK -> {
@@ -209,8 +231,22 @@ class GxSynth(sampleRate: Int, voiceCount: Int = 8, midiChannel: Int = 0) : Inst
                 if (glideLeft > 0) {
                     width += widthDelta
                     if (--glideLeft == 0) width = targetWidth
+                    bassWeight = bassWeightAt(width)
                 }
-                val signal = if (noiseProgram) noiseLevel else shape.sample(phase, width)
+                if (smoothMix != smoothTarget) {
+                    smoothMix = if (smoothTarget > smoothMix) (smoothMix + smoothingStep).coerceAtMost(1f)
+                        else (smoothMix - smoothingStep).coerceAtLeast(0f)
+                }
+                val blend = smoothMix * bassWeight
+                val signal = when {
+                    noiseProgram -> noiseLevel
+                    blend <= 0f -> shape.sample(phase, width)
+                    blend >= 1f -> shape.smoothSample(phase, width)
+                    else -> {
+                        val normal = shape.sample(phase, width)
+                        normal + (shape.smoothSample(phase, width) - normal) * blend
+                    }
+                }
                 out[i] += signal * (level ushr 14) * (1f / 65536f) * velocity
                 phase += width
                 if (phase >= 32.0) {
