@@ -10,6 +10,7 @@ import android.util.TypedValue
 import android.view.HapticFeedbackConstants
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewConfiguration
 
 /**
  * Les pads, à jouer au doigt : une grande case par piste (sa couleur, son dessin), plusieurs doigts à la fois.
@@ -26,14 +27,38 @@ import android.view.View
 class PadsView(context: Context) : View(context) {
 
     /** Une case : la piste, sa couleur, son dessin, et pour une piste à notes ses niveaux (hauteurs MIDI, du grave à l'aigu). */
-    class Tile(val track: Int, val color: Int, val icon: Int, val levels: IntArray? = null)
+    class Tile(val track: Int, val color: Int, val icon: Int, val levels: IntArray? = null, val wide: Boolean = false)
 
     var tiles: List<Tile> = emptyList()
         set(v) {
-            releaseAll()
+            val sameLayout = field.size == v.size && field.indices.all { i ->
+                field[i].track == v[i].track && field[i].wide == v[i].wide
+            }
+            if (!sameLayout) {
+                releaseAll()
+                glow.clear()
+            } else if (held.isNotEmpty()) {
+                // Un rafraîchissement du mixeur ou de la prise peut reconstruire les objets sans changer les touches.
+                for (pointer in held.keys.toList()) {
+                    val h = held[pointer] ?: continue
+                    val levels = v[h.tile].levels
+                    if (levels == null && h.pitch >= 0 || levels != null && h.pitch !in levels) lift(pointer)
+                }
+            }
             field = v
+            if (!sameLayout) rebuildLayout()
             invalidate()
         }
+
+    var editing = false
+        set(value) {
+            if (field == value) return
+            releaseAll()
+            field = value
+            invalidate()
+        }
+    var onReorder: ((fromTrack: Int, toTrack: Int) -> Unit)? = null
+    var onResize: ((track: Int) -> Unit)? = null
 
     /** La tonique (0 = do) et les noms des notes : les niveaux de la tonique portent leur nom. */
     var keyPc: Int = 0
@@ -67,56 +92,91 @@ class PadsView(context: Context) : View(context) {
     }
     private val rect = RectF()
     private val band = RectF()
-
-
+    private val touchSlop = ViewConfiguration.get(context).scaledTouchSlop
+    private var areas = emptyArray<RectF>()
+    private var editPointer = -1
+    private var source = -1
+    private var target = -1
+    private var startX = 0f
+    private var startY = 0f
+    private var fingerX = 0f
+    private var fingerY = 0f
+    private var dragging = false
+    private var interrupted = false
+    private var preview: Array<RectF>? = null
 
     private fun dp(v: Float) = v * resources.displayMetrics.density
 
-    /** Colonnes et lignes : la grille la plus proche du carré pour [n] cases dans la vue. */
-    private fun grid(n: Int): Pair<Int, Int> {
-        if (n <= 0 || width == 0 || height == 0) return 1 to 1
-        var best = 1
+    /** Le placement suit l'ordre des pistes ; une grande case occupe deux colonnes sur la même ligne. */
+    private fun layoutOf(order: List<Int>): Array<RectF> {
+        if (order.isEmpty() || width <= 0 || height <= 0) return emptyArray()
+        val units = order.size + order.count { tiles[it].wide }
+        val minColumns = if (units > order.size) 2 else 1
+        var bestColumns = minColumns
+        var bestRows = 1
         var bestScore = Float.MAX_VALUE
-        for (cols in 1..n) {
-            val rows = (n + cols - 1) / cols
+        for (cols in minColumns..units) {
+            var rows = 1
+            var used = 0
+            for (i in order) {
+                val span = if (tiles[i].wide) 2 else 1
+                if (used + span > cols) {
+                    rows++
+                    used = 0
+                }
+                used += span
+            }
             val w = width / cols.toFloat()
             val h = height / rows.toFloat()
-            // Le meilleur : des cases presque carrées et le moins de cases vides
-            val score = maxOf(w / h, h / w) + (cols * rows - n) * 0.15f
+            val score = maxOf(w / h, h / w) + (cols * rows - units) * 0.15f
             if (score < bestScore) {
                 bestScore = score
-                best = cols
+                bestColumns = cols
+                bestRows = rows
             }
         }
-        return best to (n + best - 1) / best
+        val cellWidth = width.toFloat() / bestColumns
+        val cellHeight = height.toFloat() / bestRows
+        val result = Array(order.size) { RectF() }
+        var col = 0
+        var row = 0
+        for (i in order) {
+            val span = if (tiles[i].wide) 2 else 1
+            if (col + span > bestColumns) {
+                row++
+                col = 0
+            }
+            result[i].set(col * cellWidth, row * cellHeight, (col + span) * cellWidth, (row + 1) * cellHeight)
+            col += span
+        }
+        return result
+    }
+
+    private fun rebuildLayout() {
+        areas = layoutOf(tiles.indices.toList())
+    }
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        releaseAll()
+        rebuildLayout()
     }
 
     private fun tileRect(i: Int, out: RectF) {
-        val (cols, rows) = grid(tiles.size)
-        val cw = width / cols.toFloat()
-        val ch = height / rows.toFloat()
-        val gap = dp(6f)
-        val c = i % cols
-        val r = i / cols
-        out.set(c * cw + gap / 2, r * ch + gap / 2, (c + 1) * cw - gap / 2, (r + 1) * ch - gap / 2)
+        out.set((preview ?: areas)[i])
+        val gap = minOf(dp(3f), out.width() / 4f, out.height() / 4f)
+        out.inset(gap, gap)
     }
 
-    /** La case et la note sous un point (-1, -1 : aucune ; note -1 : une case de batterie). */
-    private fun hit(x: Float, y: Float): Hold? {
-        val n = tiles.size
-        if (n == 0) return null
-        val (cols, rows) = grid(n)
-        val c = (x / (width / cols.toFloat())).toInt()
-        val r = (y / (height / rows.toFloat())).toInt()
-        if (c !in 0 until cols || r !in 0 until rows) return null
-        val i = r * cols + c
-        if (i >= n) return null
-        val levels = tiles[i].levels ?: return Hold(i, -1)
+    private fun indexAt(x: Float, y: Float) = areas.indexOfFirst { it.contains(x, y) }
+
+    private fun pitchAt(i: Int, x: Float): Int? {
+        val levels = tiles[i].levels ?: return -1
         if (levels.isEmpty()) return null
         tileRect(i, rect)
         // Le grave à gauche, l'aigu à droite
         val k = ((x - rect.left) / rect.width() * levels.size).toInt().coerceIn(0, levels.size - 1)
-        return Hold(i, levels[k], y)
+        return levels[k]
     }
 
     /** L'effet d'un doigt sur une touche : la distance parcourue depuis l'endroit où il s'est posé (à fond au tiers de la touche). */
@@ -130,7 +190,7 @@ class PadsView(context: Context) : View(context) {
     private fun keysTop(r: RectF): Float = r.top + minOf(dp(30f), r.height() * 0.15f)
 
     override fun onDraw(canvas: Canvas) {
-        val n = tiles.size
+        val n = areas.size
         if (n == 0) return
         var animating = false
         for (i in 0 until n) {
@@ -147,12 +207,54 @@ class PadsView(context: Context) : View(context) {
             } else {
                 drawMelodic(canvas, i, t, levels)
             }
+            if (editing) drawEditControls(canvas, i, t)
             if (g > 0f) {
                 glow[i] = (g - 0.08f).coerceAtLeast(0f)
                 animating = true
             }
         }
+        if (dragging) drawDragIcon(canvas)
         if (animating) postInvalidateOnAnimation()
+    }
+
+    /** La poignée montre le sens du prochain changement de largeur. Le contour marque la place du pad déplacé. */
+    private fun drawEditControls(canvas: Canvas, i: Int, tile: Tile) {
+        if (dragging && i == source) {
+            paint.color = Color.argb(145, 15, 16, 24)
+            canvas.drawRoundRect(rect, dp(16f), dp(16f), paint)
+            paint.style = Paint.Style.STROKE
+            paint.strokeWidth = dp(2f)
+            paint.color = if (target >= 0) Color.WHITE else Color.GRAY
+            canvas.drawRoundRect(rect, dp(16f), dp(16f), paint)
+            paint.style = Paint.Style.FILL
+        }
+        val radius = minOf(dp(14f), rect.width() / 4f, rect.height() / 4f)
+        val x = rect.right - radius - dp(4f)
+        val y = rect.top + radius + dp(4f)
+        paint.color = Color.argb(158, 20, 20, 28)
+        canvas.drawCircle(x, y, radius, paint)
+        paint.color = Color.WHITE
+        paint.strokeWidth = dp(1.5f)
+        for (side in -1..1 step 2) {
+            val outer = x + side * radius * 0.58f
+            val inner = x + side * radius * 0.10f
+            val tip = if (tile.wide) inner else outer
+            val tail = if (tile.wide) outer else inner
+            val wing = tip + (tail - tip) * 0.60f
+            canvas.drawLine(tail, y, tip, y, paint)
+            canvas.drawLine(wing, y - radius * 0.24f, tip, y, paint)
+            canvas.drawLine(wing, y + radius * 0.24f, tip, y, paint)
+        }
+    }
+
+    private fun drawDragIcon(canvas: Canvas) {
+        val tile = tiles.getOrNull(source) ?: return
+        val radius = minOf(dp(20f), width / 4f, height / 4f)
+        val x = fingerX.coerceIn(radius, width - radius)
+        val y = (fingerY - dp(28f)).coerceIn(radius, height - radius)
+        paint.color = blend(base, tile.color, 0.85f)
+        canvas.drawCircle(x, y, radius, paint)
+        InstrumentIcons.draw(canvas, tile.icon, x, y, radius, Color.WHITE)
     }
 
     /** Une case à notes : une touche debout par note, la tonique un peu plus claire (avec son nom), la touche tenue allumée. */
@@ -216,15 +318,98 @@ class PadsView(context: Context) : View(context) {
         if (h.pitch < 0) onUp?.invoke(t.track) else onNoteUp?.invoke(t.track, h.pitch)
     }
 
+    private fun isResizeHandle(i: Int, x: Float, y: Float): Boolean {
+        val area = areas[i]
+        return area.contains(x, y) && x >= area.right - dp(48f) && y < area.top + dp(48f)
+    }
+
+    private fun moveEdit(x: Float, y: Float) {
+        fingerX = x
+        fingerY = y
+        if (!dragging) {
+            val dx = x - startX
+            val dy = y - startY
+            if (dx * dx + dy * dy <= touchSlop * touchSlop) return
+            dragging = true
+        }
+        // Les zones de dépôt restent stables sous le doigt pendant que les autres pads montrent le résultat.
+        var next = indexAt(x, y)
+        val last = areas.last()
+        if (next < 0 && x >= last.right && x < width && y >= last.top && y < height) next = areas.lastIndex
+        if (next != target) {
+            target = next
+            preview = if (next < 0 || next == source) null else {
+                val order = tiles.indices.toMutableList()
+                order.add(next, order.removeAt(source))
+                layoutOf(order)
+            }
+        }
+        invalidate()
+    }
+
+    private fun clearEdit() {
+        editPointer = -1
+        source = -1
+        target = -1
+        dragging = false
+        preview = null
+    }
+
+    private fun touchEdit(event: MotionEvent) {
+        when (event.actionMasked) {
+            MotionEvent.ACTION_DOWN -> {
+                parent?.requestDisallowInterceptTouchEvent(true)
+                startX = event.x
+                startY = event.y
+                source = indexAt(startX, startY)
+                target = source
+                if (source >= 0) editPointer = event.getPointerId(0)
+            }
+            MotionEvent.ACTION_MOVE -> {
+                if (editPointer < 0) return
+                val i = event.findPointerIndex(editPointer)
+                if (i >= 0) moveEdit(event.getX(i), event.getY(i))
+            }
+            MotionEvent.ACTION_POINTER_UP, MotionEvent.ACTION_UP -> {
+                val i = event.actionIndex
+                if (event.getPointerId(i) != editPointer) return
+                val x = event.getX(i)
+                val y = event.getY(i)
+                moveEdit(x, y)
+                val track = tiles[source].track
+                val destination = if (dragging && target >= 0 && target != source) tiles[target].track else null
+                val resize = !dragging && isResizeHandle(source, startX, startY) && isResizeHandle(source, x, y)
+                clearEdit()
+                if (destination != null) {
+                    performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                    onReorder?.invoke(track, destination)
+                } else if (resize) {
+                    performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                    onResize?.invoke(track)
+                }
+                invalidate()
+            }
+            MotionEvent.ACTION_CANCEL -> releaseAll()
+        }
+    }
+
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (event.actionMasked == MotionEvent.ACTION_DOWN) interrupted = false
+        if (interrupted) return true
+        if (editing) {
+            touchEdit(event)
+            return true
+        }
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN, MotionEvent.ACTION_POINTER_DOWN -> {
                 parent?.requestDisallowInterceptTouchEvent(true)
                 val idx = event.actionIndex
-                val h = hit(event.getX(idx), event.getY(idx))
-                if (h != null) {
+                val x = event.getX(idx)
+                val tile = indexAt(x, event.getY(idx))
+                val pitch = if (tile >= 0) pitchAt(tile, x) else null
+                if (pitch != null) {
                     performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-                    press(event.getPointerId(idx), h)
+                    press(event.getPointerId(idx), Hold(tile, pitch, event.getY(idx)))
                 }
                 invalidate()
             }
@@ -232,24 +417,27 @@ class PadsView(context: Context) : View(context) {
                 // Un doigt qui glisse vers une autre case (ou un autre niveau) lâche l'ancienne et joue la nouvelle
                 for (k in 0 until event.pointerCount) {
                     val id = event.getPointerId(k)
+                    val x = event.getX(k)
                     val y = event.getY(k)
-                    val h = hit(event.getX(k), y)
+                    val tile = indexAt(x, y)
+                    val pitch = if (tile >= 0) pitchAt(tile, x) else null
                     val was = held[id]
-                    if (h != null && was != null && h.tile == was.tile && h.pitch == was.pitch) {
+                    if (was != null && tile == was.tile && pitch == was.pitch) {
                         // Même touche : le doigt qui bouge distord le son
-                        if (h.pitch >= 0) {
+                        if (was.pitch >= 0) {
                             val e = effectOf(was, y)
                             if (e != was.effect) {
                                 was.effect = e
-                                onNoteEffect?.invoke(tiles[h.tile].track, e)
+                                onNoteEffect?.invoke(tiles[tile].track, e)
                                 invalidate()
                             }
                         }
                         continue
                     }
-                    if (h == null && was == null) continue
+                    if (pitch == null && was == null) continue
                     lift(id)
-                    if (h != null) {
+                    if (pitch != null) {
+                        val h = Hold(tile, pitch, y)
                         // Glisser vers une autre touche de la même case garde l'élan : la distorsion continue
                         if (was != null && was.tile == h.tile && h.pitch >= 0) {
                             h.startY = was.startY
@@ -272,8 +460,15 @@ class PadsView(context: Context) : View(context) {
 
     /** Lâche tout (doigts perdus, page quittée) : aucun roulement ni aucune note ne reste coincé. */
     fun releaseAll() {
+        interrupted = true
+        clearEdit()
         for (id in held.keys.toList()) lift(id)
         invalidate()
+    }
+
+    override fun onDetachedFromWindow() {
+        releaseAll()
+        super.onDetachedFromWindow()
     }
 
     private fun blend(a: Int, b: Int, t: Float): Int {

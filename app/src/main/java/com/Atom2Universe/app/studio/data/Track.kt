@@ -40,6 +40,8 @@ data class Track(
     val length: Int = 100,
     /** Le kit de batterie du soundfont (numéro de programme de la banque 128) qui remplace le son fabriqué ; -1 : aucun. */
     val sfKit: Int = -1,
+    val padOrder: Int = Int.MAX_VALUE,
+    val padWide: Boolean = false,
 ) {
     val melodic: Boolean get() = kind != TrackKind.DRUM
 

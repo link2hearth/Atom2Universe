@@ -254,6 +254,26 @@ class StudioTracksTest {
     }
 
     @Test
+    fun padOrderAndWidthAreLocalToTheSongAndIndependentOfTheMixer() {
+        val session = StudioSession(StudioEngine(rate), StudioProject.blank())
+        val trackIds = session.project.tracks.map { it.id }
+        val first = trackIds.first()
+        val last = trackIds.last()
+        session.movePad(last, first)
+        session.resizePad(last)
+        assertEquals(last, session.padTracks().first().id)
+        assertEquals(trackIds, session.project.tracks.map { it.id })
+        session.undo()
+        assertFalse(session.padTracks().first().padWide)
+        session.redo()
+        val restored = StudioProjectCodec.decode(StudioProjectCodec.encode(session.project))!!
+        assertTrue(restored.tracks.minBy { it.padOrder }.let { it.id == last && it.padWide })
+        session.setHidden(last, true)
+        session.setHidden(last, false)
+        assertEquals(last, session.padTracks().first().id)
+    }
+
+    @Test
     fun tracksSurviveTheCodec() {
         val s = session()
         val second = s.addTrack(TrackKind.SYNTH)

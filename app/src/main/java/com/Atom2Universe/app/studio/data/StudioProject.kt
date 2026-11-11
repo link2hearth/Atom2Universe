@@ -273,6 +273,10 @@ object StudioProjectCodec {
             .put("id", t.id)
             .put("kind", t.kind)
             .put("voice", t.voice)
+            .also { o ->
+                if (t.padOrder != Int.MAX_VALUE) o.put("padOrder", t.padOrder)
+                if (t.padWide) o.put("padWide", true)
+            }
             .put("hidden", t.hidden)
             .put("muted", t.muted)
             .put("solo", t.solo)
@@ -313,6 +317,8 @@ object StudioProjectCodec {
                 filter = a.getDouble(6).toFloat().coerceIn(-1f, 1f),
                 pump = a.optDouble(7, 0.0).toFloat().coerceIn(0f, 1f),
             ),
+            padOrder = o.optInt("padOrder", Int.MAX_VALUE).coerceAtLeast(0),
+            padWide = o.optBoolean("padWide", false),
             hidden = o.optBoolean("hidden", false),
             muted = o.optBoolean("muted", false),
             solo = o.optBoolean("solo", false) && !o.optBoolean("hidden", false),
@@ -622,6 +628,28 @@ class StudioSession(
         list.add(to.coerceIn(0, list.size), t)
         remember()
         project = project.copy(tracks = list)
+    }
+
+    fun padTracks(): List<Track> = project.tracks.sortedBy { it.padOrder }
+
+    fun movePad(id: Int, target: Int) {
+        val order = padTracks().map { it.id }.toMutableList()
+        val to = order.indexOf(target)
+        if (id == target || to < 0 || !order.remove(id)) return
+        order.add(to, id)
+        val ranks = order.withIndex().associate { it.value to it.index }
+        closeOpen()
+        remember()
+        project = project.copy(tracks = project.tracks.map { it.copy(padOrder = ranks.getValue(it.id)) })
+        closeOpen()
+    }
+
+    fun resizePad(id: Int) {
+        val t = project.trackOrNull(id) ?: return
+        closeOpen()
+        remember()
+        project = project.withTrack(t.copy(padWide = !t.padWide))
+        closeOpen()
     }
 
     /** Choisit l'instrument d'une piste soundfont. */

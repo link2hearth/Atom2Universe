@@ -664,6 +664,10 @@ class StudioActivity : AudioThemedActivity() {
                 showPadPosition()
             }
         })
+        header.addView(outlined(R.string.studio_pad_arrange).apply {
+            isCheckable = true
+            setOnClickListener { pads.editing = isChecked }
+        })
         pane.addView(header)
         pads = PadsView(this).apply {
             noteNames = resources.getStringArray(R.array.studio_key_names).toList()
@@ -675,6 +679,16 @@ class StudioActivity : AudioThemedActivity() {
             onNoteDown = { track, pitch -> padNoteDown(track, pitch) }
             onNoteUp = { track, pitch -> padNoteUp(track, pitch) }
             onNoteEffect = { track, amount -> engine.setLiveDrive(track, amount) }
+            onReorder = { from, to ->
+                session.movePad(from, to)
+                refreshPads()
+                scheduleSave()
+            }
+            onResize = { id ->
+                session.resizePad(id)
+                refreshPads()
+                scheduleSave()
+            }
         }
         padsBody = LinearLayout(this).apply {
             isMotionEventSplittingEnabled = true
@@ -789,8 +803,8 @@ class StudioActivity : AudioThemedActivity() {
     private fun refreshPads() {
         if (!::pads.isInitialized) return
         pads.keyPc = session.project.keyPc
-        pads.tiles = visibleTracks().map { t ->
-            PadsView.Tile(t.id, trackColor(t), InstrumentIcons.of(t), if (t.melodic) padLevels(t.id) else null)
+        pads.tiles = session.padTracks().filterNot { it.hidden }.map { t ->
+            PadsView.Tile(t.id, trackColor(t), InstrumentIcons.of(t), if (t.melodic) padLevels(t.id) else null, t.padWide)
         }
     }
 
