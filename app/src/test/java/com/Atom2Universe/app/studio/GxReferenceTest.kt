@@ -38,7 +38,32 @@ class GxReferenceTest {
         }
     }
 
-    @Test fun glideFromBassRejoinsUnmodifiedTrebleInPhase() {
+    @Test fun keyboardPianosKeepTheirOwnOvertonesWithoutTheWhistleFromMiddleCUp() {
+        for (outputRate in listOf(22_050, 44_100, 48_000)) for (famicom in listOf(false, true)) {
+            val synth = GxSynth(outputRate).also { it.select(famicom, 0) }
+            for (note in listOf(60, 62, 64, 72, 84, 96, 108)) {
+                synth.clear()
+                synth.noteOn(note, 0.9f)
+                val audio = FloatArray(outputRate / 2).also { synth.renderMono(it, it.size) }
+                val pitch = 261.63 * 2.0.pow((note - 60) / 12.0 - 14.0 / 1200.0)
+                val fundamental = magnitude(audio, pitch, outputRate)
+                val label = "Famicom=$famicom, MIDI=$note, Hz=$outputRate"
+                assertTrue(label, fundamental > 50)
+                // Les répliques H31/H33 et les partiels au-delà de Nyquist se replient à la lecture.
+                val spurs = if (pitch * 3 > outputRate / 2) listOf(3, 31, 33) else listOf(31, 33)
+                for (h in spurs) {
+                    val image = magnitude(audio, pitch * h, outputRate)
+                    assertTrue("$label, H$h = ${image / fundamental}", image < fundamental * 0.001)
+                }
+                if (note <= 72) {
+                    val third = magnitude(audio, 3 * pitch, outputRate) / fundamental
+                    assertEquals(label, if (famicom) 0.112 else 0.001, third, 0.012)
+                }
+            }
+        }
+    }
+
+    @Test fun bassSofteningFadesOutOnAGlideIntoTheMiddleRegister() {
         val plain = GxSynth(rate)
         val soft = GxSynth(rate).also { it.smoothBass = true }
         val a = FloatArray(rate / 2)
@@ -98,14 +123,14 @@ class GxReferenceTest {
     }
 
     /** Projection sinusoïdale sur une fenêtre de Hann, de 120 à 320 ms après l'attaque. */
-    private fun magnitude(audio: FloatArray, frequency: Double): Double {
-        val start = rate * 12 / 100
-        val length = rate / 5
+    private fun magnitude(audio: FloatArray, frequency: Double, sampleRate: Int = rate): Double {
+        val start = sampleRate * 12 / 100
+        val length = sampleRate / 5
         var real = 0.0
         var imag = 0.0
         for (i in 0 until length) {
             val sample = audio[start + i] * (0.5 - 0.5 * cos(2 * PI * i / (length - 1)))
-            val phase = 2 * PI * frequency * i / rate
+            val phase = 2 * PI * frequency * i / sampleRate
             real += sample * cos(phase)
             imag += sample * sin(phase)
         }

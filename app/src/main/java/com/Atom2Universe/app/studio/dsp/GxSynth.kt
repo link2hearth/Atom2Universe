@@ -3,7 +3,7 @@ package com.Atom2Universe.app.studio.dsp
 import kotlin.math.roundToInt
 
 /** Un cycle SCC. GXSCC moyenne les paliers traversés pendant une trame de sortie. */
-internal class GxWave(gain: Int, val octave: Int, points: ByteArray) {
+internal class GxWave(gain: Int, val octave: Int, points: ByteArray, piano: Boolean = false) {
     // Le même facteur global pour toutes les ondes préserve les niveaux relatifs dans le mix de Studio.
     private val levels = DoubleArray(32) { points[it] * gain / 65536.0 }
     private val integral = DoubleArray(33).also {
@@ -11,6 +11,8 @@ internal class GxWave(gain: Int, val octave: Int, points: ByteArray) {
     }
     private val bass = FloatArray(CYCLE)
     private val mellow = FloatArray(CYCLE)
+    // Le piano garde les harmoniques de sa table ; dans l'aigu, on retire celles qui se replieraient.
+    private val pianoBands = if (piano) Array(6) { if (it == 0) bass else FloatArray(CYCLE) } else emptyArray()
     private var fundamental = 0f
     private var body = octaveAndTwelfth
 
@@ -19,6 +21,7 @@ internal class GxWave(gain: Int, val octave: Int, points: ByteArray) {
         // H31 et H33 sur le piano) viennent uniquement du maintien de chaque palier.
         bass.fill(levels.average().toFloat())
         mellow.fill(bass[0])
+        for (band in 1 until pianoBands.size) pianoBands[band].fill(bass[0])
         for (h in 1..16) {
             var a = 0.0
             var b = 0.0
@@ -40,6 +43,10 @@ internal class GxWave(gain: Int, val octave: Int, points: ByteArray) {
                 val partial = (a * sine[(i * h + CYCLE / 4) and MASK] + b * sine[(i * h) and MASK]).toFloat()
                 bass[i] += partial
                 mellow[i] += partial * warmth
+                for (band in 1 until pianoBands.size) {
+                    if (h > (16 shr band)) break
+                    pianoBands[band][i] += partial
+                }
             }
         }
     }
@@ -70,6 +77,19 @@ internal class GxWave(gain: Int, val octave: Int, points: ByteArray) {
         return if (presence == 0f) tone else {
             tone + fundamental * presence * (body[i] + (body[j] - body[i]) * fraction)
         }
+    }
+
+    fun pianoSample(phase: Double, width: Double, band: Int, blend: Float): Float {
+        val pos = (phase + width * 0.5) * CELL
+        val cell = pos.toInt()
+        val i = cell and MASK
+        val j = (cell + 1) and MASK
+        val fraction = (pos - cell).toFloat()
+        val richer = pianoBands[band]
+        val sample = richer[i] + (richer[j] - richer[i]) * fraction
+        if (blend == 0f) return sample
+        val leaner = pianoBands[band + 1]
+        return sample + (leaner[i] + (leaner[j] - leaner[i]) * fraction - sample) * blend
     }
 
     private companion object {
@@ -177,6 +197,8 @@ class GxSynth(sampleRate: Int, voiceCount: Int = 8, midiChannel: Int = 0) : Inst
         private var smoothMix = 0f
         private var bassWeight = 0f
         private var piano = false
+        private var pianoBand = 0
+        private var pianoBlend = 0f
         private var presence = 0f
         private var upperBassWidth = 0.0
         private var bassWidthSpan = 0.0
@@ -252,11 +274,16 @@ class GxSynth(sampleRate: Int, voiceCount: Int = 8, midiChannel: Int = 0) : Inst
         }
 
         private fun updateBass() {
-            // Toute la troisième octave utilise l'onde reconstruite. Le glissé de si3 à
-            // do4 rejoint en continu la lecture originale. Les effets bruités gardent leur source.
+            // Le traitement du grave rejoint le timbre normal entre si3 et do4.
             bassWeight = if (noiseProgram || drumFrames > 0) 0f else
                 ((upperBassWidth - width) / bassWidthSpan).coerceIn(0.0, 1.0).toFloat()
             presence = if (piano) ((1.0 - width / upperBassWidth) / 0.75).coerceIn(0.0, 1.0).toFloat() else 0f
+            if (piano) {
+                // width = 32 × fréquence / fréquence d'échantillonnage. Quand width atteint 1,
+                // H16 atteint Nyquist : la transition vers la table à 8 harmoniques est déjà finie.
+                pianoBand = Math.getExponent(2.0 * width).coerceIn(0, 4)
+                pianoBlend = (Math.scalb(width, 1 - pianoBand) - 1.0).coerceIn(0.0, 1.0).toFloat()
+            }
         }
 
         fun release() {
@@ -300,11 +327,12 @@ class GxSynth(sampleRate: Int, voiceCount: Int = 8, midiChannel: Int = 0) : Inst
                 }
                 val signal = when {
                     noiseProgram -> noiseLevel
-                    bassWeight <= 0f -> shape.sample(phase, width)
                     bassWeight >= 1f -> shape.bassSample(phase, width, smoothMix, presence)
                     else -> {
-                        val normal = shape.sample(phase, width)
-                        normal + (shape.bassSample(phase, width, smoothMix, presence) - normal) * bassWeight
+                        val normal = if (piano) shape.pianoSample(phase, width, pianoBand, pianoBlend)
+                            else shape.sample(phase, width)
+                        if (bassWeight == 0f) normal else
+                            normal + (shape.bassSample(phase, width, smoothMix, presence) - normal) * bassWeight
                     }
                 }
                 out[i] += signal * (level ushr 14) * (1f / 65536f) * velocity
