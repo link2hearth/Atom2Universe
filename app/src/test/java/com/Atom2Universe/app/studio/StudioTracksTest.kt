@@ -1,5 +1,8 @@
 package com.Atom2Universe.app.studio
 
+import com.Atom2Universe.app.studio.data.Action
+import com.Atom2Universe.app.studio.data.PadSize
+import com.Atom2Universe.app.studio.data.StudioHistory
 import com.Atom2Universe.app.studio.data.StudioProject
 import com.Atom2Universe.app.studio.data.StudioProjectCodec
 import com.Atom2Universe.app.studio.data.StudioSession
@@ -264,13 +267,37 @@ class StudioTracksTest {
         assertEquals(last, session.padTracks().first().id)
         assertEquals(trackIds, session.project.tracks.map { it.id })
         session.undo()
-        assertFalse(session.padTracks().first().padWide)
+        assertEquals(PadSize.NORMAL, session.padTracks().first().padSize)
         session.redo()
         val restored = StudioProjectCodec.decode(StudioProjectCodec.encode(session.project))!!
-        assertTrue(restored.tracks.minBy { it.padOrder }.let { it.id == last && it.padWide })
+        assertEquals(PadSize.WIDE, restored.track(last).padSize)
+        assertEquals(last, restored.tracks.minBy { it.padOrder }.id)
         session.setHidden(last, true)
         session.setHidden(last, false)
         assertEquals(last, session.padTracks().first().id)
+    }
+
+    @Test
+    fun halfPadSwitchesFromWideAndSurvivesTheProjectAndJournal() {
+        val session = session()
+        val kick = Inst.KICK
+        session.resizePad(kick)
+        val wide = session.project
+        session.togglePadHalf(kick)
+        val half = session.project
+        assertEquals(PadSize.HALF, StudioProjectCodec.decode(StudioProjectCodec.encode(half))!!.track(kick).padSize)
+
+        val change = Action(StudioHistory.diff(wide, half, undoableOnly = true))
+        val journal = listOf(StudioHistory.line(change, undoable = true))
+        assertEquals(PadSize.HALF, StudioHistory.replay(wide, journal).project.track(kick).padSize)
+        session.undo()
+        assertEquals(PadSize.WIDE, session.project.track(kick).padSize)
+        session.redo()
+        session.togglePadHalf(kick)
+        assertEquals(PadSize.NORMAL, session.project.track(kick).padSize)
+        session.togglePadHalf(kick)
+        session.resizePad(kick)
+        assertEquals(PadSize.WIDE, session.project.track(kick).padSize)
     }
 
     @Test

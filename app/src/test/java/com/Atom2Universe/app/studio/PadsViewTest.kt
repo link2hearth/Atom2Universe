@@ -3,6 +3,7 @@ package com.Atom2Universe.app.studio
 import android.app.Application
 import android.view.MotionEvent
 import com.Atom2Universe.app.studio.ui.PadsView
+import com.Atom2Universe.app.studio.data.PadSize
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -13,7 +14,7 @@ import org.robolectric.annotation.Config
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [34], application = Application::class, qualifiers = "mdpi")
 class PadsViewTest {
-    private fun drum(track: Int, wide: Boolean = false) = PadsView.Tile(track, 0xFF446699.toInt(), 0, wide = wide)
+    private fun drum(track: Int, size: PadSize = PadSize.NORMAL) = PadsView.Tile(track, 0xFF446699.toInt(), 0, padSize = size)
 
     private fun pads(vararg items: PadsView.Tile) = PadsView(RuntimeEnvironment.getApplication()).apply {
         tiles = items.toList()
@@ -63,8 +64,50 @@ class PadsViewTest {
         assertEquals(emptyList<Int>(), hits)
     }
 
+    @Test fun compactDrumsShareTheTopRowAndLeaveTheWholeKeyboardPlayableAfterRotation() {
+        val drums = (0..6).map { drum(it, PadSize.HALF) }
+        val keyboard = PadsView.Tile(7, 0xFF446699.toInt(), 0, intArrayOf(60, 64, 67))
+        val pads = pads(*(drums + keyboard).toTypedArray())
+        val hits = mutableListOf<Int>()
+        val notes = mutableListOf<Int>()
+        pads.onDown = { hits += it }
+        pads.onNoteDown = { _, pitch -> notes += pitch }
+        for ((w, h) in listOf(800 to 600, 600 to 800)) {
+            pads.layout(0, 0, w, h)
+            hits.clear()
+            notes.clear()
+            for (i in 0..6) {
+                val x = (i * 2 + 1) * w / 14
+                pads.touch(MotionEvent.ACTION_DOWN, x, 20)
+                pads.touch(MotionEvent.ACTION_UP, x, 20)
+            }
+            for (x in listOf(10, w / 2, w - 10)) {
+                pads.touch(MotionEvent.ACTION_DOWN, x, h / 4)
+                pads.touch(MotionEvent.ACTION_UP, x, h / 4)
+            }
+            assertEquals((0..6).toList(), hits)
+            assertEquals(listOf(60, 64, 67), notes)
+        }
+    }
+
+    @Test fun smallHandleIsSilentAndIndependentOfTheWideHandleOnAHalfTile() {
+        val pads = pads(drum(8, PadSize.HALF), drum(7), drum(3), drum(9))
+        val sizes = mutableListOf<Pair<Int, PadSize>>()
+        val hits = mutableListOf<Int>()
+        pads.onDown = { hits += it }
+        pads.onToggleHalf = { sizes += it to PadSize.HALF }
+        pads.onResize = { sizes += it to PadSize.WIDE }
+        pads.editing = true
+        for (x in listOf(8, 43)) {
+            pads.touch(MotionEvent.ACTION_DOWN, x, 8)
+            pads.touch(MotionEvent.ACTION_UP, x, 8)
+        }
+        assertEquals(listOf(8 to PadSize.HALF, 8 to PadSize.WIDE), sizes)
+        assertEquals(emptyList<Int>(), hits)
+    }
+
     @Test fun widePadSharesTwoColumnsEvenWhenPlacedAfterAnotherPad() {
-        val pads = pads(drum(12), drum(13, wide = true), drum(14))
+        val pads = pads(drum(12), drum(13, size = PadSize.WIDE), drum(14))
         val hits = mutableListOf<Int>()
         pads.onDown = { hits += it }
         for (x in listOf(50, 150, 250, 350)) {

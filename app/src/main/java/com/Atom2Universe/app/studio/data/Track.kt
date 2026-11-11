@@ -9,6 +9,8 @@ import com.Atom2Universe.app.studio.engine.TrackKind
 import com.Atom2Universe.app.studio.engine.TrackMix
 import com.Atom2Universe.app.studio.engine.TrackSpec
 
+enum class PadSize { NORMAL, WIDE, HALF }
+
 /**
  * Une piste du projet : un son de batterie ([TrackKind.DRUM], une ligne de pas), le synthé maison ([TrackKind.SYNTH]) ou
  * un instrument de soundfont ([TrackKind.SF2]) ; les deux derniers jouent des notes. [id] relie la piste à ses pas et à ses
@@ -41,7 +43,7 @@ data class Track(
     /** Le kit de batterie du soundfont (numéro de programme de la banque 128) qui remplace le son fabriqué ; -1 : aucun. */
     val sfKit: Int = -1,
     val padOrder: Int = Int.MAX_VALUE,
-    val padWide: Boolean = false,
+    val padSize: PadSize = PadSize.NORMAL,
 ) {
     val melodic: Boolean get() = kind != TrackKind.DRUM
 

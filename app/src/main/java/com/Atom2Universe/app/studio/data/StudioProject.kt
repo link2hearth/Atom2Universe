@@ -275,7 +275,11 @@ object StudioProjectCodec {
             .put("voice", t.voice)
             .also { o ->
                 if (t.padOrder != Int.MAX_VALUE) o.put("padOrder", t.padOrder)
-                if (t.padWide) o.put("padWide", true)
+                when (t.padSize) {
+                    PadSize.WIDE -> o.put("padWide", true)
+                    PadSize.HALF -> o.put("padHalf", true)
+                    PadSize.NORMAL -> Unit
+                }
             }
             .put("hidden", t.hidden)
             .put("muted", t.muted)
@@ -318,7 +322,11 @@ object StudioProjectCodec {
                 pump = a.optDouble(7, 0.0).toFloat().coerceIn(0f, 1f),
             ),
             padOrder = o.optInt("padOrder", Int.MAX_VALUE).coerceAtLeast(0),
-            padWide = o.optBoolean("padWide", false),
+            padSize = when {
+                o.optBoolean("padHalf") -> PadSize.HALF
+                o.optBoolean("padWide") -> PadSize.WIDE
+                else -> PadSize.NORMAL
+            },
             hidden = o.optBoolean("hidden", false),
             muted = o.optBoolean("muted", false),
             solo = o.optBoolean("solo", false) && !o.optBoolean("hidden", false),
@@ -644,11 +652,15 @@ class StudioSession(
         closeOpen()
     }
 
-    fun resizePad(id: Int) {
+    fun resizePad(id: Int) = togglePadSize(id, PadSize.WIDE)
+
+    fun togglePadHalf(id: Int) = togglePadSize(id, PadSize.HALF)
+
+    private fun togglePadSize(id: Int, size: PadSize) {
         val t = project.trackOrNull(id) ?: return
         closeOpen()
         remember()
-        project = project.withTrack(t.copy(padWide = !t.padWide))
+        project = project.withTrack(t.copy(padSize = if (t.padSize == size) PadSize.NORMAL else size))
         closeOpen()
     }
 

@@ -715,6 +715,11 @@ class StudioActivity : AudioThemedActivity() {
                 refreshPads()
                 scheduleSave()
             }
+            onToggleHalf = { id ->
+                session.togglePadHalf(id)
+                refreshPads()
+                scheduleSave()
+            }
         }
         padsBody = LinearLayout(this).apply {
             isMotionEventSplittingEnabled = true
@@ -830,7 +835,7 @@ class StudioActivity : AudioThemedActivity() {
         if (!::pads.isInitialized) return
         pads.keyPc = session.project.keyPc
         pads.tiles = session.padTracks().filterNot { it.hidden }.map { t ->
-            PadsView.Tile(t.id, trackColor(t), InstrumentIcons.of(t), if (t.melodic) padLevels(t.id) else null, t.padWide, trackName(t))
+            PadsView.Tile(t.id, trackColor(t), InstrumentIcons.of(t), if (t.melodic) padLevels(t.id) else null, t.padSize, trackName(t))
         }
     }
 

@@ -11,6 +11,8 @@ import android.view.HapticFeedbackConstants
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
+import com.Atom2Universe.app.studio.data.PadSize
+import com.Atom2Universe.app.R
 
 /**
  * Les pads, à jouer au doigt : une grande case par piste (sa couleur, son dessin), plusieurs doigts à la fois.
@@ -27,12 +29,12 @@ import android.view.ViewConfiguration
 class PadsView(context: Context) : View(context) {
 
     /** Une case : la piste, sa couleur, son dessin, et pour une piste à notes ses niveaux (hauteurs MIDI, du grave à l'aigu). */
-    class Tile(val track: Int, val color: Int, val icon: Int, val levels: IntArray? = null, val wide: Boolean = false, val name: String = "")
+    class Tile(val track: Int, val color: Int, val icon: Int, val levels: IntArray? = null, val padSize: PadSize = PadSize.NORMAL, val name: String = "")
 
     var tiles: List<Tile> = emptyList()
         set(v) {
             val sameLayout = field.size == v.size && field.indices.all { i ->
-                field[i].track == v[i].track && field[i].wide == v[i].wide
+                field[i].track == v[i].track && field[i].padSize == v[i].padSize && (field[i].levels == null) == (v[i].levels == null)
             }
             if (!sameLayout) {
                 releaseAll()
@@ -59,6 +61,7 @@ class PadsView(context: Context) : View(context) {
         }
     var onReorder: ((fromTrack: Int, toTrack: Int) -> Unit)? = null
     var onResize: ((track: Int) -> Unit)? = null
+    var onToggleHalf: ((track: Int) -> Unit)? = null
 
     /** La tonique (0 = do) et les noms des notes : les niveaux de la tonique portent leur nom. */
     var keyPc: Int = 0
@@ -90,6 +93,9 @@ class PadsView(context: Context) : View(context) {
         color = Color.WHITE
         isFakeBoldText = true
     }
+    private val halfLabel = context.getString(R.string.studio_pad_half_size)
+    private val halfPaint = Paint(label).apply { textAlign = Paint.Align.CENTER }
+    private val halfLabelWidth = halfPaint.measureText(halfLabel)
     private val rect = RectF()
     private val band = RectF()
     private val touchSlop = ViewConfiguration.get(context).scaledTouchSlop
@@ -110,7 +116,7 @@ class PadsView(context: Context) : View(context) {
     /** Le placement suit l'ordre des pistes ; une grande case occupe deux colonnes sur la même ligne. */
     private fun layoutOf(order: List<Int>): Array<RectF> {
         if (order.isEmpty() || width <= 0 || height <= 0) return emptyArray()
-        val units = order.size + order.count { tiles[it].wide }
+        val units = order.size + order.count { tiles[it].padSize == PadSize.WIDE }
         val minColumns = if (units > order.size) 2 else 1
         var bestColumns = minColumns
         var bestRows = 1
@@ -119,7 +125,7 @@ class PadsView(context: Context) : View(context) {
             var rows = 1
             var used = 0
             for (i in order) {
-                val span = if (tiles[i].wide) 2 else 1
+                val span = if (tiles[i].padSize == PadSize.WIDE) 2 else 1
                 if (used + span > cols) {
                     rows++
                     used = 0
@@ -135,21 +141,65 @@ class PadsView(context: Context) : View(context) {
                 bestRows = rows
             }
         }
-        val cellWidth = width.toFloat() / bestColumns
-        val cellHeight = height.toFloat() / bestRows
-        val result = Array(order.size) { RectF() }
-        var col = 0
-        var row = 0
-        for (i in order) {
-            val span = if (tiles[i].wide) 2 else 1
-            if (col + span > bestColumns) {
-                row++
-                col = 0
+        // La grille normale sert de référence stable : réduire une percussion ne rétrécit pas les autres.
+        // Les formats consécutifs partagent une rangée ; une rangée compacte rend sa hauteur aux grandes.
+        val rows = mutableListOf<PadRow>()
+        var first = 0
+        while (first < order.size) {
+            val compact = tiles[order[first]].padSize == PadSize.HALF
+            var end = first + 1
+            while (end < order.size && (tiles[order[end]].padSize == PadSize.HALF) == compact) end++
+            val standardSlots = bestColumns * 2
+            val count = end - first
+            // Évite de rejeter une percussion seule sur la ligne suivante si toutes restent faciles à toucher.
+            val slots = when {
+                !compact -> bestColumns
+                count == standardSlots + 1 && width.toFloat() / count >= dp(48f) -> count
+                else -> standardSlots
             }
-            result[i].set(col * cellWidth, row * cellHeight, (col + span) * cellWidth, (row + 1) * cellHeight)
-            col += span
+            var row = PadRow(compact, slots)
+            rows.add(row)
+            for (pos in first until end) {
+                val index = order[pos]
+                val span = if (tiles[index].padSize == PadSize.WIDE) 2 else 1
+                if (row.used + span > slots) {
+                    row = PadRow(compact, slots)
+                    rows.add(row)
+                }
+                row.indices.add(index)
+                row.used += span
+            }
+            first = end
+        }
+
+        val smallRows = rows.count { it.compact }
+        val largeRows = rows.size - smallRows
+        val halfHeight = height / maxOf(2 * bestRows, smallRows + 2 * largeRows).toFloat()
+        val largeHeight = (height - smallRows * halfHeight) / largeRows.coerceAtLeast(1)
+        val result = Array(order.size) { RectF() }
+        var top = 0f
+        for (row in rows) {
+            val bottom = top + if (row.compact) halfHeight else largeHeight
+            val cellWidth = width.toFloat() / row.slots
+            // Les claviers se partagent la largeur libre de leur rangée quand des pads sont réduits.
+            val keys = if (!row.compact && smallRows > 0) row.indices.count { tiles[it].levels != null } else 0
+            val extra = if (keys > 0) (row.slots - row.used) * cellWidth / keys else 0f
+            var left = 0f
+            for (i in row.indices) {
+                val tile = tiles[i]
+                val right = left + cellWidth * (if (tile.padSize == PadSize.WIDE) 2 else 1) +
+                    (if (tile.levels != null) extra else 0f)
+                result[i].set(left, top, right, bottom)
+                left = right
+            }
+            top = bottom
         }
         return result
+    }
+
+    private class PadRow(val compact: Boolean, val slots: Int) {
+        val indices = mutableListOf<Int>()
+        var used = 0
     }
 
     private fun rebuildLayout() {
@@ -231,18 +281,31 @@ class PadsView(context: Context) : View(context) {
             canvas.drawRoundRect(rect, dp(16f), dp(16f), paint)
             paint.style = Paint.Style.FILL
         }
-        val radius = minOf(dp(14f), rect.width() / 4f, rect.height() / 4f)
-        val x = rect.right - radius - dp(4f)
-        val y = rect.top + radius + dp(4f)
-        paint.color = Color.argb(158, 20, 20, 28)
+        val margin = minOf(dp(4f), rect.width() / 20f, rect.height() / 20f)
+        val radius = minOf(dp(14f), rect.width() / 4f - margin, rect.height() / 3f)
+        val x = rect.right - radius - margin
+        val y = rect.top + radius + margin
+        val darkInk = Color.rgb(25, 26, 34)
+        val resting = Color.argb(175, 20, 20, 28)
+        val left = rect.left + margin
+        val badgeWidth = minOf(dp(40f), rect.width() / 2f - 2f * margin)
+        val compact = tile.padSize == PadSize.HALF
+        paint.color = if (compact) Color.WHITE else resting
+        canvas.drawRoundRect(left, y - radius, left + badgeWidth, y + radius, radius, radius, paint)
+        halfPaint.color = if (compact) darkInk else Color.WHITE
+        halfPaint.textSize = label.textSize * minOf(1f, badgeWidth * 0.85f / halfLabelWidth, radius * 1.3f / label.textSize)
+        canvas.drawText(halfLabel, left + badgeWidth / 2f, y - (halfPaint.ascent() + halfPaint.descent()) / 2f, halfPaint)
+
+        val wide = tile.padSize == PadSize.WIDE
+        paint.color = if (wide) Color.WHITE else resting
         canvas.drawCircle(x, y, radius, paint)
-        paint.color = Color.WHITE
+        paint.color = if (wide) darkInk else Color.WHITE
         paint.strokeWidth = dp(1.5f)
         for (side in -1..1 step 2) {
             val outer = x + side * radius * 0.58f
             val inner = x + side * radius * 0.10f
-            val tip = if (tile.wide) inner else outer
-            val tail = if (tile.wide) outer else inner
+            val tip = if (wide) inner else outer
+            val tail = if (wide) outer else inner
             val wing = tip + (tail - tip) * 0.60f
             canvas.drawLine(tail, y, tip, y, paint)
             canvas.drawLine(wing, y - radius * 0.24f, tip, y, paint)
@@ -273,10 +336,14 @@ class PadsView(context: Context) : View(context) {
         // Le dessin de l'instrument, petit, dans la bande du haut : on reconnaît la piste sans gêner les touches
         val top = keysTop(rect)
         val s = (top - rect.top) * 0.36f
-        InstrumentIcons.draw(canvas, t.icon, rect.left + dp(10f) + s, (rect.top + top) / 2f, s, Color.argb(220, 255, 255, 255))
+        val titleLeft = rect.left + dp(if (editing) 50f else 10f)
+        val titleRight = rect.right - dp(if (editing) 36f else 6f)
+        if (titleLeft + 2f * s < titleRight) {
+            InstrumentIcons.draw(canvas, t.icon, titleLeft + s, (rect.top + top) / 2f, s, Color.argb(220, 255, 255, 255))
+        }
         if (top - rect.top >= label.textSize + dp(2f)) {
             val titleY = (top + rect.top - label.ascent() - label.descent()) * 0.5f
-            drawTileName(canvas, t, rect.left + dp(14f) + 2f * s, titleY, rect.right - dp(if (editing) 36f else 6f))
+            drawTileName(canvas, t, titleLeft + dp(4f) + 2f * s, titleY, titleRight)
         }
         val count = levels.size
         if (count == 0) return
@@ -331,9 +398,15 @@ class PadsView(context: Context) : View(context) {
         if (h.pitch < 0) onUp?.invoke(t.track) else onNoteUp?.invoke(t.track, h.pitch)
     }
 
-    private fun isResizeHandle(i: Int, x: Float, y: Float): Boolean {
+    private fun sizeHandleAt(i: Int, x: Float, y: Float): PadSize? {
         val area = areas[i]
-        return area.contains(x, y) && x >= area.right - dp(48f) && y < area.top + dp(48f)
+        if (!area.contains(x, y) || y >= area.top + dp(48f)) return null
+        val hitWidth = minOf(dp(48f), area.width() / 2f)
+        return when {
+            x < area.left + hitWidth -> PadSize.HALF
+            x >= area.right - hitWidth -> PadSize.WIDE
+            else -> null
+        }
     }
 
     private fun moveEdit(x: Float, y: Float) {
@@ -391,14 +464,14 @@ class PadsView(context: Context) : View(context) {
                 moveEdit(x, y)
                 val track = tiles[source].track
                 val destination = if (dragging && target >= 0 && target != source) tiles[target].track else null
-                val resize = !dragging && isResizeHandle(source, startX, startY) && isResizeHandle(source, x, y)
+                val handle = if (dragging) null else sizeHandleAt(source, x, y)?.takeIf { it == sizeHandleAt(source, startX, startY) }
                 clearEdit()
                 if (destination != null) {
                     performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
                     onReorder?.invoke(track, destination)
-                } else if (resize) {
+                } else if (handle != null) {
                     performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-                    onResize?.invoke(track)
+                    if (handle == PadSize.HALF) onToggleHalf?.invoke(track) else onResize?.invoke(track)
                 }
                 invalidate()
             }
