@@ -77,6 +77,7 @@
     <string name="studio_bank_scc">SCC</string>
     <string name="studio_bank_famicom">Famicom</string>
     <string name="studio_bank_fm">FM</string>
+    <string name="studio_bank_orchestral">Orchestral</string>
     <string-array name="studio_fm_programs">
         <item>Perso</item><item>Violon</item><item>Guitare</item><item>Piano</item>
         <item>Flûte</item><item>Clarinette</item><item>Hautbois</item><item>Trompette</item>
@@ -108,7 +109,9 @@
     <string name="studio_preset_arp">Arpège</string>
     <string name="studio_preset_pluck">Pincé</string>
     <string name="studio_preset_organ">Orgue</string>
+    <string name="studio_preset_acoustic_piano">Piano à queue</string>
     <string name="studio_preset_mallet">Marimba</string>
+    <string name="studio_preset_vibraphone">Vibraphone</string>
     <string name="studio_preset_brass">Cuivres</string>
     <string name="studio_preset_bell">Cloche</string>
     <string name="studio_preset_pick_bass">Basse pincée</string>

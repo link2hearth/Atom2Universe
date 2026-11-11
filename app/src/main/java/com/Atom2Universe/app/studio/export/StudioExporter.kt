@@ -176,7 +176,7 @@ object StudioExporter {
             val program = when {
                 track.kind != TrackKind.SYNTH -> track.program
                 track.synthBank == SynthBank.FM -> FM_GM_PROGRAMS[track.fmProgram.coerceIn(0, 15)]
-                track.synthBank == SynthBank.STUDIO -> SYNTH_PROGRAM
+                track.synthBank == SynthBank.STUDIO -> track.synth.gmProgram ?: SYNTH_PROGRAM
                 else -> track.program
             }
             if (track.kind == TrackKind.SF2) {

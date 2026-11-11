@@ -43,6 +43,13 @@ data class SynthPatch(
     /** Vrai si ce son joue l'enregistrement du micro ([WAVE_SAMPLE]). */
     val isSample: Boolean get() = wave == WAVE_SAMPLE
 
+    /** Programme GM d'un instrument acoustique modélisé, même après l'avoir renommé dans « Mes sons ». */
+    val gmProgram: Int? get() = when (wave) {
+        WAVE_VIBRAPHONE -> 11
+        WAVE_PIANO -> 0
+        else -> null
+    }
+
     companion object {
         const val WAVE_SAW = 0
         const val WAVE_SQUARE = 1
@@ -51,6 +58,9 @@ data class SynthPatch(
 
         /** L'oscillateur est le son enregistré au micro, rejoué plus aigu ou plus grave selon la note. */
         const val WAVE_SAMPLE = 4
+        const val WAVE_VIBRAPHONE = 5
+        const val WAVE_PIANO = 6
+        internal const val WAVE_ORCHESTRAL = 7
 
         /** Les sons gardés par l'utilisateur ont un identifiant « mine:<nom> ». */
         const val MINE_PREFIX = "mine:"
@@ -141,6 +151,11 @@ object SynthPresets {
         cutoffHz = 1050f, resonance = 0.8f, envOctaves = 1.7f, filterDecay = 0.065f,
         attack = 0.003f, decay = 0.5f, sustain = 0f, release = 0.19f, keyTrack = 0.7f, volume = 1.88f,
     )
+    val VIBRAPHONE = SynthPatch(
+        id = "vibraphone", wave = SynthPatch.WAVE_VIBRAPHONE, interval = 24, detuneCents = 0f,
+        cutoffHz = 10_000f, resonance = 0.707f, envOctaves = 0f, keyTrack = 0f,
+        attack = 0.004f, decay = VibraphoneBar.DEFAULT_DECAY, sustain = 0f, release = 1.9f, volume = 2.47f,
+    )
     val BRASS = SynthPatch(
         id = "brass", wave = SynthPatch.WAVE_SAW, detuneCents = 5f,
         cutoffHz = 1350f, resonance = 1.25f, envOctaves = 0.6f, filterDecay = 0.28f,
@@ -201,6 +216,11 @@ object SynthPresets {
     )
 
     val BASSES = listOf(BASS, SUB, ACID, DIST_BASS, WOBBLE, PICK_BASS, OCTAVE_BASS)
+    val ACOUSTIC_PIANO = SynthPatch(
+        id = "acoustic_piano", wave = SynthPatch.WAVE_PIANO, detuneCents = 0f, cutoffHz = 10_000f,
+        resonance = 0.707f, envOctaves = 0f, keyTrack = 0f, attack = 0.003f, decay = 4f,
+        sustain = 0f, release = 0.38f, volume = 2.65f,
+    )
     val KEYS = listOf(ORGAN, TINES, HARPSICHORD)
     val LEADS = listOf(LEAD, BRASS, FLUTE, CLARINET, ARCADE)
     val PADS = listOf(PAD, STRINGS, DRONE, GLASS_PAD, FIFTH_PAD)
@@ -208,7 +228,7 @@ object SynthPresets {
     val ALL = BASSES + KEYS + LEADS + PADS + PLUCKS
 
     /** Programme General MIDI proposé au premier passage en SCC/Famicom sur cette piste. */
-    fun chipProgram(patch: SynthPatch): Int = when (patch.id) {
+    fun chipProgram(patch: SynthPatch): Int = patch.gmProgram ?: when (patch.id) {
         BASS.id, ACID.id, SUB.id -> 38 // Synth Bass 1
         DIST_BASS.id, WOBBLE.id, OCTAVE_BASS.id -> 39
         PICK_BASS.id -> 34
@@ -232,7 +252,15 @@ object SynthPresets {
         else -> 0
     }
 
-    fun byId(id: String): SynthPatch = if (id == MY_VOICE.id) MY_VOICE else ALL.firstOrNull { it.id == id } ?: BASS
+    fun byId(id: String): SynthPatch = when (id) {
+        MY_VOICE.id -> MY_VOICE
+        ACOUSTIC_PIANO.id -> ACOUSTIC_PIANO
+        VIBRAPHONE.id -> VIBRAPHONE
+        else -> ALL.firstOrNull { it.id == id } ?: BASS
+    }
+
+    internal val orchestral = SynthPatch("orchestral", wave = SynthPatch.WAVE_ORCHESTRAL, detuneCents = 0f,
+        cutoffHz = 16000f, resonance = 0.707f, envOctaves = 0f, keyTrack = 0f, attack = 0.002f, sustain = 1f, volume = 2f)
 }
 
 class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), AutoCloseable {
@@ -249,6 +277,13 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), 
     @Volatile private var chip: GxSynth? = null
     @Volatile private var fm: Ym2413Synth? = null
     @Volatile private var selectedBank = SynthBank.STUDIO
+    @Volatile private var orchestralProgram = 0
+    @Volatile private lateinit var orchestralProfile: OrchestralBank.Program
+    private fun currentPatch() = if (selectedBank == SynthBank.ORCHESTRAL) when (orchestralProgram) {
+        0 -> SynthPresets.ACOUSTIC_PIANO
+        11 -> SynthPresets.VIBRAPHONE
+        else -> SynthPresets.orchestral
+    } else patch
     private val mixScratch = FloatArray(Instrument.MAX_CHUNK)
     private var closed = false
 
@@ -268,6 +303,14 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), 
                 source.select(bank == SynthBank.FAMICOM, program)
             }
             SynthBank.STUDIO -> Unit
+            SynthBank.ORCHESTRAL -> {
+                val next = program.coerceIn(0, 127)
+                if (next != orchestralProgram && next != 0 && next != 11) {
+                    orchestralProfile = OrchestralBank.load(next)
+                    for (v in voices) v.prepareOrchestral()
+                }
+                orchestralProgram = next
+            }
         }
         selectedBank = bank
     }
@@ -313,7 +356,7 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), 
         val bank = selectedBank
         if (!bank.isGx) chip?.noteOff(note)
         if (bank != SynthBank.FM) fm?.noteOff(note)
-        if (bank != SynthBank.STUDIO) {
+        if (bank != SynthBank.STUDIO && bank != SynthBank.ORCHESTRAL) {
             for (v in voices) if (v.active && v.held && v.note == note) v.release()
             if (bank == SynthBank.FM) fm?.noteOn(note, velocity) else chip?.noteOn(note, velocity)
             return
@@ -332,7 +375,7 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), 
             var oldest = Long.MAX_VALUE
             for (v in voices) if (v.age < oldest) { oldest = v.age; chosen = v }
         }
-        chosen!!.start(note, velocity, patch, age++)
+        chosen!!.start(note, velocity, currentPatch(), age++)
     }
 
     override fun noteOff(note: Int) {
@@ -368,7 +411,7 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), 
         for (v in voices) if (v.active) v.render(out, count)
 
         // Distorsion et niveau du son, sur le mélange des voix.
-        val p = patch
+        val p = currentPatch()
         val d = p.drive
         if (d > 0.001f) {
             // Le mélange des voix est faible (~0,2 de crête) : on le monte d'abord (DRIVE_PRE) pour que l'écrêtage morde,
@@ -409,6 +452,12 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), 
         private var releaseCoef = 0f
         private var filterCoef = 0f
         private val filter = Svf(sampleRate)
+        private val bar = VibraphoneBar(sampleRate)
+        private val piano = PianoStrings(sampleRate)
+        private lateinit var orchestra: OrchestralVoice
+        fun prepareOrchestral() {
+            if (!::orchestra.isInitialized) orchestra = OrchestralVoice(sampleRate)
+        }
 
         // Son enregistré : la position de lecture (en échantillons de la source), son pas, et le pas visé pendant un glissé
         private var smp: SynthSample? = null
@@ -427,6 +476,9 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), 
 
         fun start(n: Int, velocity: Float, patch: SynthPatch, a: Long) {
             val wasActive = active
+            val wasBar = wasActive && p.wave == SynthPatch.WAVE_VIBRAPHONE
+            val wasPiano = wasActive && p.wave == SynthPatch.WAVE_PIANO
+            val wasOrchestral = wasActive && p.wave == SynthPatch.WAVE_ORCHESTRAL
             p = patch
             note = n
             age = a
@@ -442,8 +494,22 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), 
             inc2 = freq * half * 2f.pow(patch.interval / 12f) / sampleRate
             incSub = freq / 2f / sampleRate
             attackInc = 1f / (maxOf(patch.attack, 0.002f) * sampleRate)
-            decayCoef = Fast.decayCoef(patch.decay, sampleRate)
+            val decayTime = if (patch.wave == SynthPatch.WAVE_VIBRAPHONE) {
+                val ringTime = bar.strike(n.coerceIn(0, 127), velocity, wasBar)
+                bar.tune(inc1, inc2)
+                ringTime * patch.decay / VibraphoneBar.DEFAULT_DECAY
+            } else if (patch.wave == SynthPatch.WAVE_PIANO) {
+                piano.strike(n, velocity, wasPiano)
+                piano.tune(inc1, inc2)
+                // Les partiels ont leur propre décroissance ; l'enveloppe générale borne la queue.
+                patch.decay * 12f
+            } else patch.decay
+            decayCoef = Fast.decayCoef(decayTime, sampleRate)
             releaseCoef = Fast.decayCoef(maxOf(patch.release, 0.005f), sampleRate)
+            if (patch.wave == SynthPatch.WAVE_ORCHESTRAL) {
+                releaseCoef = Fast.decayCoef(orchestra.strike(orchestralProfile, n, velocity, wasOrchestral), sampleRate)
+                orchestra.tune(inc1)
+            }
             filterCoef = Fast.decayCoef(patch.filterDecay, sampleRate)
             baseCutoff = patch.cutoffHz * (freq / 261.63f).pow(patch.keyTrack)
             lfoInc = patch.lfoRate / sampleRate
@@ -485,6 +551,8 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), 
             for (i in 0 until count) {
                 if (ctl <= 0) {
                     ctl = CONTROL_PERIOD
+                    if (wave == SynthPatch.WAVE_PIANO && piano.finished) { active = false; return }
+                    if (wave == SynthPatch.WAVE_ORCHESTRAL && orchestra.finished) { active = false; return }
                     if (gliding) {
                         // Portamento : chaque pas d'oscillateur fait un bout du chemin (≈ 40 ms pour arriver)
                         inc1 += (inc1Target - inc1) * GLIDE
@@ -496,6 +564,9 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), 
                             inc1 = inc1Target; inc2 = inc2Target; incSub = incSubTarget; baseCutoff = cutoffTarget; smpInc = smpIncTarget
                             gliding = false
                         }
+                        if (wave == SynthPatch.WAVE_VIBRAPHONE) bar.tune(inc1, inc2)
+                        if (wave == SynthPatch.WAVE_PIANO) piano.tune(inc1, inc2)
+                        if (wave == SynthPatch.WAVE_ORCHESTRAL) orchestra.tune(inc1)
                     }
                     var octaves = p.envOctaves * fEnv
                     if (p.lfoFilter != 0f) {
@@ -535,6 +606,12 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), 
                     val f = (smpPos - k).toFloat()
                     smpPos += smpInc
                     (s.data[k] * (1f - f) + s.data[k + 1] * f) * 0.8f + sin(ps * TWO_PI) * sub * 0.5f
+                } else if (wave == SynthPatch.WAVE_ORCHESTRAL) {
+                    orchestra.next()
+                } else if (wave == SynthPatch.WAVE_PIANO) {
+                    piano.next() + sin(ps * TWO_PI) * sub * 0.5f
+                } else if (wave == SynthPatch.WAVE_VIBRAPHONE) {
+                    bar.next() + sin(ps * TWO_PI) * sub * 0.5f
                 } else {
                     p1 += inc1
                     if (p1 >= 1f) p1 -= 1f

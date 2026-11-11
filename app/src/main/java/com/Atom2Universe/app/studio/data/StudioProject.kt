@@ -261,7 +261,7 @@ object StudioProjectCodec {
 
     internal fun decodeSynth(sy: JSONObject) = SynthPatch(
         id = sy.getString("id"),
-        wave = sy.getInt("wave").coerceIn(0, SynthPatch.WAVE_SAMPLE),
+        wave = sy.getInt("wave").coerceIn(0, SynthPatch.WAVE_PIANO),
         detuneCents = sy.getDouble("detune").toFloat().coerceIn(0f, 1200f),
         subLevel = sy.getDouble("sub").toFloat().coerceIn(0f, 1f),
         cutoffHz = sy.getDouble("cutoff").toFloat().coerceIn(40f, 16000f),
@@ -745,7 +745,7 @@ class StudioSession(
     }
 
     fun setChipProgram(id: Int, program: Int) {
-        editSynthSound(id) { if (it.synthBank.isGx) it.copy(program = program.coerceIn(0, 127), chipProgramAssigned = true) else it }
+        editSynthSound(id) { if (it.synthBank.isGx || it.synthBank == SynthBank.ORCHESTRAL) it.copy(program = program.coerceIn(0, 127), chipProgramAssigned = true) else it }
     }
 
     fun setChipSmoothBass(id: Int, enabled: Boolean) {

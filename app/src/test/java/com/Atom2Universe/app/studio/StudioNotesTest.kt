@@ -149,6 +149,69 @@ class StudioNotesTest {
     }
 
     @Test
+    fun timpaniSoundOnlyInsideTheReferenceKeyboardRange() {
+        for (note in listOf(37, 38, 54, 55, 60, 61)) {
+            for (velocity in listOf(24, 50, 96, 125)) {
+                val engine = quietEngine()
+                engine.synth.selectBank(com.Atom2Universe.app.studio.engine.SynthBank.ORCHESTRAL, 47, 0)
+                engine.trigger(Inst.SYNTH, note, velocity / 127f)
+                val signal = render(engine, rate / 5).first
+                assertEquals("Note $note à vélocité $velocity", note in 38..60, signal.any { abs(it) > 0.00001f })
+            }
+        }
+    }
+
+    @Test
+    fun orchestralKeepsTheTwoApprovedModelsSampleForSample() {
+        for ((program, preset) in listOf(0 to SynthPresets.ACOUSTIC_PIANO, 11 to SynthPresets.VIBRAPHONE)) {
+            val original = quietEngine()
+            original.synth.patch = preset
+            val orchestral = quietEngine()
+            orchestral.synth.selectBank(com.Atom2Universe.app.studio.engine.SynthBank.ORCHESTRAL, program, 0)
+            for (key in listOf(48, 60, 67, 76)) {
+                original.trigger(Inst.SYNTH, key, 0.8f)
+                orchestral.trigger(Inst.SYNTH, key, 0.8f)
+            }
+            assertTrue(render(original, rate / 2).first.contentEquals(render(orchestral, rate / 2).first))
+        }
+    }
+
+    @Test
+    fun grandPianoReproducesBothMeasuredHammerLayersAtMiddleC() {
+        // Sur le 00 de Perso.sf2, le deuxième partiel dépasse le premier au toucher doux.
+        for ((velocity, expectedDb) in listOf(64 to 5.0, 104 to -1.0)) {
+            val engine = quietEngine()
+            engine.synth.patch = SynthPresets.ACOUSTIC_PIANO
+            engine.trigger(Inst.SYNTH, 60, velocity / 127f)
+            val (sound, _) = render(engine, rate / 10)
+            val n = rate / 20
+            val window = FloatArray(n) {
+                (sound[rate / 100 + it] * (0.5 - 0.5 * kotlin.math.cos(2 * Math.PI * it / n))).toFloat()
+            }
+            val ratio = 10 * log10(powerAt(window, 523.25) / powerAt(window, 261.63))
+            assertEquals("Vélocité $velocity", expectedDb, ratio, 2.5)
+        }
+    }
+
+    @Test
+    fun vibraphoneStrikeMatchesTheBalanceOfTheSf2AcrossRegisters() {
+        // Écart entre le partiel à deux octaves et la fondamentale, mesuré sur Perso.sf2 à vélocité 96.
+        for ((pitch, expectedDb) in listOf(60 to 9.4, 67 to 4.6, 76 to -12.8)) {
+            val engine = quietEngine()
+            engine.synth.patch = SynthPresets.VIBRAPHONE
+            engine.trigger(Inst.SYNTH, pitch, 96f / 127f)
+            val (sound, _) = render(engine, rate / 10)
+            val n = rate * 60 / 1000
+            val window = FloatArray(n) {
+                (sound[rate * 15 / 1000 + it] * (0.5 - 0.5 * kotlin.math.cos(2 * Math.PI * it / n))).toFloat()
+            }
+            val hz = 440.0 * Math.pow(2.0, (pitch - 69) / 12.0)
+            val balance = 10 * log10(powerAt(window, hz * 4.01) / powerAt(window, hz))
+            assertEquals("Note MIDI $pitch", expectedDb, balance, 2.5)
+        }
+    }
+
+    @Test
     fun everyPresetIsInTune() {
         // Mesuré sur de vraies basses de synthé (Sonic Pi, CC0) : la méthode retrouve leur note à moins de 8 centièmes.
         // Ici, le filtre en mouvement et la distorsion sont coupés : ils déplacent le barycentre sans changer la hauteur.

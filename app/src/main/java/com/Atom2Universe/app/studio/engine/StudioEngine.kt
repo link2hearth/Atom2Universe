@@ -63,7 +63,7 @@ object TrackKind {
 }
 
 enum class SynthBank {
-    STUDIO, SCC, FAMICOM, FM;
+    STUDIO, SCC, FAMICOM, FM, ORCHESTRAL;
 
     val isGx get() = this == SCC || this == FAMICOM
 }

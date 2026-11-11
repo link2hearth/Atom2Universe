@@ -1877,11 +1877,13 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         val studioSynth = synthTrack && t.synthBank == SynthBank.STUDIO
         val fmSynth = synthTrack && t.synthBank == SynthBank.FM
         val chipSynth = synthTrack && t.synthBank.isGx
-        if (synthTrack) {
+        val orchestral = synthTrack && t.synthBank == SynthBank.ORCHESTRAL
+        val bankRows = if (synthTrack) SynthBank.entries.chunked(3) else emptyList()
+        for (banks in bankRows) {
             box.addView(MaterialButtonToggleGroup(this).apply {
                 isSingleSelection = true
                 isSelectionRequired = true
-                for (bank in SynthBank.entries) {
+                for (bank in banks) {
                     val button = outlined(bankName(bank)).apply {
                         id = View.generateViewId()
                         tag = bank
@@ -1947,7 +1949,7 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
                     }
                 }
                 popup.show()
-            } else if (chipSynth) {
+            } else if (chipSynth || orchestral) {
                 val current = session.project.trackOrNull(t.id) ?: return@setOnClickListener
                 pickChipProgram(pick, current.program, ::chooseProgram)
             } else if (studioSynth) {
@@ -1968,7 +1970,7 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
                 }
             }
         }
-        if (chipSynth || fmSynth) {
+        if (chipSynth || fmSynth || orchestral) {
             val programRow = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL }
             fun step(label: Int, description: Int, delta: Int) = square(label).apply {
                 contentDescription = getString(description)
@@ -1988,7 +1990,7 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
                 val pad = personalFmPad(t)
                 personalPad = pad
                 box.addView(pad, LinearLayout.LayoutParams(-1, dp(132)).apply { topMargin = dp(8) })
-            } else box.addView(SwitchCompat(this).apply {
+            } else if (chipSynth) box.addView(SwitchCompat(this).apply {
                 setText(R.string.studio_chip_smooth_bass)
                 minimumHeight = dp(48)
                 switchPadding = dp(8)
@@ -3248,6 +3250,7 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         SynthBank.SCC -> R.string.studio_bank_scc
         SynthBank.FAMICOM -> R.string.studio_bank_famicom
         SynthBank.FM -> R.string.studio_bank_fm
+        SynthBank.ORCHESTRAL -> R.string.studio_bank_orchestral
     }
 
     private fun sf2ProgramName(t: Track): String =
@@ -3987,7 +3990,9 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         "pluck" -> R.string.studio_preset_pluck
         "bell" -> R.string.studio_preset_bell
         "organ" -> R.string.studio_preset_organ
+        "acoustic_piano" -> R.string.studio_preset_acoustic_piano
         "mallet" -> R.string.studio_preset_mallet
+        "vibraphone" -> R.string.studio_preset_vibraphone
         "brass" -> R.string.studio_preset_brass
         "pick_bass" -> R.string.studio_preset_pick_bass
         "octave_bass" -> R.string.studio_preset_octave_bass

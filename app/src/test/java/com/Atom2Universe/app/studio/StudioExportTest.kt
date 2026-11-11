@@ -148,6 +148,41 @@ class StudioExportTest {
     }
 
     @Test
+    fun orchestralProgramsSurviveSelectionSaveAndMidiExport() {
+        val session = StudioSession(StudioEngine(32_000), project())
+        session.setSynthBank(Inst.SYNTH, SynthBank.ORCHESTRAL)
+        for (program in 0..127) {
+            session.setChipProgram(Inst.SYNTH, program)
+            val restored = StudioProjectCodec.decode(StudioProjectCodec.encode(session.project))!!
+            val track = restored.track(Inst.SYNTH)
+            assertEquals(SynthBank.ORCHESTRAL, track.synthBank)
+            assertEquals(program, track.program)
+            assertEquals(program, parse(StudioExporter.midiBytes(restored)).programs[restored.midiChannel(track.id)])
+        }
+    }
+
+    @Test
+    fun savedAcousticPianoExportsProgramZero() {
+        val session = StudioSession(StudioEngine(48_000), project())
+        session.setPreset("acoustic_piano")
+        val restored = StudioProjectCodec.decode(StudioProjectCodec.encode(session.project))!!
+        val track = restored.track(Inst.SYNTH)
+        assertEquals(session.project.track(Inst.SYNTH).synth, track.synth)
+        assertEquals(0, parse(StudioExporter.midiBytes(restored)).programs[restored.midiChannel(track.id)])
+    }
+
+    @Test
+    fun savedVibraphoneKeepsItsModelAndMidiProgram() {
+        val s = StudioSession(StudioEngine(48_000), project())
+        s.setPreset("vibraphone")
+        s.updateSynth(Inst.SYNTH) { it.copy(id = "mine:Vibes") }
+        val restored = StudioProjectCodec.decode(StudioProjectCodec.encode(s.project))!!
+        val track = restored.track(Inst.SYNTH)
+        assertEquals(s.project.track(Inst.SYNTH).synth, track.synth)
+        assertEquals(11, parse(StudioExporter.midiBytes(restored)).programs[restored.midiChannel(track.id)])
+    }
+
+    @Test
     fun midiUsesTheGmEquivalentOfTheFmInstrument() {
         val project = project()
         val track = project.track(Inst.SYNTH)
