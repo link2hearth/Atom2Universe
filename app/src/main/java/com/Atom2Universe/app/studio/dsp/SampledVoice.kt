@@ -5,8 +5,8 @@ import com.Atom2Universe.app.midi.sf2.Sf2Region
 import kotlin.math.pow
 import kotlin.math.roundToInt
 
-/** Piano à queue : les échantillons de la banque Orchestral, lus comme le fait le moteur SF2. */
-internal class PianoSamples(private val rate: Int) {
+/** Une note des échantillons de la banque Orchestral (piano, violon, flûte), lue comme le fait le moteur SF2. */
+internal class SampledVoice(private val rate: Int) {
     private var data: ShortArray? = null
     private var position = 0.0
     private var step = 0.0
@@ -28,12 +28,23 @@ internal class PianoSamples(private val rate: Int) {
     var finished = true
         private set
 
-    fun strike(key: Int, velocity: Float, retrigger: Boolean) {
+    /** Extinction de la note en cours une fois relâchée, en secondes jusqu'à −60 dB. */
+    var release = 0f
+        private set
+
+    fun strike(program: Int, key: Int, velocity: Float, retrigger: Boolean) {
         carry = if (retrigger) previous else 0f
         finished = true
         val file = OrchestralSamples.ready() ?: return
-        val regions = file.getPreset(0, 0)?.regions ?: return
-        val nearest = key.coerceIn(FIRST_KEY, LAST_KEY)
+        val regions = file.getPreset(0, program)?.regions ?: return
+        var first = 127
+        var last = 0
+        for (i in regions.indices) {
+            first = minOf(first, regions[i].keyRange.first)
+            last = maxOf(last, regions[i].keyRange.last)
+        }
+        if (first > last) return
+        val nearest = key.coerceIn(first, last)
         val force = (velocity * 127f).roundToInt().coerceIn(1, 127)
         var region: Sf2Region? = null
         for (i in regions.indices) if (regions[i].matches(nearest, force)) { region = regions[i]; break }
@@ -51,6 +62,8 @@ internal class PianoSamples(private val rate: Int) {
         gain = STUDIO_GAIN * velocity * region.calculateGain() / 32768f
         envelope = 1f
         val shape = region.volumeEnvelope
+        // L'extinction SF2 descend de 100 dB dans sa durée : −60 dB en arrive aux six dixièmes.
+        release = (shape?.release ?: 0.1f) * 0.6f
         if (shape == null || shape.sustain >= 1f) {
             holdLeft = Int.MAX_VALUE
         } else {
@@ -111,8 +124,6 @@ internal class PianoSamples(private val rate: Int) {
     }
 
     private companion object {
-        const val FIRST_KEY = 21
-        const val LAST_KEY = 108
         // Niveau dans Studio, à côté des autres préréglages (mesuré égal à l'ancien piano calculé).
         const val STUDIO_GAIN = 1f
     }

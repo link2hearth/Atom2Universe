@@ -20,7 +20,7 @@ class OrchestralProgram internal constructor(val number: Int, private val channe
     @Volatile private var loaded: OrchestralBank.Program? = null
 
     internal fun profile(): OrchestralBank.Program? {
-        if (number == 0) return null
+        if (OrchestralSamples.has(number)) return null
         return loaded ?: OrchestralBank.load(number, channel).also { loaded = it }
     }
 
@@ -122,7 +122,7 @@ internal class OrchestralSoundBank {
 
     init {
         val (drumPcm, kit) = drums
-        // Le piano : de vrais échantillons, joués par le moteur SF2 comme n'importe quel SF2.
+        // Piano, violon, flûte : de vrais échantillons, joués par le moteur SF2 comme n'importe quel SF2.
         val sampled = OrchestralSamples.file
         val pcm = drumPcm + sampled.sampleData
         val offset = drumPcm.size.toLong()

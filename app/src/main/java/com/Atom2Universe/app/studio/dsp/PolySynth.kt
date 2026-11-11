@@ -253,6 +253,9 @@ object SynthPresets {
         else -> ALL.firstOrNull { it.id == id } ?: BASS
     }
 
+    /** Les notes tenues en échantillons de la banque Orchestral (violon, flûte) : le son dure tant que la touche est tenue. */
+    internal val sustainedSamples = ACOUSTIC_PIANO.copy(id = "orchestral_samples", cutoffHz = 16000f, attack = 0.002f, sustain = 1f)
+
     internal val orchestral = SynthPatch("orchestral", wave = SynthPatch.WAVE_ORCHESTRAL, detuneCents = 0f,
         cutoffHz = 16000f, resonance = 0.707f, envOctaves = 0f, keyTrack = 0f, attack = 0.002f, sustain = 1f, volume = 2f)
 }
@@ -282,8 +285,9 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), 
     private var spatialBlock = false
     override val stereoDifference get() = if (spatialBlock) difference else null
     @Volatile private lateinit var orchestralProfile: OrchestralBank.Program
-    private fun currentPatch() = if (selectedBank == SynthBank.ORCHESTRAL) when (orchestralProgram) {
-        0 -> SynthPresets.ACOUSTIC_PIANO
+    private fun currentPatch() = if (selectedBank == SynthBank.ORCHESTRAL) when {
+        orchestralProgram == 0 -> SynthPresets.ACOUSTIC_PIANO
+        OrchestralSamples.has(orchestralProgram) -> SynthPresets.sustainedSamples
         else -> SynthPresets.orchestral
     } else patch
     private val mixScratch = FloatArray(Instrument.MAX_CHUNK)
@@ -336,10 +340,10 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), 
             SynthBank.STUDIO -> Unit
             SynthBank.ORCHESTRAL -> {
                 val next = program.coerceIn(0, 127)
-                // Le piano joue des échantillons mono, sans couche stéréo calculée.
-                stereoBank = if (next == 0) null else OrchestralStereo.load(next)
-                if (next == 0) OrchestralSamples.file
-                if (next != orchestralProgram && next != 0) {
+                // Les instruments en échantillons sont mono, sans couche stéréo calculée.
+                val sampled = OrchestralSamples.has(next)
+                stereoBank = if (sampled) null else OrchestralStereo.load(next)
+                if (next != orchestralProgram && !sampled) {
                     val profile = OrchestralBank.load(next)
                     orchestralProfile = profile
                     for (v in voices) v.prepareOrchestral()
@@ -395,7 +399,8 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), 
 
     override fun noteOn(note: Int, velocity: Float) {
         val bank = selectedBank
-        if (bank == SynthBank.ORCHESTRAL && !OrchestralRanges.contains(orchestralProgram, note, (velocity * 127).roundToInt())) return
+        if (bank == SynthBank.ORCHESTRAL && !OrchestralSamples.has(orchestralProgram) &&
+            !OrchestralRanges.contains(orchestralProgram, note, (velocity * 127).roundToInt())) return
         if (!bank.isGx) chip?.noteOff(note)
         if (bank != SynthBank.FM) fm?.noteOff(note)
         if (bank != SynthBank.STUDIO && bank != SynthBank.ORCHESTRAL) {
@@ -504,7 +509,7 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), 
         private var releaseCoef = 0f
         private var filterCoef = 0f
         private val filter = Svf(sampleRate)
-        private val piano = PianoSamples(sampleRate)
+        private val piano = SampledVoice(sampleRate)
         private val pianoBlock = FloatArray(CONTROL_PERIOD)
         private lateinit var orchestra: OrchestralVoice
         fun prepareOrchestral() {
@@ -540,7 +545,7 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), 
             val lastSpatial = spatial
             // Écarts de niveau stables sur les notes et les accords de Perso.sf2, à trois vélocités.
             orchestralGain = if (selectedBank == SynthBank.ORCHESTRAL) when (orchestralProgram) {
-                11 -> 3.04f // +9,7 dB : mesuré contre Perso.sf2 avec la couche stéréo
+                11 -> 1.52f // +3,6 dB : mesuré contre Perso.sf2 avec la couche stéréo
                 20 -> 0.178f // −15 dB
                 53 -> 0.398f // −8 dB
                 78 -> 0.126f // −18 dB
@@ -573,13 +578,13 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), 
             incSub = freq / 2f / sampleRate
             attackInc = 1f / (maxOf(patch.attack, 0.002f) * sampleRate)
             val decayTime = if (patch.wave == SynthPatch.WAVE_PIANO) {
-                piano.strike(n, velocity, wasPiano)
+                piano.strike(if (selectedBank == SynthBank.ORCHESTRAL) orchestralProgram else 0, n, velocity, wasPiano)
                 piano.tune(inc1)
                 // Les partiels ont leur propre décroissance ; l'enveloppe générale borne la queue.
                 patch.decay * 12f
             } else patch.decay
             decayCoef = Fast.decayCoef(decayTime, sampleRate)
-            releaseCoef = Fast.decayCoef(maxOf(patch.release, 0.005f), sampleRate)
+            releaseCoef = Fast.decayCoef(maxOf(if (patch === SynthPresets.sustainedSamples) piano.release else patch.release, 0.005f), sampleRate)
             if (patch.wave == SynthPatch.WAVE_ORCHESTRAL) {
                 releaseCoef = Fast.decayCoef(orchestra.strike(profile ?: orchestralProfile, n, velocity, wasOrchestral), sampleRate)
                 orchestra.tune(inc1)
