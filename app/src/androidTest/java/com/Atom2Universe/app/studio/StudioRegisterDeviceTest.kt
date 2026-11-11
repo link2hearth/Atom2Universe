@@ -47,11 +47,11 @@ class StudioRegisterDeviceTest {
                 val tab = withParent(isAssignableFrom(MaterialButtonToggleGroup::class.java))
                 val notesTab = onView(allOf(withText(R.string.studio_tab_notes), tab, isDisplayed()))
                 notesTab.perform(click())
-                assertEquals(60, checkRegister(0, 24).first)
+                assertEquals(60, checkRegister(0, 60).first)
                 onView(isAssignableFrom(PianoRollView::class.java)).perform(
                     GeneralSwipeAction(Swipe.SLOW, sideKeyPosition(.30f), sideKeyPosition(.85f), Press.FINGER)
                 )
-                val shifted = checkRegister(0, 24)
+                val shifted = checkRegister(0, 60)
                 assertTrue("Dragging the side keyboard must scroll to higher pitches", shifted.first > 60)
 
                 val settings = onView(allOf(withText(R.string.studio_tab_notes),
@@ -63,14 +63,17 @@ class StudioRegisterDeviceTest {
                 val sharp = onView(allOf(withText(names[3]), tonic))
                 sharp.perform(click())
                 sharp.check(matches(isSelected()))
-                assertEquals(shifted, checkRegister(3, 27))
+                assertEquals(shifted, checkRegister(3, 63))
                 onView(allOf(withText(R.string.studio_pads), tab, isDisplayed())).perform(click())
                 notesTab.perform(click())
-                assertEquals(shifted, checkRegister(3, 27))
+                assertEquals(shifted, checkRegister(3, 63))
 
                 settings.perform(click())
-                onView(withText(context.getString(R.string.studio_rhythm_pitch, names[3] + "1"))).perform(click())
+                onView(withText(context.getString(R.string.studio_rhythm_pitch, names[3] + "4"))).perform(click())
+                val lowerSharp = names[3] + "1"
+                onView(withText(lowerSharp)).perform(click())
                 assertTrue("The indicated rhythm key must now be visible", 27 in checkRegister(3, 27))
+                onView(withText(context.getString(R.string.studio_rhythm_pitch, lowerSharp))).check(matches(isDisplayed()))
             }
         } finally {
             library.delete(song.id)

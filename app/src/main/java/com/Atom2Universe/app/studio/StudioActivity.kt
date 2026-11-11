@@ -1384,13 +1384,11 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         tonicRow.addView(keyLabel, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
         rhythmPitchButton = outlined(null).apply {
             visibility = View.GONE
-            setOnClickListener {
-                val pitch = keyboard.rhythmPitch
-                if (pitch >= 0) {
-                    register.reveal(pitch)
-                    refreshRoll()
-                }
-            }
+            setIconResource(R.drawable.ic_chevron_down)
+            iconGravity = MaterialButton.ICON_GRAVITY_TEXT_END
+            iconSize = dp(16)
+            iconPadding = dp(4)
+            setOnClickListener { showRhythmOctaves(it) }
         }
         tonicRow.addView(rhythmPitchButton, wrap())
         tuning.addView(tonicRow)
@@ -2671,6 +2669,27 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         register.reveal(note.pitch)
         roll.ensureVisible(note.step)
         refreshRoll()
+    }
+
+    private fun showRhythmOctaves(anchor: View) {
+        val track = curTrack() ?: return
+        val key = session.project.keyPc
+        val current = session.rhythmEntryPitch(track.id) / 12 - 1
+        val menu = ImmersiveSupportPopupMenu(this, anchor)
+        for (octave in -1..Track.maxRhythmOctave(key)) {
+            menu.menu.add(0, octave + 1, octave + 1, pitchName((octave + 1) * 12 + key))
+        }
+        menu.menu.setGroupCheckable(0, true, true)
+        menu.menu.findItem(current + 1).isChecked = true
+        menu.setOnMenuItemClickListener { item ->
+            val octave = item.itemId - 1
+            session.setRhythmOctave(track.id, octave)
+            register.setLow((octave + 1) * 12)
+            refreshRoll()
+            scheduleSave()
+            true
+        }
+        menu.show()
     }
 
     private fun showRegisterMenu(anchor: View) {

@@ -62,6 +62,8 @@ data class Track(
     val fmProgram: Int = DEFAULT_FM_PROGRAM,
     val fmBrightness: Float = DEFAULT_FM_BRIGHTNESS,
     val fmAttack: Float = DEFAULT_FM_ATTACK,
+    /** Octave de la tonique à poser sur une nouvelle case mélodique de Rythme (do central = do4). */
+    val rhythmOctave: Int = DEFAULT_RHYTHM_OCTAVE,
 ) {
     val melodic: Boolean get() = kind != TrackKind.DRUM
 
@@ -70,6 +72,11 @@ data class Track(
         else TrackSpec(id, kind, voice, bank, program)
 
     companion object {
+        const val DEFAULT_RHYTHM_OCTAVE = 4
+
+        /** MIDI se termine à sol9 (127) ; sol♯ à si culminent à l'octave 8. */
+        fun maxRhythmOctave(keyPc: Int): Int = (127 - keyPc) / 12 - 1
+
         const val DEFAULT_FM_PROGRAM = 3 // Piano
         const val DEFAULT_FM_BRIGHTNESS = 0.5f
         const val DEFAULT_FM_ATTACK = 0.5f

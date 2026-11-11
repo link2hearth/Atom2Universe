@@ -81,7 +81,8 @@ class StudioGxIntegrationTest {
             val session = StudioSession(StudioEngine(rate), StudioProject.blank())
             session.setKey(4)
             session.setSynthBank(track, bank)
-            for ((program, pitch) in listOf(0 to 64, 32 to 40)) {
+            val pitch = 64
+            for (program in listOf(0, 32)) {
                 session.setChipProgram(track, program)
                 assertEquals(pitch, session.rhythmPreviewPitch(track, 0))
                 session.setStep(track, 0, true)

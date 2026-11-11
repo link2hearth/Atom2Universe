@@ -13,6 +13,7 @@ import com.Atom2Universe.app.studio.engine.Inst
 import com.Atom2Universe.app.studio.engine.Note
 import com.Atom2Universe.app.studio.engine.StepPattern
 import com.Atom2Universe.app.studio.engine.StudioEngine
+import com.Atom2Universe.app.studio.engine.SynthBank
 import com.Atom2Universe.app.studio.engine.TrackKind
 import com.Atom2Universe.app.studio.export.StudioExporter
 import com.Atom2Universe.app.studio.music.Styles
@@ -299,6 +300,59 @@ class StudioTracksTest {
         session.togglePadHalf(kick)
         session.resizePad(kick)
         assertEquals(PadSize.WIDE, session.project.track(kick).padSize)
+    }
+
+    @Test
+    fun rhythmEntryUsesTheChosenOctaveDespiteExistingBassNotes() {
+        val s = StudioSession(quiet(), StudioProject.blank())
+        val synth = Inst.SYNTH
+        s.setKey(5)
+        s.addNote(0, 29, 2)
+        s.addNote(2, 29, 1)
+        val sf = s.addTrack(TrackKind.SF2)
+        assertEquals(29, s.rhythmPreviewPitch(synth, 1))
+        assertEquals(65, s.rhythmEntryPitch(synth))
+        s.setStep(synth, 4, true)
+        s.setRhythmOctave(synth, 2)
+        s.setStep(synth, 5, true)
+        s.resetStep(synth, 0)
+        assertEquals(29, s.stepInfo(synth, 0)!!.pitch)
+        assertEquals(65, s.stepInfo(synth, 4)!!.pitch)
+        assertEquals(41, s.stepInfo(synth, 5)!!.pitch)
+        assertEquals(65, s.rhythmEntryPitch(sf))
+        s.setSynthBank(synth, SynthBank.SCC)
+        s.setChipProgram(synth, 32)
+        assertEquals(41, s.rhythmEntryPitch(synth))
+        s.setKey(7)
+        s.setRhythmOctave(sf, 12)
+        assertEquals(127, s.rhythmEntryPitch(sf))
+        s.setKey(8)
+        assertEquals(116, s.rhythmEntryPitch(sf))
+        s.setRhythmOctave(sf, -5)
+        assertEquals(8, s.rhythmEntryPitch(sf))
+    }
+
+    @Test
+    fun rhythmOctaveSurvivesSavingUndoAndJournalReplay() {
+        val s = session()
+        val synth = Inst.SYNTH
+        val before = s.project
+        s.setRhythmOctave(synth, 4)
+        s.setRhythmOctave(Inst.KICK, 6)
+        assertFalse(s.canUndo)
+        s.setRhythmOctave(synth, 6)
+        val loaded = StudioProjectCodec.decode(StudioProjectCodec.encode(s.project))!!
+        assertEquals(6, loaded.track(synth).rhythmOctave)
+        val oldTrack = StudioProjectCodec.encodeTrack(loaded.track(synth))
+        oldTrack.remove("rhythmOctave")
+        assertEquals(4, StudioProjectCodec.decodeTrack(oldTrack)!!.rhythmOctave)
+        val delta = Action(StudioHistory.diff(before, loaded, undoableOnly = true))
+        val replay = StudioHistory.replay(before, listOf(StudioHistory.line(delta, true)))
+        assertEquals(6, replay.project.track(synth).rhythmOctave)
+        s.undo()
+        assertEquals(4, s.project.track(synth).rhythmOctave)
+        s.redo()
+        assertEquals(6, s.project.track(synth).rhythmOctave)
     }
 
     @Test

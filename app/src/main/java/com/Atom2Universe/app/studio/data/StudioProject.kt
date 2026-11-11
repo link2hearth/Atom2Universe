@@ -13,7 +13,6 @@ import com.Atom2Universe.app.studio.engine.TrackKind
 import com.Atom2Universe.app.studio.engine.SynthBank
 import com.Atom2Universe.app.studio.engine.TrackMix
 import com.Atom2Universe.app.studio.music.Style
-import com.Atom2Universe.app.studio.music.StudioRegister
 import com.Atom2Universe.app.studio.music.Styles
 import org.json.JSONArray
 import org.json.JSONException
@@ -293,6 +292,7 @@ object StudioProjectCodec {
                 if (t.fmProgram != Track.DEFAULT_FM_PROGRAM) o.put("fmProgram", t.fmProgram)
                 if (t.fmBrightness != Track.DEFAULT_FM_BRIGHTNESS) o.put("fmBrightness", t.fmBrightness.toDouble())
                 if (t.fmAttack != Track.DEFAULT_FM_ATTACK) o.put("fmAttack", t.fmAttack.toDouble())
+                if (t.melodic && t.rhythmOctave != Track.DEFAULT_RHYTHM_OCTAVE) o.put("rhythmOctave", t.rhythmOctave)
                 if (t.padOrder != Int.MAX_VALUE) o.put("padOrder", t.padOrder)
                 if (t.melodic && t.padPlayMode != PadPlayMode.DRIVE) o.put("padPlayMode", t.padPlayMode.key)
                 when (t.padSize) {
@@ -344,6 +344,7 @@ object StudioProjectCodec {
                 filter = a.getDouble(6).toFloat().coerceIn(-1f, 1f),
                 pump = a.optDouble(7, 0.0).toFloat().coerceIn(0f, 1f),
             ),
+            rhythmOctave = o.optInt("rhythmOctave", Track.DEFAULT_RHYTHM_OCTAVE).coerceIn(-1, 9),
             padOrder = o.optInt("padOrder", Int.MAX_VALUE).coerceAtLeast(0),
             padPlayMode = if (kind == TrackKind.DRUM) PadPlayMode.DRIVE else PadPlayMode.fromKey(o.optString("padPlayMode")),
             padSize = when {
@@ -706,15 +707,21 @@ class StudioSession(
 
     private fun togglePadSize(id: Int, size: PadSize) {
         val t = project.trackOrNull(id) ?: return
-        applyPadEdit(t.copy(padSize = if (t.padSize == size) PadSize.NORMAL else size))
+        applyTrackSetting(t.copy(padSize = if (t.padSize == size) PadSize.NORMAL else size))
     }
 
     fun setPadPlayMode(id: Int, mode: PadPlayMode) {
         val t = project.trackOrNull(id) ?: return
-        if (t.melodic && t.padPlayMode != mode) applyPadEdit(t.copy(padPlayMode = mode))
+        if (t.melodic && t.padPlayMode != mode) applyTrackSetting(t.copy(padPlayMode = mode))
     }
 
-    private fun applyPadEdit(track: Track) {
+    fun setRhythmOctave(track: Int, octave: Int) {
+        val t = project.trackOrNull(track) ?: return
+        val next = octave.coerceIn(-1, Track.maxRhythmOctave(project.keyPc))
+        if (t.melodic && next != t.rhythmOctave) applyTrackSetting(t.copy(rhythmOctave = next))
+    }
+
+    private fun applyTrackSetting(track: Track) {
         closeOpen()
         remember()
         project = project.withTrack(track)
@@ -1088,25 +1095,12 @@ class StudioSession(
     private class Melody(val notes: List<Note>, steps: Int) {
         val velocity = FloatArray(steps)
         val tails = BooleanArray(steps)
-        private val octaveCounts = IntArray(11)
         init {
             for (note in notes) {
-                octaveCounts[note.pitch / 12]++
                 if (note.step !in velocity.indices) continue
                 velocity[note.step] = maxOf(velocity[note.step], note.velocity)
                 for (s in note.step + 1 until minOf(steps, note.step + note.length)) tails[s] = true
             }
-        }
-
-        fun entryOctave(reference: Int?): Int {
-            if (reference == null) return octaveCounts.indexOfFirst { it > 0 } * 12
-            var best = reference / 12
-            for (octave in octaveCounts.indices) {
-                val count = octaveCounts[octave]
-                if (count > octaveCounts[best] || (count == octaveCounts[best] &&
-                        abs(octave * 12 - reference) < abs(best * 12 - reference))) best = octave
-            }
-            return best * 12
         }
     }
 
@@ -1361,10 +1355,9 @@ class StudioSession(
 
     /** Hauteur réellement posée sur un pas vide de Rythme et repérée sur les claviers de Notes. */
     internal fun rhythmEntryPitch(track: Int): Int {
-        val reference = StudioRegister.chipOctave(project.track(track))
-        val octave = melody(track)?.entryOctave(reference) ?: reference ?: StudioRegister.MIDDLE_C
-        val pitch = octave + project.keyPc
-        return if (pitch <= 127) pitch else pitch - 12
+        val key = project.keyPc
+        val octave = project.track(track).rhythmOctave.coerceIn(-1, Track.maxRhythmOctave(key))
+        return (octave + 1) * 12 + key
     }
 
     // ---- Notes d'une piste mélodique ---------------------------------------------------------------------------
