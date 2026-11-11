@@ -62,7 +62,7 @@ data class Track(
     val fmProgram: Int = DEFAULT_FM_PROGRAM,
     val fmBrightness: Float = DEFAULT_FM_BRIGHTNESS,
     val fmAttack: Float = DEFAULT_FM_ATTACK,
-    /** Octave de la tonique à poser sur une nouvelle case mélodique de Rythme (do central = do4). */
+    /** Octave de la tonique des nouveaux pas de Rythme et du début de la tuile mélodique dans Pads (do central = do4). */
     val rhythmOctave: Int = DEFAULT_RHYTHM_OCTAVE,
 ) {
     val melodic: Boolean get() = kind != TrackKind.DRUM

@@ -7,6 +7,7 @@ import com.Atom2Universe.app.studio.engine.Inst
 import com.Atom2Universe.app.studio.engine.Note
 import com.Atom2Universe.app.studio.engine.StudioEngine
 import com.Atom2Universe.app.studio.engine.SynthBank
+import com.Atom2Universe.app.studio.engine.TrackKind
 import com.Atom2Universe.app.studio.music.Scales
 import com.Atom2Universe.app.studio.music.StudioRegister
 import com.Atom2Universe.app.studio.music.TapTempo
@@ -25,13 +26,13 @@ class StudioEditingTest {
             s.setKey(key)
             val rhythm = s.rhythmEntryPitch(Inst.SYNTH)
             assertEquals(60 + key, rhythm)
-            assertEquals(rhythm, StudioRegister.padPitches(emptyList(), Scales.CHROMATIC, key, null).first())
+            assertEquals(rhythm, s.padPitches(Inst.SYNTH).first())
             s.setStep(Inst.SYNTH, 3, true)
             assertEquals(rhythm, s.notesOf(Inst.SYNTH).single().pitch)
         }
     }
 
-    @Test fun chipReferencesForExplicitFocusAndPadPitchesAgreeForEveryKey() {
+    @Test fun explicitFocusUsesTheReferenceRegisterOfEachChipInstrument() {
         val piano = Track.synth(7).copy(synthBank = SynthBank.SCC)
         val bass = piano.copy(synthBank = SynthBank.FAMICOM, program = 32)
         val r = StudioRegister(360, 740)
@@ -42,21 +43,40 @@ class StudioEditingTest {
             for (key in 0..11) {
                 val tonic = expectedC + key
                 assertTrue(tonic in r.low..r.high)
-                assertEquals(tonic, StudioRegister.padPitches(emptyList(), Scales.MAJOR, key, octave).first())
             }
         }
         r.focus(emptyList(), StudioRegister.chipOctave(Track.synth(7)))
         assertEquals(36, r.low)
     }
 
-    @Test fun existingChipNotesKeepTheirRegisterAndThePadStopsAtMidi127() {
+    @Test fun explicitFocusShowsExistingHighNotesEvenForABassInstrument() {
         val notes = listOf(Note(0, 124), Note(4, 127))
         val r = StudioRegister(360, 740)
         r.focus(notes, 36)
         assertTrue(notes.all { it.pitch in r.low..r.high })
-        val pad = StudioRegister.padPitches(notes, Scales.CHROMATIC, 9, 36)
-        assertTrue(notes.all { it.pitch in pad })
-        assertEquals(127, pad.last())
+    }
+
+    @Test fun padUsesTheSelectedTrackOctaveAcrossPatternsSoundsAndMidiLimits() {
+        val s = session()
+        val synth = Inst.SYNTH
+        val second = s.addTrack(TrackKind.SF2)
+        s.setKey(9)
+        s.setScale(Scales.MAJOR.id)
+        s.addNote(0, 45, 1)
+        s.setSynthBank(synth, SynthBank.FAMICOM)
+        s.setChipProgram(synth, 32)
+        val major = intArrayOf(69, 71, 73, 74, 76, 78, 80, 81)
+        assertArrayEquals(major, s.padPitches(synth))
+        s.setRhythmOctave(synth, 3)
+        s.selectPattern(1)
+        assertArrayEquals(major.map { it - 12 }.toIntArray(), s.padPitches(synth))
+        assertArrayEquals(major, s.padPitches(second))
+        s.setKey(7)
+        s.setRhythmOctave(synth, 9)
+        assertArrayEquals(intArrayOf(127), s.padPitches(synth))
+        s.setKey(0)
+        s.setRhythmOctave(synth, -1)
+        assertEquals(0, s.padPitches(synth).first())
     }
 
     @Test fun scrollAndRevealCoverEveryMidiPitchOnPhoneAndTablet() {

@@ -13,11 +13,14 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.Atom2Universe.app.R
+import com.Atom2Universe.app.studio.data.PadPlayMode
 import com.Atom2Universe.app.studio.data.StudioLibrary
 import com.Atom2Universe.app.studio.data.StudioProject
 import com.Atom2Universe.app.studio.data.StudioSession
+import com.Atom2Universe.app.studio.engine.Inst
 import com.Atom2Universe.app.studio.engine.StudioEngine
 import com.Atom2Universe.app.studio.ui.KeyboardView
+import com.Atom2Universe.app.studio.ui.PadsView
 import com.Atom2Universe.app.studio.ui.PianoRollView
 import com.Atom2Universe.app.studio.ui.StudioTonicKeyboard
 import com.google.android.material.button.MaterialButton
@@ -37,6 +40,7 @@ class StudioRegisterDeviceTest {
         val project = StudioEngine(48_000).use { engine ->
             val session = StudioSession(engine, StudioProject.blank().copy(keyPc = 0))
             session.addNote(0, 24, 1)
+            session.setPadPlayMode(Inst.SYNTH, PadPlayMode.THEREMIN)
             session.project
         }
         val library = StudioLibrary(File(context.filesDir, "studio/songs"))
@@ -65,18 +69,27 @@ class StudioRegisterDeviceTest {
                 sharp.check(matches(isSelected()))
                 assertEquals(shifted, checkRegister(3, 63))
                 onView(allOf(withText(R.string.studio_pads), tab, isDisplayed())).perform(click())
-                notesTab.perform(click())
-                assertEquals(shifted, checkRegister(3, 63))
-
-                settings.perform(click())
-                onView(withText(context.getString(R.string.studio_rhythm_pitch, names[3] + "4"))).perform(click())
+                checkThereminRange(63, 75)
+                onView(withText(context.getString(R.string.studio_track_octave, names[3] + "4"))).perform(click())
                 val lowerSharp = names[3] + "1"
                 onView(withText(lowerSharp)).perform(click())
+                checkThereminRange(27, 39)
+                onView(withText(context.getString(R.string.studio_track_octave, lowerSharp))).check(matches(isDisplayed()))
+                notesTab.perform(click())
                 assertTrue("The indicated rhythm key must now be visible", 27 in checkRegister(3, 27))
-                onView(withText(context.getString(R.string.studio_rhythm_pitch, lowerSharp))).check(matches(isDisplayed()))
             }
         } finally {
             library.delete(song.id)
+        }
+    }
+
+    private fun checkThereminRange(low: Int, high: Int) {
+        onView(allOf(isAssignableFrom(PadsView::class.java), isDisplayed())).check { view, error ->
+            if (error != null) throw error
+            val tile = (view as PadsView).tiles.single { it.track == Inst.SYNTH }
+            assertEquals(PadPlayMode.THEREMIN, tile.mode)
+            assertEquals(low, tile.levels!!.first())
+            assertEquals(high, tile.levels.last())
         }
     }
 

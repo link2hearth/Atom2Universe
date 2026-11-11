@@ -919,21 +919,12 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         } else padFingers[track] = left
     }
 
-    /**
-     * Les niveaux d'une case à notes : une octave de la gamme, de tonique à tonique, dans le registre de la piste (celui de
-     * ses notes ; sans note, l'octave du milieu pour un synthé de mélodie).
-     */
-    private fun padLevels(track: Track): IntArray {
-        val p = session.project
-        return StudioRegister.padPitches(session.notesOf(track.id), Scales.byId(p.scaleId), p.keyPc, StudioRegister.chipOctave(track))
-    }
-
     /** Les cases : une par piste visible (batterie ou notes), dans l'ordre des pistes. */
     private fun refreshPads() {
         if (!::pads.isInitialized) return
         pads.keyPc = session.project.keyPc
         pads.tiles = session.padTracks().filterNot { it.hidden }.map { t ->
-            PadsView.Tile(t.id, trackColor(t), InstrumentIcons.of(t), if (t.melodic) padLevels(t) else null, t.padSize, trackName(t), t.padPlayMode)
+            PadsView.Tile(t.id, trackColor(t), InstrumentIcons.of(t), if (t.melodic) session.padPitches(t.id) else null, t.padSize, trackName(t), t.padPlayMode)
         }
     }
 
@@ -2686,6 +2677,7 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
             session.setRhythmOctave(track.id, octave)
             register.setLow((octave + 1) * 12)
             refreshRoll()
+            if (padsPane.visibility == View.VISIBLE) refreshPads()
             scheduleSave()
             true
         }
@@ -3108,7 +3100,7 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         refreshRoll()
         refreshNotesControls()
         refreshMixer()
-        // Les niveaux des cases à notes suivent la gamme, la tonalité et le registre des notes
+        // Les cases mélodiques suivent la gamme, la tonalité et l’octave choisie pour chaque piste.
         if (padsPane.visibility == View.VISIBLE) refreshPads()
     }
 
@@ -3119,7 +3111,7 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         keyboard.rhythmPitch = pitch
         roll.rhythmPitch = pitch
         rhythmPitchButton.visibility = if (pitch >= 0) View.VISIBLE else View.GONE
-        if (pitch >= 0) rhythmPitchButton.text = getString(R.string.studio_rhythm_pitch, pitchName(pitch))
+        if (pitch >= 0) rhythmPitchButton.text = getString(R.string.studio_track_octave, pitchName(pitch))
     }
 
     private fun refreshRoll() {

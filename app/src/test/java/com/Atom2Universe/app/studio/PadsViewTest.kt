@@ -155,6 +155,25 @@ class PadsViewTest {
     private fun melodic(mode: PadPlayMode) =
         PadsView.Tile(23, 0xFFE07744.toInt(), 0, intArrayOf(60, 64, 67), mode = mode)
 
+    @Test fun changingOctaveReleasesTheSharedEndpointAndPlaysTheNewRangeInEveryMode() {
+        for (mode in PadPlayMode.entries) {
+            fun tile(low: Int) = PadsView.Tile(23, 0, 0, (low..low + 12).toList().toIntArray(), mode = mode)
+            val pads = pads(tile(57))
+            val notes = mutableListOf<Int>()
+            pads.onNoteDown = { _, pitch -> notes += pitch }
+            pads.onNoteUp = { _, pitch -> notes += -pitch }
+            pads.touch(MotionEvent.ACTION_DOWN, 390, 70)
+            pads.tiles = listOf(tile(69))
+            pads.touch(MotionEvent.ACTION_MOVE, 390, 70)
+            pads.touch(MotionEvent.ACTION_UP, 390, 70)
+            for (x in listOf(10, 390)) {
+                pads.touch(MotionEvent.ACTION_DOWN, x, 70)
+                pads.touch(MotionEvent.ACTION_UP, x, 70)
+            }
+            assertEquals(mode.name, listOf(69, -69, 69, -69, 81, -81), notes)
+        }
+    }
+
     @Test fun modeButtonOpensOnReleaseAndDraggingOffItNeverPlays() {
         val pads = pads(melodic(PadPlayMode.DRIVE))
         val chosen = mutableListOf<Int>()

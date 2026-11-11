@@ -49,8 +49,11 @@ class PadsView(context: Context) : View(context) {
                 // Un rafraîchissement du mixeur ou de la prise peut reconstruire les objets sans changer les touches.
                 for (pointer in held.keys.toList()) {
                     val h = held[pointer] ?: continue
-                    val levels = v[h.tile].levels
-                    if (field[h.tile].mode != v[h.tile].mode || levels != null && h.pitch !in levels) {
+                    val old = field[h.tile]
+                    val next = v[h.tile]
+                    val levels = next.levels
+                    val rangeMoved = old.levels?.firstOrNull() != levels?.firstOrNull()
+                    if (old.mode != next.mode || rangeMoved || levels != null && h.pitch !in levels) {
                         mutedPointers.add(pointer)
                         lift(pointer)
                     }

@@ -12,6 +12,7 @@ import com.Atom2Universe.app.studio.engine.StudioEngine
 import com.Atom2Universe.app.studio.engine.TrackKind
 import com.Atom2Universe.app.studio.engine.SynthBank
 import com.Atom2Universe.app.studio.engine.TrackMix
+import com.Atom2Universe.app.studio.music.Scales
 import com.Atom2Universe.app.studio.music.Style
 import com.Atom2Universe.app.studio.music.Styles
 import org.json.JSONArray
@@ -1353,12 +1354,15 @@ class StudioSession(
             ?: rhythmEntryPitch(track)
     }
 
-    /** Hauteur réellement posée sur un pas vide de Rythme et repérée sur les claviers de Notes. */
+    /** Tonique de la piste commune aux nouveaux pas de Rythme, au repère de Notes et au bord gauche du pad. */
     internal fun rhythmEntryPitch(track: Int): Int {
         val key = project.keyPc
         val octave = project.track(track).rhythmOctave.coerceIn(-1, Track.maxRhythmOctave(key))
         return (octave + 1) * 12 + key
     }
+
+    internal fun padPitches(track: Int): IntArray =
+        Scales.rows(Scales.byId(project.scaleId), project.keyPc, rhythmEntryPitch(track), octaves = 1, locked = true)
 
     // ---- Notes d'une piste mélodique ---------------------------------------------------------------------------
 
