@@ -5,8 +5,10 @@ import android.content.res.Configuration
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.RectF
+import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
+import com.Atom2Universe.app.R
 
 /**
  * Un pad à deux axes pour jouer des effets du doigt. [onMove] reçoit x (0 à gauche, 1 à droite) et y (0 en bas, 1 en
@@ -54,6 +56,13 @@ class XyPadView(context: Context) : View(context) {
     private val lineColor = if (dark) 0xFF4A4A54.toInt() else 0xFFB8B8C4.toInt()
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val rect = RectF()
+    private val axisPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        textSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12f, resources.displayMetrics)
+    }
+    private val filterAxis = "← " + context.getString(R.string.studio_fx_filter)
+    private val spaceAxis = "↑ " + context.getString(R.string.studio_space)
+
+    private val axisWidth = maxOf(axisPaint.measureText(filterAxis), axisPaint.measureText(spaceAxis))
 
     private fun dp(v: Float) = v * resources.displayMetrics.density
 
@@ -68,6 +77,13 @@ class XyPadView(context: Context) : View(context) {
         paint.strokeWidth = dp(1.5f)
         canvas.drawLine(px, 0f, px, height.toFloat(), paint)
         canvas.drawLine(0f, py, width.toFloat(), py, paint)
+
+        val margin = dp(12f)
+        if (height > 2f * (margin + axisPaint.textSize) && width > margin * 2 + axisWidth) {
+            axisPaint.color = if (dark || recording) 0xFFB9B9C5.toInt() else 0xFF51515F.toInt()
+            canvas.drawText(spaceAxis, margin, margin - axisPaint.ascent(), axisPaint)
+            canvas.drawText(filterAxis, margin, height - margin, axisPaint)
+        }
 
         paint.color = accent
         paint.alpha = if (touching) 255 else 140
