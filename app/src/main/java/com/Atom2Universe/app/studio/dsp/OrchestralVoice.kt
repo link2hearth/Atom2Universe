@@ -12,7 +12,7 @@ internal object OrchestralBank {
         @Volatile var attack: OrchestralAttack? = null
     }
     class Program(val firstKey: Int, val lastKey: Int, val layers: Int, val limitedRange: Boolean,
-                  val spectra: Array<Spectrum>, val rightChannel: Boolean) {
+                  val spectra: Array<Spectrum>) {
         fun spectrum(key: Int, velocity: Int): Spectrum {
             val index = (key.coerceIn(firstKey, lastKey) - firstKey) * layers
             var layer = 0
@@ -20,11 +20,10 @@ internal object OrchestralBank {
             return spectra[index + layer]
         }
     }
-    enum class Channel(val suffix: String) { MONO(""), LEFT("-left"), RIGHT("-right") }
     private val recent = LinkedHashMap<String, Program>(8, 0.75f, true)
     private val amplitudes = FloatArray(111) { if (it == 110) 0f else 10f.pow(-it / 20f) }
-    @Synchronized fun load(program: Int, channel: Channel = Channel.MONO): Program {
-        val name = "$program${channel.suffix}"
+    @Synchronized fun load(program: Int): Program {
+        val name = "$program"
         recent[name]?.let { return it }
         val stream = checkNotNull(javaClass.getResourceAsStream("/studio/orchestral/$name.bin"))
         val result = DataInputStream(stream.buffered()).use { input ->
@@ -64,7 +63,7 @@ internal object OrchestralBank {
                 }
                 Spectrum(tones, release, ratios, levels, times, trajectories, maxVelocity, reference, loopStart, loopEnd)
             }
-            Program(firstKey, lastKey, layers, mapped, spectra, channel == Channel.RIGHT)
+            Program(firstKey, lastKey, layers, mapped, spectra)
         }
         if (recent.size >= 4) recent.remove(recent.keys.first())
         recent[name] = result
@@ -113,7 +112,7 @@ internal class OrchestralVoice(private val rate: Int) {
             ring = 0f
             return 0.04f
         }
-        return strike(program.spectrum(key, (velocity * 127f).roundToInt()), velocity, retrigger, program.rightChannel)
+        return strike(program.spectrum(key, (velocity * 127f).roundToInt()), velocity, retrigger, false)
     }
 
     fun strike(spectrum: OrchestralBank.Spectrum, velocity: Float, retrigger: Boolean, rightChannel: Boolean): Float {

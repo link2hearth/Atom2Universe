@@ -15,13 +15,12 @@ import java.util.concurrent.FutureTask
 import kotlin.math.roundToInt
 
 /** Un programme GM de Studio. Le lecteur charge les profils du morceau avant de lancer le fil audio. */
-class OrchestralProgram internal constructor(val number: Int, private val channel: OrchestralBank.Channel) {
-    internal val isRight get() = channel == OrchestralBank.Channel.RIGHT
+class OrchestralProgram internal constructor(val number: Int) {
     @Volatile private var loaded: OrchestralBank.Program? = null
 
     internal fun profile(): OrchestralBank.Program? {
         if (OrchestralSamples.has(number)) return null
-        return loaded ?: OrchestralBank.load(number, channel).also { loaded = it }
+        return loaded ?: OrchestralBank.load(number).also { loaded = it }
     }
 
     internal fun unload() { loaded = null }
@@ -107,11 +106,7 @@ internal class OrchestralSoundBank {
         )
     }
 
-    private val programs = (0..127).associateWith { number ->
-        if (number == 48) listOf(OrchestralProgram(number, OrchestralBank.Channel.LEFT),
-            OrchestralProgram(number, OrchestralBank.Channel.RIGHT))
-        else listOf(OrchestralProgram(number, OrchestralBank.Channel.MONO))
-    }
+    private val programs = (0..127).associateWith { OrchestralProgram(it) }
     val file: Sf2File
     private val prepared = mutableSetOf<OrchestralBank.Spectrum>()
 
@@ -126,18 +121,15 @@ internal class OrchestralSoundBank {
         val sampled = OrchestralSamples.file
         val pcm = drumPcm + sampled.sampleData
         val offset = drumPcm.size.toLong()
-        val presets = programs.entries.associate { (number, layers) ->
+        val presets = programs.entries.associate { (number, program) ->
             sampled.getPreset(0, number)?.let { preset ->
                 return@associate "0:$number" to preset.copy(regions = preset.regions.map {
                     it.copy(sampleStart = it.sampleStart + offset, sampleEnd = it.sampleEnd + offset,
                         loopStart = it.loopStart + offset, loopEnd = it.loopEnd + offset)
                 })
             }
-            val regions = OrchestralRanges.zones(number).flatMap { zone ->
-                layers.mapIndexed { index, program ->
-                    val pan = if (layers.size == 1) 0f else if (index == 0) -1f else 1f
-                    region(number, zone.keys, 48000, 0, 0, 60, program).copy(velRange = zone.velocities, pan = pan)
-                }
+            val regions = OrchestralRanges.zones(number).map { zone ->
+                region(number, zone.keys, 48000, 0, 0, 60, program).copy(velRange = zone.velocities)
             }
             "0:$number" to Sf2Preset(ProgramInfo.GM_PROGRAM_NAMES[number], 0, number, regions)
         } + ("128:0" to kit)
@@ -145,10 +137,8 @@ internal class OrchestralSoundBank {
     }
 
     fun preparePrograms(used: Set<Int>) {
-        for (number in used) if (number != 48) OrchestralStereo.load(number)
-        for ((number, layers) in programs) for (layer in layers) {
-            if (number in used) layer.profile() else layer.unload()
-        }
+        for (number in used) if (!OrchestralSamples.has(number)) OrchestralStereo.load(number)
+        for ((number, program) in programs) if (number in used) program.profile() else program.unload()
     }
 
     /** Prépare en RAM les attaques récurrentes. Les notes rares, modulées ou longues restent synthétisées. */
@@ -165,11 +155,9 @@ internal class OrchestralSoundBank {
             val key = id ushr 7 and 127
             val vel = id and 127
             if (!OrchestralRanges.contains(program, key, vel)) continue
-            for (layer in programs.getValue(program)) {
-                val profile = layer.profile() ?: continue
-                if (key in profile.firstKey..profile.lastKey) count(profile.spectrum(key, vel), key, layer.isRight, times)
-            }
-            if (program != 48) count(OrchestralStereo.load(program)?.at(key, vel)?.difference, key, true, times)
+            val profile = programs.getValue(program).profile() ?: continue
+            if (key in profile.firstKey..profile.lastKey) count(profile.spectrum(key, vel), key, false, times)
+            count(OrchestralStereo.load(program)?.at(key, vel)?.difference, key, true, times)
         }
         var floatsLeft = 6 * 1024 * 1024 // Au plus 24 Mio, points de reprise compris.
         val selected = HashMap<Target, Int>()

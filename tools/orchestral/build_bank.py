@@ -1,11 +1,14 @@
 """Fabrique la banque Orchestral : de vrais échantillons allégés, de sources dont la licence permet la copie.
 
-    python tools/orchestral/build_bank.py C:\\chemin\\Perso.sf2 C:\\chemin\\VSCO-2-CE
+    python tools/orchestral/build_bank.py C:\\chemin\\Perso.sf2 C:\\chemin\\sources
 
 Deux sources :
 - PROGRAMS : programmes repris du SoundFont (le piano, en CC0) ;
-- WAVES : prises de VSCO 2 Community Edition (CC0, github.com/sgossner/VSCO-2-CE), une par tierce
-  environ, la nuance la plus forte. Chaque prise est mise en mono et accordée. Une note tenue est
+- WAVES : prises de bibliothèques CC0 rangées dans le dossier des sources, une par tierce environ,
+  la nuance la plus forte :
+  . VSCO-2-CE : VSCO 2 Community Edition (github.com/sgossner/VSCO-2-CE), l'orchestre ;
+  . FreePats : guitare classique, guitares électriques FSBS, basses YR (freepats.zenvoid.org) ;
+  . Karoryfer/meatbass : contrebasse pincée (github.com/sfzinstruments/karoryfer.meatbass). Chaque prise est mise en mono et accordée. Une note tenue est
   coupée après l'attaque puis bouclée sur une seconde environ, vibrato compris ; une note frappée
   ou pincée garde sa résonance, raccourcie.
 Les autres instruments d'Orchestral restent recalculés par l'application.
@@ -31,7 +34,7 @@ from scipy.signal import resample_poly
 
 OUT = Path(__file__).resolve().parents[2] / "app/src/main/resources/studio/orchestral/bank.sf2"
 PROGRAMS = {0: 25}          # programme -> atténuation du preset en centibels (niveau égal au SF2 d'origine)
-# programme -> prises de VSCO 2 CE. Tout le clavier joue : hors de l'étendue de l'instrument, la prise
+# programme -> prises enregistrées. Tout le clavier joue : hors de l'étendue de l'instrument, la prise
 # la plus proche est transposée (le lecteur ne retombe pas sur le piano).
 # folders : dossiers de prises, les suivants l'emportent sur les précédents pour une même note ;
 # keep : durée gardée d'une note frappée, en secondes (absent : note tenue, bouclée) ;
@@ -40,7 +43,10 @@ PROGRAMS = {0: 25}          # programme -> atténuation du preset en centibels (
 # numbered : pour des fichiers numérotés par touche, la note du fichier 0 ; only : texte que le nom
 # des prises doit contenir ; octave : décalage des notes écrites quand la mesure ne peut pas le
 # trouver ; pitches : hauteur donnée à la main (début du nom -> note MIDI décimale), pour les
-# timbales, dont le son est inharmonique (note = premier mode de la peau, relevé au spectre).
+# timbales, dont le son est inharmonique (note = premier mode de la peau, relevé au spectre) ;
+# source : bibliothèque (VSCO-2-CE si absent) ; skip : texte que le nom ne doit pas contenir ;
+# spacing : écart minimal, en demi-tons, entre deux prises gardées ; lowest : pour des fichiers nommés
+# par la note sans l'octave (douze prises d'affilée), la note la plus grave du jeu.
 STRINGS = ["Strings/Solo Contrabass/SusVib", "Strings/Cello Section/susvib", "Strings/Viola Section/susvib",
            "Strings/Violin Section/susVib"]
 WAVES = {
@@ -48,6 +54,21 @@ WAVES = {
     12: dict(name="Marimba", folders=["Percussion/Marimba"], keep=1.5, release=0.8, gain=8.0),
     13: dict(name="Xylophone", folders=["Percussion/Xylo"], keep=1.0, release=0.6, gain=4.5),
     19: dict(name="Church Organ", folders=["Keys/Organ/Loud"], only="Man3Open", numbered=35, release=0.6, gain=-0.5),
+    24: dict(name="Nylon Guitar", source="FreePats/spanish-classical-guitar",
+             folders=["SpanishClassicalGuitar-SFZ+FLAC-20190618/samples"], spacing=3, keep=2.5, release=0.3, gain=4.9),
+    26: dict(name="Jazz Guitar", source="FreePats/electric-guitar-FSBS-jazz", folders=["samples/bridge/small"],
+             keep=3.0, release=0.3, gain=4.1),
+    27: dict(name="Clean Guitar", source="FreePats/electric-guitar-FSBS-clean", folders=["samples/bridge/small"],
+             keep=3.0, release=0.3, gain=4.6),
+    29: dict(name="Overdriven Guitar", source="FreePats/electric-guitar-FSBS-dist1", folders=["samples/bridge"],
+             skip="soft", spacing=3, keep=3.0, release=0.3, gain=1.2),
+    30: dict(name="Distortion Guitar", same=29),
+    32: dict(name="Acoustic Bass", source="Karoryfer/meatbass", folders=["Samples/pizz"], skip="perc",
+             keep=2.5, release=0.4, gain=8.0),
+    33: dict(name="Finger Bass", source="FreePats/electric-bass-YR", folders=["samples/finger"],
+             lowest=28, keep=2.5, release=0.3, gain=7.3),
+    34: dict(name="Picked Bass", source="FreePats/electric-bass-YR", folders=["samples/pick"],
+             lowest=28, keep=2.5, release=0.3, gain=6.4),
     40: dict(name="Violin", folders=["Strings/Solo Violin/Arco Vib"], release=0.5, gain=1.0),
     41: dict(name="Viola", folders=["Strings/Viola Section/susvib"], release=0.5, gain=2.5),
     42: dict(name="Cello", folders=["Strings/Cello Section/susvib"], release=0.5, gain=8.0),
@@ -73,7 +94,7 @@ WAVES = {
     73: dict(name="Flute", folders=["Woodwinds/Flute/susvib"], release=0.5, gain=3.3),
 }
 DYNAMICS = {"pp": 0, "p": 1, "mp": 2, "mf": 3, "f": 4, "ff": 5}
-NOTE = re.compile(r"(?<![A-Za-z])([A-G])(#?)(\d)(?![0-9])")
+NOTE = re.compile(r"(?<![A-Za-z])([A-Ga-g])(#|b)?(\d)(?![0-9])")
 STEPS = {"C": 0, "D": 2, "E": 4, "F": 5, "G": 7, "A": 9, "B": 11}
 WAVE_LEVEL = 3300           # niveau efficace commun des notes tenues (-20 dB)
 NO_SHORTENING = range(112, 128)   # percussions et bruitages : sons qui évoluent, jamais bouclés ici
@@ -223,6 +244,10 @@ def pitch(signal, rate):
     spectrum = np.fft.rfft(signal * np.hanning(len(signal)), 1 << 17)
     correlation = np.fft.irfft(np.abs(spectrum) ** 2)
     low, high = rate // 4500, rate // 28
+    # Sauter le sommet du décalage nul : sur une note grave il déborde largement sur les premiers décalages.
+    negative = np.nonzero(correlation[:high] < 0)[0]
+    if len(negative):
+        low = max(low, int(negative[0]))
     lag = low + int(np.argmax(correlation[low:high]))
     top = correlation[lag]
     for divisor in (4, 3, 2):       # la vraie période est le plus petit sous-multiple encore fort
@@ -237,7 +262,7 @@ def pitch(signal, rate):
     return 69 + 12 * math.log2(rate / max(exact, 1.0) / 440)
 
 
-def tuning(prepared, numbered, octave):
+def tuning(prepared, numbered, octave, lowest):
     """Note et correction en cents de chaque prise d'un dossier. prepared : [(chemin, hauteur mesurée)].
     Le nom du fichier donne la note ; l'octave d'écriture, variable d'un dossier à l'autre, est celle
     que confirme le plus grand nombre de mesures. La mesure n'accorde que si elle tombe sur cette note."""
@@ -245,15 +270,19 @@ def tuning(prepared, numbered, octave):
     for path, measured in prepared:
         note = NOTE.search(path.stem)
         number = re.search(r"_(\d+)$", path.stem)
-        if note:
-            written.append(12 * (int(note.group(3)) + 1) + STEPS[note.group(1)] + len(note.group(2)))
+        bare = re.fullmatch(r"([A-G])(#?)", path.stem)
+        if bare and lowest is not None:
+            written.append(lowest + (STEPS[bare.group(1)] + len(bare.group(2)) - lowest) % 12)
+        elif note:
+            written.append(12 * (int(note.group(3)) + 1) + STEPS[note.group(1).upper()]
+                           + {"#": 1, "b": -1, None: 0}[note.group(2)])
         elif numbered is not None and number:
             written.append(numbered + int(number.group(1)))
         else:
             written.append(None)
     votes = {}
     for (path, measured), nominal in zip(prepared, written):
-        if nominal is not None and numbered is None:
+        if nominal is not None and numbered is None and lowest is None:
             octaves = round((measured - nominal) / 12)
             if abs(measured - nominal - 12 * octaves) < 0.5:
                 votes[octaves] = votes.get(octaves, 0) + 1
@@ -266,15 +295,15 @@ def tuning(prepared, numbered, octave):
     return result
 
 
-def takes(folder, only, pitches):
+def takes(folder, only, skip, pitches):
     """Les prises à garder d'un dossier : par note écrite dans le nom, la nuance la plus forte, première prise."""
     best = {}
-    for path in sorted(folder.glob("*.wav")):
+    for path in sorted([*folder.glob("*.wav"), *folder.glob("*.flac")]):
         stem = path.stem
-        if only and only not in stem:
+        if only and only not in stem or skip and skip in stem:
             continue
         note = NOTE.search(stem)
-        layer = re.search(r"_v(\d)", stem)
+        layer = re.search(r"_vl?(\d)", stem)
         dynamic = re.search(r"_(pp|p|mp|mf|f|ff)(?:_|$)", stem)
         rank = int(layer.group(1)) if layer else DYNAMICS[dynamic.group(1)] if dynamic else 0
         key = note.group(0) if note else next((name for name in pitches if stem.startswith(name)), stem)
@@ -555,17 +584,20 @@ class Bank:
         made = {}
         for source in spec["folders"]:
             pitches = spec.get("pitches", {})
-            paths = takes(folder / source, spec.get("only"), pitches)
+            paths = takes(folder / spec.get("source", "VSCO-2-CE") / source, spec.get("only"), spec.get("skip"), pitches)
             sounds = [sustained(path, spec["gain"]) if looped else struck(path, spec["gain"], spec["keep"])
                       for path in paths]
             measured = [next((pitches[name] for name in pitches if path.stem.startswith(name)), sound[4])
                         for path, sound in zip(paths, sounds)]
-            tuned = tuning(list(zip(paths, measured)), spec.get("numbered"), spec.get("octave", 0))
+            tuned = tuning(list(zip(paths, measured)), spec.get("numbered"), spec.get("octave", 0), spec.get("lowest"))
             for sound, (root, correction) in zip(sounds, tuned):
                 made[root] = (*sound[:4], correction)
             print("    notes :", " ".join(f"{root}{correction:+d}" for root, correction in sorted(tuned)))
         zones_ = []
-        roots = sorted(made)
+        roots = []
+        for root in sorted(made):
+            if not roots or root - roots[-1] >= spec.get("spacing", 1):
+                roots.append(root)
         for i, root in enumerate(roots):
             signal, loop_start, loop_end, rate, correction = made[root]
             low = 0 if i == 0 else (roots[i - 1] + root) // 2 + 1

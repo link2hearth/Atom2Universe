@@ -1951,7 +1951,7 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
                 popup.show()
             } else if (chipSynth || orchestral) {
                 val current = session.project.trackOrNull(t.id) ?: return@setOnClickListener
-                pickChipProgram(pick, current.program, ::chooseProgram)
+                pickChipProgram(pick, current.program, if (orchestral) orchestralPrograms else null, ::chooseProgram)
             } else if (studioSynth) {
                 pickSynthPreset(pick, patch().id) { chosen ->
                     session.updateSynth(t.id) { chosen }
@@ -1977,6 +1977,13 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
                 setOnClickListener {
                     val now = session.project.trackOrNull(t.id) ?: return@setOnClickListener
                     val current = if (fmSynth) now.fmProgram else now.program
+                    if (orchestral) {
+                        // La banque Orchestral ne propose que ses instruments d'orchestre : passer au voisin dans cette liste.
+                        val list = orchestralPrograms
+                        val at = list.indexOf(current).takeIf { it >= 0 } ?: list.indexOfLast { it < current }
+                        chooseProgram(list[Math.floorMod(at + delta, list.size)])
+                        return@setOnClickListener
+                    }
                     val count = if (fmSynth) fmProgramNames.size else chipProgramNames.size
                     chooseProgram(Math.floorMod(current + delta, count))
                 }
@@ -2233,11 +2240,13 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
             if (durationMs > 0L) handler.postDelayed(stopAuditionTask, durationMs)
         }
 
-    private fun pickChipProgram(anchor: View, program: Int, onPick: (Int) -> Unit) {
+    private fun pickChipProgram(anchor: View, program: Int, offered: List<Int>?, onPick: (Int) -> Unit) {
         val popup = ImmersiveSupportPopupMenu(this, anchor)
         for (family in GeneralMidiInstruments.Category.entries) {
+            val programs = family.range.filter { offered == null || it in offered }
+            if (programs.isEmpty()) continue
             val group = popup.menu.addSubMenu(family.stringResId)
-            for (index in family.range) {
+            for (index in programs) {
                 group.add(chipProgramNames[index]).apply {
                     isCheckable = true
                     isChecked = index == program
@@ -3236,6 +3245,7 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
     private fun trackColor(t: Track): Int = StudioColors.of(t)
 
     private val chipProgramNames by lazy { resources.getStringArray(R.array.gm_instruments) }
+    private val orchestralPrograms get() = com.Atom2Universe.app.studio.dsp.PolySynth.ORCHESTRAL_PROGRAMS
     private val fmProgramNames by lazy { resources.getStringArray(R.array.studio_fm_programs) }
 
     private fun instrumentName(t: Track): String = when {

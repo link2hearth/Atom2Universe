@@ -74,7 +74,7 @@ class OrchestralPlaybackTest {
     }
 
     @Test fun preparedAttackMatchesLiveOscillatorsAcrossCacheEndAndPitchBend() {
-        val profile = OrchestralBank.load(48, OrchestralBank.Channel.LEFT)
+        val profile = OrchestralBank.load(25)
         val spectrum = profile.spectrum(69, 100)
         val cycles = 440f / rate
         for (bendAt in listOf(3841, 10000)) {

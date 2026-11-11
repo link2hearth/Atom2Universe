@@ -19,4 +19,7 @@ internal object OrchestralSamples {
 
     /** Vrai si ce programme GM est joué par des échantillons plutôt que recalculé. */
     fun has(program: Int) = file.getPreset(0, program) != null
+
+    /** Les programmes GM joués par des échantillons, dans l'ordre. */
+    val programs: List<Int> by lazy { (0..127).filter(::has) }
 }

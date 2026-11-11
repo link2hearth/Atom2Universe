@@ -304,8 +304,7 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), 
         fun start(program: Int, profile: OrchestralBank.Program?, note: Int, velocity: Float) {
             synth.selectedBank = SynthBank.ORCHESTRAL
             synth.orchestralProgram = program
-            // Les cordes 48 du lecteur possèdent déjà deux régions gauche/droite indépendantes.
-            synth.stereoBank = if (program == 48) null else OrchestralStereo.load(program)
+            synth.stereoBank = OrchestralStereo.load(program)
             voice.active = false
             voice.start(note, velocity, synth.currentPatch(), 0L, profile)
             lastPitch = 1f
@@ -724,21 +723,24 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), 
         }
     }
 
-    private companion object {
-        const val ATTACK = 0
-        const val DECAY = 1
-        const val RELEASE = 2
-        const val CONTROL_PERIOD = 16
-        const val WARM_UP_FRAMES = 16_000
-        const val SILENT = 1e-4f
+    companion object {
+        /** Les instruments que propose la banque Orchestral : ceux en échantillons, et le vibraphone recalculé. */
+        val ORCHESTRAL_PROGRAMS: List<Int> by lazy { (OrchestralSamples.programs + 11).sorted() }
+
+        private const val ATTACK = 0
+        private const val DECAY = 1
+        private const val RELEASE = 2
+        private const val CONTROL_PERIOD = 16
+        private const val WARM_UP_FRAMES = 16_000
+        private const val SILENT = 1e-4f
 
         /** Part du chemin faite à chaque période de contrôle pendant un glissé (≈ 40 ms pour arriver à 48 kHz). */
-        const val GLIDE = 0.06f
-        const val TWO_PI = (2.0 * PI).toFloat()
+        private const val GLIDE = 0.06f
+        private const val TWO_PI = (2.0 * PI).toFloat()
 
         /** Gain d'entrée de l'étage de distorsion, et pente de la compensation de niveau (réglés par mesure). */
-        const val DRIVE_PRE = 4f
-        const val DRIVE_COMP = 12f
+        private const val DRIVE_PRE = 4f
+        private const val DRIVE_COMP = 12f
 
         fun shape(p: Float, dt: Float, wave: Int): Float = when (wave) {
             SynthPatch.WAVE_SQUARE -> {
