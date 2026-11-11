@@ -5,6 +5,7 @@ import com.Atom2Universe.app.studio.dsp.SynthPresets
 import com.Atom2Universe.app.studio.engine.DRUM_KIT_BANK
 import com.Atom2Universe.app.studio.engine.Inst
 import com.Atom2Universe.app.studio.engine.StudioEngine
+import com.Atom2Universe.app.studio.engine.SynthBank
 import com.Atom2Universe.app.studio.engine.TrackKind
 import com.Atom2Universe.app.studio.engine.TrackMix
 import com.Atom2Universe.app.studio.engine.TrackSpec
@@ -37,8 +38,9 @@ data class Track(
     val solo: Boolean = false,
     /** Le son d'une piste de synthé. */
     val synth: SynthPatch = SynthPresets.BASS,
-    /** L'instrument d'une piste soundfont : banque et programme. */
+    /** Banque MIDI du soundfont. */
     val bank: Int = 0,
+    /** Programme MIDI du soundfont ou des banques SCC et Famicom. */
     val program: Int = 0,
     /** Arpégiateur d'une piste qui joue des notes : mode, vitesse (0 = croche, 1 = double-croche, 2 = triple), octaves. */
     val arpMode: Int = 0,
@@ -53,6 +55,7 @@ data class Track(
     val padOrder: Int = Int.MAX_VALUE,
     val padSize: PadSize = PadSize.NORMAL,
     val padPlayMode: PadPlayMode = PadPlayMode.DRIVE,
+    val synthBank: SynthBank = SynthBank.STUDIO,
 ) {
     val melodic: Boolean get() = kind != TrackKind.DRUM
 

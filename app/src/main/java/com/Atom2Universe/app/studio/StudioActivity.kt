@@ -48,7 +48,9 @@ import android.util.TypedValue
 import android.widget.FrameLayout
 import com.Atom2Universe.app.midi.input.MidiConnectionStatus
 import com.Atom2Universe.app.midi.input.MidiInputController
+import com.Atom2Universe.app.midi.visualizer.GeneralMidiInstruments
 import com.Atom2Universe.app.studio.engine.Inst
+import com.Atom2Universe.app.studio.engine.SynthBank
 import com.Atom2Universe.app.studio.engine.TrackKind
 import com.Atom2Universe.app.studio.data.Track
 import com.Atom2Universe.app.studio.data.PadPlayMode
@@ -1838,16 +1840,44 @@ class StudioActivity : AudioThemedActivity() {
         }
         val params = ArrayList<SoundParam>()
         fun patch() = session.project.trackOrNull(t.id)?.synth ?: t.synth
-        val synthKind = t.kind == TrackKind.SYNTH
+        val synthTrack = t.kind == TrackKind.SYNTH
+        val studioSynth = synthTrack && t.synthBank == SynthBank.STUDIO
+        val chipSynth = synthTrack && !studioSynth
+        if (synthTrack) {
+            box.addView(MaterialButtonToggleGroup(this).apply {
+                isSingleSelection = true
+                isSelectionRequired = true
+                for (bank in SynthBank.entries) {
+                    val button = outlined(bankName(bank)).apply {
+                        id = View.generateViewId()
+                        tag = bank
+                        minWidth = 0
+                        minimumWidth = 0
+                        setPadding(dp(10), 0, dp(10), 0)
+                    }
+                    addView(button)
+                    if (bank == t.synthBank) check(button.id)
+                }
+                addOnButtonCheckedListener { group, id, checked ->
+                    if (checked) {
+                        val bank = group.findViewById<View>(id).tag as SynthBank
+                        session.setSynthBank(t.id, bank)
+                        scheduleSave()
+                        showSoundPanel(anchor, t.id)
+                        if (!playing) auditionSynthTrack(t.id)
+                    }
+                }
+            }, wrap())
+        }
         val pick = outlined(null)
         val forget = outlined(R.string.studio_forget_sound)
         var waveGroup: MaterialButtonToggleGroup? = null
         var refreshingWave = false
         fun refreshPick() {
             val now = session.project.trackOrNull(t.id) ?: return
-            pick.text = if (now.kind == TrackKind.SYNTH) soundName(now.synth) else sf2ProgramName(now)
-            forget.visibility = if (now.kind == TrackKind.SYNTH && now.synth.id.startsWith(SynthPatch.MINE_PREFIX)) View.VISIBLE else View.GONE
-            if (synthKind) {
+            pick.text = instrumentName(now)
+            forget.visibility = if (studioSynth && now.synth.id.startsWith(SynthPatch.MINE_PREFIX)) View.VISIBLE else View.GONE
+            if (studioSynth) {
                 refreshingWave = true
                 waveGroup?.let { group ->
                     val waveId = waveIds.getOrNull(now.synth.wave)
@@ -1858,8 +1888,17 @@ class StudioActivity : AudioThemedActivity() {
             for (p in params) p.bar.progress = (p.toSlider(p.read()).coerceIn(0f, 1f) * 1000).roundToInt()
             refreshNotesControls()
         }
+        fun chooseProgram(program: Int) {
+            session.setChipProgram(t.id, program)
+            scheduleSave()
+            refreshPick()
+            if (!playing) auditionSynthTrack(t.id)
+        }
         pick.setOnClickListener {
-            if (synthKind) {
+            if (chipSynth) {
+                val current = session.project.trackOrNull(t.id) ?: return@setOnClickListener
+                pickChipProgram(pick, current.program, ::chooseProgram)
+            } else if (studioSynth) {
                 pickSynthPreset(pick, patch().id) { chosen ->
                     session.updateSynth(t.id) { chosen }
                     scheduleSave()
@@ -1877,7 +1916,20 @@ class StudioActivity : AudioThemedActivity() {
                 }
             }
         }
-        if (synthKind) {
+        if (chipSynth) {
+            val programRow = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL }
+            fun step(label: Int, description: Int, delta: Int) = square(label).apply {
+                contentDescription = getString(description)
+                setOnClickListener {
+                    session.project.trackOrNull(t.id)?.let { chooseProgram(Math.floorMod(it.program + delta, 128)) }
+                }
+            }
+            programRow.addView(step(R.string.studio_tempo_less, R.string.studio_program_previous, -1))
+            pick.setPadding(dp(6), 0, dp(6), 0)
+            programRow.addView(pick, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
+            programRow.addView(step(R.string.studio_tempo_more, R.string.studio_program_next, 1))
+            box.addView(programRow, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(8) })
+        } else if (studioSynth) {
             box.addView(FlowRow(this).apply {
                 hGap = dp(8)
                 addView(pick)
@@ -1887,7 +1939,7 @@ class StudioActivity : AudioThemedActivity() {
             })
         } else box.addView(pick, wrap())
 
-        if (synthKind) {
+        if (studioSynth) {
             // Un son à soi : enregistré au micro, ou un réglage gardé pour le retrouver dans tous les morceaux
             val own = FlowRow(this).apply { hGap = dp(8); vGap = dp(4) }
             val status = TextView(this).apply { textSize = 13f; alpha = 0.75f; visibility = View.GONE }
@@ -1948,7 +2000,7 @@ class StudioActivity : AudioThemedActivity() {
             params += p
             soundSlider(into, p, t.id)
         }
-        if (synthKind) {
+        if (studioSynth) {
             add(box, SoundParam(R.string.studio_macro_bright, { patch().cutoffHz },
                 { hz -> ln(hz.coerceIn(100f, 10000f) / 100f) / ln(100f) }, { t2 -> 100f * exp(t2 * ln(100f)) },
                 { v -> session.updateSynth(t.id) { it.copy(cutoffHz = v) } }))
@@ -1958,7 +2010,7 @@ class StudioActivity : AudioThemedActivity() {
         add(box, SoundParam(R.string.studio_macro_ambience, { session.project.trackOrNull(t.id)?.mix?.reverbSend ?: 0f }, { it }, { it },
             { v -> session.setSynthSpace(v, t.id) }))
 
-        if (synthKind) {
+        if (studioSynth) {
             val advanced = LinearLayout(this).apply {
                 orientation = LinearLayout.VERTICAL
                 visibility = View.GONE
@@ -2016,10 +2068,21 @@ class StudioActivity : AudioThemedActivity() {
     /** La note précédente ne doit pas écourter le son suivant quand on parcourt rapidement la banque. */
     private val presetReleases = mutableMapOf<Int, Runnable>()
 
+    private fun auditionSynthTrack(id: Int) {
+        val t = session.project.trackOrNull(id) ?: return
+        if (t.synthBank == SynthBank.STUDIO) auditionPreset(id, t.synth)
+        else auditionNote(id, if (t.program in 32..39) 36 else 60, 500L)
+    }
+
     private fun auditionPreset(track: Int, patch: SynthPatch) {
+        val octave = if (SynthPresets.BASSES.any { it.id == patch.id }) 36 else 60
+        // Laisser aussi aux nappes et aux drones le temps d'atteindre leur attaque.
+        auditionNote(track, octave, (patch.attack * 1000).toLong() + 450L)
+    }
+
+    private fun auditionNote(track: Int, octave: Int, durationMs: Long) {
         if (session.isMuted(track)) return
         presetReleases.remove(track)?.let { handler.removeCallbacks(it); it.run() }
-        val octave = if (SynthPresets.BASSES.any { it.id == patch.id }) 36 else 60
         val pitch = octave + session.project.keyPc
         engine.trigger(track, pitch, 0.9f, recordHit = false)
         val release = Runnable {
@@ -2027,8 +2090,22 @@ class StudioActivity : AudioThemedActivity() {
             presetReleases.remove(track)
         }
         presetReleases[track] = release
-        // Laisser aussi aux nappes et aux drones le temps d'atteindre leur attaque.
-        handler.postDelayed(release, (patch.attack * 1000).toLong() + 450L)
+        handler.postDelayed(release, durationMs)
+    }
+
+    private fun pickChipProgram(anchor: View, program: Int, onPick: (Int) -> Unit) {
+        val popup = androidx.appcompat.widget.PopupMenu(this, anchor)
+        for (family in GeneralMidiInstruments.Category.entries) {
+            val group = popup.menu.addSubMenu(family.stringResId)
+            for (index in family.range) {
+                group.add(chipProgramNames[index]).apply {
+                    isCheckable = true
+                    isChecked = index == program
+                    setOnMenuItemClickListener { onPick(index); true }
+                }
+            }
+        }
+        popup.show()
     }
 
     private fun pickSynthPreset(anchor: View, currentId: String, onPick: (SynthPatch) -> Unit) {
@@ -2949,7 +3026,7 @@ class StudioActivity : AudioThemedActivity() {
         recordButton.setText(if (recorder.armed) R.string.studio_record_on else R.string.studio_record_off)
         recordButton.setBackgroundColor(if (recorder.armed) 0x66E74C3C else android.graphics.Color.TRANSPARENT)
         if (t == null) return
-        val soundName = if (t.kind == TrackKind.SYNTH) soundName(t.synth) else sf2ProgramName(t)
+        val soundName = instrumentName(t)
         soundButton.text = soundName
         soundButton.contentDescription = getString(R.string.studio_sound_label, soundName)
         arpButton.setText(R.string.studio_arp_caption)
@@ -2976,6 +3053,20 @@ class StudioActivity : AudioThemedActivity() {
     }
 
     private fun trackColor(t: Track): Int = StudioColors.of(t)
+
+    private val chipProgramNames by lazy { resources.getStringArray(R.array.gm_instruments) }
+
+    private fun instrumentName(t: Track): String = when {
+        t.kind != TrackKind.SYNTH -> sf2ProgramName(t)
+        t.synthBank == SynthBank.STUDIO -> soundName(t.synth)
+        else -> chipProgramNames[t.program]
+    }
+
+    private fun bankName(bank: SynthBank): Int = when (bank) {
+        SynthBank.STUDIO -> R.string.studio_title
+        SynthBank.SCC -> R.string.studio_bank_scc
+        SynthBank.FAMICOM -> R.string.studio_bank_famicom
+    }
 
     private fun sf2ProgramName(t: Track): String =
         sf2?.programs?.firstOrNull { it.bank == t.bank && it.program == t.program }?.name?.trim()?.takeIf { it.isNotEmpty() }
@@ -3453,7 +3544,11 @@ class StudioActivity : AudioThemedActivity() {
     /** Redessine la grille et le mixeur seulement si la liste des pistes a changé. */
     private fun refreshTracks() {
         ensureSelected()
-        val sig = session.project.tracks.joinToString(",") { "${it.id}:${it.kind}:${it.voice}:${it.hidden}:${it.bank}:${it.program}" }
+        val sig = session.project.tracks.joinToString(",") {
+            // Seul le soundfont nomme sa piste d'après le programme. Parcourir les sons SCC garde la sélection de notes.
+            val namedProgram = if (it.kind == TrackKind.SF2) "${it.bank}:${it.program}" else ""
+            "${it.id}:${it.kind}:${it.voice}:${it.hidden}:$namedProgram"
+        }
         if (sig == trackSignature) return
         setPasteArmed(false)
         grid.clearSelection()

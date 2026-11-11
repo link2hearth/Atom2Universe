@@ -62,6 +62,8 @@ object TrackKind {
     const val SF2 = 2
 }
 
+enum class SynthBank { STUDIO, SCC, FAMICOM }
+
 /**
  * Ce que le moteur doit savoir d'une piste pour fabriquer son instrument. [id] (0 à [StudioEngine.MAX_TRACKS] − 1) relie la
  * piste à ses pas et à ses notes ; [voice] est le son de batterie ([Inst]) pour une piste rythmique ; [bank] et [program]

@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.studio.dsp
 
+import com.Atom2Universe.app.studio.engine.SynthBank
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.pow
@@ -219,7 +220,30 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate) {
     private val voices = Array(voiceCount) { Voice() }
     private var age = 0L
 
+    // Construit sur le fil des réglages. Les queues des deux instruments passent par le même mixage de piste.
+    private class Chip(sampleRate: Int) {
+        val synth = GxSynth(sampleRate)
+        val scratch = FloatArray(Instrument.MAX_CHUNK)
+    }
+
+    @Volatile private var chip: Chip? = null
+    @Volatile private var selectedChip: GxSynth? = null
+
+    fun selectBank(bank: SynthBank, program: Int, midiChannel: Int) {
+        selectedChip = if (bank == SynthBank.STUDIO) null else {
+            val source = chip ?: Chip(sampleRate).also { chip = it }
+            source.synth.midiChannel = midiChannel
+            source.synth.select(bank == SynthBank.FAMICOM, program)
+            source.synth
+        }
+    }
+
     override fun glide(from: Int, to: Int, velocity: Float) {
+        val gx = chip?.synth
+        if (gx != null && gx.holds(from)) {
+            gx.glide(from, to, velocity)
+            return
+        }
         // La voix qui tient [from] change de hauteur en glissant, sans repartir de zéro (pad thérémine)
         for (v in voices) if (v.active && v.held && v.note == from) {
             v.retune(to)
@@ -232,10 +256,17 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate) {
         get() {
             var n = 0
             for (v in voices) if (v.active) n++
-            return n
+            return n + (chip?.synth?.activeVoices ?: 0)
         }
 
     override fun noteOn(note: Int, velocity: Float) {
+        val gx = selectedChip
+        if (gx != null) {
+            for (v in voices) if (v.active && v.held && v.note == note) v.release()
+            gx.noteOn(note, velocity)
+            return
+        }
+        chip?.synth?.noteOff(note)
         // Une même note rejouée reprend sa voix (sinon deux voix identiques s'additionnent).
         var chosen: Voice? = null
         for (v in voices) if (v.active && v.note == note && v.held) chosen = v
@@ -254,14 +285,26 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate) {
     }
 
     override fun noteOff(note: Int) {
+        chip?.synth?.noteOff(note)
         for (v in voices) if (v.active && v.held && v.note == note) v.release()
     }
 
     override fun allOff() {
+        chip?.synth?.allOff()
         for (v in voices) if (v.active && v.held) v.release()
     }
 
     override fun renderMono(out: FloatArray, count: Int): Boolean {
+        val studio = renderStudio(out, count)
+        val source = chip ?: return studio
+        if (!studio) return source.synth.renderMono(out, count)
+        if (source.synth.renderMono(source.scratch, count)) {
+            for (i in 0 until count) out[i] += source.scratch[i]
+        }
+        return true
+    }
+
+    private fun renderStudio(out: FloatArray, count: Int): Boolean {
         var any = false
         for (v in voices) if (v.active) { any = true; break }
         if (!any) return false

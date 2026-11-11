@@ -137,6 +137,7 @@ object StudioHistory {
                 tracks = if (tracks.none { it.id == id }) tracks + core else tracks.map {
                     if (it.id != id) it else it.copy(
                         kind = core.kind, voice = core.voice, bank = core.bank, program = core.program,
+                        synthBank = core.synthBank,
                         kit = core.kit, tune = core.tune, length = core.length, sfKit = core.sfKit,
                         padOrder = core.padOrder, padSize = core.padSize, padPlayMode = core.padPlayMode,
                     )

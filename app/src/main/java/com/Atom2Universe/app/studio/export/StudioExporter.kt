@@ -9,6 +9,7 @@ import com.Atom2Universe.app.studio.engine.GM_DRUM_NOTES
 import com.Atom2Universe.app.studio.engine.Inst
 import com.Atom2Universe.app.studio.engine.StepPattern
 import com.Atom2Universe.app.studio.engine.StudioEngine
+import com.Atom2Universe.app.studio.engine.SynthBank
 import com.Atom2Universe.app.studio.engine.TrackKind
 import java.io.ByteArrayOutputStream
 import java.io.OutputStream
@@ -134,16 +135,11 @@ object StudioExporter {
     private fun audible(project: StudioProject, t: Track): Boolean =
         !t.hidden && !t.muted && (project.tracks.none { it.solo } || t.solo)
 
-    /** Le canal MIDI de la n-ième piste mélodique : de 1 à 16 sans le canal 10 (la batterie). */
-    private fun channelOf(index: Int): Int {
-        val c = if (index < 9) index else index + 1
-        return c.coerceAtMost(15)
-    }
-
     /** Le projet en fichier MIDI (format 1 : tempo, batterie, puis une piste par instrument mélodique audible). */
     fun midiBytes(project: StudioProject): ByteArray {
         val drums = ArrayList<Ev>()
         val melodic = project.tracks.filter { it.melodic && audible(project, it) }
+        val channels = IntArray(melodic.size) { project.midiChannel(melodic[it].id) }
         val melodies = List(melodic.size) { ArrayList<Ev>() }
         val swingTicks = (project.swing.coerceIn(0f, 0.5f) * TICKS_PER_STEP).roundToInt()
         var offset = 0
@@ -164,7 +160,7 @@ object StudioExporter {
             for (n in pattern.notes) {
                 val index = melodic.indexOfFirst { it.id == n.track }
                 if (index < 0) continue
-                val ch = channelOf(index)
+                val ch = channels[index]
                 val t = tickOf(n.step)
                 val off = t + (n.length * TICKS_PER_STEP * 0.95f).roundToInt().coerceAtLeast(1)
                 melodies[index] += Ev(t, 1, byteArrayOf((0x90 or ch).toByte(), n.pitch.coerceIn(0, 127).toByte(), (n.velocity * 127f).roundToInt().coerceIn(1, 127).toByte()))
@@ -174,8 +170,8 @@ object StudioExporter {
         }
         // Au début de chaque piste mélodique : l'instrument (banque puis programme)
         for ((index, track) in melodic.withIndex()) {
-            val ch = channelOf(index)
-            val program = if (track.kind == TrackKind.SF2) track.program else SYNTH_PROGRAM
+            val ch = channels[index]
+            val program = if (track.kind == TrackKind.SYNTH && track.synthBank == SynthBank.STUDIO) SYNTH_PROGRAM else track.program
             if (track.kind == TrackKind.SF2) {
                 melodies[index] += Ev(0, -3, byteArrayOf((0xB0 or ch).toByte(), 0, ((track.bank shr 7) and 0x7F).toByte()))
                 melodies[index] += Ev(0, -2, byteArrayOf((0xB0 or ch).toByte(), 32, (track.bank and 0x7F).toByte()))

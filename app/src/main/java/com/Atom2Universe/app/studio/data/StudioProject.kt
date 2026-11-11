@@ -10,6 +10,7 @@ import com.Atom2Universe.app.studio.engine.StepCond
 import com.Atom2Universe.app.studio.engine.StepPattern
 import com.Atom2Universe.app.studio.engine.StudioEngine
 import com.Atom2Universe.app.studio.engine.TrackKind
+import com.Atom2Universe.app.studio.engine.SynthBank
 import com.Atom2Universe.app.studio.engine.TrackMix
 import com.Atom2Universe.app.studio.music.Style
 import com.Atom2Universe.app.studio.music.Styles
@@ -77,6 +78,16 @@ class StudioProject(
 
     /** La première piste qui joue des notes (celle du clavier au départ), de préférence visible. */
     val firstMelodic: Track? get() = tracks.firstOrNull { it.melodic && !it.hidden } ?: tracks.firstOrNull { it.melodic }
+
+    /** Canal MIDI en base zéro, commun à l'accordage GXSCC et à l'export. Le canal 9 est réservé à la batterie. */
+    internal fun midiChannel(id: Int): Int {
+        var channel = 0
+        for (track in tracks) {
+            if (track.id == id) return if (track.melodic) channel else 9
+            if (track.melodic) channel = if (channel == 8) 10 else (channel + 1).coerceAtMost(15)
+        }
+        error("Piste MIDI introuvable : $id")
+    }
 
     fun copy(
         styleId: String = this.styleId,
@@ -275,6 +286,7 @@ object StudioProjectCodec {
             .put("kind", t.kind)
             .put("voice", t.voice)
             .also { o ->
+                if (t.kind == TrackKind.SYNTH && t.synthBank != SynthBank.STUDIO) o.put("synthBank", t.synthBank.name)
                 if (t.padOrder != Int.MAX_VALUE) o.put("padOrder", t.padOrder)
                 if (t.melodic && t.padPlayMode != PadPlayMode.DRIVE) o.put("padPlayMode", t.padPlayMode.key)
                 when (t.padSize) {
@@ -334,6 +346,9 @@ object StudioProjectCodec {
             muted = o.optBoolean("muted", false),
             solo = o.optBoolean("solo", false) && !o.optBoolean("hidden", false),
             synth = if (kind == TrackKind.SYNTH) decodeSynth(o.getJSONObject("synth")) else SynthPresets.BASS,
+            synthBank = if (kind == TrackKind.SYNTH) {
+                SynthBank.entries.firstOrNull { it.name == o.optString("synthBank") } ?: SynthBank.STUDIO
+            } else SynthBank.STUDIO,
             bank = o.optInt("bank", 0).coerceIn(0, 16383),
             program = o.optInt("program", 0).coerceIn(0, 127),
             arpMode = arp.getInt(0).coerceIn(0, 4),
@@ -569,7 +584,10 @@ class StudioSession(
 
     private fun pushTrack(t: Track) {
         engine.applyMix(t.id, t.mix)
-        engine.synthOf(t.id)?.patch = t.synth
+        engine.synthOf(t.id)?.apply {
+            patch = t.synth
+            selectBank(t.synthBank, t.program, project.midiChannel(t.id))
+        }
         engine.setArp(t.id, t.arpMode, ARP_DIVISIONS[t.arpRate.coerceIn(0, 2)], t.arpOctaves)
         engine.setVoice(t.id, t.kit, t.tune, t.length)
     }
@@ -639,6 +657,7 @@ class StudioSession(
         list.add(to.coerceIn(0, list.size), t)
         remember()
         project = project.copy(tracks = list)
+        for (t in list) if (t.synthBank != SynthBank.STUDIO) pushTrack(t)
     }
 
     fun padTracks(): List<Track> = project.tracks.sortedBy { it.padOrder }
@@ -681,6 +700,26 @@ class StudioSession(
         if (project.trackOrNull(id)?.kind != TrackKind.SF2) return
         changeTrack(id) { it.copy(bank = bank.coerceIn(0, 16383), program = program.coerceIn(0, 127)) }
         engine.setTracks(project.tracks.map { it.spec })
+    }
+
+    fun setSynthBank(id: Int, bank: SynthBank) {
+        editSynthSound(id) { it.copy(synthBank = bank) }
+    }
+
+    fun setChipProgram(id: Int, program: Int) {
+        editSynthSound(id) { if (it.synthBank == SynthBank.STUDIO) it else it.copy(program = program.coerceIn(0, 127)) }
+    }
+
+    private inline fun editSynthSound(id: Int, edit: (Track) -> Track) {
+        val before = project.trackOrNull(id) ?: return
+        if (before.kind != TrackKind.SYNTH) return
+        val after = edit(before)
+        if (after == before) return
+        closeOpen()
+        remember()
+        project = project.withTrack(after)
+        pushTrack(after)
+        closeOpen()
     }
 
     /** Règle le son d'une piste de batterie : variante [kit], hauteur [tune] (demi-tons) et durée [length] (pour cent). */
