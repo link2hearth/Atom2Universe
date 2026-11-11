@@ -172,17 +172,6 @@ class StudioExportTest {
     }
 
     @Test
-    fun savedVibraphoneKeepsItsModelAndMidiProgram() {
-        val s = StudioSession(StudioEngine(48_000), project())
-        s.setPreset("vibraphone")
-        s.updateSynth(Inst.SYNTH) { it.copy(id = "mine:Vibes") }
-        val restored = StudioProjectCodec.decode(StudioProjectCodec.encode(s.project))!!
-        val track = restored.track(Inst.SYNTH)
-        assertEquals(s.project.track(Inst.SYNTH).synth, track.synth)
-        assertEquals(11, parse(StudioExporter.midiBytes(restored)).programs[restored.midiChannel(track.id)])
-    }
-
-    @Test
     fun midiUsesTheGmEquivalentOfTheFmInstrument() {
         val project = project()
         val track = project.track(Inst.SYNTH)

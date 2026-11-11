@@ -3992,7 +3992,6 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         "organ" -> R.string.studio_preset_organ
         "acoustic_piano" -> R.string.studio_preset_acoustic_piano
         "mallet" -> R.string.studio_preset_mallet
-        "vibraphone" -> R.string.studio_preset_vibraphone
         "brass" -> R.string.studio_preset_brass
         "pick_bass" -> R.string.studio_preset_pick_bass
         "octave_bass" -> R.string.studio_preset_octave_bass

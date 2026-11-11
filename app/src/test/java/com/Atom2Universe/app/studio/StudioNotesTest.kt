@@ -2,7 +2,6 @@ package com.Atom2Universe.app.studio
 
 import com.Atom2Universe.app.studio.data.StudioProject
 import com.Atom2Universe.app.studio.data.StudioSession
-import com.Atom2Universe.app.studio.dsp.OrchestralStereo
 import com.Atom2Universe.app.studio.dsp.PolySynth
 import com.Atom2Universe.app.studio.dsp.SynthPatch
 import com.Atom2Universe.app.studio.dsp.SynthPresets
@@ -164,32 +163,6 @@ class StudioNotesTest {
     }
 
     @Test
-    fun orchestralKeepsTheApprovedModelsInTheStereoCenter() {
-        val count = rate / 4
-        for ((program, preset) in listOf(11 to SynthPresets.VIBRAPHONE)) {
-            for (key in listOf(48, 60, 67, 76)) {
-                val expected = FloatArray(count)
-                val left = FloatArray(count)
-                val right = FloatArray(count)
-                val bus = FloatArray(count)
-                PolySynth(rate, 1).use { original ->
-                    original.patch = preset
-                    original.noteOn(key, 0.8f)
-                    original.render(expected, FloatArray(count), bus, bus, 0, count)
-                }
-                PolySynth(rate, 1).use { stereo ->
-                    stereo.selectBank(com.Atom2Universe.app.studio.engine.SynthBank.ORCHESTRAL, program, 0)
-                    stereo.noteOn(key, 0.8f)
-                    stereo.render(left, right, bus, bus, 0, count)
-                }
-                val mid = OrchestralStereo.load(program)!!.at(key, 102)!!.mid
-                assertTrue(expected.indices.all { abs((left[it] + right[it]) * 0.5f - expected[it] * mid) < 1e-5f })
-                assertTrue(left.indices.any { abs(left[it] - right[it]) > 1e-4f })
-            }
-        }
-    }
-
-    @Test
     fun orchestralPianoPlaysTheSampledGrandInTheCenter() {
         val count = rate / 4
         val expected = FloatArray(count)
@@ -225,24 +198,6 @@ class StudioNotesTest {
             10 * log10(powerAt(window, 523.25) / powerAt(window, 261.63))
         }
         assertTrue("Doux ${ratios[0]} dB, fort ${ratios[1]} dB", ratios[0] > 0.0 && ratios[0] > ratios[1] + 1.5)
-    }
-
-    @Test
-    fun vibraphoneStrikeMatchesTheBalanceOfTheSf2AcrossRegisters() {
-        // Écart entre le partiel à deux octaves et la fondamentale, mesuré sur Perso.sf2 à vélocité 96.
-        for ((pitch, expectedDb) in listOf(60 to 9.4, 67 to 4.6, 76 to -12.8)) {
-            val engine = quietEngine()
-            engine.synth.patch = SynthPresets.VIBRAPHONE
-            engine.trigger(Inst.SYNTH, pitch, 96f / 127f)
-            val (sound, _) = render(engine, rate / 10)
-            val n = rate * 60 / 1000
-            val window = FloatArray(n) {
-                (sound[rate * 15 / 1000 + it] * (0.5 - 0.5 * kotlin.math.cos(2 * Math.PI * it / n))).toFloat()
-            }
-            val hz = 440.0 * Math.pow(2.0, (pitch - 69) / 12.0)
-            val balance = 10 * log10(powerAt(window, hz * 4.01) / powerAt(window, hz))
-            assertEquals("Note MIDI $pitch", expectedDb, balance, 2.5)
-        }
     }
 
     @Test

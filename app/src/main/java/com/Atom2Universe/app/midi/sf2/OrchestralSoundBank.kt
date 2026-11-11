@@ -20,7 +20,7 @@ class OrchestralProgram internal constructor(val number: Int, private val channe
     @Volatile private var loaded: OrchestralBank.Program? = null
 
     internal fun profile(): OrchestralBank.Program? {
-        if (number == 0 || number == 11) return null
+        if (number == 0) return null
         return loaded ?: OrchestralBank.load(number, channel).also { loaded = it }
     }
 
