@@ -84,6 +84,9 @@
     <string name="studio_preset_lead">Lead</string>
     <string name="studio_preset_arp">Arp</string>
     <string name="studio_preset_pluck">Pluck</string>
+    <string name="studio_preset_organ">Organ</string>
+    <string name="studio_preset_mallet">Marimba</string>
+    <string name="studio_preset_brass">Brass</string>
     <string name="studio_preset_bell">Bell</string>
     <string name="studio_advanced">Advanced</string>
     <string name="studio_macro_bright">Brightness</string>

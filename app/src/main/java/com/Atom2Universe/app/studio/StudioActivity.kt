@@ -830,7 +830,7 @@ class StudioActivity : AudioThemedActivity() {
         if (!::pads.isInitialized) return
         pads.keyPc = session.project.keyPc
         pads.tiles = session.padTracks().filterNot { it.hidden }.map { t ->
-            PadsView.Tile(t.id, trackColor(t), InstrumentIcons.of(t), if (t.melodic) padLevels(t.id) else null, t.padWide)
+            PadsView.Tile(t.id, trackColor(t), InstrumentIcons.of(t), if (t.melodic) padLevels(t.id) else null, t.padWide, trackName(t))
         }
     }
 
@@ -1158,13 +1158,15 @@ class StudioActivity : AudioThemedActivity() {
 
                     override fun onStartTrackingTouch(seekBar: SeekBar) {}
                     override fun onStopTrackingTouch(seekBar: SeekBar) {
-                        // Une note d'essai : on entend l'effet tout de suite
-                        previewTrack(lane)
+                        if (!playing) previewTrack(lane)
                     }
                 })
             }
             row.addView(bar, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
             box.addView(row, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(8) })
+        }
+        if (padsPane.visibility == View.VISIBLE) {
+            add(R.string.studio_volume, { it.level }, { it / LEVEL_MAX }, { it * LEVEL_MAX }, { mix, value -> mix.copy(level = value) })
         }
         add(R.string.studio_fx_pan, { it.pan }, { (it + 1f) / 2f }, { it * 2f - 1f }, { m, v -> m.copy(pan = if (kotlin.math.abs(v) < 0.04f) 0f else v) })
         add(R.string.studio_fx_reverb, { it.reverbSend }, { it }, { it }, { m, v -> m.copy(reverbSend = v) })
@@ -3444,6 +3446,9 @@ class StudioActivity : AudioThemedActivity() {
         "arp" -> R.string.studio_preset_arp
         "pluck" -> R.string.studio_preset_pluck
         "bell" -> R.string.studio_preset_bell
+        "organ" -> R.string.studio_preset_organ
+        "mallet" -> R.string.studio_preset_mallet
+        "brass" -> R.string.studio_preset_brass
         else -> R.string.studio_preset_bass
     }
 

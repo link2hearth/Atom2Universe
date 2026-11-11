@@ -27,7 +27,7 @@ import android.view.ViewConfiguration
 class PadsView(context: Context) : View(context) {
 
     /** Une case : la piste, sa couleur, son dessin, et pour une piste à notes ses niveaux (hauteurs MIDI, du grave à l'aigu). */
-    class Tile(val track: Int, val color: Int, val icon: Int, val levels: IntArray? = null, val wide: Boolean = false)
+    class Tile(val track: Int, val color: Int, val icon: Int, val levels: IntArray? = null, val wide: Boolean = false, val name: String = "")
 
     var tiles: List<Tile> = emptyList()
         set(v) {
@@ -207,6 +207,9 @@ class PadsView(context: Context) : View(context) {
             } else {
                 drawMelodic(canvas, i, t, levels)
             }
+            if (levels == null && rect.height() >= dp(58f)) {
+                drawTileName(canvas, t, rect.left + dp(9f), rect.bottom - dp(8f), rect.right - dp(6f))
+            }
             if (editing) drawEditControls(canvas, i, t)
             if (g > 0f) {
                 glow[i] = (g - 0.08f).coerceAtLeast(0f)
@@ -247,6 +250,12 @@ class PadsView(context: Context) : View(context) {
         }
     }
 
+    private fun drawTileName(canvas: Canvas, tile: Tile, x: Float, y: Float, right: Float) {
+        if (tile.name.isEmpty() || label.measureText(tile.name) > right - x) return
+        label.textAlign = Paint.Align.LEFT
+        canvas.drawText(tile.name, x, y, label)
+    }
+
     private fun drawDragIcon(canvas: Canvas) {
         val tile = tiles.getOrNull(source) ?: return
         val radius = minOf(dp(20f), width / 4f, height / 4f)
@@ -265,6 +274,10 @@ class PadsView(context: Context) : View(context) {
         val top = keysTop(rect)
         val s = (top - rect.top) * 0.36f
         InstrumentIcons.draw(canvas, t.icon, rect.left + dp(10f) + s, (rect.top + top) / 2f, s, Color.argb(220, 255, 255, 255))
+        if (top - rect.top >= label.textSize + dp(2f)) {
+            val titleY = (top + rect.top - label.ascent() - label.descent()) * 0.5f
+            drawTileName(canvas, t, rect.left + dp(14f) + 2f * s, titleY, rect.right - dp(if (editing) 36f else 6f))
+        }
         val count = levels.size
         if (count == 0) return
         val w = rect.width() / count

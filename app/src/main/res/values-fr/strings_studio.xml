@@ -84,6 +84,9 @@
     <string name="studio_preset_lead">Mélodie</string>
     <string name="studio_preset_arp">Arpège</string>
     <string name="studio_preset_pluck">Pincé</string>
+    <string name="studio_preset_organ">Orgue</string>
+    <string name="studio_preset_mallet">Marimba</string>
+    <string name="studio_preset_brass">Cuivres</string>
     <string name="studio_preset_bell">Cloche</string>
     <string name="studio_advanced">Avancé</string>
     <string name="studio_macro_bright">Brillance</string>

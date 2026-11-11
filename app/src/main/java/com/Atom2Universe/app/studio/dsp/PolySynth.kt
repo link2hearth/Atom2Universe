@@ -130,7 +130,23 @@ object SynthPresets {
         volume = 1.2f,
     )
 
-    val ALL = listOf(BASS, SUB, ACID, DIST_BASS, WOBBLE, PAD, STRINGS, DRONE, LEAD, ARP, PLUCK, BELL)
+    val ORGAN = SynthPatch(
+        id = "organ", wave = SynthPatch.WAVE_SINE, interval = 12, detuneCents = 0f, subLevel = 0.12f,
+        cutoffHz = 4500f, resonance = 0.75f, envOctaves = 0f, attack = 0.012f, decay = 0.12f,
+        sustain = 0.88f, release = 0.085f, drive = 0.09f, keyTrack = 0.2f, volume = 1.12f,
+    )
+    val MALLET = SynthPatch(
+        id = "mallet", wave = SynthPatch.WAVE_TRIANGLE, interval = 12, detuneCents = 2f,
+        cutoffHz = 1050f, resonance = 0.8f, envOctaves = 1.7f, filterDecay = 0.065f,
+        attack = 0.003f, decay = 0.5f, sustain = 0f, release = 0.19f, keyTrack = 0.7f, volume = 1.88f,
+    )
+    val BRASS = SynthPatch(
+        id = "brass", wave = SynthPatch.WAVE_SAW, detuneCents = 5f,
+        cutoffHz = 1350f, resonance = 1.25f, envOctaves = 0.6f, filterDecay = 0.28f,
+        attack = 0.09f, decay = 0.25f, sustain = 0.8f, release = 0.16f, keyTrack = 0.6f, volume = 1.1f,
+    )
+
+    val ALL = listOf(BASS, SUB, ACID, DIST_BASS, WOBBLE, PAD, STRINGS, DRONE, LEAD, ARP, PLUCK, BELL, ORGAN, MALLET, BRASS)
 
     fun byId(id: String): SynthPatch = if (id == MY_VOICE.id) MY_VOICE else ALL.firstOrNull { it.id == id } ?: BASS
 }
