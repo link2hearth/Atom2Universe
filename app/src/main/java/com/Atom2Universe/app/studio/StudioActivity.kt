@@ -116,7 +116,10 @@ class StudioActivity : AudioThemedActivity() {
     private lateinit var mixerStrips: LinearLayout
     private lateinit var mixerBody: LinearLayout
     private lateinit var mixerStripView: View
-    private lateinit var mixerPadBox: View
+    private lateinit var mixerPadBox: LinearLayout
+    private lateinit var mixerPadTitle: TextView
+    private lateinit var padGestureRow: FlowRow
+    private lateinit var padsXyToggle: MaterialButton
     private lateinit var notesContent: LinearLayout
     private lateinit var notesEmpty: TextView
     private lateinit var trackStrip: LinearLayout
@@ -661,6 +664,7 @@ class StudioActivity : AudioThemedActivity() {
         // Roulement : un doigt qui reste sur une case de batterie la fait rejouer en rythme (sinon, un seul coup). Gardé d'une fois sur l'autre.
         val prefs = getSharedPreferences(PREFS, MODE_PRIVATE)
         padsRoll = prefs.getBoolean(PREF_PADS_ROLL, false)
+        padsShowXY = prefs.getBoolean(PREF_PADS_SHOW_XY, false)
         val rates = resources.getStringArray(R.array.studio_roll_rates)
         var rollRate = prefs.getInt(PREF_ROLL_RATE, 0).coerceIn(rates.indices)
         val rateButton = outlined(null).apply {
@@ -685,14 +689,6 @@ class StudioActivity : AudioThemedActivity() {
         }, wrap(end = dp(8)))
         header.addView(rateButton)
         header.addView(outlined(R.string.studio_pad_sounds).apply { setOnClickListener { showPadSounds(it) } })
-        header.addView(outlined(R.string.studio_xy_title).apply {
-            isCheckable = true
-            setOnClickListener {
-                padsShowXY = isChecked
-                placePerformancePad()
-                showPadPosition()
-            }
-        })
         header.addView(outlined(R.string.studio_pad_arrange).apply {
             isCheckable = true
             setOnClickListener { pads.editing = isChecked }
@@ -991,14 +987,29 @@ class StudioActivity : AudioThemedActivity() {
         }
         padView = pad
         val xyBox = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
-        xyBox.addView(TextView(this).apply {
+        mixerPadTitle = TextView(this).apply {
             setText(R.string.studio_xy_title)
             textSize = 16f
             setTypeface(typeface, Typeface.BOLD)
             setPadding(0, 0, 0, dp(6))
-        })
+        }
+        xyBox.addView(mixerPadTitle)
         xyBox.addView(pad, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f))
-        val gestureRow = FlowRow(this).apply { hGap = dp(8); vGap = dp(4) }
+        padGestureRow = flowRow(topMargin = dp(8)).apply { vGap = dp(4) }
+        padsXyToggle = outlined(R.string.studio_xy_title).apply {
+            visibility = View.GONE
+            isCheckable = true
+            isChecked = padsShowXY
+            iconSize = dp(20)
+            iconPadding = dp(4)
+            setOnClickListener {
+                padsShowXY = isChecked
+                getSharedPreferences(PREFS, MODE_PRIVATE).edit().putBoolean(PREF_PADS_SHOW_XY, isChecked).apply()
+                placePerformancePad()
+                showPadPosition()
+            }
+        }
+        padGestureRow.addView(padsXyToggle)
         holdPadSwitch = SwitchCompat(this).apply {
             setText(R.string.studio_pad_hold)
             isChecked = session.project.heldPad != null
@@ -1014,7 +1025,7 @@ class StudioActivity : AudioThemedActivity() {
                 scheduleSave()
             }
         }
-        gestureRow.addView(holdPadSwitch)
+        padGestureRow.addView(holdPadSwitch)
         gestureRecordButton = outlined(R.string.studio_gesture_record).apply {
             isCheckable = true
             setOnClickListener {
@@ -1041,9 +1052,9 @@ class StudioActivity : AudioThemedActivity() {
                 scheduleSave()
             }
         }
-        gestureRow.addView(gestureRecordButton)
-        gestureRow.addView(gestureClearButton)
-        xyBox.addView(gestureRow, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(8) })
+        padGestureRow.addView(gestureRecordButton)
+        padGestureRow.addView(gestureClearButton)
+        xyBox.addView(padGestureRow)
 
         // Les tranches et le pad : côte à côte sur un écran large, l'un sous l'autre sinon (voir applyMixerLayout)
         mixerStripView = strip
@@ -1086,13 +1097,30 @@ class StudioActivity : AudioThemedActivity() {
 
     /** Le même pad, le même maintien et la même prise de geste dans les deux onglets. */
     private fun placePerformancePad() {
-        val docked = padsShowXY && padsPane.visibility == View.VISIBLE
+        val onPads = padsPane.visibility == View.VISIBLE
+        val docked = onPads && padsShowXY
         val target = if (docked) padsBody else mixerBody
         if (mixerPadBox.parent !== target) {
             padView.finishTouch(false)
             (mixerPadBox.parent as? ViewGroup)?.removeView(mixerPadBox)
             target.addView(mixerPadBox)
         }
+        // Le pied reste sous les tuiles dans les deux orientations, même quand le pad est replié.
+        val footerParent = if (onPads) padsPane else mixerPadBox
+        if (padGestureRow.parent !== footerParent) {
+            (padGestureRow.parent as? ViewGroup)?.removeView(padGestureRow)
+            footerParent.addView(padGestureRow)
+        }
+        mixerPadTitle.visibility = if (docked) View.GONE else View.VISIBLE
+        padsXyToggle.visibility = if (onPads) View.VISIBLE else View.GONE
+        if (onPads) {
+            padsXyToggle.setIconResource(if (docked) R.drawable.ic_chevron_down else R.drawable.ic_chevron_up)
+            padsXyToggle.contentDescription = getString(if (docked) R.string.studio_xy_fold else R.string.studio_xy_unfold)
+        }
+        val controls = if (onPads && !docked) View.GONE else View.VISIBLE
+        holdPadSwitch.visibility = controls
+        gestureRecordButton.visibility = controls
+        gestureClearButton.visibility = controls
         val config = resources.configuration
         val wide = config.screenWidthDp >= 650 && config.screenWidthDp > config.screenHeightDp
         padsBody.orientation = if (wide) LinearLayout.HORIZONTAL else LinearLayout.VERTICAL
@@ -3644,6 +3672,7 @@ class StudioActivity : AudioThemedActivity() {
         const val PREFS = "studio_prefs"
         const val PREF_ROLL_RATE = "pads_roll_rate"
         const val PREF_PADS_ROLL = "pads_roll"
+        const val PREF_PADS_SHOW_XY = "pads_show_xy"
 
         /** La couleur de chaque motif (A à D) dans les blocs du morceau. */
         val PATTERN_COLORS = intArrayOf(0xFF7C8CFF.toInt(), 0xFF1ABC9C.toInt(), 0xFFF39C12.toInt(), 0xFFE84393.toInt())

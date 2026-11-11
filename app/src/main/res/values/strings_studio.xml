@@ -16,6 +16,8 @@
     <string name="studio_fx_echo">Echo</string>
     <string name="studio_pad_hold">Hold</string>
     <string name="studio_xy_title">Performance pad</string>
+    <string name="studio_xy_unfold">Open performance pad</string>
+    <string name="studio_xy_fold">Collapse performance pad</string>
     <string name="studio_gesture_record">Record my gesture</string>
     <string name="studio_gesture_clear">Clear gesture</string>
 

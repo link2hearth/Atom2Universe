@@ -16,6 +16,8 @@
     <string name="studio_fx_echo">Écho</string>
     <string name="studio_pad_hold">Maintenir</string>
     <string name="studio_xy_title">Pad de jeu</string>
+    <string name="studio_xy_unfold">Ouvrir le pad de jeu</string>
+    <string name="studio_xy_fold">Replier le pad de jeu</string>
     <string name="studio_gesture_record">Enregistrer mon geste</string>
     <string name="studio_gesture_clear">Effacer le geste</string>
 
