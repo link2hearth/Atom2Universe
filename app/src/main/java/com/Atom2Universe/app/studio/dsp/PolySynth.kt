@@ -146,7 +146,65 @@ object SynthPresets {
         attack = 0.09f, decay = 0.25f, sustain = 0.8f, release = 0.16f, keyTrack = 0.6f, volume = 1.1f,
     )
 
-    val ALL = listOf(BASS, SUB, ACID, DIST_BASS, WOBBLE, PAD, STRINGS, DRONE, LEAD, ARP, PLUCK, BELL, ORGAN, MALLET, BRASS)
+    private val PICK_BASS = SynthPatch(
+        id = "pick_bass", volume = 1.30f, wave = SynthPatch.WAVE_TRIANGLE, detuneCents = 0f, subLevel = 0.35f,
+        cutoffHz = 430f, resonance = 1.4f, envOctaves = 3.5f, filterDecay = 0.095f,
+        attack = 0.003f, decay = 0.38f, sustain = 0.12f, release = 0.07f, keyTrack = 0.4f,
+    )
+    private val OCTAVE_BASS = SynthPatch(
+        id = "octave_bass", volume = 1.07f, wave = SynthPatch.WAVE_SQUARE, interval = 12, detuneCents = 0f, subLevel = 0.45f,
+        cutoffHz = 650f, resonance = 1.1f, envOctaves = 1.6f, filterDecay = 0.14f,
+        attack = 0.006f, decay = 0.18f, sustain = 0.6f, release = 0.06f, drive = 0.08f,
+    )
+    private val TINES = SynthPatch(
+        id = "tines", volume = 1.23f, wave = SynthPatch.WAVE_SINE, interval = 12, detuneCents = 3f,
+        cutoffHz = 820f, resonance = 0.85f, envOctaves = 2.7f, filterDecay = 0.12f,
+        attack = 0.004f, decay = 1.6f, sustain = 0.16f, release = 0.22f, keyTrack = 0.7f,
+    )
+    private val HARPSICHORD = SynthPatch(
+        id = "harpsichord", volume = 1.58f, wave = SynthPatch.WAVE_SAW, interval = 12, detuneCents = 2f,
+        cutoffHz = 2300f, resonance = 0.75f, envOctaves = 1.7f, filterDecay = 0.09f,
+        attack = 0.003f, decay = 0.48f, sustain = 0.08f, release = 0.055f, keyTrack = 0.8f,
+    )
+    private val FLUTE = SynthPatch(
+        id = "flute", volume = 1.26f, wave = SynthPatch.WAVE_SINE, interval = 12, detuneCents = 0f,
+        cutoffHz = 720f, resonance = 0.65f, envOctaves = 0.4f, filterDecay = 0.13f,
+        attack = 0.075f, decay = 0.3f, sustain = 0.91f, release = 0.13f, keyTrack = 0.8f,
+    )
+    private val CLARINET = SynthPatch(
+        id = "clarinet", volume = 0.60f, wave = SynthPatch.WAVE_SQUARE, detuneCents = 0f,
+        cutoffHz = 1320f, resonance = 1.3f, envOctaves = 0.15f, filterDecay = 0.18f,
+        attack = 0.042f, decay = 0.25f, sustain = 0.85f, release = 0.105f, keyTrack = 0.7f,
+    )
+    private val GLASS_PAD = SynthPatch(
+        id = "glass_pad", volume = 1.12f, wave = SynthPatch.WAVE_SINE, interval = 19, detuneCents = 3f,
+        cutoffHz = 1500f, resonance = 0.85f, envOctaves = 0f, filterDecay = 0.5f,
+        attack = 0.8f, decay = 0.7f, sustain = 0.85f, release = 1.8f, keyTrack = 0.6f,
+        lfoRate = 0.17f, lfoFilter = 0.8f,
+    )
+    private val FIFTH_PAD = SynthPatch(
+        id = "fifth_pad", volume = 1.33f, wave = SynthPatch.WAVE_TRIANGLE, interval = 7, detuneCents = 4f, subLevel = 0.15f,
+        cutoffHz = 1100f, resonance = 1.3f, envOctaves = 0.35f, filterDecay = 0.9f,
+        attack = 0.32f, decay = 0.7f, sustain = 0.8f, release = 1.4f,
+        lfoRate = 0.28f, lfoFilter = 1.1f,
+    )
+    private val KALIMBA = SynthPatch(
+        id = "kalimba", volume = 1.46f, wave = SynthPatch.WAVE_SINE, interval = 24, detuneCents = 0f,
+        cutoffHz = 630f, resonance = 0.8f, envOctaves = 3.3f, filterDecay = 0.08f,
+        attack = 0.002f, decay = 0.72f, sustain = 0f, release = 0.32f, keyTrack = 0.65f,
+    )
+    private val ARCADE = SynthPatch(
+        id = "arcade", volume = 0.77f, wave = SynthPatch.WAVE_SQUARE, detuneCents = 0f,
+        cutoffHz = 4500f, resonance = 0.72f, envOctaves = 0f, filterDecay = 0.1f,
+        attack = 0.002f, decay = 0.065f, sustain = 0.67f, release = 0.035f, keyTrack = 0.4f,
+    )
+
+    val BASSES = listOf(BASS, SUB, ACID, DIST_BASS, WOBBLE, PICK_BASS, OCTAVE_BASS)
+    val KEYS = listOf(ORGAN, TINES, HARPSICHORD)
+    val LEADS = listOf(LEAD, BRASS, FLUTE, CLARINET, ARCADE)
+    val PADS = listOf(PAD, STRINGS, DRONE, GLASS_PAD, FIFTH_PAD)
+    val PLUCKS = listOf(ARP, PLUCK, BELL, MALLET, KALIMBA)
+    val ALL = BASSES + KEYS + LEADS + PADS + PLUCKS
 
     fun byId(id: String): SynthPatch = if (id == MY_VOICE.id) MY_VOICE else ALL.firstOrNull { it.id == id } ?: BASS
 }

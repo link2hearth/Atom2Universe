@@ -365,6 +365,10 @@ class StudioActivity : AudioThemedActivity() {
         keyboard.releaseAll()
         theremin.finish()
         padExpressionResets.keys.toList().forEach(::clearPendingPadEffects)
+        for (release in presetReleases.values.toList()) {
+            handler.removeCallbacks(release)
+            release.run()
+        }
         setPadsRecording(false)
         stopLive()
         handler.removeCallbacks(saveRunnable)
@@ -1829,24 +1833,30 @@ class StudioActivity : AudioThemedActivity() {
         val synthKind = t.kind == TrackKind.SYNTH
         val pick = outlined(null)
         val forget = outlined(R.string.studio_forget_sound)
+        var waveGroup: MaterialButtonToggleGroup? = null
+        var refreshingWave = false
         fun refreshPick() {
             val now = session.project.trackOrNull(t.id) ?: return
             pick.text = if (now.kind == TrackKind.SYNTH) soundName(now.synth) else sf2ProgramName(now)
             forget.visibility = if (now.kind == TrackKind.SYNTH && now.synth.id.startsWith(SynthPatch.MINE_PREFIX)) View.VISIBLE else View.GONE
+            if (synthKind) {
+                refreshingWave = true
+                waveGroup?.let { group ->
+                    val waveId = waveIds.getOrNull(now.synth.wave)
+                    if (waveId == null) group.clearChecked() else group.check(waveId)
+                }
+                refreshingWave = false
+            }
             for (p in params) p.bar.progress = (p.toSlider(p.read()).coerceIn(0f, 1f) * 1000).roundToInt()
             refreshNotesControls()
         }
         pick.setOnClickListener {
             if (synthKind) {
-                // Les sons du synthé, puis « Mon son (micro) » s'il y a un enregistrement, puis les sons gardés
-                val choices = ArrayList<SynthPatch>(SynthPresets.ALL)
-                if (engine.synthSample != null) choices += SynthPresets.MY_VOICE
-                choices += mySounds.all()
-                dropdown(pick, choices.map { soundName(it) }) { which ->
-                    session.updateSynth(t.id) { choices[which] }
+                pickSynthPreset(pick, patch().id) { chosen ->
+                    session.updateSynth(t.id) { chosen }
                     scheduleSave()
                     refreshPick()
-                    previewTrack(t.id)
+                    auditionPreset(t.id, chosen)
                 }
             } else {
                 withSf2 { bridge ->
@@ -1859,7 +1869,15 @@ class StudioActivity : AudioThemedActivity() {
                 }
             }
         }
-        box.addView(pick, wrap())
+        if (synthKind) {
+            box.addView(FlowRow(this).apply {
+                hGap = dp(8)
+                addView(pick)
+                addView(outlined(R.string.studio_drum_listen).apply {
+                    setOnClickListener { auditionPreset(t.id, patch()) }
+                })
+            })
+        } else box.addView(pick, wrap())
 
         if (synthKind) {
             // Un son à soi : enregistré au micro, ou un réglage gardé pour le retrouver dans tous les morceaux
@@ -1944,13 +1962,14 @@ class StudioActivity : AudioThemedActivity() {
                 for (i in 0 until 4) addView(outlined(labels[i]).apply { id = waveIds[i]; minWidth = 0; setPadding(dp(8), 0, dp(8), 0) })
                 if (patch().wave in 0..3) check(waveIds[patch().wave])
                 addOnButtonCheckedListener { _, id, checked ->
-                    if (checked) {
+                    if (checked && !refreshingWave) {
                         session.updateSynth(t.id) { it.copy(wave = waveIds.indexOf(id)) }
                         scheduleSave()
                         previewTrack(t.id)
                     }
                 }
             }
+            waveGroup = wave
             advanced.addView(wave, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(8) })
             val list = listOf(
                 SoundParam(R.string.studio_adv_resonance, { patch().resonance }, { (it - 0.5f) / 9.5f }, { 0.5f + it * 9.5f },
@@ -1984,6 +2003,46 @@ class StudioActivity : AudioThemedActivity() {
         }
         refreshPick()
         panels.show(R.string.studio_sound_caption, getString(R.string.studio_panel_track, getString(R.string.studio_sound_caption), trackName(t)), box, 340, anchor, onHistory = { showSoundPanel(anchor, t.id) }) { session.project.trackOrNull(t.id)?.hidden == false }
+    }
+
+    /** La note précédente ne doit pas écourter le son suivant quand on parcourt rapidement la banque. */
+    private val presetReleases = mutableMapOf<Int, Runnable>()
+
+    private fun auditionPreset(track: Int, patch: SynthPatch) {
+        if (session.isMuted(track)) return
+        presetReleases.remove(track)?.let { handler.removeCallbacks(it); it.run() }
+        val octave = if (SynthPresets.BASSES.any { it.id == patch.id }) 36 else 60
+        val pitch = octave + session.project.keyPc
+        engine.trigger(track, pitch, 0.9f, recordHit = false)
+        val release = Runnable {
+            engine.release(track, pitch)
+            presetReleases.remove(track)
+        }
+        presetReleases[track] = release
+        // Laisser aussi aux nappes et aux drones le temps d'atteindre leur attaque.
+        handler.postDelayed(release, (patch.attack * 1000).toLong() + 450L)
+    }
+
+    private fun pickSynthPreset(anchor: View, currentId: String, onPick: (SynthPatch) -> Unit) {
+        val popup = androidx.appcompat.widget.PopupMenu(this, anchor)
+        fun family(title: Int, patches: List<SynthPatch>) {
+            if (patches.isEmpty()) return
+            val group = popup.menu.addSubMenu(title)
+            for (patch in patches) {
+                group.add(soundName(patch)).apply {
+                    isCheckable = true
+                    isChecked = patch.id == currentId
+                    setOnMenuItemClickListener { onPick(patch); true }
+                }
+            }
+        }
+        family(R.string.studio_family_bass, SynthPresets.BASSES)
+        family(R.string.studio_family_keys, SynthPresets.KEYS)
+        family(R.string.studio_family_lead, SynthPresets.LEADS)
+        family(R.string.studio_family_pad, SynthPresets.PADS)
+        family(R.string.studio_family_pluck, SynthPresets.PLUCKS)
+        family(R.string.studio_family_own, listOfNotNull(SynthPresets.MY_VOICE.takeIf { engine.synthSample != null }) + mySounds.all())
+        popup.show()
     }
 
     /** Le panneau « Arpège » de la piste choisie : mode, vitesse et nombre d'octaves. */
@@ -3553,6 +3612,16 @@ class StudioActivity : AudioThemedActivity() {
         "organ" -> R.string.studio_preset_organ
         "mallet" -> R.string.studio_preset_mallet
         "brass" -> R.string.studio_preset_brass
+        "pick_bass" -> R.string.studio_preset_pick_bass
+        "octave_bass" -> R.string.studio_preset_octave_bass
+        "tines" -> R.string.studio_preset_tines
+        "harpsichord" -> R.string.studio_preset_harpsichord
+        "flute" -> R.string.studio_preset_flute
+        "clarinet" -> R.string.studio_preset_clarinet
+        "glass_pad" -> R.string.studio_preset_glass_pad
+        "fifth_pad" -> R.string.studio_preset_fifth_pad
+        "kalimba" -> R.string.studio_preset_kalimba
+        "arcade" -> R.string.studio_preset_arcade
         else -> R.string.studio_preset_bass
     }
 
