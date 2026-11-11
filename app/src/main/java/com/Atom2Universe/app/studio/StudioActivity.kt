@@ -76,10 +76,13 @@ import com.Atom2Universe.app.studio.ui.ThereminView
 import com.Atom2Universe.app.studio.data.MySounds
 import com.Atom2Universe.app.studio.dsp.SynthPatch
 import com.Atom2Universe.app.studio.dsp.SynthSample
+import com.Atom2Universe.app.util.ImmersiveMaterialAlertDialogBuilder
+import com.Atom2Universe.app.util.ImmersiveSupportPopupMenu
+import com.Atom2Universe.app.util.SystemBarsManager
+import com.Atom2Universe.app.util.SystemBarsPreferenceOwner
 import com.Atom2Universe.app.util.enableImmersiveMode
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.button.MaterialButtonToggleGroup
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlin.math.exp
 import kotlin.math.ln
 import kotlin.math.pow
@@ -94,7 +97,10 @@ const val EXTRA_PROJECT_ID = "studio_project_id"
  *
  * Toutes les rangées de commandes passent à la ligne quand la place manque ([FlowRow]) : rien n'est caché hors écran.
  */
-class StudioActivity : AudioThemedActivity() {
+class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
+    override val showNavigationBar: Boolean get() = false
+    override val showStatusBar: Boolean get() = SystemBarsManager.shouldShowSystemBars(this)
+
 
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleHelper.applyLocale(newBase))
@@ -469,7 +475,7 @@ class StudioActivity : AudioThemedActivity() {
         titleRow.addView(tabsGroup, wrap())
         titleRow.addView(square(R.string.studio_help_button).apply {
             setOnClickListener {
-                MaterialAlertDialogBuilder(this@StudioActivity)
+                ImmersiveMaterialAlertDialogBuilder(this@StudioActivity)
                     .setTitle(R.string.studio_help_title)
                     .setMessage(helpText())
                     .setPositiveButton(android.R.string.ok, null)
@@ -775,7 +781,7 @@ class StudioActivity : AudioThemedActivity() {
         val track = session.project.trackOrNull(id) ?: return
         padModeAnchor.translationX = x.coerceIn(0, pads.width - 1).toFloat()
         padModeAnchor.translationY = y.coerceIn(0, pads.height - 1).toFloat()
-        val menu = androidx.appcompat.widget.PopupMenu(this, padModeAnchor)
+        val menu = ImmersiveSupportPopupMenu(this, padModeAnchor)
         for (mode in PadPlayMode.entries) {
             val name = getString(StudioNames.padMode(mode))
             val title = if (mode == PadPlayMode.THEREMIN) name else getString(R.string.studio_pad_mode_keyboard, name)
@@ -1757,11 +1763,11 @@ class StudioActivity : AudioThemedActivity() {
         withSf2 { bridge ->
             val kits = bridge.drumKits
             if (kits.isEmpty()) {
-                MaterialAlertDialogBuilder(this).setMessage(R.string.studio_no_drum_kit).setPositiveButton(android.R.string.ok, null).show()
+                ImmersiveMaterialAlertDialogBuilder(this).setMessage(R.string.studio_no_drum_kit).setPositiveButton(android.R.string.ok, null).show()
                 return@withSf2
             }
             val names = kits.map { it.name.trim().ifEmpty { it.program.toString() } }.toTypedArray()
-            MaterialAlertDialogBuilder(this)
+            ImmersiveMaterialAlertDialogBuilder(this)
                 .setTitle(R.string.studio_drum_kit_pick)
                 .setItems(names) { _, which ->
                     session.setDrumSoundfont(trackId, kits[which].program)
@@ -1915,7 +1921,7 @@ class StudioActivity : AudioThemedActivity() {
         pick.setOnClickListener {
             if (fmSynth) {
                 val current = session.project.trackOrNull(t.id) ?: return@setOnClickListener
-                val popup = androidx.appcompat.widget.PopupMenu(this, pick)
+                val popup = ImmersiveSupportPopupMenu(this, pick)
                 fmProgramNames.forEachIndexed { index, name ->
                     popup.menu.add(name).apply {
                         isCheckable = true
@@ -2214,7 +2220,7 @@ class StudioActivity : AudioThemedActivity() {
         }
 
     private fun pickChipProgram(anchor: View, program: Int, onPick: (Int) -> Unit) {
-        val popup = androidx.appcompat.widget.PopupMenu(this, anchor)
+        val popup = ImmersiveSupportPopupMenu(this, anchor)
         for (family in GeneralMidiInstruments.Category.entries) {
             val group = popup.menu.addSubMenu(family.stringResId)
             for (index in family.range) {
@@ -2229,7 +2235,7 @@ class StudioActivity : AudioThemedActivity() {
     }
 
     private fun pickSynthPreset(anchor: View, currentId: String, onPick: (SynthPatch) -> Unit) {
-        val popup = androidx.appcompat.widget.PopupMenu(this, anchor)
+        val popup = ImmersiveSupportPopupMenu(this, anchor)
         fun family(title: Int, patches: List<SynthPatch>) {
             if (patches.isEmpty()) return
             val group = popup.menu.addSubMenu(title)
@@ -2820,7 +2826,7 @@ class StudioActivity : AudioThemedActivity() {
         val holder = FrameLayout(this).apply { setPadding(dp(24), dp(16), dp(24), 0); addView(bar) }
         // Lu par le fil de rendu, écrit par le bouton : partagé entre deux fils
         val cancelled = java.util.concurrent.atomic.AtomicBoolean(false)
-        val dialog = MaterialAlertDialogBuilder(this)
+        val dialog = ImmersiveMaterialAlertDialogBuilder(this)
             .setTitle(R.string.studio_export_working)
             .setView(holder)
             .setCancelable(false)
@@ -2845,13 +2851,13 @@ class StudioActivity : AudioThemedActivity() {
                 if (isFinishing || isDestroyed) return@runOnUiThread
                 when {
                     cancelled.get() -> Unit
-                    saved == null -> MaterialAlertDialogBuilder(this).setMessage(R.string.studio_export_failed).setPositiveButton(android.R.string.ok, null).show()
+                    saved == null -> ImmersiveMaterialAlertDialogBuilder(this).setMessage(R.string.studio_export_failed).setPositiveButton(android.R.string.ok, null).show()
                     kind == EXPORT_EDITOR -> startActivity(
                         Intent(this, AudioEditorLibraryActivity::class.java)
                             .putExtra(EXTRA_IMPORT_URI, saved.uri.toString())
                             .putExtra(EXTRA_IMPORT_NAME, saved.name.removeSuffix(".wav")),
                     )
-                    else -> MaterialAlertDialogBuilder(this)
+                    else -> ImmersiveMaterialAlertDialogBuilder(this)
                         .setMessage(getString(R.string.studio_export_done, StudioFiles.FOLDER, saved.name))
                         .setPositiveButton(android.R.string.ok, null)
                         .show()
@@ -3756,7 +3762,7 @@ class StudioActivity : AudioThemedActivity() {
             runOnUiThread {
                 if (isFinishing || isDestroyed) return@runOnUiThread
                 if (bridge == null) {
-                    MaterialAlertDialogBuilder(this).setMessage(R.string.studio_no_soundfont).setPositiveButton(android.R.string.ok, null).show()
+                    ImmersiveMaterialAlertDialogBuilder(this).setMessage(R.string.studio_no_soundfont).setPositiveButton(android.R.string.ok, null).show()
                     return@runOnUiThread
                 }
                 sf2 = bridge
@@ -3771,7 +3777,7 @@ class StudioActivity : AudioThemedActivity() {
     private fun pickProgram(bridge: Sf2Bridge, onPick: (bank: Int, program: Int) -> Unit) {
         val list = bridge.programs
         val names = list.map { it.name.trim().ifEmpty { "${it.bank}:${it.program}" } }.toTypedArray()
-        MaterialAlertDialogBuilder(this)
+        ImmersiveMaterialAlertDialogBuilder(this)
             .setTitle(R.string.studio_sf2_pick)
             .setItems(names) { _, which -> onPick(list[which].bank, list[which].program) }
             .show()
@@ -3935,7 +3941,7 @@ class StudioActivity : AudioThemedActivity() {
 
     /** Un menu court qui s'ouvre juste sous le bouton touché (pas de fenêtre qui voile la page). */
     private fun dropdown(anchor: View, labels: List<String>, enabled: (Int) -> Boolean = { true }, onPick: (Int) -> Unit) {
-        val menu = androidx.appcompat.widget.PopupMenu(this, anchor)
+        val menu = ImmersiveSupportPopupMenu(this, anchor)
         labels.forEachIndexed { i, label -> menu.menu.add(0, i, i, label).isEnabled = enabled(i) }
         menu.setOnMenuItemClickListener {
             onPick(it.itemId)

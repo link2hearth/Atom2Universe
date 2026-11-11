@@ -34,6 +34,8 @@ import com.Atom2Universe.app.studio.data.StudioProject
 import com.Atom2Universe.app.studio.music.Style
 import com.Atom2Universe.app.studio.music.Styles
 import com.Atom2Universe.app.studio.ui.StudioThumb
+import com.Atom2Universe.app.util.SystemBarsManager
+import com.Atom2Universe.app.util.SystemBarsPreferenceOwner
 import com.Atom2Universe.app.util.enableImmersiveMode
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -44,7 +46,10 @@ import java.io.File
  * L'accueil du Studio : la liste des morceaux, chacun une carte (vignette = sa grille de rythme). On y crée un morceau
  * (un nom et un style de départ, ou vide), on en ouvre un, on le renomme, le duplique ou le supprime.
  */
-class StudioLibraryActivity : ThemedActivity() {
+class StudioLibraryActivity : ThemedActivity(), SystemBarsPreferenceOwner {
+    override val showNavigationBar: Boolean get() = false
+    override val showStatusBar: Boolean get() = SystemBarsManager.shouldShowSystemBars(this)
+
 
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleHelper.applyLocale(newBase))
