@@ -11,7 +11,10 @@ import org.robolectric.android.controller.ContentProviderController
 import android.graphics.Bitmap
 import android.os.Environment
 import java.time.Instant
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeout
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Protocol
@@ -30,6 +33,8 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import java.time.LocalDate
 import java.util.Collections
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [34], application = android.app.Application::class)
@@ -41,10 +46,12 @@ class CivitaiSlideshowTest {
     private val png = ByteArrayOutputStream().also {
         Bitmap.createBitmap(2, 2, Bitmap.Config.ARGB_8888).compress(Bitmap.CompressFormat.PNG, 100, it)
     }.toByteArray()
+    @Volatile private var beforeRequest: ((okhttp3.HttpUrl) -> Unit)? = null
     private val client = OkHttpClient.Builder().addInterceptor { chain ->
         val request = chain.request()
         val url = request.url
         requests.add(url.toString())
+        beforeRequest?.invoke(url)
         val red = url.host == "civitai.red"
         val body = if (red || url.host == "civitai.com") {
             val start = url.queryParameter("cursor")?.toInt() ?: if (red) 1001 else 1
@@ -71,10 +78,67 @@ class CivitaiSlideshowTest {
             "No image for $source, direction $direction, id $id after requests: $requests"
         }
         slideshow.remember(source, file)
+        if (direction == 0) slideshow.completeInitialBatch(source)
         file
     }
 
     private fun imageRequests() = requests.count { it.startsWith("https://image.") }
+
+    @Test fun emptyCacheReturnsTheFirstWebpBeforeDownloadingTheRest() = runBlocking {
+        val first = requireNotNull(slideshow.select(recent, 0, null))
+        assertEquals(1, imageRequests())
+        assertNotNull(android.graphics.BitmapFactory.decodeFile(first.path))
+        assertEquals(CivitaiSlideshow.Position(1, 1), slideshow.position(recent, first))
+        slideshow.completeInitialBatch(recent)
+        assertEquals(20, imageRequests())
+        assertEquals(CivitaiSlideshow.Position(1, 20), slideshow.position(recent, first))
+    }
+
+    @Test fun reopeningShowsTheLastWebpAndCanNavigateWhileTheNextDownloadIsBlocked() = runBlocking {
+        prefs.edit().putLong("day", LocalDate.now().toEpochDay()).putInt("downloads", 38).commit()
+        val first = display(recent, 0)
+        val last = display(recent, 1)
+        assertNotEquals(first, last)
+        prefs.edit().putInt("downloads", 2).commit()
+        requests.clear()
+        slideshow = CivitaiSlideshow(context, client)
+        assertEquals(last, slideshow.select(recent, 0, null))
+        assertNotNull(android.graphics.BitmapFactory.decodeFile(last.path))
+        assertTrue(requests.isEmpty())
+
+        val started = CountDownLatch(1)
+        val release = CountDownLatch(1)
+        beforeRequest = { url ->
+            if (url.host == "image.civitai.com") {
+                started.countDown()
+                if (!release.await(10, TimeUnit.SECONDS)) throw java.io.IOException("Blocked download")
+            }
+        }
+        val filling = async(Dispatchers.IO) { slideshow.completeInitialBatch(recent) }
+        try {
+            assertTrue(started.await(5, TimeUnit.SECONDS))
+            withTimeout(2_000) {
+                assertEquals(last, slideshow.select(recent, 0, null))
+                assertEquals(first, slideshow.select(recent, -1, last.nameWithoutExtension.toLong()))
+                assertEquals(CivitaiSlideshow.Position(2, 2), slideshow.position(recent, last))
+            }
+        } finally {
+            release.countDown()
+        }
+        filling.await()
+        assertEquals(CivitaiSlideshow.Position(2, 20), slideshow.position(recent, last))
+        assertEquals(18, imageRequests())
+    }
+
+    @Test fun expiredLastImageFallsBackToAnotherCachedImageWithoutARequest() = runBlocking {
+        val first = display(recent, 0)
+        val last = display(recent, 1)
+        prefs.edit().putLong("expires_" + last.nameWithoutExtension, 1L).commit()
+        requests.clear()
+        slideshow = CivitaiSlideshow(context, client)
+        assertEquals(first, slideshow.select(recent, 0, null))
+        assertTrue(requests.isEmpty())
+    }
 
     @Test fun countsReadyFilesAndKeepsTheSameImageWhenAppendingAndReopening() = runBlocking {
         val first = display(recent, 0)

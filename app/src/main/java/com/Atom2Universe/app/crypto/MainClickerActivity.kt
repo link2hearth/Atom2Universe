@@ -2088,19 +2088,16 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
 
         updateCivitaiWidget()
         if (usingCivitai) {
-            refreshCivitaiPosition()
-            if (!cleanupScheduled) {
-                CivitaiCacheWorker.schedule(applicationContext)
-                cleanupScheduled = true
-            }
-            scheduleCivitaiCleanup()
             if (currentCivitaiFile()?.let { !it.isFile || !civitai.allowed(it) } == true) clearDisplayedBackground()
             if (displayedBackgroundUri == null) {
                 showCivitaiImage(0, notifyIfMissing = true)
             } else {
                 imageOptionsUpdate?.invoke(displayedBackgroundUri)
+                refreshCivitaiPosition()
+                scheduleCivitaiCleanup()
+                completeInitialCivitaiBatch()
+                startBackgroundLoop()
             }
-            startBackgroundLoop()
             return
         }
         if (favoritesMode) {
@@ -2284,34 +2281,24 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
         val currentId = displayedBackgroundUri?.lastPathSegment?.substringBeforeLast('.')?.toLongOrNull()
         imageOptionsUpdate?.invoke(null)
         civitaiImageJob = lifecycleScope.launch {
-            val file = civitai.select(source, direction, currentId) { done ->
-                runOnUiThread {
-                    if (source == backgroundSource && civitaiImageJob?.isActive == true) {
-                        initialProgress = done
-                        updateCivitaiWidget()
-                    }
-                }
-            }
-            initialProgress = null
+            val file = civitai.select(source, direction, currentId)
             val uri = file?.let { Uri.fromFile(it) }
             val bitmap = if (uri != null && uri != displayedBackgroundUri) decodeBackgroundBitmap(uri) else null
-            if (file != null && uri != null && (uri == displayedBackgroundUri || bitmap != null)) {
+            if (file != null && uri != null && file.isFile && civitai.allowed(file) && (uri == displayedBackgroundUri || bitmap != null)) {
                 if (bitmap != null) backgroundImageView.setImageBitmap(bitmap)
                 displayedBackgroundUri = uri
                 civitai.remember(source, file)
+                if (direction == 0 || currentId == null) completeInitialCivitaiBatch()
             } else {
-                if (file != null) civitai.rejectUnreadable(file)
+                if (file != null && bitmap == null && file.isFile && civitai.allowed(file)) civitai.rejectUnreadable(file)
                 if (notifyIfMissing) showToast(getString(R.string.clicker_civitai_unavailable))
             }
             refreshCivitaiPosition()
-            scheduleCivitaiCleanup()
+            if (midnightJob?.isActive != true) scheduleCivitaiCleanup()
             imageOptionsUpdate?.invoke(displayedBackgroundUri)
             restartSlideshowCountdown()
         }
-        civitaiImageJob?.invokeOnCompletion { runOnUiThread {
-            if (civitaiImageJob?.isActive != true) initialProgress = null
-            updateCivitaiWidget()
-        } }
+        civitaiImageJob?.invokeOnCompletion { runOnUiThread { updateCivitaiWidget() } }
         updateCivitaiWidget()
     }
 
@@ -2344,6 +2331,28 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
         }
     }
 
+    private fun completeInitialCivitaiBatch() {
+        val source = backgroundSource
+        if (!usingCivitai || !backgroundDisplayEnabled || !clickerInForeground || civitaiBatchJob?.isActive == true ||
+            !civitai.needsInitialBatch(source)) return
+        civitaiBatchJob = lifecycleScope.launch {
+            val job = coroutineContext[Job]
+            civitai.completeInitialBatch(source) { done ->
+                runOnUiThread {
+                    if (job?.isActive == true && backgroundSource == source) {
+                        initialProgress = done
+                        refreshCivitaiPosition()
+                        updateCivitaiWidget()
+                    }
+                }
+            }
+            initialProgress = null
+            refreshCivitaiPosition()
+            scheduleCivitaiCleanup()
+            updateCivitaiWidget()
+        }
+    }
+
     private fun addCivitaiBatch() {
         if (!usingCivitai || !backgroundDisplayEnabled || !clickerInForeground || civitaiBatchJob?.isActive == true ||
             civitaiImageJob?.isActive == true || civitaiActionJob?.isActive == true) return
@@ -2372,6 +2381,7 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
 
     private fun cancelCivitaiBatch() {
         civitaiBatchJob?.cancel()
+        initialProgress = null
         batchProgress = null
         updateCivitaiWidget()
     }
@@ -2379,6 +2389,10 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
     private fun scheduleCivitaiCleanup() {
         midnightJob?.cancel()
         if (!clickerInForeground || !backgroundDisplayEnabled) return
+        if (!cleanupScheduled) {
+            CivitaiCacheWorker.schedule(applicationContext)
+            cleanupScheduled = true
+        }
         midnightJob = lifecycleScope.launch {
             while (isActive) {
                 civitai.cleanExpired()

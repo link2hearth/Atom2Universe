@@ -9,6 +9,7 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.sync.Mutex
@@ -100,10 +101,8 @@ internal class CivitaiSlideshow(
     data class Position(val current: Int = 0, val total: Int = 0)
 
     suspend fun position(feed: ClickerBackgroundSource, displayed: File?): Position = withContext(Dispatchers.IO) {
-        mutex.withLock {
-            val ready = pool(feed)
-            Position(displayed?.let { ready.indexOf(id(it)) + 1 } ?: 0, ready.size)
-        }
+        val ready = pool(feed)
+        Position(displayed?.let { ready.indexOf(id(it)) + 1 } ?: 0, ready.size)
     }
 
     init {
@@ -294,37 +293,63 @@ internal class CivitaiSlideshow(
             .putInt("downloads", MAX_DOWNLOADS - remaining + 1).commit()
     }
 
-    suspend fun select(feed: ClickerBackgroundSource, direction: Int, displayedId: Long?,
-                       progress: (Int) -> Unit = {}): File? = withContext(Dispatchers.IO) {
-        mutex.withLock {
-            cleanExpiredLocked()
-            val day = today().toEpochDay()
-            if (prefs.getLong("initial_day_$feed", -1) != day) {
-                prefs.edit {
-                    putLong("initial_day_$feed", day)
-                    putInt("initial_left_$feed", (20 - pool(feed).size).coerceAtLeast(0))
-                }
-            }
-            var left = prefs.getInt("initial_left_$feed", 0)
-            if (left > 0 && (direction == 0 || pool(feed).isEmpty())) {
-                while (left > 0) {
-                    progress(20 - left)
-                    if (addOne(feed, manual = false) == null) break
-                    left--
-                    prefs.edit { putInt("initial_left_$feed", left) }
-                }
-            }
-            val ready = pool(feed)
-            if (ready.isEmpty()) return@withLock null
-            val last = displayedId ?: prefs.getLong("last_$feed", -1)
-            val position = ready.indexOf(last)
-            val index = when {
-                position < 0 -> if (direction < 0) ready.lastIndex else 0
-                else -> Math.floorMod(position + direction, ready.size)
-            }
-            file(ready[index])
+    private fun selectCached(feed: ClickerBackgroundSource, direction: Int, displayedId: Long?): File? {
+        val last = displayedId ?: prefs.getLong("last_$feed", -1)
+        if (direction == 0 && last in ids("pool_$feed")) {
+            val cached = file(last)
+            if (cached.isFile && allowed(last)) return cached
         }
+        val ready = pool(feed)
+        if (ready.isEmpty()) return null
+        val position = ready.indexOf(last)
+        val index = if (position >= 0) Math.floorMod(position + direction, ready.size)
+                    else if (direction < 0) ready.lastIndex else 0
+        return file(ready[index])
     }
+
+    suspend fun select(feed: ClickerBackgroundSource, direction: Int, displayedId: Long?): File? =
+        withContext(Dispatchers.IO) {
+            // Published WebPs can be read while a download or a trash sweep holds the writer lock.
+            selectCached(feed, direction, displayedId) ?: mutex.withLock {
+                selectCached(feed, direction, displayedId)?.let { return@withLock it }
+                cleanExpiredLocked()
+                if (ids("pool_$feed").any { !file(it).isFile }) {
+                    prefs.edit { remove("pool_$feed"); remove("initial_day_$feed") }
+                }
+                addInitialImage(feed)
+            }
+        }
+
+    fun needsInitialBatch(feed: ClickerBackgroundSource) =
+        prefs.getLong("initial_day_$feed", -1) != today().toEpochDay() || prefs.getInt("initial_left_$feed", 0) > 0
+
+    // Called under the writer lock. Only completed WebPs count towards the initial twenty.
+    private suspend fun addInitialImage(feed: ClickerBackgroundSource): File? {
+        val day = today().toEpochDay()
+        if (prefs.getLong("initial_day_$feed", -1) != day) {
+            prefs.edit {
+                putLong("initial_day_$feed", day)
+                putInt("initial_left_$feed", (20 - pool(feed).size).coerceAtLeast(0))
+            }
+        }
+        val left = prefs.getInt("initial_left_$feed", 0)
+        if (left <= 0) return null
+        val image = addOne(feed, manual = false) ?: return null
+        prefs.edit { putInt("initial_left_$feed", left - 1) }
+        return image
+    }
+
+    suspend fun completeInitialBatch(feed: ClickerBackgroundSource, progress: (Int) -> Unit = {}) =
+        withContext(Dispatchers.IO) {
+            while (needsInitialBatch(feed)) {
+                ensureActive()
+                val done = mutex.withLock {
+                    addInitialImage(feed) ?: return@withContext
+                    20 - prefs.getInt("initial_left_$feed", 0)
+                }
+                progress(done)
+            }
+        }
 
     suspend fun addBatch(feed: ClickerBackgroundSource, progress: (Int) -> Unit): Int = withContext(Dispatchers.IO) {
         mutex.withLock {
