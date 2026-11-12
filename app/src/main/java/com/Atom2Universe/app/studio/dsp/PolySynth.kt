@@ -342,7 +342,7 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), 
                 // Les instruments en échantillons sont mono, sans couche stéréo calculée.
                 val sampled = OrchestralSamples.has(next)
                 stereoBank = if (sampled) null else OrchestralStereo.load(next)
-                if (next != orchestralProgram && !sampled) {
+                if (next != orchestralProgram && !sampled && !OrchestralRanges.isSilent(next)) {
                     val profile = OrchestralBank.load(next)
                     orchestralProfile = profile
                     for (v in voices) v.prepareOrchestral()
@@ -549,7 +549,6 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), 
                 53 -> 0.398f // −8 dB
                 78 -> 0.126f // −18 dB
                 103 -> 0.141f // −17 dB
-                120 -> 0.251f // −12 dB
                 else -> 1f
             } else 1f
             spatial = if (selectedBank == SynthBank.ORCHESTRAL) stereoBank?.at(n, (velocity * 127).roundToInt()) else null

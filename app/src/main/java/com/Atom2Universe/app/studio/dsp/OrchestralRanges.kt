@@ -11,7 +11,7 @@ internal object OrchestralRanges {
             18, 52, 87, 110 -> 12..127
             24 -> 23..120
             25 -> 24..108
-            26, 28, 36, 37, 127 -> 0..84
+            26, 28, 36, 37 -> 0..84
             27, 53 -> 0..120
             34 -> 26..127
             39 -> 0..96
@@ -19,7 +19,7 @@ internal object OrchestralRanges {
             45 -> 0..112
             47 -> 38..60
             50 -> 0..113
-            51, 54, 61, 90, 96, 125 -> 0..108
+            51, 54, 61, 90, 96 -> 0..108
             60 -> 24..84
             66 -> 38..127
             68 -> 58..88
@@ -29,8 +29,15 @@ internal object OrchestralRanges {
             115, 117 -> 0..103
             else -> 0..127
         }
-        if (program == 26) listOf(Zone(keys), Zone(85..85, 83..127)) else listOf(Zone(keys))
+        when (program) {
+            26 -> listOf(Zone(keys), Zone(85..85, 83..127))
+            // Les bruitages (bruit de frette, mer, oiseaux, téléphone…) ne sont pas simulés : muets.
+            in 120..127 -> emptyList()
+            else -> listOf(Zone(keys))
+        }
     }
+
+    fun isSilent(program: Int) = programs[program].isEmpty()
 
     fun zones(program: Int) = programs[program]
     fun contains(program: Int, key: Int, velocity: Int) =

@@ -20,7 +20,7 @@ class OrchestralProgram internal constructor(val number: Int) {
     @Volatile private var loaded: OrchestralBank.Program? = null
 
     internal fun profile(): OrchestralBank.Program? {
-        if (OrchestralSamples.has(number)) return null
+        if (OrchestralSamples.has(number) || OrchestralRanges.isSilent(number)) return null
         return loaded ?: OrchestralBank.load(number).also { loaded = it }
     }
 

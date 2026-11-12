@@ -38,6 +38,14 @@ class OrchestralPlaybackTest {
             for (program in 0..127) {
                 bank.preparePrograms(setOf(program))
                 val regions = bank.file.getPreset(0, program)!!.regions
+                if (program in 120..127) {
+                    // Les bruitages ne sont pas simulés : le programme existe mais reste muet.
+                    synth.reset()
+                    synth.programChange(0, program)
+                    synth.noteOn(0, 60, 100)
+                    assertTrue("GM $program muet", record(synth, 16).all { it == 0f })
+                    continue
+                }
                 val profile = regions.first().orchestralProgram?.profile()
                 // Un instrument en échantillons ne joue que son étendue : prendre une note en son milieu.
                 val key = if (profile == null) (regions.minOf { it.keyRange.first } + regions.maxOf { it.keyRange.last }) / 2
