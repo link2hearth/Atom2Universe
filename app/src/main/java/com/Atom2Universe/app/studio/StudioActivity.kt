@@ -1933,6 +1933,7 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         fun chooseProgram(program: Int) {
             personalPad?.finishTouch(false)
             if (fmSynth) session.setFmProgram(t.id, program) else session.setChipProgram(t.id, program)
+            if (orchestral) orchestralLast[orchestralTab(program)] = program
             scheduleSave()
             refreshPick()
             refreshChipKeyboard(t.id)
@@ -1951,7 +1952,8 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
                 popup.show()
             } else if (chipSynth || orchestral) {
                 val current = session.project.trackOrNull(t.id) ?: return@setOnClickListener
-                pickChipProgram(pick, current.program, if (orchestral) orchestralPrograms else null, ::chooseProgram)
+                pickChipProgram(pick, current.program,
+                    if (orchestral) orchestralTabs[orchestralTab(current.program)] else null, ::chooseProgram)
             } else if (studioSynth) {
                 pickSynthPreset(pick, patch().id) { chosen ->
                     session.updateSynth(t.id) { chosen }
@@ -1970,6 +1972,22 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
                 }
             }
         }
+        if (orchestral) {
+            val tabIds = intArrayOf(View.generateViewId(), View.generateViewId())
+            val labels = intArrayOf(R.string.studio_orchestral_instruments, R.string.studio_orchestral_synth)
+            box.addView(MaterialButtonToggleGroup(this).apply {
+                isSingleSelection = true
+                isSelectionRequired = true
+                for (i in 0..1) addView(outlined(labels[i]).apply { id = tabIds[i]; minWidth = dp(96) })
+                orchestralLast[orchestralTab(t.program)] = t.program
+                check(tabIds[orchestralTab(t.program)])
+                addOnButtonCheckedListener { _, id, checked ->
+                    val now = session.project.trackOrNull(t.id) ?: return@addOnButtonCheckedListener
+                    val tab = tabIds.indexOf(id)
+                    if (checked && tab != orchestralTab(now.program)) chooseProgram(orchestralLast[tab])
+                }
+            }, LinearLayout.LayoutParams(-2, -2).apply { topMargin = dp(8) })
+        }
         if (chipSynth || fmSynth || orchestral) {
             val programRow = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL }
             fun step(label: Int, description: Int, delta: Int) = square(label).apply {
@@ -1978,8 +1996,8 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
                     val now = session.project.trackOrNull(t.id) ?: return@setOnClickListener
                     val current = if (fmSynth) now.fmProgram else now.program
                     if (orchestral) {
-                        // La banque Orchestral ne propose que ses instruments d'orchestre : passer au voisin dans cette liste.
-                        val list = orchestralPrograms
+                        // Passer au voisin dans l'onglet de l'instrument courant.
+                        val list = orchestralTabs[orchestralTab(current)]
                         val at = list.indexOf(current).takeIf { it >= 0 } ?: list.indexOfLast { it < current }
                         chooseProgram(list[Math.floorMod(at + delta, list.size)])
                         return@setOnClickListener
@@ -3245,7 +3263,14 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
     private fun trackColor(t: Track): Int = StudioColors.of(t)
 
     private val chipProgramNames by lazy { resources.getStringArray(R.array.gm_instruments) }
-    private val orchestralPrograms get() = com.Atom2Universe.app.studio.dsp.PolySynth.ORCHESTRAL_PROGRAMS
+    // Les deux onglets de la banque Orchestral : vrais échantillons (0) et instruments calculés (1).
+    private val orchestralTabs get() = listOf(
+        com.Atom2Universe.app.studio.dsp.PolySynth.ORCHESTRAL_SAMPLED,
+        com.Atom2Universe.app.studio.dsp.PolySynth.ORCHESTRAL_SIMULATED,
+    )
+    private fun orchestralTab(program: Int) = if (program in orchestralTabs[0]) 0 else 1
+    // Le dernier instrument choisi dans chaque onglet : on le retrouve en y revenant.
+    private val orchestralLast = intArrayOf(0, 4)
     private val fmProgramNames by lazy { resources.getStringArray(R.array.studio_fm_programs) }
 
     private fun instrumentName(t: Track): String = when {

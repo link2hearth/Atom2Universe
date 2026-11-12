@@ -724,7 +724,15 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), 
 
     companion object {
         /** Les instruments que propose la banque Orchestral : ceux en échantillons, et le vibraphone recalculé. */
-        val ORCHESTRAL_PROGRAMS: List<Int> by lazy { (OrchestralSamples.programs + 11).sorted() }
+        /** Les instruments en vrais échantillons de la banque Orchestral. */
+        val ORCHESTRAL_SAMPLED: List<Int> by lazy { OrchestralSamples.programs }
+        /**
+         * Les instruments calculés, retenus à l'écoute. Écartés : le lead chiff (83, double du 82),
+         * le lead voix (85) et le halo (94), mis de côté, et les bruitages (120 à 127), muets.
+         */
+        val ORCHESTRAL_SIMULATED: List<Int> by lazy {
+            (0..127).filter { !OrchestralSamples.has(it) && !OrchestralRanges.isSilent(it) && it != 83 && it != 85 && it != 94 }
+        }
 
         private const val ATTACK = 0
         private const val DECAY = 1

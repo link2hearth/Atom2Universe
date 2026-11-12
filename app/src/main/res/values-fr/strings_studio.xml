@@ -78,6 +78,8 @@
     <string name="studio_bank_famicom">Famicom</string>
     <string name="studio_bank_fm">FM</string>
     <string name="studio_bank_orchestral">Orchestral</string>
+    <string name="studio_orchestral_instruments">Instru</string>
+    <string name="studio_orchestral_synth">Synthé</string>
     <string-array name="studio_fm_programs">
         <item>Perso</item><item>Violon</item><item>Guitare</item><item>Piano</item>
         <item>Flûte</item><item>Clarinette</item><item>Hautbois</item><item>Trompette</item>
