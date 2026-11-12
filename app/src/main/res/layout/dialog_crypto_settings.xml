@@ -78,6 +78,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/clicker_site_red" />
+
+                <com.google.android.material.chip.Chip
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:id="@+id/source_wallhaven"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="@string/clicker_site_wallhaven" />
             </com.google.android.material.chip.ChipGroup>
 
             <com.google.android.material.chip.ChipGroup

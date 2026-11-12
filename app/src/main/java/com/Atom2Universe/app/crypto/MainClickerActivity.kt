@@ -449,12 +449,15 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
             showToast(getString(R.string.crypto_background_folder_saved))
         }
 
+    private var pendingExportSite: CivitaiSite? = null
     private val exportFolderLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            val site = pendingExportSite ?: return@registerForActivityResult
+            pendingExportSite = null
             val uri = result.data?.data ?: return@registerForActivityResult
             persistFolderPermission(uri, result.data?.flags ?: 0)
             if (contentResolver.persistedUriPermissions.any { it.uri == uri && it.isReadPermission && it.isWritePermission }) {
-                civitai.exportFolder = uri
+                civitai.setFolder(site, uri)
             } else showToast(getString(R.string.civitai_folder_error))
         }
 
@@ -470,6 +473,7 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         backgroundSource = civitai.source
+        pendingExportSite = CivitaiSite.entries.find { it.name == savedInstanceState?.getString("pending_export_site") }
         pictureAwaitingPermission = savedInstanceState?.getString("pending_civitai_save")
         seenRestoreGeneration = com.Atom2Universe.app.crypto.sync.GamesSyncManager.restoreGeneration(this)
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
@@ -801,6 +805,7 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
+        outState.putString("pending_export_site", pendingExportSite?.name)
         outState.putString("pending_civitai_save", pictureAwaitingPermission)
     }
 
@@ -2304,7 +2309,7 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
             batchProgress != null || (direction != 0 && civitaiActionJob?.isActive == true)) return
         stopBackgroundLoop()
         val source = backgroundSource
-        val currentId = displayedBackgroundUri?.lastPathSegment?.substringBeforeLast('.')?.toLongOrNull()
+        val currentId = displayedBackgroundUri?.lastPathSegment?.substringBeforeLast('.')
         imageOptionsUpdate?.invoke(null)
         civitaiImageJob = lifecycleScope.launch {
             val file = civitai.select(source, direction, currentId)
@@ -2332,7 +2337,7 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
         if (usingCivitai) displayedBackgroundUri?.path?.let { java.io.File(it) } else null
 
     private fun civitaiLabel(file: java.io.File): String = civitai.title(file)
-        ?: getString(R.string.civitai_date_id, civitai.date(file), file.nameWithoutExtension)
+        ?: getString(R.string.civitai_date_id, civitai.date(file), civitai.displayId(file))
 
     private fun updateCivitaiWidget() {
         if (!::civitaiWidget.isInitialized) return
@@ -2340,7 +2345,7 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
         civitaiWidget.render(usingCivitai && backgroundDisplayEnabled, file?.let(::civitaiLabel),
             civitaiPosition, batchProgress ?: initialProgress, file?.let(civitai::saved) == true,
             civitaiImageJob?.isActive == true || civitaiActionJob?.isActive == true || batchProgress != null,
-            civitai.transparency)
+            civitai.transparency, backgroundSource)
     }
 
     private fun refreshCivitaiPosition() {
@@ -2399,7 +2404,7 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
             refreshCivitaiPosition()
             if (currentCivitaiFile() == null && added > 0) showCivitaiImage(0, notifyIfMissing = false)
             else startBackgroundLoop()
-            if (added < 20) showToast(getString(R.string.civitai_partial_batch, added))
+            if (added < source.batchSize) showToast(getString(R.string.civitai_partial_batch, added, source.batchSize))
             scheduleCivitaiCleanup()
             updateCivitaiWidget()
         }
@@ -3149,6 +3154,7 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
 
     private fun saveCivitaiPicture(file: java.io.File) {
         if (civitaiActionJob?.isActive == true || file != currentCivitaiFile()) return
+        val site = backgroundSource.site ?: return
         val checked = civitai.saved(file)
         if (!checked && civitai.exportFolder == null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q &&
             checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != android.content.pm.PackageManager.PERMISSION_GRANTED
@@ -3158,7 +3164,7 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
             return
         }
         civitaiActionJob = lifecycleScope.launch {
-            val success = if (checked) civitai.unvalidate(file) else civitai.save(file)
+            val success = if (checked) civitai.unvalidate(file) else civitai.save(file, site)
             if (!success) showToast(getString(R.string.floating_web_image_error_save))
             if (usingCivitai) scheduleCivitaiCleanup()
             imageOptionsUpdate?.invoke(displayedBackgroundUri)
@@ -3413,6 +3419,7 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
         updateDestination()
         view.findViewById<View>(R.id.civitai_choose_destination).setOnClickListener {
             dialog.dismiss()
+            pendingExportSite = backgroundSource.site
             openFolderPicker(civitai.exportFolder, forExport = true)
         }
         resetDestination.setOnClickListener {
@@ -3431,6 +3438,7 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
             }
         }
         fun updateFolderControls() {
+            updateDestination()
             view.findViewById<View>(R.id.civitai_transparency_row).isVisible = usingCivitai
             sorts.isVisible = usingCivitai
             view.findViewById<View>(R.id.civitai_destination_controls).isVisible = usingCivitai
@@ -3443,6 +3451,7 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
             view.findViewById<View>(R.id.source_red).isVisible = civitai.redVisible
             sources.check(when (backgroundSource.site) {
                 CivitaiSite.STANDARD -> R.id.source_civitai
+                CivitaiSite.WALLHAVEN -> R.id.source_wallhaven
                 CivitaiSite.RED -> R.id.source_red
                 null -> R.id.source_folder
             })
@@ -3454,6 +3463,7 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
         fun applySourceSelection() {
             val site = when (sources.checkedChipId) {
                 R.id.source_civitai -> CivitaiSite.STANDARD
+                R.id.source_wallhaven -> CivitaiSite.WALLHAVEN
                 R.id.source_red -> CivitaiSite.RED
                 else -> null
             }

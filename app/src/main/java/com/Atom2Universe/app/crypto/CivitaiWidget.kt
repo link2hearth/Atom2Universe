@@ -53,13 +53,14 @@ internal class CivitaiWidget(private val card: View, navigate: (Int) -> Unit,
     }
 
     fun render(visible: Boolean, label: String?, position: CivitaiSlideshow.Position, batch: Int?, saved: Boolean, busy: Boolean,
-               transparency: Int) {
+               transparency: Int, source: ClickerBackgroundSource = ClickerBackgroundSource.RECENT) {
         card.isVisible = visible
         if (!visible) return
         card.alpha = 1f - transparency / 100f
-        title.text = label ?: card.context.getString(R.string.civitai_widget_label)
+        title.text = label ?: card.context.getString(if (source.site == CivitaiSite.WALLHAVEN) R.string.clicker_site_wallhaven else R.string.civitai_widget_label)
+        more.contentDescription = card.context.getString(R.string.civitai_add_batch, source.batchSize)
         val index = card.context.getString(R.string.civitai_position, position.current, position.total)
-        count.text = if (batch == null) index else card.context.getString(R.string.civitai_loading_batch, index, batch)
+        count.text = if (batch == null) index else card.context.getString(R.string.civitai_loading_batch, index, batch, source.batchSize)
         accept.isSelected = saved
         accept.contentDescription = card.context.getString(if (saved) R.string.civitai_unvalidate else R.string.clicker_civitai_save)
         accept.isEnabled = label != null && !busy

@@ -34,7 +34,8 @@ import kotlin.coroutines.resumeWithException
 
 internal enum class CivitaiSite(val host: String, val browsingLevel: Int) {
     STANDARD("civitai.com", 1),
-    RED("civitai.red", 4 or 8 or 16)
+    RED("civitai.red", 4 or 8 or 16),
+    WALLHAVEN("wallhaven.cc", 0)
 }
 
 internal enum class ClickerBackgroundSource(val site: CivitaiSite? = null, val weekly: Boolean = false) {
@@ -42,7 +43,11 @@ internal enum class ClickerBackgroundSource(val site: CivitaiSite? = null, val w
     RECENT(CivitaiSite.STANDARD),
     WEEK(CivitaiSite.STANDARD, true),
     RED_RECENT(CivitaiSite.RED),
-    RED_WEEK(CivitaiSite.RED, true);
+    RED_WEEK(CivitaiSite.RED, true),
+    WALLHAVEN_RECENT(CivitaiSite.WALLHAVEN),
+    WALLHAVEN_WEEK(CivitaiSite.WALLHAVEN, true);
+
+    val batchSize get() = if (site == CivitaiSite.WALLHAVEN) 24 else 20
 
     companion object {
         val feeds = entries.filter { it.site != null }
@@ -60,7 +65,8 @@ internal class CivitaiSlideshow(
         private const val HOUR = 3_600_000L
         private const val DAY = 24 * HOUR
         private const val RETRY_DELAY = 60_000L
-        private const val MAX_DOWNLOADS = 40
+        // 120 is divisible by both batch sizes (20 and 24).
+        private const val BATCH_CREDITS = 120
         private const val MAX_IMAGE_BYTES = 4L * 1024 * 1024
         private const val CACHE_BYTES = 64L * 1024 * 1024
         private val mutex = Mutex()
@@ -89,15 +95,27 @@ internal class CivitaiSlideshow(
     private val prefs = preferences(context)
     val redVisible: Boolean get() = prefs.getBoolean(RED_VISIBLE, false)
     private val directory = File(context.cacheDir, "clicker-civitai")
-    private data class Entry(val id: Long, val url: String, val title: String, val date: String)
-    private fun file(id: Long) = File(directory, "$id.webp")
-    private fun ids(key: String) = prefs.getString(key, "").orEmpty().split(',').mapNotNull(String::toLongOrNull)
+    private data class Entry(val id: String, val url: String, val title: String, val date: String)
+    private fun file(id: String) = File(directory, "$id.webp")
+    private fun ids(key: String) = prefs.getString(key, "").orEmpty().split(',').filter { it.isNotEmpty() }
     private fun isCacheFile(file: File) = file.parentFile == directory && file.extension == "webp" &&
-        file.nameWithoutExtension.toLongOrNull() != null
-    private fun id(file: File) = file.nameWithoutExtension.toLong()
+        cacheId.matches(file.nameWithoutExtension)
+    private val cacheId = Regex("(?:[0-9]+|wallhaven-[a-z0-9]+)")
+    private fun id(file: File) = file.nameWithoutExtension
+    fun displayId(file: File) = id(file).removePrefix("wallhaven-")
+    private fun imageName(file: File): String {
+        val provider = if (id(file).startsWith("wallhaven-")) "Wallhaven" else "Civitai"
+        return "${date(file)}-$provider-${displayId(file)}"
+    }
+    private fun lastId(feed: ClickerBackgroundSource): String? = prefs.getString("last_image_$feed", null)
+        ?: prefs.getLong("last_$feed", -1).takeIf { it > 0 }?.toString()
+
+    private fun folderKey(site: CivitaiSite) = if (site == CivitaiSite.STANDARD) "export_folder" else "export_folder_$site"
+    fun folder(site: CivitaiSite): Uri? = prefs.getString(folderKey(site), null)?.let(Uri::parse)
+    fun setFolder(site: CivitaiSite, uri: Uri?) = prefs.edit { putString(folderKey(site), uri?.toString()) }
     var exportFolder: Uri?
-        get() = prefs.getString("export_folder", null)?.let(Uri::parse)
-        set(value) { prefs.edit { putString("export_folder", value?.toString()) } }
+        get() = folder(source.site ?: CivitaiSite.STANDARD)
+        set(value) { setFolder(source.site ?: CivitaiSite.STANDARD, value) }
 
     var transparency: Int
         get() = prefs.getInt("widget_transparency", 0)
@@ -107,7 +125,7 @@ internal class CivitaiSlideshow(
     fun title(file: File): String? = prefs.getString("title_" + id(file), null)?.takeIf(String::isNotBlank)
     fun saved(file: File) = prefs.contains("saved_" + id(file))
     fun allowed(file: File) = allowed(id(file))
-    private fun allowed(id: Long): Boolean {
+    private fun allowed(id: String): Boolean {
         val day = today().toEpochDay()
         if (prefs.getLong("reject_$id", -1) > day) return false
         if (prefs.contains("saved_$id")) return prefs.getLong("saved_$id", -1) >= day
@@ -117,7 +135,7 @@ internal class CivitaiSlideshow(
 
     private fun expiresAt(file: File) = prefs.getLong("expires_" + id(file), file.lastModified() + DAY)
 
-    private fun pool(feed: ClickerBackgroundSource): List<Long> =
+    private fun pool(feed: ClickerBackgroundSource): List<String> =
         ids("pool_$feed").filter { file(it).isFile && allowed(it) }
 
     data class Position(val current: Int = 0, val total: Int = 0)
@@ -143,7 +161,7 @@ internal class CivitaiSlideshow(
     private class InvalidImage : IOException()
     private class TooLarge : IOException()
     private class CacheFull : IOException()
-    private val unavailable = mutableMapOf<Long, Long>()
+    private val unavailable = mutableMapOf<String, Long>()
     private val retryImagesAfter = mutableMapOf<CivitaiSite, Long>()
 
     private fun available(feed: ClickerBackgroundSource) = feed.site != CivitaiSite.RED || redVisible
@@ -171,9 +189,10 @@ internal class CivitaiSlideshow(
                 remove("expires_$id")
                 putLong("reject_$id", today().plusMonths(2).toEpochDay())
                 for (feed in ClickerBackgroundSource.feeds) {
-                    if (prefs.getLong("last_$feed", -1) == id) {
+                    if (lastId(feed) == id) {
                         val order = ids("pool_$feed")
-                        putLong("last_$feed", order.getOrNull(order.indexOf(id) - 1) ?: -1L)
+                        remove("last_$feed")
+                        putString("last_image_$feed", order.getOrNull(order.indexOf(id) - 1))
                     }
                     for (key in listOf("pool_$feed", "seen_$feed")) {
                         putString(key, ids(key).filterNot { it == id }.joinToString(","))
@@ -195,13 +214,13 @@ internal class CivitaiSlideshow(
         }
     }
 
-    suspend fun save(file: File): Boolean = withContext(Dispatchers.IO) {
+    suspend fun save(file: File, site: CivitaiSite = source.site ?: CivitaiSite.STANDARD): Boolean = withContext(Dispatchers.IO) {
         mutex.withLock {
             if (!isCacheFile(file)) return@withLock false
             if (saved(file)) return@withLock true
             if (!allowed(file) || !file.isFile) return@withLock false
-            val name = "${date(file)}-Civitai-${id(file)}.webp"
-            val destination = exportFolder
+            val name = "${imageName(file)}.webp"
+            val destination = folder(site)
             val copyKey = "copy_${id(file)}_${destination ?: "Pictures"}"
             val previous = prefs.getString(copyKey, null)?.let(Uri::parse)
             val copy = previous?.takeIf { uri ->
@@ -233,7 +252,7 @@ internal class CivitaiSlideshow(
         return try {
             if (!trash.isDirectory && !trash.mkdirs()) return false
             File(trash, ".nomedia").createNewFile()
-            val part = File.createTempFile("${date(source)}-Civitai-${id(source)}-trash-", ".part", trash)
+            val part = File.createTempFile("${imageName(source)}-trash-", ".part", trash)
             val target = File(trash, part.nameWithoutExtension + ".webp")
             try {
                 source.copyTo(part, overwrite = true)
@@ -251,9 +270,10 @@ internal class CivitaiSlideshow(
     }
 
     private fun cleanExpiredLocked() {
-        val removed = mutableSetOf<Long>()
+        val removed = mutableSetOf<String>()
         for (cached in directory.listFiles().orEmpty()) {
-            val id = cached.nameWithoutExtension.toLongOrNull() ?: continue
+            if (!isCacheFile(cached)) continue
+            val id = id(cached)
             if (allowed(id)) continue
             val cleared = if (saved(cached)) cached.delete() else moveToTrash(cached)
             if (cleared) removed.add(id)
@@ -309,20 +329,29 @@ internal class CivitaiSlideshow(
         if (folderNeedsRefresh(folder)) prefs.edit { remove("refresh_folder") }
     }
 
-    private fun remainingDownloads(day: Long = today().toEpochDay()): Int =
-        if (prefs.getLong("day", -1) == day)
-            MAX_DOWNLOADS - prefs.getInt("downloads", 0) else MAX_DOWNLOADS
-
-    private fun reserveDownload(): Boolean {
-        val day = today().toEpochDay()
-        val remaining = remainingDownloads(day)
-        return remaining > 0 && prefs.edit().putLong("day", day)
-            .putInt("downloads", MAX_DOWNLOADS - remaining + 1).commit()
+    private fun spentCredits(day: Long): Int {
+        if (prefs.getLong("day", -1) != day) return 0
+        val wallhaven = prefs.getInt("wallhaven_downloads", 0)
+        val civitai = prefs.getInt("downloads", 0) - wallhaven
+        return civitai * (BATCH_CREDITS / 20) + wallhaven * (BATCH_CREDITS / 24)
     }
 
-    private fun selectCached(feed: ClickerBackgroundSource, direction: Int, displayedId: Long?): File? {
-        val last = displayedId ?: prefs.getLong("last_$feed", -1)
-        if (direction == 0 && last in ids("pool_$feed")) {
+    private fun hasDownloadBudget(feed: ClickerBackgroundSource) =
+        spentCredits(today().toEpochDay()) + BATCH_CREDITS / feed.batchSize <= 2 * BATCH_CREDITS
+
+    private fun reserveDownload(feed: ClickerBackgroundSource): Boolean {
+        if (!hasDownloadBudget(feed)) return false
+        val day = today().toEpochDay()
+        val sameDay = prefs.getLong("day", -1) == day
+        val total = if (sameDay) prefs.getInt("downloads", 0) else 0
+        val wallhaven = if (sameDay) prefs.getInt("wallhaven_downloads", 0) else 0
+        return prefs.edit().putLong("day", day).putInt("downloads", total + 1)
+            .putInt("wallhaven_downloads", wallhaven + if (feed.site == CivitaiSite.WALLHAVEN) 1 else 0).commit()
+    }
+
+    private fun selectCached(feed: ClickerBackgroundSource, direction: Int, displayedId: String?): File? {
+        val last = displayedId ?: lastId(feed)
+        if (direction == 0 && last != null && last in ids("pool_$feed")) {
             val cached = file(last)
             if (cached.isFile && allowed(last)) return cached
         }
@@ -334,7 +363,7 @@ internal class CivitaiSlideshow(
         return file(ready[index])
     }
 
-    suspend fun select(feed: ClickerBackgroundSource, direction: Int, displayedId: Long?): File? =
+    suspend fun select(feed: ClickerBackgroundSource, direction: Int, displayedId: String?): File? =
         withContext(Dispatchers.IO) {
             if (!available(feed)) return@withContext null
             // Published WebPs can be read while a download or a trash sweep holds the writer lock.
@@ -357,7 +386,7 @@ internal class CivitaiSlideshow(
         if (prefs.getLong("initial_day_$feed", -1) != day) {
             prefs.edit {
                 putLong("initial_day_$feed", day)
-                putInt("initial_left_$feed", (20 - pool(feed).size).coerceAtLeast(0))
+                putInt("initial_left_$feed", (feed.batchSize - pool(feed).size).coerceAtLeast(0))
             }
         }
         val left = prefs.getInt("initial_left_$feed", 0)
@@ -373,7 +402,7 @@ internal class CivitaiSlideshow(
                 ensureActive()
                 val done = mutex.withLock {
                     addInitialImage(feed) ?: return@withContext
-                    20 - prefs.getInt("initial_left_$feed", 0)
+                    feed.batchSize - prefs.getInt("initial_left_$feed", 0)
                 }
                 progress(done)
             }
@@ -383,7 +412,7 @@ internal class CivitaiSlideshow(
         mutex.withLock {
             cleanExpiredLocked()
             var added = 0
-            while (added < 20 && addOne(feed, manual = true) != null) {
+            while (added < feed.batchSize && addOne(feed, manual = true) != null) {
                 added++
                 progress(added)
             }
@@ -402,7 +431,7 @@ internal class CivitaiSlideshow(
         val key = feed.name
         val now = System.currentTimeMillis()
         val already = (pool(feed) + history(key)).toHashSet()
-        val hasBudget = manual || remainingDownloads() > 0
+        val hasBudget = manual || hasDownloadBudget(feed)
         var page = readPage(key)
         val mayFetch = now >= prefs.getLong("retry_$key", 0)
         suspend fun fetch(url: String, append: Boolean): Boolean {
@@ -435,7 +464,7 @@ internal class CivitaiSlideshow(
                 if (!target.isFile) {
                     if (!hasBudget || now < (retryImagesAfter[site] ?: 0L)) continue
                     if (directory.listFiles().orEmpty().count { it.extension == "webp" } >= 80) return null
-                    if (attempted >= 3 || (!manual && !reserveDownload())) return null
+                    if (attempted >= 3 || (!manual && !reserveDownload(feed))) return null
                     attempted++
                     try {
                         cacheImage(entry)
@@ -473,20 +502,27 @@ internal class CivitaiSlideshow(
         }
     }
 
-    private fun history(key: String): List<Long> = ids("seen_$key")
+    private fun history(key: String): List<String> = ids("seen_$key")
 
     fun remember(feed: ClickerBackgroundSource, file: File) {
-        val id = file.nameWithoutExtension.toLongOrNull() ?: return
+        if (!isCacheFile(file)) return
+        val id = id(file)
         val key = feed.name
         val previous = history(key)
         prefs.edit {
-            putLong("last_$key", id)
+            putString("last_image_$key", id)
             if (id !in previous) putString("seen_$key", (previous + id).takeLast(500).joinToString(","))
         }
     }
 
 
-    private fun firstUrl(site: CivitaiSite, weekly: Boolean): String =
+    private fun firstUrl(site: CivitaiSite, weekly: Boolean): String = if (site == CivitaiSite.WALLHAVEN) {
+        "https://wallhaven.cc/api/v1/search".toHttpUrl().newBuilder()
+            .addQueryParameter("purity", "100")
+            .addQueryParameter("sorting", if (weekly) "toplist" else "date_added")
+            .apply { if (weekly) addQueryParameter("topRange", "1w") }
+            .build().toString()
+    } else
         "https://${site.host}/api/v1/images".toHttpUrl().newBuilder()
             .addQueryParameter("limit", "20")
             .addQueryParameter("type", "image")
@@ -497,6 +533,7 @@ internal class CivitaiSlideshow(
 
     private suspend fun fetchPage(url: String, site: CivitaiSite): Page {
         val json = JSONObject(requestBytes(url, 2L * 1024 * 1024).toString(Charsets.UTF_8))
+        if (site == CivitaiSite.WALLHAVEN) return wallhavenPage(url, json)
         val items = json.getJSONArray("items")
         val entries = buildList {
             for (i in 0 until items.length()) {
@@ -509,7 +546,7 @@ internal class CivitaiSlideshow(
                 if (imageUrl.isHttps && (imageUrl.host.endsWith(".civitai.com") || imageUrl.host.endsWith(".${site.host}"))) {
                     val title = item.optString("title").takeUnless { it.isBlank() || it == "null" }.orEmpty()
                     val date = runCatching { LocalDate.parse(item.optString("createdAt").take(10)) }.getOrNull() ?: today()
-                    add(Entry(id, imageUrl.toString(), title.take(200), date.toString()))
+                    add(Entry(id.toString(), imageUrl.toString(), title.take(200), date.toString()))
                 }
             }
         }
@@ -518,11 +555,33 @@ internal class CivitaiSlideshow(
         return Page(entries.distinctBy { it.id }, next?.toString().orEmpty())
     }
 
+    private fun wallhavenPage(url: String, json: JSONObject): Page {
+        val items = json.getJSONArray("data")
+        val entries = buildList {
+            for (i in 0 until items.length()) {
+                val item = items.optJSONObject(i) ?: continue
+                val key = "wallhaven-" + item.optString("id")
+                if (!cacheId.matches(key) || item.optString("purity") != "sfw") continue
+                val oversized = item.optLong("file_size") > MAX_IMAGE_BYTES
+                val path = if (oversized) item.optJSONObject("thumbs")?.optString("large") else item.optString("path")
+                val image = path?.toHttpUrlOrNull() ?: continue
+                if (!image.isHttps || image.host !in setOf("w.wallhaven.cc", "th.wallhaven.cc")) continue
+                val date = runCatching { LocalDate.parse(item.optString("created_at").take(10)) }.getOrElse { today() }
+                add(Entry(key, image.toString(), "", date.toString()))
+            }
+        }
+        val meta = json.getJSONObject("meta")
+        val current = meta.getInt("current_page")
+        val next = if (current in 1 until meta.getInt("last_page")) url.toHttpUrl().newBuilder()
+            .setQueryParameter("page", (current + 1).toString()).build().toString() else ""
+        return Page(entries.distinctBy { it.id }, next)
+    }
+
     private fun readPage(key: String): Page {
         val entries = JSONArray(prefs.getString("entries_$key", "[]"))
         return Page(List(entries.length()) { i ->
             val row = entries.getJSONArray(i)
-            Entry(row.getLong(0), row.getString(1), row.optString(2), row.optString(3, today().toString()))
+            Entry(row.getString(0), row.getString(1), row.optString(2), row.optString(3, today().toString()))
         }, prefs.getString("next_$key", "").orEmpty())
     }
 

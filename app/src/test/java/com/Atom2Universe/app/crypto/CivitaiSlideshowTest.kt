@@ -74,6 +74,16 @@ class CivitaiSlideshowTest {
             }
             JSONObject().put("items", items).put("metadata", JSONObject().put("nextPage", next.toString()))
                 .toString().toResponseBody("application/json".toMediaType())
+        } else if (url.host == "wallhaven.cc") {
+            val page = url.queryParameter("page")?.toInt() ?: 1
+            val items = JSONArray()
+            for (number in 1..24) {
+                val id = ((page - 1) * 24 + number).toString(36)
+                items.put(JSONObject().put("id", id).put("purity", "sfw").put("created_at", "2026-11-12 10:00:00")
+                    .put("path", "https://w.wallhaven.cc/full/ab/wallhaven-$id.jpg"))
+            }
+            JSONObject().put("data", items).put("meta", JSONObject().put("current_page", page).put("last_page", 3))
+                .toString().toResponseBody("application/json".toMediaType())
         } else png.toResponseBody("image/png".toMediaType())
         Response.Builder().request(request).protocol(Protocol.HTTP_1_1).code(200).message("OK").body(body).build()
     }.build()
@@ -82,7 +92,7 @@ class CivitaiSlideshowTest {
     private val week = ClickerBackgroundSource.WEEK
 
     private fun display(source: ClickerBackgroundSource, direction: Int, id: Long? = null): File = runBlocking {
-        val file = requireNotNull(slideshow.select(source, direction, id)) {
+        val file = requireNotNull(slideshow.select(source, direction, id?.toString())) {
             "No image for $source, direction $direction, id $id after requests: $requests"
         }
         slideshow.remember(source, file)
@@ -127,7 +137,7 @@ class CivitaiSlideshowTest {
             assertTrue(started.await(5, TimeUnit.SECONDS))
             withTimeout(2_000) {
                 assertEquals(last, slideshow.select(recent, 0, null))
-                assertEquals(first, slideshow.select(recent, -1, last.nameWithoutExtension.toLong()))
+                assertEquals(first, slideshow.select(recent, -1, last.nameWithoutExtension))
                 assertEquals(CivitaiSlideshow.Position(2, 2), slideshow.position(recent, last))
             }
         } finally {
@@ -184,7 +194,7 @@ class CivitaiSlideshowTest {
 
     @Test fun bothSortsUseTheSelectedHostAndPersist() {
         CivitaiSlideshow.toggleRedVisibility(context)
-        for (feed in ClickerBackgroundSource.feeds) {
+        for (feed in ClickerBackgroundSource.feeds.filter { it.site != CivitaiSite.WALLHAVEN }) {
             slideshow.source = feed
             slideshow = CivitaiSlideshow(context, client)
             assertEquals(feed, slideshow.source)
@@ -280,6 +290,37 @@ class CivitaiSlideshowTest {
         CivitaiSlideshow.toggleRedVisibility(context)
         assertTrue(slideshow.redVisible)
         assertEquals(recent, slideshow.source)
+    }
+
+    @Test @Config(sdk = [28]) fun wallhavenBatchesAndActionsAreIndependentOfCivitai() = runBlocking {
+        val civitai = display(recent, 0)
+        val feed = ClickerBackgroundSource.WALLHAVEN_WEEK
+        slideshow.source = feed
+        val first = display(feed, 0)
+        assertEquals("wallhaven-1.webp", first.name)
+        val second = display(feed, 1)
+        assertEquals(CivitaiSlideshow.Position(2, 24), slideshow.position(feed, second))
+        assertEquals(24, slideshow.addBatch(feed) {})
+        assertEquals(CivitaiSlideshow.Position(2, 48), slideshow.position(feed, second))
+        assertTrue(requests.any { it.contains("topRange=1w") && it.contains("sorting=toplist") && it.contains("page=2") })
+        assertTrue(slideshow.save(first))
+        assertTrue(slideshow.unvalidate(first))
+        assertTrue(slideshow.hide(first))
+        assertTrue(civitai.isFile && slideshow.allowed(civitai))
+        val pictures = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+        assertTrue(File(pictures, "Atom2Universe/2026-11-12-Wallhaven-1.webp").isFile)
+        display(ClickerBackgroundSource.WALLHAVEN_RECENT, 0)
+        assertTrue(requests.any { it.contains("sorting=date_added") && it.contains("purity=100") })
+    }
+
+    @Test fun exportDestinationsAreRememberedSeparately() {
+        for (site in CivitaiSite.entries) slideshow.setFolder(site, android.net.Uri.parse("content://folders/" + site.name))
+        slideshow = CivitaiSlideshow(context, client)
+        for (site in CivitaiSite.entries) assertEquals(site.name, slideshow.folder(site)?.lastPathSegment)
+        slideshow.setFolder(CivitaiSite.RED, null)
+        assertNull(slideshow.folder(CivitaiSite.RED))
+        assertNotNull(slideshow.folder(CivitaiSite.STANDARD))
+        assertNotNull(slideshow.folder(CivitaiSite.WALLHAVEN))
     }
 
     @Test fun widgetArrowsMoveBackwardAndForward() {
