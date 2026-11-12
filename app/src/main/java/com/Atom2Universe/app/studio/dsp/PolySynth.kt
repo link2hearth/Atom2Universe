@@ -727,8 +727,8 @@ class PolySynth(sampleRate: Int, voiceCount: Int = 8) : Instrument(sampleRate), 
         /** Les instruments en vrais échantillons de la banque Orchestral. */
         val ORCHESTRAL_SAMPLED: List<Int> by lazy { OrchestralSamples.programs }
         /**
-         * Les instruments calculés, retenus à l'écoute. Écartés : le lead chiff (83, double du 82),
-         * le lead voix (85) et le halo (94), mis de côté, et les bruitages (120 à 127), muets.
+         * Les instruments calculés, retenus à l'écoute. Écartés : le lead chiff (83) et le halo (94),
+         * restés à leur ancienne mesure, le lead voix (85), mis de côté, et les bruitages (120 à 127), muets.
          */
         val ORCHESTRAL_SIMULATED: List<Int> by lazy {
             (0..127).filter { !OrchestralSamples.has(it) && !OrchestralRanges.isSilent(it) && it != 83 && it != 85 && it != 94 }

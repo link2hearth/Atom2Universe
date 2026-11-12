@@ -23,8 +23,7 @@ internal object OrchestralBank {
     private val recent = LinkedHashMap<String, Program>(8, 0.75f, true)
     private val amplitudes = FloatArray(111) { if (it == 110) 0f else 10f.pow(-it / 20f) }
     @Synchronized fun load(program: Int): Program {
-        // Le lead chiff (83) joue le son du lead calliope (82) : choix fait à l'écoute.
-        val name = if (program == 83) "82" else "$program"
+        val name = "$program"
         recent[name]?.let { return it }
         // Lu d'un bloc puis décodé en mémoire : bien plus rapide qu'un flux lu octet par octet.
         val bytes = checkNotNull(javaClass.getResourceAsStream("/studio/orchestral/$name.bin")).use { it.readBytes() }
