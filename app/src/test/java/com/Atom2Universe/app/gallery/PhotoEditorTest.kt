@@ -59,13 +59,69 @@ class PhotoEditorTest {
     @Test fun cropMirrorAndRotationReplayInImageCoordinates() {
         val src = sheet(100,60,Color.RED)
         for (y in 0 until 60) for (x in 50 until 100) src.setPixel(x,y,Color.BLUE)
-        val cropped = PhotoRender.apply(src,PhotoEdit.Crop(RectF(.25f,0f,.75f,1f)))
+        val cropped = PhotoRender.apply(src,PhotoEdit.Frame(0f,RectF(.25f,0f,.75f,1f)))
         val mirrored = PhotoRender.apply(cropped,PhotoEdit.Mirror)
         val rotated = PhotoRender.apply(mirrored,PhotoEdit.Rotate)
         assertEquals(60,rotated.width)
         assertEquals(50,rotated.height)
         assertEquals(Color.BLUE,rotated.getPixel(5,5))
         assertEquals(Color.RED,rotated.getPixel(5,45))
+    }
+
+    private fun adjust(mask: PhotoMask? = null, vararg set: Pair<AdjustChannel,Int>) =
+        PhotoEdit.Adjust(AdjustChannel.entries.map { c -> set.firstOrNull { it.first == c }?.second ?: 0 },mask)
+
+    @Test fun adjustmentsStayLocalKeepTransparencyAndDoNothingAtZero() {
+        val source = sheet(120,80,0x80406080.toInt())
+        assertEquals(source.getPixel(60,40),PhotoRender.apply(source,adjust()).getPixel(60,40))
+        val lit = PhotoRender.apply(source,adjust(rectangle(0f,0f,.5f,1f),AdjustChannel.LIGHT to 60,AdjustChannel.SHARPNESS to 50))
+        assertTrue(Color.green(lit.getPixel(20,40)) > Color.green(source.getPixel(20,40)))
+        assertEquals(128,Color.alpha(lit.getPixel(20,40)))
+        assertEquals(source.getPixel(100,40),lit.getPixel(100,40))
+        val grey = PhotoRender.apply(source,adjust(null,AdjustChannel.SATURATION to -100)).getPixel(60,40)
+        assertEquals(Color.red(grey),Color.blue(grey))
+    }
+
+    @Test fun blurStraightenAndAutoLevelsWorkOnWholeImage() {
+        val source = sheet(200,100,Color.BLACK)
+        for (y in 0 until 100) for (x in 100 until 200) source.setPixel(x,y,Color.WHITE)
+        val blurred = PhotoRender.apply(source,adjust(null,AdjustChannel.BLUR to 100))
+        assertTrue(Color.red(blurred.getPixel(100,50)) in 60..200)
+        assertEquals(Color.BLACK,blurred.getPixel(10,50))
+        val level = PhotoRender.apply(source,PhotoEdit.Frame(10f,RectF(0f,0f,1f,1f)))
+        assertEquals(200,level.width)
+        assertEquals(100,level.height)
+        for (corner in listOf(0 to 0,199 to 0,0 to 99,199 to 99)) assertEquals(255,Color.alpha(level.getPixel(corner.first,corner.second)))
+        val dull = sheet(64,64,0xff404040.toInt())
+        for (y in 0 until 64) for (x in 32 until 64) dull.setPixel(x,y,0xffa0a0a0.toInt())
+        val levels = requireNotNull(PhotoRender.autoLevels(dull,null))
+        val stretched = PhotoRender.apply(dull,levels)
+        assertTrue(Color.red(stretched.getPixel(5,5)) < 8)
+        assertTrue(Color.red(stretched.getPixel(60,5)) > 247)
+        assertNull(PhotoRender.autoLevels(source,null))
+    }
+
+    @Test fun featherInvertFillAndCloneFollowTheSelection() {
+        val source = sheet(100,100,Color.RED)
+        for (y in 0 until 100) for (x in 50 until 100) source.setPixel(x,y,Color.BLUE)
+        val left = rectangle(0f,0f,.5f,1f)
+        val inverted = PhotoMask(left.parts + MaskPart.Invert)
+        val filled = PhotoRender.apply(source,PhotoEdit.Fill(Color.GREEN,inverted))
+        assertEquals(Color.RED,filled.getPixel(20,50))
+        assertEquals(Color.GREEN,filled.getPixel(80,50))
+        val soft = PhotoRender.apply(source,PhotoEdit.Fill(Color.GREEN,left.copy(feather = .08f)))
+        assertEquals(Color.GREEN,soft.getPixel(10,50))
+        assertEquals(Color.BLUE,soft.getPixel(90,50))
+        val edge = soft.getPixel(50,50)
+        assertTrue(Color.green(edge) in 40..215)
+        // Copy the blue half onto the red one: the source lies 50 px to the right of the stroke.
+        val stamp = Trace(listOf(PointF(.2f,.5f)),.2f)
+        val cloned = PhotoRender.apply(source,PhotoEdit.Clone(stamp,PointF(.5f,0f),null))
+        assertEquals(Color.BLUE,cloned.getPixel(20,50))
+        assertEquals(Color.RED,cloned.getPixel(20,10))
+        val faint = PhotoRender.apply(source,PhotoEdit.Ink(stamp.copy(soft = 1f),Color.WHITE,false,null,.5f))
+        assertTrue(Color.green(faint.getPixel(20,50)) in 100..150)
+        assertEquals(Color.RED,faint.getPixel(40,10))
     }
 
     @Test fun undoRedoAndExportReplayOnSourceAfterSmallPreview() {

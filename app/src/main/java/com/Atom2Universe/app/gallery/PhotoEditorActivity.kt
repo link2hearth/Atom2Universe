@@ -2,10 +2,12 @@ package com.Atom2Universe.app.gallery
 
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.PointF
 import android.net.Uri
 import android.os.Bundle
 import android.provider.DocumentsContract
 import android.view.Gravity
+import android.view.MotionEvent
 import android.view.View
 import android.widget.*
 import androidx.activity.OnBackPressedCallback
@@ -19,12 +21,15 @@ import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.util.enableImmersiveMode
 import com.Atom2Universe.app.util.followImmersiveMode
 import java.util.Locale
+import kotlin.math.roundToInt
 
 class PhotoEditorActivity : ThemedActivity() {
     companion object {
         internal const val NAME = "photo_name"
         internal const val PARENT = "photo_parent"
         internal const val RESULT_ID = "edited_id"
+        /** Widest soft edge of a selection, relative to the short side of the image. */
+        private const val FEATHER = 0.08f
     }
     private val model by lazy { ViewModelProvider(this)[PhotoEditorModel::class.java] }
     private val name by lazy { intent.getStringExtra(NAME) ?: getString(R.string.gallery_image) }
@@ -37,6 +42,7 @@ class PhotoEditorActivity : ThemedActivity() {
     private lateinit var undo: ImageButton
     private lateinit var redo: ImageButton
     private lateinit var save: ImageButton
+    private var sliders: LinearLayout? = null
     private var choosing = false
     private var dialog: AlertDialog? = null
     private val picker = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -63,6 +69,14 @@ class PhotoEditorActivity : ThemedActivity() {
         val top = panel()
         top.action(R.drawable.ic_arrow_back_24,R.string.back,::leave)
         top.heading().apply { text = name; tooltipText = name }
+        // Held down, shows the untouched photo.
+        top.action(R.drawable.ic_px_eye,R.string.photo_compare) {}.setOnTouchListener { view,event ->
+            when (event.actionMasked) {
+                MotionEvent.ACTION_DOWN -> { view.isPressed = true; model.compare = true; surface.invalidate() }
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> { view.isPressed = false; model.compare = false; surface.invalidate() }
+            }
+            true
+        }
         undo = top.action(R.drawable.ic_px_undo,R.string.photo_undo) { model.history(-1) }
         redo = top.action(R.drawable.ic_px_redo,R.string.photo_redo) { model.history(1) }
         save = top.action(R.drawable.ic_save,R.string.photo_save_copy) { model.prepare() }
@@ -89,6 +103,7 @@ class PhotoEditorActivity : ThemedActivity() {
             override fun handleOnBackPressed() = leave()
         })
         model.updates.observe(this) { refresh() }
+        model.frames.observe(this) { actions(); surface.invalidate() }
         model.open(uri,intent.getStringExtra(PARENT)?.let(Uri::parse))
     }
 
@@ -183,20 +198,27 @@ class PhotoEditorActivity : ThemedActivity() {
         tab(EditTab.CUTOUT,R.string.photo_cutout,R.drawable.ic_px_cut)
         tab(EditTab.DRAW,R.string.photo_draw,R.drawable.ic_px_brush)
         options.removeAllViews()
-        // The slider, when present, is the only extra row under the options.
-        if (controls.childCount > 2) controls.removeViewAt(2)
+        // Everything under the options is a row of sliders, rebuilt with them.
+        while (controls.childCount > 2) controls.removeViewAt(2)
+        sliders = null
+        val selection = model.selection
         when (model.tab) {
             EditTab.FRAME -> {
-                tool(EditTool.CROP,R.string.photo_crop)
-                item(options,R.string.photo_rotate) { model.edit(PhotoEdit.Rotate,false) }
-                item(options,R.string.photo_mirror) { model.edit(PhotoEdit.Mirror,false) }
+                for (ratio in CropRatio.entries) item(options,ratio.label,model.ratio == ratio) { model.shape(ratio); refresh() }
+                item(options,R.string.photo_rotate) { model.applyDraft(PhotoEdit.Rotate,false) }
+                item(options,R.string.photo_mirror) { model.applyDraft(PhotoEdit.Mirror,false) }
+                applyButton()
+                slider(-45,45,model.angle,R.string.photo_straighten) { model.angle = it; model.touch() }
             }
             EditTab.LIGHT -> {
-                val channels = listOf(R.string.photo_light,R.string.photo_contrast,R.string.photo_saturation)
-                channels.forEachIndexed { i,label -> item(options,label,model.channel == i) { model.channel = i; refresh() } }
+                item(options,R.string.photo_auto) { model.auto() }
+                for (channel in AdjustChannel.entries) item(options,channel.label,model.channel == channel) {
+                    model.channel = channel; refresh()
+                }
                 applyButton()
-                slider(-100,100,model.adjustments[model.channel],channels[model.channel]) {
-                    model.adjustments[model.channel] = it; actions(); surface.invalidate()
+                val channel = model.channel
+                slider(channel.min,100,model.adjustments[channel.ordinal],channel.label) {
+                    model.adjustments[channel.ordinal] = it; model.refreshDraft(); actions()
                 }
             }
             EditTab.LOOK -> {
@@ -204,18 +226,27 @@ class PhotoEditorActivity : ThemedActivity() {
                     model.look = if (model.look == look) null else look; refresh()
                 }
                 applyButton()
+                if (model.look != null) slider(0,100,model.lookStrength,R.string.photo_strength) {
+                    model.lookStrength = it; model.touch()
+                }
             }
             EditTab.SELECT -> {
                 tool(EditTool.RECT,R.string.photo_rect)
+                tool(EditTool.OVAL,R.string.photo_oval)
                 tool(EditTool.LASSO,R.string.photo_lasso)
                 tool(EditTool.WAND,R.string.photo_wand)
                 refineTools()
-                item(options,R.string.photo_clear) { model.selectMask { null } }
+                if (selection != null) {
+                    item(options,R.string.photo_invert) {
+                        model.selectMask { selection.copy(parts = selection.parts + MaskPart.Invert) }
+                    }
+                    item(options,R.string.photo_clear) { model.selectMask { null } }
+                }
             }
             EditTab.CUTOUT -> {
-                if (model.selection != null) {
-                    item(options,R.string.photo_keep,true) { model.selection?.let { model.edit(PhotoEdit.Cut(it,true),false) } }
-                    item(options,R.string.photo_remove) { model.selection?.let { model.edit(PhotoEdit.Cut(it,false),false) } }
+                if (selection != null) {
+                    item(options,R.string.photo_keep,true) { model.edit(PhotoEdit.Cut(selection,true),false) }
+                    item(options,R.string.photo_remove) { model.edit(PhotoEdit.Cut(selection,false),false) }
                 }
                 tool(EditTool.SUBJECT,R.string.photo_subject)
                 tool(EditTool.BACKGROUND,R.string.photo_background)
@@ -225,6 +256,11 @@ class PhotoEditorActivity : ThemedActivity() {
             EditTab.DRAW -> {
                 tool(EditTool.BRUSH,R.string.photo_brush)
                 tool(EditTool.ERASER,R.string.photo_eraser)
+                tool(EditTool.CLONE,R.string.photo_clone)
+                if (model.tool == EditTool.CLONE && model.cloneSource != null) item(options,R.string.photo_clone_source) {
+                    model.cloneSource = null; model.cloneOffset = null; refresh()
+                }
+                tool(EditTool.PICKER,R.string.photo_picker)
                 item(options,R.string.photo_color) {
                     SimpleColorPickerDialog(this,String.format(Locale.ROOT,"#%06X",model.ink and 0xffffff),
                         showTextMode = false) { hex,_ -> model.ink = Color.parseColor(hex); refresh() }.show()
@@ -237,22 +273,34 @@ class PhotoEditorActivity : ThemedActivity() {
                     compoundDrawablePadding = dp(5)
                     setCompoundDrawablesRelative(swatch,null,null,null)
                 }
+                if (selection != null) item(options,R.string.photo_fill) {
+                    model.edit(PhotoEdit.Fill(model.ink,selection,model.opacity/100f))
+                }
             }
         }
         when (model.tool) {
             EditTool.WAND, EditTool.BACKGROUND -> slider(0,150,model.tolerance,R.string.photo_tolerance) { model.tolerance = it }
-            EditTool.ADD, EditTool.SUBTRACT, EditTool.BRUSH, EditTool.ERASER ->
+            EditTool.ADD, EditTool.SUBTRACT -> slider(1,18,model.brushSize,R.string.photo_size) { model.brushSize = it }
+            EditTool.BRUSH, EditTool.ERASER, EditTool.CLONE -> {
                 slider(1,18,model.brushSize,R.string.photo_size) { model.brushSize = it }
+                slider(5,100,model.opacity,R.string.photo_opacity) { model.opacity = it }
+                slider(0,100,model.softness,R.string.photo_softness) { model.softness = it }
+            }
             else -> Unit
+        }
+        if (selection != null && (model.tab == EditTab.SELECT || model.tab == EditTab.CUTOUT)) {
+            slider(0,100,(selection.feather/FEATHER*100).roundToInt(),R.string.photo_feather,
+                released = { value -> model.selectMask { selection.copy(feather = value*FEATHER/100f) } })
         }
         val help = when (model.tool) {
             EditTool.CROP -> R.string.photo_hint_crop
-            EditTool.RECT, EditTool.LASSO -> R.string.photo_hint_trace
+            EditTool.RECT, EditTool.OVAL, EditTool.LASSO -> R.string.photo_hint_trace
             EditTool.WAND -> R.string.photo_hint_wand
             EditTool.SUBJECT -> R.string.photo_hint_subject
             EditTool.BACKGROUND -> R.string.photo_hint_background
             EditTool.ADD, EditTool.SUBTRACT -> R.string.photo_hint_refine
-            else -> if (model.selection != null) R.string.photo_hint_local else 0
+            EditTool.CLONE -> if (model.cloneSource == null) R.string.photo_hint_clone_source else R.string.photo_hint_clone
+            else -> if (selection != null) R.string.photo_hint_local else 0
         }
         hint.visibility = if (help != 0) View.VISIBLE else View.GONE
         if (help != 0) hint.setText(help)
@@ -262,43 +310,69 @@ class PhotoEditorActivity : ThemedActivity() {
         enabled(tool(EditTool.SUBTRACT,R.string.photo_mask_subtract),model.selection != null)
     }
     private fun applyButton() {
-        item(options,R.string.photo_apply) { model.draft?.let { model.clearDraft(); model.edit(it) } }
+        item(options,R.string.photo_apply) { model.applyDraft() }
     }
-    private fun slider(min: Int,max: Int,value: Int,label: Int,changed: (Int) -> Unit) {
-        val row = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL; setPadding(dp(12),0,dp(12),0) }
-        if (model.tab != EditTab.LIGHT) row.addView(TextView(this).apply {
-            setText(label); setTextColor(galleryColor(R.attr.a2uSecondaryTextColor))
-        })
-        val readout = TextView(this).apply {
-            setTextColor(galleryColor(R.attr.a2uTextColor)); text = getString(R.string.photo_value,value)
+    /** Sliders share one row; [released] is for settings too heavy to follow the finger. */
+    private fun slider(min: Int,max: Int,value: Int,label: Int,released: ((Int) -> Unit)? = null,changed: (Int) -> Unit = {}) {
+        val row = sliders ?: LinearLayout(this).apply {
+            setPadding(dp(6),0,dp(6),0)
+            controls.addView(this,-1,-2)
+            sliders = this
         }
-        val bar = SeekBar(this).apply {
+        val cell = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
+        val title = TextView(this).apply {
+            setTextColor(galleryColor(R.attr.a2uSecondaryTextColor))
+            textSize = if (tablet()) 15f else 13f
+            setSingleLine()
+            setPadding(dp(8),dp(4),dp(8),0)
+            text = getString(R.string.photo_setting,getString(label),value)
+        }
+        cell.addView(title,-1,-2)
+        cell.addView(SeekBar(this).apply {
             this.max = max-min; progress = value-min; contentDescription = getString(label)
             setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                 override fun onStartTrackingTouch(seekBar: SeekBar) = Unit
-                override fun onStopTrackingTouch(seekBar: SeekBar) = Unit
+                override fun onStopTrackingTouch(seekBar: SeekBar) {
+                    if (!model.busy) released?.invoke(seekBar.progress+min)
+                }
                 override fun onProgressChanged(seekBar: SeekBar,p: Int,user: Boolean) {
-                    if (user && !model.busy) { changed(p+min); readout.text = getString(R.string.photo_value,p+min) }
+                    if (user && !model.busy) { changed(p+min); title.text = getString(R.string.photo_setting,getString(label),p+min) }
                 }
             })
-        }
-        row.addView(bar,LinearLayout.LayoutParams(0,dp(40),1f))
-        row.addView(readout,dp(46),-2)
-        controls.addView(row,-1,-2)
+        },-1,dp(40))
+        row.addView(cell,LinearLayout.LayoutParams(0,-2,1f))
     }
     private fun gesture(tool: EditTool,trace: Trace) {
         val previous = model.selection
+        val feather = previous?.feather ?: 0f
+        val opacity = model.opacity/100f
         when (tool) {
-            EditTool.CROP -> model.edit(PhotoEdit.Crop(trace.bounds()),false)
-            EditTool.RECT, EditTool.LASSO -> model.selectMask { PhotoMask(listOf(MaskPart.Shape(trace.copy(width=0f)))) }
-            EditTool.WAND -> model.selectMask { PhotoSelections.wand(it,trace.points.first(),model.tolerance) }
-            EditTool.SUBJECT -> model.selectMask { PhotoSelections.subject(it,trace.bounds()) }
+            EditTool.RECT, EditTool.OVAL, EditTool.LASSO -> model.selectMask { PhotoMask(listOf(MaskPart.Shape(trace)),feather) }
+            EditTool.WAND -> model.selectMask { PhotoSelections.wand(it,trace.points.first(),model.tolerance).copy(feather = feather) }
+            EditTool.SUBJECT -> model.selectMask { PhotoSelections.subject(it,trace.bounds()).copy(feather = feather) }
             EditTool.ADD, EditTool.SUBTRACT -> if (tool == EditTool.ADD || previous != null) model.selectMask {
-                PhotoMask(previous?.parts.orEmpty() + MaskPart.Shape(trace,tool == EditTool.SUBTRACT))
+                PhotoMask(previous?.parts.orEmpty() + MaskPart.Shape(trace,tool == EditTool.SUBTRACT),feather)
             }
             EditTool.BACKGROUND -> model.removeBackground(trace)
-            EditTool.BRUSH, EditTool.ERASER -> model.edit(PhotoEdit.Ink(trace,model.ink,tool == EditTool.ERASER,previous))
-            EditTool.PAN -> Unit
+            EditTool.BRUSH, EditTool.ERASER -> model.edit(PhotoEdit.Ink(trace,model.ink,tool == EditTool.ERASER,previous,opacity))
+            EditTool.CLONE -> {
+                val source = model.cloneSource
+                if (source == null) { model.cloneSource = trace.points.last(); refresh() }
+                else {
+                    val start = trace.points.first()
+                    val offset = model.cloneOffset ?: PointF(source.x-start.x,source.y-start.y).also { model.cloneOffset = it }
+                    model.edit(PhotoEdit.Clone(trace,offset,previous,opacity))
+                }
+            }
+            EditTool.PICKER -> model.preview?.let { image ->
+                val at = trace.points.last()
+                val color = image.getPixel((at.x*image.width).toInt().coerceIn(0,image.width-1),
+                    (at.y*image.height).toInt().coerceIn(0,image.height-1))
+                if (Color.alpha(color) > 0) model.ink = color or Color.BLACK
+                model.tool = EditTool.BRUSH
+                refresh()
+            }
+            EditTool.PAN, EditTool.CROP -> Unit
         }
     }
     private fun show(builder: AlertDialog.Builder) {
