@@ -84,6 +84,12 @@ android {
         }
     }
 
+    // La banque Orchestral (60 Mo) est lue directement dans l'APK : compressée, il faudrait la
+    // décompresser à chaque ouverture (≈ 0,6 s sur tablette) pour 10 Mo gagnés.
+    androidResources {
+        noCompress += "sf2"
+    }
+
     // Résout les conflits de librairies natives entre mididriver, ffmpeg-kit et fluidsynth
     packaging {
         jniLibs {

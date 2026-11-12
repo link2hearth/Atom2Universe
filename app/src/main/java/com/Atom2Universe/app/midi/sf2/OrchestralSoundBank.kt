@@ -11,7 +11,8 @@ import com.Atom2Universe.app.studio.dsp.Perc
 import com.Atom2Universe.app.studio.dsp.Snare
 import com.Atom2Universe.app.studio.dsp.Svf
 import com.Atom2Universe.app.studio.dsp.Tom
-import java.util.concurrent.FutureTask
+import java.util.concurrent.Executors
+import java.util.concurrent.atomic.AtomicInteger
 import kotlin.math.roundToInt
 
 /** Un programme GM de Studio. Le lecteur charge les profils du morceau avant de lancer le fil audio. */
@@ -36,6 +37,14 @@ internal class OrchestralSoundBank {
         private const val HEADROOM = 60
         /** Ce que le lecteur doit ajouter au gain d'un SoundFont ordinaire pour jouer cette banque à son niveau. */
         const val GAIN_OVER_SOUNDFONT = 4f
+        private const val DRUM_SOUNDS = 11
+        /** Place laissée en tête des échantillons d'OrchestralSamples pour les percussions (2 s par frappe au plus). */
+        const val DRUM_RESERVE = DRUM_SOUNDS * (2 * DRUM_RATE + 4)
+
+        private val WORKERS = Runtime.getRuntime().availableProcessors().coerceIn(1, 2)
+        private val worker = Executors.newFixedThreadPool(WORKERS) { task ->
+            Thread(task, "Orchestral-Preparation").apply { isDaemon = true }
+        }
 
         // Les percussions de Studio sont des frappes synthétisées. Les partager sous forme de PCM
         // permet au canal GM 10 de les jouer comme un kit SF2 ordinaire (hauteur et charlestons étouffés).
@@ -45,7 +54,7 @@ internal class OrchestralSoundBank {
             // Quatre coups successifs de la caisse ample de Studio : le bruit du timbre
             // continue d'un coup à l'autre. Les quatre prises sont calculées au chargement.
             val rollSnare = Snare(DRUM_RATE).apply { setVoice(kit = 2, tune = 1, length = 110) }
-            val instruments = kit + List(4) { rollSnare }
+            val instruments = kit + List(DRUM_SOUNDS - kit.size) { rollSnare }
             val samples = ArrayList<ShortArray>()
             val starts = IntArray(instruments.size)
             var size = 0
@@ -113,9 +122,13 @@ internal class OrchestralSoundBank {
 
     private val programs = (0..127).associateWith { OrchestralProgram(it) }
     val file: Sf2File
+    private val lock = Any()
     private val prepared = mutableSetOf<OrchestralBank.Spectrum>()
+    // Chaque préparation (ou remise à zéro) arrête la précédente encore en cours en arrière-plan.
+    @Volatile private var generation = 0
 
-    fun clearAttacks() {
+    fun clearAttacks() = synchronized(lock) {
+        generation++
         for (spectrum in prepared) spectrum.attack = null
         prepared.clear()
     }
@@ -123,16 +136,13 @@ internal class OrchestralSoundBank {
     init {
         val (drumPcm, kit) = drums
         // Piano, violon, flûte : de vrais échantillons, joués par le moteur SF2 comme n'importe quel SF2.
+        // Les percussions vont dans la place laissée en tête du même tableau : aucune copie des 60 Mo.
         val sampled = OrchestralSamples.file
-        val pcm = drumPcm + sampled.sampleData
-        val offset = drumPcm.size.toLong()
+        val pcm = sampled.sampleData
+        check(drumPcm.size <= DRUM_RESERVE)
+        drumPcm.copyInto(pcm)
         val presets = programs.entries.associate { (number, program) ->
-            sampled.getPreset(0, number)?.let { preset ->
-                return@associate "0:$number" to preset.copy(regions = preset.regions.map {
-                    it.copy(sampleStart = it.sampleStart + offset, sampleEnd = it.sampleEnd + offset,
-                        loopStart = it.loopStart + offset, loopEnd = it.loopEnd + offset)
-                })
-            }
+            sampled.getPreset(0, number)?.let { return@associate "0:$number" to it }
             val regions = OrchestralRanges.zones(number).map { zone ->
                 region(number, zone.keys, 48000, 0, 0, 60, program).copy(velRange = zone.velocities)
             }
@@ -146,10 +156,14 @@ internal class OrchestralSoundBank {
         for ((number, program) in programs) if (number in used) program.profile() else program.unload()
     }
 
-    /** Prépare en RAM les attaques récurrentes. Les notes rares, modulées ou longues restent synthétisées. */
+    /**
+     * Prépare en RAM les attaques récurrentes. Les notes rares, modulées ou longues restent synthétisées.
+     * [notes] dans l'ordre où elles apparaissent : le calcul se fait en arrière-plan pendant la
+     * lecture, dans cet ordre, et une note dont l'attaque n'est pas encore prête est synthétisée.
+     */
     fun prepareAttacks(notes: Map<Int, Int>, rate: Int) {
         data class Target(val spectrum: OrchestralBank.Spectrum, val key: Int, val right: Boolean)
-        val hits = HashMap<Target, Int>()
+        val hits = LinkedHashMap<Target, Int>()
         fun count(spectrum: OrchestralBank.Spectrum?, key: Int, right: Boolean, times: Int) {
             if (spectrum == null || spectrum.tones == 0 || spectrum.movingRatios != null) return
             val target = Target(spectrum, key, right)
@@ -174,27 +188,33 @@ internal class OrchestralSoundBank {
             selected[target] = frames
         }
         val keep = selected.keys.mapTo(mutableSetOf()) { it.spectrum }
-        for (spectrum in prepared) if (spectrum !in keep) spectrum.attack = null
-        prepared.clear()
-        prepared.addAll(keep)
-        val missing = selected.entries.filter { (target, frames) ->
+        // Dans l'ordre du morceau (celui de hits) : les premières notes jouées sont prêtes les premières.
+        val scheduled = mutableSetOf<OrchestralBank.Spectrum>()
+        val missing = hits.keys.mapNotNull { target ->
+            val frames = selected[target] ?: return@mapNotNull null
             val cache = target.spectrum.attack
-            cache == null || cache.rate != rate || cache.samples.size != frames
-        }.sortedByDescending { (target, frames) -> frames * target.spectrum.tones }
-        fun build(index: Int) {
-            val (target, frames) = missing[index]
-            target.spectrum.attack = OrchestralAttack(rate, target.key, target.right, target.spectrum, frames)
+            if (cache != null && cache.rate == rate && cache.samples.size == frames) return@mapNotNull null
+            if (!scheduled.add(target.spectrum)) return@mapNotNull null
+            target to frames
         }
-        if (missing.size < 4 || Runtime.getRuntime().availableProcessors() < 2) {
-            for (i in missing.indices) build(i)
-        } else {
-            val other = FutureTask { for (i in 1 until missing.size step 2) build(i) }
-            Thread(other, "Orchestral-Preparation").start()
-            try {
-                for (i in missing.indices step 2) build(i)
-            } finally {
-                other.get()
+        val ticket = synchronized(lock) {
+            generation++
+            for (spectrum in prepared) if (spectrum !in keep) spectrum.attack = null
+            prepared.clear()
+            prepared.addAll(keep)
+            generation
+        }
+        if (missing.isEmpty()) return
+        val next = AtomicInteger()
+        val task = Runnable {
+            while (generation == ticket) {
+                val index = next.getAndIncrement()
+                if (index >= missing.size) break
+                val (target, frames) = missing[index]
+                val attack = OrchestralAttack(rate, target.key, target.right, target.spectrum, frames)
+                synchronized(lock) { if (generation == ticket) target.spectrum.attack = attack }
             }
         }
+        repeat(if (missing.size < 4) 1 else WORKERS) { worker.execute(task) }
     }
 }

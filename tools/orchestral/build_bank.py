@@ -38,7 +38,7 @@ import numpy as np
 import soundfile
 from scipy.signal import butter, resample_poly, sosfiltfilt
 
-OUT = Path(__file__).resolve().parents[2] / "app/src/main/resources/studio/orchestral/bank.sf2"
+OUT = Path(__file__).resolve().parents[2] / "app/src/main/assets/studio/orchestral/bank.sf2"
 # Toute la banque est écrite 6 dB plus bas que son niveau d'écoute, et le lecteur la joue 6 dB plus fort
 # (gain 0,8 au lieu de 0,4) : cette marge laisse monter les instruments très sonores de la référence
 # (piccolo, violoncelle) sans écrêter leurs prises.

@@ -1,6 +1,6 @@
 package com.Atom2Universe.app.studio.dsp
 
-import java.io.DataInputStream
+import java.nio.ByteBuffer
 import kotlin.math.pow
 
 /** Milieu et différence mesurés sur les deux canaux secs de chaque zone stéréo du SF2. */
@@ -24,19 +24,19 @@ internal class OrchestralStereo(private val zones: ByteArray, private val layers
             if (checked[program]) return banks[program]
             val stream = OrchestralStereo::class.java.getResourceAsStream("/studio/orchestral/$program-stereo.bin")
             banks[program] = stream?.let {
-                DataInputStream(it.buffered()).use { input ->
-                    require(input.readInt() == 0x53545331)
-                    val zones = ByteArray(2048).also(input::readFully)
+                ByteBuffer.wrap(it.use { stream -> stream.readBytes() }).let { input ->
+                    require(input.int == 0x53545331)
+                    val zones = ByteArray(2048).also { bytes -> input.get(bytes) }
                     val layers = Array<Layer?>(256) {
-                        if (!input.readBoolean()) return@Array null
-                        val mid = input.readFloat()
-                        val pan = input.readFloat()
-                        val velocity = input.readUnsignedByte()
-                        val tones = input.readUnsignedByte()
+                        if (input.get().toInt() == 0) return@Array null
+                        val mid = input.float
+                        val pan = input.float
+                        val velocity = input.u8()
+                        val tones = input.u8()
                         val ratios = FloatArray(tones + 6)
                         val levels = Array(ratios.size) { i ->
-                            ratios[i] = input.readFloat()
-                            FloatArray(times.size) { amplitudes[input.readUnsignedByte()] }
+                            ratios[i] = input.float
+                            FloatArray(times.size) { amplitudes[input.u8()] }
                         }
                         Layer(mid, pan, OrchestralBank.Spectrum(tones, 1f, ratios, levels, times,
                             null, 127, velocity, -1, -1))

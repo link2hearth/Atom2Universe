@@ -4,6 +4,8 @@ import android.content.Context
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
+import android.os.SystemClock
+import android.util.Log
 import androidx.core.net.toUri
 import com.Atom2Universe.app.midi.service.MidiAudioMixer
 import com.Atom2Universe.app.midi.service.MidiEngine
@@ -41,6 +43,8 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
         private const val COMPLETION_DELAY_MS = 500L
         // BUG FIX 3.17: Limite max d'evenements MIDI pour eviter les fichiers corrompus/infinis
         private const val MAX_MIDI_EVENTS = 500_000
+        private const val ORDER_BITS = 19 // 2^19 > MAX_MIDI_EVENTS
+        private const val ORDER_MASK = (1L shl ORDER_BITS) - 1
         // Bande d'égaliseur jamais réglée (le synthé garde sa valeur par défaut)
         private const val EQ_UNSET = Int.MIN_VALUE
 
@@ -224,7 +228,9 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
 
     private fun loadBank(path: String): Sf2File? {
         if (path == OrchestralSoundBank.ID) {
+            val start = SystemClock.elapsedRealtime()
             val bank = orchestralBank ?: OrchestralSoundBank().also { orchestralBank = it }
+            Log.i("Sf2Engine", "loadBank: orchestral ${SystemClock.elapsedRealtime() - start} ms")
             return bank.file
         }
         orchestralBank?.clearAttacks()
@@ -240,7 +246,8 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
         val bank = orchestralBank ?: return
         val channels = IntArray(16)
         val used = mutableSetOf<Int>()
-        val notes = HashMap<Int, Int>()
+        val notes = LinkedHashMap<Int, Int>() // Ordre d'apparition : les premières attaques prêtes les premières
+
         for (event in midiTimeline) {
             if (event.channel == 9) continue
             when (event.type) {
@@ -311,10 +318,15 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
             MidiEventDispatcher.prepareForNewFile()
 
             // MidiFile(File) n'en ferme jamais le flux : on l'ouvre nous-mêmes.
+            val parseStart = SystemClock.elapsedRealtime()
             midiFile = file.inputStream().use { MidiFile(it) }
-
+            val timelineStart = SystemClock.elapsedRealtime()
             buildMidiTimeline()
+            val prepareStart = SystemClock.elapsedRealtime()
             prepareOrchestralPrograms()
+            val prepareEnd = SystemClock.elapsedRealtime()
+            Log.i("Sf2Engine", "loadMidiFile: parse ${timelineStart - parseStart} ms, timeline ${prepareStart - timelineStart} ms, " +
+                "orchestral ${prepareEnd - prepareStart} ms")
 
             // La SoundFont est projetée en entier : le synthétiseur (et ses réglages) reste
             // le même d'un morceau à l'autre
@@ -1046,15 +1058,15 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
         var microsecondsPerBeat = 500000.0
         val ticksPerBeat = midi.resolution.toDouble()
 
-        data class TickEvent(val tick: Long, val event: MidiEvent, val order: Int)
-        val allEvents = mutableListOf<TickEvent>()
-        var eventOrder = 0
+        val allEvents = ArrayList<MidiEvent>()
+        val ticks = ArrayList<Long>()
 
         for (track in midi.tracks) {
             var absoluteTick = 0L
             for (event in track.events) {
                 absoluteTick += event.delta
-                allEvents.add(TickEvent(absoluteTick, event, eventOrder++))
+                allEvents.add(event)
+                ticks.add(absoluteTick)
                 // BUG FIX 3.17: Limite max d'evenements pour eviter les fichiers corrompus
                 if (allEvents.size >= MAX_MIDI_EVENTS) break
             }
@@ -1073,23 +1085,30 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
             }
         }
 
-        allEvents.sortWith(compareBy<TickEvent>({ it.tick }, { eventPriority(it.event) }, { it.order }))
+        // Tri par (tick, priorité, ordre) sur une seule clé numérique : un tableau de nombres se trie
+        // bien plus vite qu'une liste d'objets comparés par trois fonctions.
+        val keys = LongArray(allEvents.size) { index ->
+            (ticks[index].coerceAtLeast(0L) shl ORDER_BITS + 3) or
+                (eventPriority(allEvents[index]).toLong() shl ORDER_BITS) or index.toLong()
+        }
+        keys.sort()
 
         var currentTick = 0L
         var currentTimeUs = 0.0
 
-        for (tickEvent in allEvents) {
-            val deltaTicks = tickEvent.tick - currentTick
+        for (key in keys) {
+            val tick = key ushr (ORDER_BITS + 3)
+            val deltaTicks = tick - currentTick
             // BUG FIX 3.16: Valider que deltaTicks >= 0 et ticksPerBeat > 0
             if (deltaTicks >= 0 && ticksPerBeat > 0) {
                 currentTimeUs += deltaTicks.toDouble() * microsecondsPerBeat / ticksPerBeat
             }
-            currentTick = tickEvent.tick
+            currentTick = tick
 
             // Valider que timeMs >= 0
             val timeMs = (currentTimeUs / 1000.0).toLong().coerceAtLeast(0)
 
-            when (val event = tickEvent.event) {
+            when (val event = allEvents[(key and ORDER_MASK).toInt()]) {
                 is Tempo -> {
                     microsecondsPerBeat = event.mpqn.toDouble()
                 }
@@ -1142,7 +1161,7 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
             }
         }
 
-        midiTimeline = events.sortedBy { it.timeMs }
+        midiTimeline = events // Déjà dans l'ordre du temps : les ticks sont triés
         // Durée = temps du dernier tick (tous événements confondus, y compris EndOfTrack)
         // au lieu du dernier événement schedulé, pour correspondre à la durée réelle du fichier MIDI
         durationMs = (currentTimeUs / 1000.0).toLong()

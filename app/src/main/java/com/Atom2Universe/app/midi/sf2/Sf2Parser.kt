@@ -13,7 +13,10 @@ import kotlin.math.min
  * Parser for SoundFont 2 (.sf2) files.
  * Parses the RIFF/sfbk structure and builds presets with regions.
  */
-class Sf2Parser {
+class Sf2Parser(
+    /** Échantillons vides laissés en tête de sampleData (positions des en-têtes décalées d'autant). */
+    private val reservedSamples: Int = 0
+) {
 
     companion object {
         // RIFF chunk IDs
@@ -213,8 +216,8 @@ class Sf2Parser {
             if (id == SMPL) {
                 // Sample data is 16-bit signed PCM (bulk copy, borné à ce qui reste réellement dans le fichier)
                 val numSamples = min(chunkSize, buffer.capacity() - chunkStart) / 2
-                sampleData = ShortArray(numSamples)
-                buffer.slice().order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(sampleData, 0, numSamples)
+                sampleData = ShortArray(reservedSamples + numSamples)
+                buffer.slice().order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(sampleData, reservedSamples, numSamples)
             }
 
             val nextPos = chunkStart + chunkSize + (chunkSize % 2)
@@ -326,10 +329,10 @@ class Sf2Parser {
 
         for (i in 0 until count) {
             val name = readString(buffer, 20)
-            val sampleStart = buffer.int.toLong() and 0xFFFFFFFFL
-            val sampleEnd = buffer.int.toLong() and 0xFFFFFFFFL
-            val startLoop = buffer.int.toLong() and 0xFFFFFFFFL
-            val endLoop = buffer.int.toLong() and 0xFFFFFFFFL
+            val sampleStart = (buffer.int.toLong() and 0xFFFFFFFFL) + reservedSamples
+            val sampleEnd = (buffer.int.toLong() and 0xFFFFFFFFL) + reservedSamples
+            val startLoop = (buffer.int.toLong() and 0xFFFFFFFFL) + reservedSamples
+            val endLoop = (buffer.int.toLong() and 0xFFFFFFFFL) + reservedSamples
             val sampleRate = buffer.int
             val originalPitch = buffer.get().toInt() and 0xFF
             val pitchCorrection = buffer.get().toInt()

@@ -1,6 +1,6 @@
 package com.Atom2Universe.app.studio.dsp
 
-import java.io.DataInputStream
+import java.nio.ByteBuffer
 import kotlin.math.*
 
 /** Partiels et souffle mesurés sur les 88 touches, à deux vélocités et sept instants. */
@@ -25,41 +25,42 @@ internal object OrchestralBank {
     @Synchronized fun load(program: Int): Program {
         val name = "$program"
         recent[name]?.let { return it }
-        val stream = checkNotNull(javaClass.getResourceAsStream("/studio/orchestral/$name.bin"))
-        val result = DataInputStream(stream.buffered()).use { input ->
-            val format = input.readInt()
+        // Lu d'un bloc puis décodé en mémoire : bien plus rapide qu'un flux lu octet par octet.
+        val bytes = checkNotNull(javaClass.getResourceAsStream("/studio/orchestral/$name.bin")).use { it.readBytes() }
+        val result = ByteBuffer.wrap(bytes).let { input ->
+            val format = input.int
             require(format in 0x4f524332..0x4f524336)
             val moving = format != 0x4f524332
             val mapped = format == 0x4f524335
             val looped = format == 0x4f524336
             val noiseBands = if (format >= 0x4f524334) ResonantNoise.BANDS else 6
             val times = if (moving) {
-                val count = if (looped) input.readUnsignedShort() else input.readUnsignedByte()
-                FloatArray(count) { input.readFloat() }
+                val count = if (looped) input.u16() else input.u8()
+                FloatArray(count) { input.float }
             } else seconds
-            val firstKey = if (mapped) input.readUnsignedByte() else 21
-            val lastKey = if (mapped) input.readUnsignedByte() else 108
-            val layers = if (mapped) input.readUnsignedByte() else 2
+            val firstKey = if (mapped) input.u8() else 21
+            val lastKey = if (mapped) input.u8() else 108
+            val layers = if (mapped) input.u8() else 2
             val spectra = Array((lastKey - firstKey + 1) * layers) { index ->
                 val soft = index % layers == 0
-                val loopStart = if (looped) input.readUnsignedShort() else -1
-                val loopEnd = if (looped) input.readUnsignedShort() else -1
-                val maxVelocity = if (mapped) input.readUnsignedByte() else if (soft) 80 else 127
-                val reference = if (mapped) input.readUnsignedByte() else if (soft) 64 else 104
-                val tones = input.readUnsignedByte()
-                val release = input.readFloat()
+                val loopStart = if (looped) input.u16() else -1
+                val loopEnd = if (looped) input.u16() else -1
+                val maxVelocity = if (mapped) input.u8() else if (soft) 80 else 127
+                val reference = if (mapped) input.u8() else if (soft) 64 else 104
+                val tones = input.u8()
+                val release = input.float
                 val ratios = FloatArray(tones + noiseBands)
                 val trajectories = if (moving) Array(tones) { FloatArray(times.size) } else null
                 val levels = Array(ratios.size) { i ->
-                    if (trajectories == null) ratios[i] = input.readFloat()
+                    if (trajectories == null) ratios[i] = input.float
                     else if (i < tones) {
                         val key = firstKey + index / layers
                         for (j in times.indices) {
-                            trajectories[i][j] = 2f.pow((input.readUnsignedShort() / 256f - key) / 12f)
+                            trajectories[i][j] = 2f.pow((input.u16() / 256f - key) / 12f)
                         }
                         ratios[i] = trajectories[i][0]
                     }
-                    FloatArray(times.size) { amplitudes[input.readUnsignedByte()] }
+                    FloatArray(times.size) { amplitudes[input.u8()] }
                 }
                 Spectrum(tones, release, ratios, levels, times, trajectories, maxVelocity, reference, loopStart, loopEnd)
             }
@@ -70,6 +71,9 @@ internal object OrchestralBank {
         return result
     }
 }
+
+internal fun ByteBuffer.u8() = get().toInt() and 0xFF
+internal fun ByteBuffer.u16() = short.toInt() and 0xFFFF
 
 /** Une voix sans enregistrement. Les partiels suivent la hauteur jouée, le souffle garde ses bandes acoustiques. */
 internal class OrchestralVoice(private val rate: Int) {
