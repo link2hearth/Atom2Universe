@@ -11,7 +11,6 @@ import com.Atom2Universe.app.R
 
 internal class CivitaiWidget(private val card: View, navigate: (Int) -> Unit,
                             save: () -> Unit, reject: () -> Unit, add: () -> Unit) {
-    private val title = card.findViewById<TextView>(R.id.civitai_title)
     private val count = card.findViewById<TextView>(R.id.civitai_count)
     private val accept = card.findViewById<ImageButton>(R.id.civitai_accept)
     private val cross = card.findViewById<ImageButton>(R.id.civitai_reject)
@@ -25,9 +24,9 @@ internal class CivitaiWidget(private val card: View, navigate: (Int) -> Unit,
         back.setOnClickListener { navigate(-1) }
         next.setOnClickListener { navigate(1) }
         more.setOnClickListener { add() }
-        val normal = accept.imageTintList?.defaultColor ?: title.currentTextColor
+        val normal = accept.imageTintList?.defaultColor ?: count.currentTextColor
         accept.imageTintList = ColorStateList(
-            arrayOf(intArrayOf(android.R.attr.state_selected), intArrayOf()), intArrayOf(Color.WHITE, normal))
+            arrayOf(intArrayOf(android.R.attr.state_selected), intArrayOf()), intArrayOf(Color.rgb(46, 184, 108), normal))
         var dx = 0f
         var dy = 0f
         card.findViewById<View>(R.id.civitai_handle).setOnTouchListener { view, event ->
@@ -57,7 +56,6 @@ internal class CivitaiWidget(private val card: View, navigate: (Int) -> Unit,
         card.isVisible = visible
         if (!visible) return
         card.alpha = 1f - transparency / 100f
-        title.text = label ?: card.context.getString(if (source.site == CivitaiSite.WALLHAVEN) R.string.clicker_site_wallhaven else R.string.civitai_widget_label)
         more.contentDescription = card.context.getString(R.string.civitai_add_batch, source.batchSize)
         val index = card.context.getString(R.string.civitai_position, position.current, position.total)
         count.text = if (batch == null) index else card.context.getString(R.string.civitai_loading_batch, index, batch, source.batchSize)

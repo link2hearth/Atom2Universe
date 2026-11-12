@@ -421,5 +421,4 @@
     <string name="civitai_transparency">Widget transparency</string>
     <string name="civitai_transparency_value">%1$d%%</string>
     <string name="civitai_trash_error">Could not move the image to the trash</string>
-    <string name="civitai_widget_label">Civitai</string>
 </resources>

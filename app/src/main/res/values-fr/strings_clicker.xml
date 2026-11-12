@@ -418,5 +418,4 @@
     <string name="civitai_transparency">Transparence du widget</string>
     <string name="civitai_transparency_value">%1$d%%</string>
     <string name="civitai_trash_error">Impossible de déplacer l’image dans la corbeille</string>
-    <string name="civitai_widget_label">Civitai</string>
 </resources>
