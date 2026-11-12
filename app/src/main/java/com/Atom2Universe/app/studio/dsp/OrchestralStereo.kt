@@ -25,7 +25,10 @@ internal class OrchestralStereo(private val zones: ByteArray, private val layers
             val stream = OrchestralStereo::class.java.getResourceAsStream("/studio/orchestral/$program-stereo.bin")
             banks[program] = stream?.let {
                 ByteBuffer.wrap(it.use { stream -> stream.readBytes() }).let { input ->
-                    require(input.int == 0x53545331)
+                    val format = input.int
+                    require(format == 0x53545331 || format == 0x53545332)
+                    // STS2 : instants libres (ceux du modèle mono ORC7, départ à zéro) au lieu des sept instants fixes.
+                    val instants = if (format == 0x53545332) FloatArray(input.u8()) { input.float } else times
                     val zones = ByteArray(2048).also { bytes -> input.get(bytes) }
                     val layers = Array<Layer?>(256) {
                         if (input.get().toInt() == 0) return@Array null
@@ -36,9 +39,9 @@ internal class OrchestralStereo(private val zones: ByteArray, private val layers
                         val ratios = FloatArray(tones + 6)
                         val levels = Array(ratios.size) { i ->
                             ratios[i] = input.float
-                            FloatArray(times.size) { amplitudes[input.u8()] }
+                            FloatArray(instants.size) { amplitudes[input.u8()] }
                         }
-                        Layer(mid, pan, OrchestralBank.Spectrum(tones, 1f, ratios, levels, times,
+                        Layer(mid, pan, OrchestralBank.Spectrum(tones, 1f, ratios, levels, instants,
                             null, 127, velocity, -1, -1))
                     }
                     OrchestralStereo(zones, layers)

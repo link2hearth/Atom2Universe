@@ -23,21 +23,25 @@ internal object OrchestralBank {
     private val recent = LinkedHashMap<String, Program>(8, 0.75f, true)
     private val amplitudes = FloatArray(111) { if (it == 110) 0f else 10f.pow(-it / 20f) }
     @Synchronized fun load(program: Int): Program {
-        val name = "$program"
+        // Le lead chiff (83) joue le son du lead calliope (82) : choix fait à l'écoute.
+        val name = if (program == 83) "82" else "$program"
         recent[name]?.let { return it }
         // Lu d'un bloc puis décodé en mémoire : bien plus rapide qu'un flux lu octet par octet.
         val bytes = checkNotNull(javaClass.getResourceAsStream("/studio/orchestral/$name.bin")).use { it.readBytes() }
         val result = ByteBuffer.wrap(bytes).let { input ->
             val format = input.int
-            require(format in 0x4f524332..0x4f524336)
-            val moving = format != 0x4f524332
+            require(format in 0x4f524332..0x4f524337)
+            // ORC7 : instants libres comme ORC4, mais partiels à rapports fixes (attaques préparables) et gain d'ensemble.
+            val fixed = format == 0x4f524337
+            val moving = format != 0x4f524332 && !fixed
             val mapped = format == 0x4f524335
             val looped = format == 0x4f524336
             val noiseBands = if (format >= 0x4f524334) ResonantNoise.BANDS else 6
-            val times = if (moving) {
+            val times = if (moving || fixed) {
                 val count = if (looped) input.u16() else input.u8()
                 FloatArray(count) { input.float }
             } else seconds
+            val gain = if (fixed) input.float else 1f
             val firstKey = if (mapped) input.u8() else 21
             val lastKey = if (mapped) input.u8() else 108
             val layers = if (mapped) input.u8() else 2
@@ -60,7 +64,8 @@ internal object OrchestralBank {
                         }
                         ratios[i] = trajectories[i][0]
                     }
-                    FloatArray(times.size) { amplitudes[input.u8()] }
+                    if (fixed) FloatArray(times.size) { amplitudes[input.u8()] * gain }
+                    else FloatArray(times.size) { amplitudes[input.u8()] }
                 }
                 Spectrum(tones, release, ratios, levels, times, trajectories, maxVelocity, reference, loopStart, loopEnd)
             }

@@ -43,6 +43,12 @@ OUT = Path(__file__).resolve().parents[2] / "app/src/main/assets/studio/orchestr
 # (gain 0,8 au lieu de 0,4) : cette marge laisse monter les instruments très sonores de la référence
 # (piccolo, violoncelle) sans écrêter leurs prises.
 PROGRAMS = {0: 85}          # programme -> atténuation du preset en centibels (niveau égal au SF2 d'origine)
+# Programmes qui rejouent les échantillons d'un programme de PROGRAMS (source) sans rien ajouter au
+# fichier : le son est joué deux fois, désaccordé de plus et moins detune centièmes de demi-ton.
+DERIVED = {
+    1: dict(name="Bright Piano", source=0, detune=4, attenuation=140),
+}
+G_FINE_TUNE = 52
 # programme -> prises enregistrées. Un instrument ne joue que les notes du vrai instrument (span, en
 # notes MIDI) : au-delà il se tait, rien n'est fabriqué pour une note qu'il ne possède pas (une prise
 # transposée de plusieurs octaves gronde). À l'intérieur, la prise la plus proche est transposée.
@@ -766,6 +772,15 @@ class Bank:
                 made.insert(0, [(G_ATTENUATION, PROGRAMS[program])])
                 made[1] = [g for g in made[1] if g[0] != G_ATTENUATION]
             presets.append((text(preset[0]), program, made))
+            for number, spec in DERIVED.items():
+                if spec["source"] == program:
+                    layers = [[(G_ATTENUATION, spec["attenuation"])]]
+                    for zone in made:
+                        if G_INSTRUMENT in dict(zone):
+                            for cents in (spec["detune"], -spec["detune"]):
+                                layers.append([g for g in zone if g[0] not in (G_INSTRUMENT, G_ATTENUATION, G_FINE_TUNE)]
+                                              + [(G_FINE_TUNE, cents), (G_INSTRUMENT, dict(zone)[G_INSTRUMENT])])
+                    presets.append((spec["name"], number, layers))
             added = self.position - before
             print(f"{program:3d} {text(preset[0]):22s} {added * 2 / 1e6:5.2f} Mo")
         for program in sorted(WAVES, key=lambda number: "same" in WAVES[number]) if recordings else ():
