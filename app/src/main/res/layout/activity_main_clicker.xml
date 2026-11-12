@@ -141,6 +141,15 @@
             android:layout_margin="16dp"
             android:visibility="gone" />
 
+        <include
+            android:id="@+id/civitai_widget"
+            layout="@layout/view_civitai_widget"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="8dp"
+            android:visibility="gone" />
+
         <com.Atom2Universe.app.crypto.FloatingWebWidget
             android:id="@+id/floating_web_widget"
             android:layout_width="wrap_content"

@@ -69,7 +69,7 @@ import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.util.TypedValue
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.Atom2Universe.app.crypto.clicker.ClickerBannerView
 import com.Atom2Universe.app.crypto.clicker.AtomShopUpgrade
@@ -113,6 +113,28 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
         MainClickerRepository.getInstance(database)
     }
     private val shuffleManager by lazy { MainClickerShuffleManager(backgroundRepository) }
+
+    private val civitai by lazy { CivitaiSlideshow(applicationContext, httpClient) }
+    private var backgroundSource = ClickerBackgroundSource.FOLDER
+    private val usingCivitai get() = backgroundSource != ClickerBackgroundSource.FOLDER
+    private var backgroundReloadJob: Job? = null
+    private var civitaiImageJob: Job? = null
+    private var civitaiBatchJob: Job? = null
+    private var civitaiActionJob: Job? = null
+    private var positionJob: Job? = null
+    private var initialProgress: Int? = null
+    private var cleanupScheduled = false
+    private var midnightJob: Job? = null
+    private var batchProgress: Int? = null
+    private var civitaiPosition = CivitaiSlideshow.Position()
+    private lateinit var civitaiWidget: CivitaiWidget
+    private var clickerInForeground = false
+    private var pictureAwaitingPermission: String? = null
+    private val picturePermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        val file = pictureAwaitingPermission?.let { java.io.File(it) }
+        pictureAwaitingPermission = null
+        if (granted && file != null) saveCivitaiPicture(file)
+    }
 
     private var bannerExpanded = false
     private lateinit var bannerControls: List<View>
@@ -396,16 +418,15 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
                 if (abs(velocityX) < swipeVelocityThreshold) return false
 
                 if (dx < 0) {
-                    showNextBackgroundImage(restartTimer = true, notifyIfMissing = true)
+                    showNextBackgroundImage(notifyIfMissing = true)
                 } else {
-                    showPreviousBackgroundImage(restartTimer = true, notifyIfMissing = true)
+                    showPreviousBackgroundImage(notifyIfMissing = true)
                 }
                 return true
             }
 
             override fun onLongPress(e: MotionEvent) {
-                val uri = shuffleManager.currentUri() ?: return
-                showImageOptionsDialog(uri)
+                openCurrentBackgroundImageOptions()
             }
         })
     }
@@ -420,6 +441,15 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
             showToast(getString(R.string.crypto_background_folder_saved))
         }
 
+    private val exportFolderLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            val uri = result.data?.data ?: return@registerForActivityResult
+            persistFolderPermission(uri, result.data?.flags ?: 0)
+            if (contentResolver.persistedUriPermissions.any { it.uri == uri && it.isReadPermission && it.isWritePermission }) {
+                civitai.exportFolder = uri
+            } else showToast(getString(R.string.civitai_folder_error))
+        }
+
     private val openAtomFolderLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             val uri = result.data?.data ?: return@registerForActivityResult
@@ -431,6 +461,8 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        backgroundSource = civitai.source
+        pictureAwaitingPermission = savedInstanceState?.getString("pending_civitai_save")
         seenRestoreGeneration = com.Atom2Universe.app.crypto.sync.GamesSyncManager.restoreGeneration(this)
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -466,6 +498,11 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
         sudokuToggle = findViewById(R.id.main_clicker_sudoku_toggle)
         game2048Toggle = findViewById(R.id.main_clicker_2048_toggle)
         newsWidgetView = findViewById(R.id.news_widget)
+        civitaiWidget = CivitaiWidget(findViewById(R.id.civitai_widget),
+            navigate = { showCivitaiImage(it, notifyIfMissing = true) },
+            save = { currentCivitaiFile()?.let(::saveCivitaiPicture) },
+            reject = { currentCivitaiFile()?.let(::discardCivitaiPicture) },
+            add = ::addCivitaiBatch)
         newsToggle = findViewById(R.id.main_clicker_news_toggle)
         solitaireWidgetView = findViewById(R.id.solitaire_widget)
         solitaireToggle = findViewById(R.id.main_clicker_solitaire_toggle)
@@ -552,7 +589,7 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
         }
         clickerBannerView.onAtomsClick = {
             val atomVisualActive = clickerToggle.isChecked && MainClickerPreferences.isAtomSpringEnabled(this)
-            if (atomVisualActive) {
+            if (atomVisualActive && !(usingCivitai && backgroundDisplayEnabled)) {
                 val newIndex = atomSpringView.cycleToNext()
                 MainClickerPreferences.setAtomSpringIndex(this, newIndex)
             } else {
@@ -702,6 +739,7 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
 
     override fun onResume() {
         super.onResume()
+        clickerInForeground = true
         val resetFlags   = getSharedPreferences("pending_reset_flags", MODE_PRIVATE)
         val resetStats   = resetFlags.getBoolean("reset_stats",   false)
         val resetClicker = resetFlags.getBoolean("reset_clicker", false)
@@ -752,7 +790,19 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
         clickerSoundEngine.muted = !MainClickerPreferences.isClickerSoundEnabled(this)
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString("pending_civitai_save", pictureAwaitingPermission)
+    }
+
     override fun onPause() {
+        clickerInForeground = false
+        cancelCivitaiBatch()
+        midnightJob?.cancel()
+        if (usingCivitai) {
+            stopBackgroundLoop()
+            civitaiImageJob?.cancel()
+        }
         clickerSoundEngine.stop()
         floatingWebWidget.onPause()
         colorStackWidgetView.cancelTimer()
@@ -2005,10 +2055,14 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
     private fun applyBackgroundDisplayPreference() {
         backgroundImageView.visibility = if (backgroundDisplayEnabled) View.VISIBLE else View.INVISIBLE
         starfieldView.visibility = if (backgroundDisplayEnabled) View.GONE else View.VISIBLE
+        updateCivitaiWidget()
         if (backgroundDisplayEnabled) {
             updateAutoBackgroundLoop()
         } else {
             stopBackgroundLoop()
+            civitaiImageJob?.cancel()
+            cancelCivitaiBatch()
+            midnightJob?.cancel()
         }
     }
 
@@ -2027,12 +2081,30 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
     }
 
     private fun reloadBackground(force: Boolean) {
+        backgroundReloadJob?.cancel()
         backgroundFolderUri = MainClickerPreferences.getFolderUri(this)
         slideshowIntervalMs = MainClickerPreferences.getSlideshowMinutes(this) * 60_000L
         favoritesMode = MainClickerPreferences.isFavoritesModeEnabled(this)
 
+        updateCivitaiWidget()
+        if (usingCivitai) {
+            refreshCivitaiPosition()
+            if (!cleanupScheduled) {
+                CivitaiCacheWorker.schedule(applicationContext)
+                cleanupScheduled = true
+            }
+            scheduleCivitaiCleanup()
+            if (currentCivitaiFile()?.let { !it.isFile || !civitai.allowed(it) } == true) clearDisplayedBackground()
+            if (displayedBackgroundUri == null) {
+                showCivitaiImage(0, notifyIfMissing = true)
+            } else {
+                imageOptionsUpdate?.invoke(displayedBackgroundUri)
+            }
+            startBackgroundLoop()
+            return
+        }
         if (favoritesMode) {
-            lifecycleScope.launch {
+            backgroundReloadJob = lifecycleScope.launch {
                 val favUris = withContext(Dispatchers.IO) { backgroundRepository.getAllFavoriteUris() }
                 if (favUris.isEmpty()) {
                     showToast(getString(R.string.crypto_favorites_empty_toast))
@@ -2042,19 +2114,21 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
                     return@launch
                 }
                 shuffleManager.loadFromFavorites(favUris)
-                showNextBackgroundImage(restartTimer = false, notifyIfMissing = false)
+                showNextBackgroundImage(notifyIfMissing = false)
                 startBackgroundLoop()
             }
             return
         }
 
-        lifecycleScope.launch {
-            val result = shuffleManager.reloadFromFolder(this@MainClickerActivity, backgroundFolderUri, force)
+        backgroundReloadJob = lifecycleScope.launch {
+            val folder = backgroundFolderUri
+            val result = shuffleManager.reloadFromFolder(this@MainClickerActivity, folder, force || civitai.folderNeedsRefresh(folder))
+            if (result.reason == MainClickerShuffleManager.ReloadReason.LOADED) civitai.folderRefreshed(folder)
             lastReloadReason = result.reason
 
             when (result.reason) {
                 MainClickerShuffleManager.ReloadReason.LOADED -> {
-                    showNextBackgroundImage(restartTimer = false, notifyIfMissing = false)
+                    showNextBackgroundImage(notifyIfMissing = false)
                     if (force) {
                         showToast(getString(R.string.crypto_background_loaded_toast, result.imageCount))
                     }
@@ -2063,7 +2137,7 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
                 MainClickerShuffleManager.ReloadReason.UNCHANGED -> {
                     val currentUri = shuffleManager.currentUri()
                     if (currentUri == null) {
-                        showNextBackgroundImage(restartTimer = false, notifyIfMissing = false)
+                        showNextBackgroundImage(notifyIfMissing = false)
                     } else {
                         if (force || backgroundImageView.drawable == null) {
                             setBackgroundImage(
@@ -2108,10 +2182,11 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
     }
 
     private fun startBackgroundLoop() {
-        if (imageOptionsUpdate != null) return
+        if (imageOptionsUpdate != null || batchProgress != null) return
         if (!backgroundDisplayEnabled) return
         if (slideshowIntervalMs <= 0L) return
-        if (shuffleManager.imageCount() == 0) return
+        if (!clickerInForeground) return
+        if (!usingCivitai && shuffleManager.imageCount() == 0) return
         if (backgroundJob?.isActive == true) return
 
         val storedRemaining = MainClickerPreferences.getSlideshowRemainingMs(this)
@@ -2121,7 +2196,7 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
         backgroundJob = lifecycleScope.launch {
             delay(initialDelay)
             while (isActive) {
-                showNextBackgroundImage(restartTimer = false, notifyIfMissing = false)
+                showNextBackgroundImage(notifyIfMissing = false)
                 delay(slideshowIntervalMs)
             }
         }
@@ -2129,7 +2204,7 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
 
     private fun stopBackgroundLoop() {
         if (backgroundJob?.isActive == true) {
-            val elapsed = (System.currentTimeMillis() - backgroundDelaySegmentStartedAt).coerceAtLeast(0L)
+            val elapsed = (android.os.SystemClock.elapsedRealtime() - backgroundDelaySegmentStartedAt).coerceAtLeast(0L)
             val remaining = (backgroundDelaySegmentMs - elapsed).coerceAtLeast(0L)
             MainClickerPreferences.setSlideshowRemainingMs(this, remaining)
         }
@@ -2140,7 +2215,7 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
     /** Enregistre le point de départ du compte à rebours en cours, pour pouvoir calculer le temps restant si on met en pause. */
     private fun markBackgroundDelaySegment(delayMs: Long) {
         backgroundDelaySegmentMs = delayMs
-        backgroundDelaySegmentStartedAt = System.currentTimeMillis()
+        backgroundDelaySegmentStartedAt = android.os.SystemClock.elapsedRealtime()
     }
 
     /** Repart sur un intervalle complet après un changement d'image (auto ou manuel). */
@@ -2149,7 +2224,17 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
         markBackgroundDelaySegment(slideshowIntervalMs)
     }
 
-    private fun showNextBackgroundImage(restartTimer: Boolean, notifyIfMissing: Boolean) {
+    private fun restartSlideshowCountdown() {
+        stopBackgroundLoop()
+        resetSlideshowCountdown()
+        startBackgroundLoop()
+    }
+
+    private fun showNextBackgroundImage(notifyIfMissing: Boolean) {
+        if (usingCivitai) {
+            showCivitaiImage(1, notifyIfMissing)
+            return
+        }
         val nextUri = shuffleManager.nextUri()
         if (nextUri == null) {
             if (notifyIfMissing) {
@@ -2162,15 +2247,13 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
             uri = nextUri,
             advanceOnFailure = true
         )
-        resetSlideshowCountdown()
-        if (restartTimer) {
-            updateAutoBackgroundLoop()
-        } else {
-            startBackgroundLoop()
-        }
     }
 
-    private fun showPreviousBackgroundImage(restartTimer: Boolean, notifyIfMissing: Boolean) {
+    private fun showPreviousBackgroundImage(notifyIfMissing: Boolean) {
+        if (usingCivitai) {
+            showCivitaiImage(-1, notifyIfMissing)
+            return
+        }
         val previousUri = shuffleManager.previousUri()
         if (previousUri == null) {
             if (notifyIfMissing) {
@@ -2183,11 +2266,133 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
             uri = previousUri,
             advanceOnFailure = true
         )
-        resetSlideshowCountdown()
-        if (restartTimer) {
-            updateAutoBackgroundLoop()
-        } else {
-            startBackgroundLoop()
+    }
+
+    private fun clearDisplayedBackground() {
+        ++backgroundRequestToken
+        displayedBackgroundUri = null
+        backgroundImageView.setImageDrawable(null)
+        imageOptionsUpdate?.invoke(null)
+        updateCivitaiWidget()
+    }
+
+    private fun showCivitaiImage(direction: Int, notifyIfMissing: Boolean) {
+        if (!usingCivitai || !backgroundDisplayEnabled || !clickerInForeground || civitaiImageJob?.isActive == true ||
+            batchProgress != null || (direction != 0 && civitaiActionJob?.isActive == true)) return
+        stopBackgroundLoop()
+        val source = backgroundSource
+        val currentId = displayedBackgroundUri?.lastPathSegment?.substringBeforeLast('.')?.toLongOrNull()
+        imageOptionsUpdate?.invoke(null)
+        civitaiImageJob = lifecycleScope.launch {
+            val file = civitai.select(source, direction, currentId) { done ->
+                runOnUiThread {
+                    if (source == backgroundSource && civitaiImageJob?.isActive == true) {
+                        initialProgress = done
+                        updateCivitaiWidget()
+                    }
+                }
+            }
+            initialProgress = null
+            val uri = file?.let { Uri.fromFile(it) }
+            val bitmap = if (uri != null && uri != displayedBackgroundUri) decodeBackgroundBitmap(uri) else null
+            if (file != null && uri != null && (uri == displayedBackgroundUri || bitmap != null)) {
+                if (bitmap != null) backgroundImageView.setImageBitmap(bitmap)
+                displayedBackgroundUri = uri
+                civitai.remember(source, file)
+            } else {
+                if (file != null) civitai.rejectUnreadable(file)
+                if (notifyIfMissing) showToast(getString(R.string.clicker_civitai_unavailable))
+            }
+            refreshCivitaiPosition()
+            scheduleCivitaiCleanup()
+            imageOptionsUpdate?.invoke(displayedBackgroundUri)
+            restartSlideshowCountdown()
+        }
+        civitaiImageJob?.invokeOnCompletion { runOnUiThread {
+            if (civitaiImageJob?.isActive != true) initialProgress = null
+            updateCivitaiWidget()
+        } }
+        updateCivitaiWidget()
+    }
+
+    private fun currentCivitaiFile(): java.io.File? =
+        if (usingCivitai) displayedBackgroundUri?.path?.let { java.io.File(it) } else null
+
+    private fun civitaiLabel(file: java.io.File): String = civitai.title(file)
+        ?: getString(R.string.civitai_date_id, civitai.date(file), file.nameWithoutExtension)
+
+    private fun updateCivitaiWidget() {
+        if (!::civitaiWidget.isInitialized) return
+        val file = currentCivitaiFile()
+        civitaiWidget.render(usingCivitai && backgroundDisplayEnabled, file?.let(::civitaiLabel),
+            civitaiPosition, batchProgress ?: initialProgress, file?.let(civitai::saved) == true,
+            civitaiImageJob?.isActive == true || civitaiActionJob?.isActive == true || batchProgress != null,
+            civitai.transparency)
+    }
+
+    private fun refreshCivitaiPosition() {
+        positionJob?.cancel()
+        if (!usingCivitai) return
+        val source = backgroundSource
+        val displayed = currentCivitaiFile()
+        positionJob = lifecycleScope.launch {
+            val position = civitai.position(source, displayed)
+            if (backgroundSource == source && displayed == currentCivitaiFile()) {
+                civitaiPosition = position
+                updateCivitaiWidget()
+            }
+        }
+    }
+
+    private fun addCivitaiBatch() {
+        if (!usingCivitai || !backgroundDisplayEnabled || !clickerInForeground || civitaiBatchJob?.isActive == true ||
+            civitaiImageJob?.isActive == true || civitaiActionJob?.isActive == true) return
+        val source = backgroundSource
+        stopBackgroundLoop()
+        batchProgress = 0
+        updateCivitaiWidget()
+        civitaiBatchJob = lifecycleScope.launch {
+            val added = civitai.addBatch(source) { done ->
+                runOnUiThread {
+                    if (backgroundSource == source && batchProgress != null) {
+                        batchProgress = done
+                        updateCivitaiWidget()
+                    }
+                }
+            }
+            batchProgress = null
+            refreshCivitaiPosition()
+            if (currentCivitaiFile() == null && added > 0) showCivitaiImage(0, notifyIfMissing = false)
+            else startBackgroundLoop()
+            if (added < 20) showToast(getString(R.string.civitai_partial_batch, added))
+            scheduleCivitaiCleanup()
+            updateCivitaiWidget()
+        }
+    }
+
+    private fun cancelCivitaiBatch() {
+        civitaiBatchJob?.cancel()
+        batchProgress = null
+        updateCivitaiWidget()
+    }
+
+    private fun scheduleCivitaiCleanup() {
+        midnightJob?.cancel()
+        if (!clickerInForeground || !backgroundDisplayEnabled) return
+        midnightJob = lifecycleScope.launch {
+            while (isActive) {
+                civitai.cleanExpired()
+                val now = java.time.ZonedDateTime.now()
+                val midnight = now.toLocalDate().plusDays(1).atStartOfDay(now.zone)
+                val wait = minOf(java.time.Duration.between(now, midnight).toMillis(), civitai.nextExpiryDelay())
+                if (currentCivitaiFile()?.let { !it.isFile || !civitai.allowed(it) } == true) {
+                    civitaiImageJob?.cancel()
+                    clearDisplayedBackground()
+                    showCivitaiImage(0, notifyIfMissing = false)
+                }
+                refreshCivitaiPosition()
+                delay(wait.coerceAtLeast(1))
+            }
         }
     }
 
@@ -2205,6 +2410,7 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
         uri: Uri,
         advanceOnFailure: Boolean = true
     ) {
+        stopBackgroundLoop()
         val requestToken = ++backgroundRequestToken
         imageOptionsUpdate?.invoke(null)
         lifecycleScope.launch {
@@ -2214,6 +2420,7 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
                 backgroundImageView.setImageBitmap(bitmap)
                 displayedBackgroundUri = uri
                 imageOptionsUpdate?.invoke(uri)
+                restartSlideshowCountdown()
                 shuffleManager.persistPlaybackState()
             } else {
                 handleBackgroundDecodeFailure(uri, advanceOnFailure, requestToken)
@@ -2247,7 +2454,7 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
                 return@launch
             }
 
-            showNextBackgroundImage(restartTimer = false, notifyIfMissing = false)
+            showNextBackgroundImage(notifyIfMissing = false)
         }
     }
 
@@ -2811,7 +3018,7 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
 
     // ── Dossier d'images ──────────────────────────────────────────────────────
 
-    private fun openFolderPicker(currentFolder: Uri?) {
+    private fun openFolderPicker(currentFolder: Uri?, forExport: Boolean = false) {
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE).apply {
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
@@ -2821,7 +3028,7 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
                 putExtra(DocumentsContract.EXTRA_INITIAL_URI, currentFolder)
             }
         }
-        openFolderLauncher.launch(intent)
+        if (forExport) exportFolderLauncher.launch(intent) else openFolderLauncher.launch(intent)
     }
 
     private fun persistFolderPermission(uri: Uri, flags: Int) {
@@ -2893,8 +3100,56 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
     }
 
     private fun openCurrentBackgroundImageOptions() {
-        val uri = shuffleManager.currentUri() ?: return
-        showImageOptionsDialog(uri)
+        val uri = if (usingCivitai) {
+            if (!backgroundDisplayEnabled) return
+            displayedBackgroundUri
+        } else shuffleManager.currentUri()
+        if (uri != null) showImageOptionsDialog(uri)
+    }
+
+    private fun saveCivitaiPicture(file: java.io.File) {
+        if (civitaiActionJob?.isActive == true || file != currentCivitaiFile()) return
+        val checked = civitai.saved(file)
+        if (!checked && civitai.exportFolder == null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q &&
+            checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != android.content.pm.PackageManager.PERMISSION_GRANTED
+        ) {
+            pictureAwaitingPermission = file.absolutePath
+            picturePermission.launch(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            return
+        }
+        civitaiActionJob = lifecycleScope.launch {
+            val success = if (checked) civitai.unvalidate(file) else civitai.save(file)
+            if (!success) showToast(getString(R.string.floating_web_image_error_save))
+            if (usingCivitai) scheduleCivitaiCleanup()
+            imageOptionsUpdate?.invoke(displayedBackgroundUri)
+        }
+        civitaiActionJob?.invokeOnCompletion { runOnUiThread { updateCivitaiWidget() } }
+        updateCivitaiWidget()
+    }
+
+    private fun discardCivitaiPicture(file: java.io.File) {
+        if (civitaiActionJob?.isActive == true || civitai.saved(file) || file != currentCivitaiFile()) return
+        val source = backgroundSource
+        stopBackgroundLoop()
+        civitaiImageJob?.cancel()
+        var removed = false
+        civitaiActionJob = lifecycleScope.launch { removed = civitai.hide(file) }
+        civitaiActionJob?.invokeOnCompletion { error ->
+            runOnUiThread {
+                if (error == null && source == backgroundSource && file == currentCivitaiFile()) {
+                    if (removed) {
+                        clearDisplayedBackground()
+                        showCivitaiImage(1, notifyIfMissing = true)
+                    } else {
+                        showToast(getString(R.string.civitai_trash_error))
+                        startBackgroundLoop()
+                    }
+                    refreshCivitaiPosition()
+                }
+                updateCivitaiWidget()
+            }
+        }
+        updateCivitaiWidget()
     }
 
     // ── Dialog options image (long press) ────────────────────────────────────
@@ -2908,6 +3163,14 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
         val btnFavorite = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btn_favorite)
         val btnRemove = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btn_remove_slideshow)
         val btnDelete = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btn_delete_device)
+        val remote = usingCivitai
+        if (remote) {
+            btnFavorite.setText(R.string.clicker_civitai_save)
+            btnRemove.setText(R.string.clicker_civitai_hide)
+            btnDelete.isVisible = false
+            btnFavorite.layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT
+            btnRemove.layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT
+        }
         var selectedUri: Uri? = null
         var favoriteJob: Job? = null
 
@@ -2919,6 +3182,15 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
             btnRemove.isEnabled = currentUri != null
             btnDelete.isEnabled = currentUri != null
             if (currentUri == null) return
+            if (remote) {
+                val file = java.io.File(currentUri.path ?: return)
+                val saved = civitai.saved(file)
+                btnFavorite.isEnabled = civitaiActionJob?.isActive != true
+                btnRemove.isEnabled = !saved && btnFavorite.isEnabled
+                btnFavorite.setText(if (saved) R.string.civitai_unvalidate else R.string.clicker_civitai_save)
+                pathView.text = civitaiLabel(file)
+                return
+            }
             favoriteJob = lifecycleScope.launch {
                 val isFav = withContext(Dispatchers.IO) { backgroundRepository.isFavorite(currentUri) }
                 btnFavorite.text = getString(
@@ -2930,17 +3202,23 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
 
         stopBackgroundLoop()
         imageOptionsUpdate = ::updateSelection
-        updateSelection(uri.takeIf { it == displayedBackgroundUri })
+        updateSelection(uri.takeIf { it == displayedBackgroundUri && (!remote || civitaiImageJob?.isActive != true) })
 
         view.findViewById<View>(R.id.image_options_previous).setOnClickListener {
-            showPreviousBackgroundImage(restartTimer = true, notifyIfMissing = false)
+            showPreviousBackgroundImage(notifyIfMissing = false)
         }
         view.findViewById<View>(R.id.image_options_next).setOnClickListener {
-            showNextBackgroundImage(restartTimer = true, notifyIfMissing = false)
+            showNextBackgroundImage(notifyIfMissing = false)
         }
 
         btnFavorite.setOnClickListener {
             val uri = selectedUri ?: return@setOnClickListener
+            if (remote) {
+                val file = uri.path?.let { java.io.File(it) } ?: return@setOnClickListener
+                dialog.dismiss()
+                saveCivitaiPicture(file)
+                return@setOnClickListener
+            }
             btnFavorite.isEnabled = false
             lifecycleScope.launch {
                 val isFav = withContext(Dispatchers.IO) { backgroundRepository.isFavorite(uri) }
@@ -2958,12 +3236,17 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
         btnRemove.setOnClickListener {
             val uri = selectedUri ?: return@setOnClickListener
             dialog.dismiss()
+            if (remote) {
+                val file = uri.path?.let { java.io.File(it) } ?: return@setOnClickListener
+                discardCivitaiPicture(file)
+                return@setOnClickListener
+            }
             lifecycleScope.launch {
                 shuffleManager.removeInvalidUri(uri)
                 if (favoritesMode) {
                     withContext(Dispatchers.IO) { backgroundRepository.removeFavorite(uri) }
                 }
-                showNextBackgroundImage(restartTimer = true, notifyIfMissing = false)
+                showNextBackgroundImage(notifyIfMissing = false)
             }
         }
 
@@ -2987,7 +3270,7 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
                             if (favoritesMode) {
                                 withContext(Dispatchers.IO) { backgroundRepository.removeFavorite(uri) }
                             }
-                            showNextBackgroundImage(restartTimer = true, notifyIfMissing = false)
+                            showNextBackgroundImage(notifyIfMissing = false)
                             showToast(getString(R.string.crypto_image_deleted_toast))
                         } else {
                             showToast(getString(R.string.crypto_image_delete_failed_toast))
@@ -3031,11 +3314,15 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
         setupSwitch(R.id.settings_background_enabled,
             { MainClickerPreferences.isBackgroundDisplayEnabled(this) },
             { MainClickerPreferences.setBackgroundDisplayEnabled(this, it) },
-            { backgroundDisplayEnabled = MainClickerPreferences.isBackgroundDisplayEnabled(this); applyBackgroundDisplayPreference() }
+            {
+                backgroundDisplayEnabled = MainClickerPreferences.isBackgroundDisplayEnabled(this)
+                applyBackgroundDisplayPreference()
+                if (usingCivitai && backgroundDisplayEnabled) reloadBackground(force = false)
+            }
         )
 
         val currentImageNameView = view.findViewById<TextView>(R.id.settings_current_image_name)
-        val currentUri = shuffleManager.currentUri()
+        val currentUri = if (usingCivitai) null else shuffleManager.currentUri()
         if (currentUri != null) {
             val displayPath = uriToDisplayPath(currentUri)
             if (displayPath.isNotBlank()) {
@@ -3073,6 +3360,81 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
             reloadBackground(force = true)
         }
 
+        val sources = view.findViewById<com.google.android.material.chip.ChipGroup>(R.id.settings_image_source)
+        val sorts = view.findViewById<com.google.android.material.chip.ChipGroup>(R.id.settings_civitai_sort)
+        val destinationValue = view.findViewById<TextView>(R.id.civitai_destination_value)
+        val resetDestination = view.findViewById<View>(R.id.civitai_default_destination)
+        fun updateDestination() {
+            val uri = civitai.exportFolder
+            destinationValue.text = if (uri == null) getString(R.string.civitai_pictures_path)
+                                    else DocumentsContract.getTreeDocumentId(uri)
+            resetDestination.isVisible = uri != null
+        }
+        updateDestination()
+        view.findViewById<View>(R.id.civitai_choose_destination).setOnClickListener {
+            dialog.dismiss()
+            openFolderPicker(civitai.exportFolder, forExport = true)
+        }
+        resetDestination.setOnClickListener {
+            civitai.exportFolder = null
+            updateDestination()
+        }
+        val transparencySlider = view.findViewById<Slider>(R.id.civitai_transparency_slider)
+        val transparencyValue = view.findViewById<TextView>(R.id.civitai_transparency_value)
+        transparencySlider.value = civitai.transparency.toFloat()
+        transparencyValue.text = getString(R.string.civitai_transparency_value, civitai.transparency)
+        transparencySlider.addOnChangeListener { _, value, fromUser ->
+            if (fromUser) {
+                civitai.transparency = value.toInt()
+                transparencyValue.text = getString(R.string.civitai_transparency_value, value.toInt())
+                updateCivitaiWidget()
+            }
+        }
+        fun updateFolderControls() {
+            view.findViewById<View>(R.id.civitai_transparency_row).isVisible = usingCivitai
+            sorts.isVisible = usingCivitai
+            view.findViewById<View>(R.id.civitai_destination_controls).isVisible = usingCivitai
+            view.findViewById<View>(R.id.settings_choose_folder_btn).isVisible = !usingCivitai
+            folderView.isVisible = !usingCivitai
+            favoritesModeSwitch.isVisible = !usingCivitai
+            currentImageNameView.isVisible = !usingCivitai && currentImageNameView.text.isNotEmpty()
+        }
+        sources.check(when (backgroundSource.site) {
+            CivitaiSite.STANDARD -> R.id.source_civitai
+            CivitaiSite.RED -> R.id.source_red
+            null -> R.id.source_folder
+        })
+        sorts.check(if (civitai.weeklySort) R.id.source_week else R.id.source_recent)
+        updateFolderControls()
+        fun applySourceSelection() {
+            val site = when (sources.checkedChipId) {
+                R.id.source_civitai -> CivitaiSite.STANDARD
+                R.id.source_red -> CivitaiSite.RED
+                else -> null
+            }
+            val newSource = site?.let { ClickerBackgroundSource.feed(it, sorts.checkedChipId == R.id.source_week) }
+                ?: ClickerBackgroundSource.FOLDER
+            if (newSource == backgroundSource) return
+            stopBackgroundLoop()
+            civitaiImageJob?.cancel()
+            backgroundReloadJob?.cancel()
+            cancelCivitaiBatch()
+            midnightJob?.cancel()
+            positionJob?.cancel()
+            initialProgress = null
+            civitaiPosition = CivitaiSlideshow.Position()
+            clearDisplayedBackground()
+            backgroundSource = newSource
+            civitai.source = newSource
+            currentImageNameView.text = ""
+            updateFolderControls()
+            resetSlideshowCountdown()
+            reloadBackground(force = false)
+        }
+
+        sources.setOnCheckedStateChangeListener { _, _ -> applySourceSelection() }
+        sorts.setOnCheckedStateChangeListener { _, _ -> applySourceSelection() }
+
         setupSwitch(R.id.settings_clicker_sound_enabled,
             { MainClickerPreferences.isClickerSoundEnabled(this) },
             { enabled -> MainClickerPreferences.setClickerSoundEnabled(this, enabled); clickerSoundEngine.muted = !enabled }
@@ -3093,7 +3455,13 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
             { navBarVisible = MainClickerPreferences.isNavBarVisible(this); applySystemBarsPreference() }
         )
         val bannerList = view.findViewById<RecyclerView>(R.id.settings_banner_list)
-        bannerList.layoutManager = LinearLayoutManager(this)
+        val bannerGrid = GridLayoutManager(this, 1)
+        bannerList.layoutManager = bannerGrid
+        val minColumnWidth = (190 * resources.displayMetrics.density * resources.configuration.fontScale.coerceAtLeast(1f)).toInt()
+        bannerList.addOnLayoutChangeListener { _, left, _, right, _, _, _, _, _ ->
+            val columns = ((right - left) / minColumnWidth).coerceAtLeast(1)
+            if (columns != bannerGrid.spanCount) bannerGrid.spanCount = columns
+        }
         val bannerItems = MainClickerPreferences.getBannerToggleOrder(this).mapNotNull { key ->
             val labelRes = widgetLabelRes[key] ?: return@mapNotNull null
             val visible = widgetBannerVisibleGetter[key]?.invoke() ?: true
@@ -3474,7 +3842,7 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
     ) : ItemTouchHelper.Callback() {
 
         override fun getMovementFlags(rv: RecyclerView, vh: RecyclerView.ViewHolder) =
-            makeMovementFlags(ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0)
+            makeMovementFlags(ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT, 0)
 
         override fun onMove(rv: RecyclerView, vh: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
             adapter.onItemMoved(vh.bindingAdapterPosition, target.bindingAdapterPosition)

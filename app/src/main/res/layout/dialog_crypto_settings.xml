@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/startup_background">
@@ -25,7 +26,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="10dp"
             android:text="@string/crypto_settings_dialog_title"
             android:textColor="?android:attr/textColorPrimary"
             android:textSize="18sp"
@@ -47,21 +48,106 @@
             android:layout_height="wrap_content"
             android:text="@string/crypto_background_display_label" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/settings_choose_folder_btn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="@string/crypto_background_choose_folder" />
+        <com.google.android.flexbox.FlexboxLayout
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            app:flexWrap="wrap" app:alignItems="center">
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/settings_image_source"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:singleSelection="true" app:selectionRequired="true">
 
-        <TextView
-            android:id="@+id/settings_folder_value"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/crypto_background_no_folder"
-            android:textColor="?android:attr/textColorSecondary"
-            android:textSize="12sp" />
+                <com.google.android.material.chip.Chip
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:id="@+id/source_folder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/clicker_source_folder" />
+
+                <com.google.android.material.chip.Chip
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:id="@+id/source_civitai"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/clicker_site_standard" />
+
+                <com.google.android.material.chip.Chip
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:id="@+id/source_red"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/clicker_site_red" />
+            </com.google.android.material.chip.ChipGroup>
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/settings_civitai_sort"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:singleSelection="true" app:selectionRequired="true"
+                android:visibility="gone">
+
+                <com.google.android.material.chip.Chip
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:id="@+id/source_recent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/clicker_source_recent" />
+
+                <com.google.android.material.chip.Chip
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:id="@+id/source_week"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/clicker_source_week" />
+            </com.google.android.material.chip.ChipGroup>
+        </com.google.android.flexbox.FlexboxLayout>
+
+        <com.google.android.flexbox.FlexboxLayout android:id="@+id/civitai_destination_controls"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            app:flexWrap="wrap" app:alignItems="center" android:visibility="gone">
+            <com.google.android.material.button.MaterialButton android:id="@+id/civitai_choose_destination"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="@string/civitai_choose_destination" />
+            <TextView android:id="@+id/civitai_destination_value" android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:paddingHorizontal="6dp" android:textColor="?attr/a2uSecondaryTextColor" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/civitai_default_destination"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="@string/civitai_default_destination" />
+        </com.google.android.flexbox.FlexboxLayout>
+
+        <LinearLayout android:id="@+id/civitai_transparency_row" android:visibility="gone"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:gravity="center_vertical" android:orientation="horizontal">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:labelFor="@id/civitai_transparency_slider" android:text="@string/civitai_transparency"
+                android:textColor="?attr/a2uTextColor" android:textSize="13sp" />
+            <com.google.android.material.slider.Slider android:id="@+id/civitai_transparency_slider"
+                android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                android:valueFrom="0" android:valueTo="90" android:stepSize="5" />
+            <TextView android:id="@+id/civitai_transparency_value" android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:textColor="?attr/a2uSecondaryTextColor" />
+        </LinearLayout>
+
+        <com.google.android.flexbox.FlexboxLayout
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            app:flexWrap="wrap" app:alignItems="center">
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/settings_choose_folder_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="@string/crypto_background_choose_folder" />
+
+            <TextView
+                android:id="@+id/settings_folder_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="@string/crypto_background_no_folder"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="12sp" />
+        </com.google.android.flexbox.FlexboxLayout>
 
         <TextView
             android:id="@+id/settings_current_image_name"
@@ -108,24 +194,27 @@
             android:valueTo="10"
             android:stepSize="1" />
 
-        <com.google.android.material.switchmaterial.SwitchMaterial android:textColor="?attr/a2uTextColor"
-            android:id="@+id/settings_image_center"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="@string/crypto_image_center_label" />
-
-        <com.google.android.material.switchmaterial.SwitchMaterial android:textColor="?attr/a2uTextColor"
-            android:id="@+id/settings_favorites_mode"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="@string/crypto_favorites_mode_label" />
+        <com.google.android.flexbox.FlexboxLayout
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            app:flexWrap="wrap" app:alignItems="center">
+            <com.google.android.material.switchmaterial.SwitchMaterial android:textColor="?attr/a2uTextColor"
+                android:id="@+id/settings_image_center"
+                android:layout_width="wrap_content"
+                android:layout_marginEnd="12dp" android:minHeight="48dp"
+                android:layout_height="wrap_content"
+                android:text="@string/crypto_image_center_label" />
+            <com.google.android.material.switchmaterial.SwitchMaterial android:textColor="?attr/a2uTextColor"
+                android:id="@+id/settings_favorites_mode"
+                android:layout_width="wrap_content"
+                android:layout_marginEnd="12dp" android:minHeight="48dp"
+                android:layout_height="wrap_content"
+                android:text="@string/crypto_favorites_mode_label" />
+        </com.google.android.flexbox.FlexboxLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginVertical="18dp"
+            android:layout_marginVertical="8dp"
             android:background="?android:attr/listDivider" />
 
         <!-- ─── Section Affichage ─── -->
@@ -138,31 +227,33 @@
             android:textSize="13sp"
             android:textStyle="bold" />
 
-        <com.google.android.material.switchmaterial.SwitchMaterial android:textColor="?attr/a2uTextColor"
-            android:id="@+id/settings_keep_screen_on"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/crypto_keep_screen_on_label" />
-
-        <com.google.android.material.switchmaterial.SwitchMaterial android:textColor="?attr/a2uTextColor"
-            android:id="@+id/settings_status_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/crypto_show_status_bar_label" />
-
-        <com.google.android.material.switchmaterial.SwitchMaterial android:textColor="?attr/a2uTextColor"
-            android:id="@+id/settings_nav_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/crypto_show_nav_bar_label" />
+        <com.google.android.flexbox.FlexboxLayout
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            app:flexWrap="wrap" app:alignItems="center">
+            <com.google.android.material.switchmaterial.SwitchMaterial android:textColor="?attr/a2uTextColor"
+                android:id="@+id/settings_keep_screen_on"
+                android:layout_width="wrap_content"
+                android:layout_marginEnd="12dp" android:minHeight="48dp"
+                android:layout_height="wrap_content"
+                android:text="@string/crypto_keep_screen_on_label" />
+            <com.google.android.material.switchmaterial.SwitchMaterial android:textColor="?attr/a2uTextColor"
+                android:id="@+id/settings_status_bar"
+                android:layout_width="wrap_content"
+                android:layout_marginEnd="12dp" android:minHeight="48dp"
+                android:layout_height="wrap_content"
+                android:text="@string/crypto_show_status_bar_label" />
+            <com.google.android.material.switchmaterial.SwitchMaterial android:textColor="?attr/a2uTextColor"
+                android:id="@+id/settings_nav_bar"
+                android:layout_width="wrap_content"
+                android:layout_marginEnd="12dp" android:minHeight="48dp"
+                android:layout_height="wrap_content"
+                android:text="@string/crypto_show_nav_bar_label" />
+        </com.google.android.flexbox.FlexboxLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginVertical="18dp"
+            android:layout_marginVertical="8dp"
             android:background="?android:attr/listDivider" />
 
         <!-- ─── Section Sons ─── -->
@@ -184,7 +275,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginVertical="18dp"
+            android:layout_marginVertical="8dp"
             android:background="?android:attr/listDivider" />
 
         <!-- ─── Section Toggles de la bannière ─── -->

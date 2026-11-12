@@ -3,20 +3,16 @@ package com.Atom2Universe.app.crypto
 import android.Manifest
 import android.app.Activity
 import android.app.Application
-import android.content.ContentValues
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.drawable.GradientDrawable
-import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.os.Handler
 import android.os.Looper
-import android.provider.MediaStore
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.KeyEvent
@@ -42,8 +38,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.Atom2Universe.app.R
 import com.google.android.material.card.MaterialCardView
-import java.io.File
-import java.io.InputStream
 import java.net.HttpURLConnection
 import java.net.URL
 import java.text.SimpleDateFormat
@@ -481,7 +475,7 @@ class FloatingWebWidget @JvmOverloads constructor(
 
                 val filename = buildSmartFilename(url, mimeType)
                 // Copié par morceaux vers le fichier : une grosse image ne passe jamais en mémoire
-                val saved = connection.inputStream.use { saveToAtom2Universe(it, filename, mimeType) }
+                val saved = connection.inputStream.use { saveToAtom2Universe(context, it, filename, mimeType) }
                 if (saved) showDownloadToast(filename)
                 else postToast(context.getString(R.string.floating_web_image_error_save))
 
@@ -500,50 +494,6 @@ class FloatingWebWidget @JvmOverloads constructor(
             ctx = ctx.baseContext
         }
         return null
-    }
-
-    /** Écrit l'image dans Pictures/Atom2Universe ; false (et rien de laissé derrière) si vide ou en échec. */
-    private fun saveToAtom2Universe(input: InputStream, filename: String, mimeType: String): Boolean {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            val resolver = context.contentResolver
-            val values = ContentValues().apply {
-                put(MediaStore.MediaColumns.DISPLAY_NAME, filename)
-                put(MediaStore.MediaColumns.MIME_TYPE, mimeType)
-                put(MediaStore.MediaColumns.RELATIVE_PATH,
-                    "${Environment.DIRECTORY_PICTURES}/Atom2Universe")
-                put(MediaStore.MediaColumns.IS_PENDING, 1)
-            }
-            val uri = resolver.insert(
-                MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY),
-                values
-            ) ?: return false
-            val written = try {
-                resolver.openOutputStream(uri)?.use { input.copyTo(it) } ?: 0L
-            } catch (_: Exception) { 0L }
-            if (written <= 0L) {
-                runCatching { resolver.delete(uri, null, null) }
-                return false
-            }
-            values.clear()
-            values.put(MediaStore.MediaColumns.IS_PENDING, 0)
-            resolver.update(uri, values, null, null)
-            true
-        } else {
-            val picturesDir = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES
-            )
-            val dir = File(picturesDir, "Atom2Universe").also { it.mkdirs() }
-            val file = File(dir, filename)
-            val written = try {
-                file.outputStream().use { input.copyTo(it) }
-            } catch (_: Exception) { 0L }
-            if (written <= 0L) {
-                file.delete()
-                return false
-            }
-            MediaScannerConnection.scanFile(context, arrayOf(file.absolutePath), null, null)
-            true
-        }
     }
 
     // ── Nom de fichier intelligent ────────────────────────────────────────────
