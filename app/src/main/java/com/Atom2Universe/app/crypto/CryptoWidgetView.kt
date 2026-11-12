@@ -53,7 +53,10 @@ class CryptoWidgetView @JvmOverloads constructor(
 
     private val minScale = 0.8f
     private val maxScale = 2.2f
-    private var currentScale = 1f
+    // La taille affichée fait foi : elle peut être restaurée de l'extérieur.
+    private var currentScale: Float
+        get() = scaleX
+        set(value) { scaleX = value; scaleY = value }
 
     private var downRawX = 0f
     private var downRawY = 0f

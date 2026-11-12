@@ -117,7 +117,10 @@ class NewsWidgetView @JvmOverloads constructor(
     // ── Zoom (pinch, 2 doigts) ────────────────────────────────────────────────
     private val minScale = 0.6f
     private val maxScale = 2.5f
-    private var currentScale = 2.5f
+    // La taille affichée fait foi : elle peut être restaurée de l'extérieur.
+    private var currentScale: Float
+        get() = scaleX
+        set(value) { scaleX = value; scaleY = value }
 
     private val scaleDetector = ScaleGestureDetector(context,
         object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
@@ -229,8 +232,7 @@ class NewsWidgetView @JvmOverloads constructor(
 
     init {
         LayoutInflater.from(context).inflate(R.layout.view_news_widget, this, true)
-        scaleX = currentScale
-        scaleY = currentScale
+        currentScale = 2.5f
 
         cardView   = findViewById(R.id.news_widget_card)
         header     = findViewById(R.id.news_widget_header)
@@ -273,6 +275,21 @@ class NewsWidgetView @JvmOverloads constructor(
         btnOpen.setOnClickListener { openCurrentArticle() }
         header.setOnTouchListener { _, event -> handleHeaderTouch(event) }
         keepFloatingWidgetOnScreenOnResize()
+        // Un titre plus ou moins long change la hauteur : l'arête du haut (et celle de gauche) ne bouge pas.
+        addOnLayoutChangeListener { _, l, t, r, b, oldL, oldT, oldR, oldB ->
+            val w = r - l
+            val h = b - t
+            val oldW = oldR - oldL
+            val oldH = oldB - oldT
+            if (oldW <= 0 || oldH <= 0 || (w == oldW && h == oldH)) return@addOnLayoutChangeListener
+            translationX += (oldL - l) + (oldW - w) / 2f * (1f - scaleX)
+            translationY += (oldT - t) + (oldH - h) / 2f * (1f - scaleY)
+            // Sauf s'il déborderait en bas de l'écran : il remonte alors juste ce qu'il faut.
+            val container = parent as? View ?: return@addOnLayoutChangeListener
+            val shownTop = t + translationY + h / 2f * (1f - scaleY)
+            val overflow = shownTop + h * scaleY - container.height
+            if (overflow > 0f) translationY -= minOf(overflow, shownTop).coerceAtLeast(0f)
+        }
 
         showStatus(context.getString(R.string.news_widget_loading))
     }

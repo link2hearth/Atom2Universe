@@ -136,6 +136,7 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
     private var batchProgress: Int? = null
     private var civitaiPosition = CivitaiSlideshow.Position()
     private lateinit var civitaiWidget: CivitaiWidget
+    private lateinit var widgetPlaces: FloatingWidgetPlaces
     private var clickerInForeground = false
     private var pictureAwaitingPermission: String? = null
     private val picturePermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
@@ -638,6 +639,25 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
             if (isChecked) theLineWidgetView.reload()
         }
 
+        widgetPlaces = FloatingWidgetPlaces(this).apply {
+            add("crypto", cryptoWidgetView)
+            add("earth", earthMoonWidgetView)
+            add("chess", chessWidgetView)
+            add("draughts", draughtsWidgetView)
+            add("sudoku", sudokuWidgetView)
+            add("game2048", game2048WidgetView)
+            add("solitaire", solitaireWidgetView)
+            add("blackjack", blackjackWidgetView)
+            add("color_stack", colorStackWidgetView)
+            add("music", musicPlayerWidgetView)
+            add("pipetap", pipeTapWidgetView)
+            add("the_line", theLineWidgetView)
+            // Le widget d'actualités se cache aussi quand il n'a rien à montrer.
+            add("news", newsWidgetView) { MainClickerPreferences.isNewsWidgetEnabled(this@MainClickerActivity) }
+            add("civitai", findViewById(R.id.civitai_widget))
+            findViewById<View>(android.R.id.content).viewTreeObserver.addOnGlobalLayoutListener(onLayout)
+        }
+
         bannerViewCache = mapOf(
             "earth" to Pair(findViewById(R.id.main_clicker_label_earth), earthToggle),
             "chess" to Pair(findViewById(R.id.main_clicker_label_chess), chessToggle),
@@ -820,6 +840,7 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
         clickerSoundEngine.stop()
         floatingWebWidget.onPause()
         colorStackWidgetView.cancelTimer()
+        widgetPlaces.save()
         super.onPause()
     }
 

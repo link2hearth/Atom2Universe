@@ -62,7 +62,10 @@ class Game2048WidgetView @JvmOverloads constructor(
     // ── Zoom (pinch 2 doigts) ─────────────────────────────────────────────────
     private val minScale = 0.4f
     private val maxScale = 3.0f
-    private var currentScale = 1f
+    // La taille affichée fait foi : elle peut être restaurée de l'extérieur.
+    private var currentScale: Float
+        get() = scaleX
+        set(value) { scaleX = value; scaleY = value }
 
     private val scaleDetector = ScaleGestureDetector(context,
         object : ScaleGestureDetector.SimpleOnScaleGestureListener() {

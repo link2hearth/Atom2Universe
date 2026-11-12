@@ -102,7 +102,10 @@ class MusicPlayerWidgetView @JvmOverloads constructor(
     private val hideRunnable = Runnable { fadeControls(show = false) }
 
     // ── Pinch-to-zoom ─────────────────────────────────────────────────────────
-    private var currentScale = 1.0f
+    // La taille affichée fait foi : elle peut être restaurée de l'extérieur.
+    private var currentScale: Float
+        get() = scaleX
+        set(value) { scaleX = value; scaleY = value }
     private val scaleDetector = ScaleGestureDetector(context,
         object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
             override fun onScale(detector: ScaleGestureDetector): Boolean {

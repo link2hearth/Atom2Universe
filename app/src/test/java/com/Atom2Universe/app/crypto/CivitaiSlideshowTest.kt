@@ -113,11 +113,11 @@ class CivitaiSlideshowTest {
     }
 
     @Test fun reopeningShowsTheLastWebpAndCanNavigateWhileTheNextDownloadIsBlocked() = runBlocking {
-        prefs.edit().putLong("day", LocalDate.now().toEpochDay()).putInt("downloads", 38).commit()
+        prefs.edit().putLong("initial_day_$recent", LocalDate.now().toEpochDay()).putInt("initial_left_$recent", 2).commit()
         val first = display(recent, 0)
         val last = display(recent, 1)
         assertNotEquals(first, last)
-        prefs.edit().putInt("downloads", 2).commit()
+        prefs.edit().putInt("initial_left_$recent", 18).commit()
         requests.clear()
         slideshow = CivitaiSlideshow(context, client)
         assertEquals(last, slideshow.select(recent, 0, null))
@@ -369,22 +369,20 @@ class CivitaiSlideshowTest {
         assertNotEquals("1", display(recent, -1).nameWithoutExtension)
     }
 
-    @Test fun dailyLimitIsSharedAndReopeningResumesAPartialFirstBatch() = runBlocking {
-        prefs.edit().putLong("day", LocalDate.now().toEpochDay()).putInt("downloads", 39).commit()
+    @Test fun reopeningResumesAPartialFirstBatch() = runBlocking {
+        prefs.edit().putLong("initial_day_$recent", LocalDate.now().toEpochDay()).putInt("initial_left_$recent", 1).commit()
         val first = display(recent, 0)
         assertEquals(CivitaiSlideshow.Position(1, 1), slideshow.position(recent, first))
-        assertEquals(first, display(week, 0))
         assertEquals(1, imageRequests())
-        prefs.edit().putLong("day", LocalDate.now().minusDays(1).toEpochDay()).commit()
+        prefs.edit().putInt("initial_left_$recent", 19).commit()
         slideshow = CivitaiSlideshow(context, client)
         assertEquals(first, display(recent, 0))
         assertEquals(CivitaiSlideshow.Position(1, 20), slideshow.position(recent, first))
         assertEquals(20, imageRequests())
     }
 
-    @Test fun manualBatchAddsTwentyRealImagesBeyondTheAutomaticLimit() = runBlocking {
+    @Test fun manualBatchAddsTwentyMoreRealImages() = runBlocking {
         val first = display(recent, 0)
-        prefs.edit().putLong("day", LocalDate.now().toEpochDay()).putInt("downloads", 40).commit()
         val counts = mutableListOf<Int>()
         assertEquals(20, slideshow.addBatch(recent) { counts += it })
         assertEquals((1..20).toList(), counts)

@@ -65,10 +65,8 @@ internal class CivitaiSlideshow(
         private const val HOUR = 3_600_000L
         private const val DAY = 24 * HOUR
         private const val RETRY_DELAY = 60_000L
-        // 120 is divisible by both batch sizes (20 and 24).
-        private const val BATCH_CREDITS = 120
         private const val MAX_IMAGE_BYTES = 4L * 1024 * 1024
-        private const val CACHE_BYTES = 64L * 1024 * 1024
+        private const val CACHE_BYTES = 200L * 1024 * 1024
         private val mutex = Mutex()
         const val RED_VISIBLE = "red_visible"
 
@@ -329,26 +327,6 @@ internal class CivitaiSlideshow(
         if (folderNeedsRefresh(folder)) prefs.edit { remove("refresh_folder") }
     }
 
-    private fun spentCredits(day: Long): Int {
-        if (prefs.getLong("day", -1) != day) return 0
-        val wallhaven = prefs.getInt("wallhaven_downloads", 0)
-        val civitai = prefs.getInt("downloads", 0) - wallhaven
-        return civitai * (BATCH_CREDITS / 20) + wallhaven * (BATCH_CREDITS / 24)
-    }
-
-    private fun hasDownloadBudget(feed: ClickerBackgroundSource) =
-        spentCredits(today().toEpochDay()) + BATCH_CREDITS / feed.batchSize <= 2 * BATCH_CREDITS
-
-    private fun reserveDownload(feed: ClickerBackgroundSource): Boolean {
-        if (!hasDownloadBudget(feed)) return false
-        val day = today().toEpochDay()
-        val sameDay = prefs.getLong("day", -1) == day
-        val total = if (sameDay) prefs.getInt("downloads", 0) else 0
-        val wallhaven = if (sameDay) prefs.getInt("wallhaven_downloads", 0) else 0
-        return prefs.edit().putLong("day", day).putInt("downloads", total + 1)
-            .putInt("wallhaven_downloads", wallhaven + if (feed.site == CivitaiSite.WALLHAVEN) 1 else 0).commit()
-    }
-
     private fun selectCached(feed: ClickerBackgroundSource, direction: Int, displayedId: String?): File? {
         val last = displayedId ?: lastId(feed)
         if (direction == 0 && last != null && last in ids("pool_$feed")) {
@@ -391,7 +369,7 @@ internal class CivitaiSlideshow(
         }
         val left = prefs.getInt("initial_left_$feed", 0)
         if (left <= 0) return null
-        val image = addOne(feed, manual = false) ?: return null
+        val image = addOne(feed) ?: return null
         prefs.edit { putInt("initial_left_$feed", left - 1) }
         return image
     }
@@ -412,7 +390,7 @@ internal class CivitaiSlideshow(
         mutex.withLock {
             cleanExpiredLocked()
             var added = 0
-            while (added < feed.batchSize && addOne(feed, manual = true) != null) {
+            while (added < feed.batchSize && addOne(feed) != null) {
                 added++
                 progress(added)
             }
@@ -425,13 +403,12 @@ internal class CivitaiSlideshow(
     }
 
     // Each step commits its own file and cursor so cancelling a batch keeps its completed images.
-    private suspend fun addOne(feed: ClickerBackgroundSource, manual: Boolean): File? {
+    private suspend fun addOne(feed: ClickerBackgroundSource): File? {
         if (!available(feed)) return null
         val site = requireNotNull(feed.site)
         val key = feed.name
         val now = System.currentTimeMillis()
         val already = (pool(feed) + history(key)).toHashSet()
-        val hasBudget = manual || hasDownloadBudget(feed)
         var page = readPage(key)
         val mayFetch = now >= prefs.getLong("retry_$key", 0)
         suspend fun fetch(url: String, append: Boolean): Boolean {
@@ -462,9 +439,9 @@ internal class CivitaiSlideshow(
                 if (entry.id in already || !allowed(entry.id) || now < (unavailable[entry.id] ?: 0)) continue
                 val target = file(entry.id)
                 if (!target.isFile) {
-                    if (!hasBudget || now < (retryImagesAfter[site] ?: 0L)) continue
-                    if (directory.listFiles().orEmpty().count { it.extension == "webp" } >= 80) return null
-                    if (attempted >= 3 || (!manual && !reserveDownload(feed))) return null
+                    if (now < (retryImagesAfter[site] ?: 0L)) continue
+                    if (directory.listFiles().orEmpty().count { it.extension == "webp" } >= 1000) return null
+                    if (attempted >= 3) return null
                     attempted++
                     try {
                         cacheImage(entry)
@@ -488,7 +465,7 @@ internal class CivitaiSlideshow(
                 }
                 return target
             }
-            if (pageIndex == 2 || !online || !hasBudget || page.next.isEmpty() || !fetch(page.next, true)) return null
+            if (pageIndex == 2 || !online || page.next.isEmpty() || !fetch(page.next, true)) return null
         }
         return null
     }
