@@ -284,11 +284,6 @@ class NewsWidgetView @JvmOverloads constructor(
             if (oldW <= 0 || oldH <= 0 || (w == oldW && h == oldH)) return@addOnLayoutChangeListener
             translationX += (oldL - l) + (oldW - w) / 2f * (1f - scaleX)
             translationY += (oldT - t) + (oldH - h) / 2f * (1f - scaleY)
-            // Sauf s'il déborderait en bas de l'écran : il remonte alors juste ce qu'il faut.
-            val container = parent as? View ?: return@addOnLayoutChangeListener
-            val shownTop = t + translationY + h / 2f * (1f - scaleY)
-            val overflow = shownTop + h * scaleY - container.height
-            if (overflow > 0f) translationY -= minOf(overflow, shownTop).coerceAtLeast(0f)
         }
 
         showStatus(context.getString(R.string.news_widget_loading))
