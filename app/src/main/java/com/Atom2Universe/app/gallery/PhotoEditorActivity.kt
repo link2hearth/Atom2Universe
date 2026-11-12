@@ -68,7 +68,7 @@ class PhotoEditorActivity : ThemedActivity() {
         }
         val top = panel()
         top.action(R.drawable.ic_arrow_back_24,R.string.back,::leave)
-        top.heading().apply { text = name; tooltipText = name }
+        top.heading(compact = true).apply { text = name; tooltipText = name }
         // Held down, shows the untouched photo.
         top.action(R.drawable.ic_px_eye,R.string.photo_compare) {}.setOnTouchListener { view,event ->
             when (event.actionMasked) {
@@ -256,6 +256,7 @@ class PhotoEditorActivity : ThemedActivity() {
             EditTab.DRAW -> {
                 tool(EditTool.BRUSH,R.string.photo_brush)
                 tool(EditTool.ERASER,R.string.photo_eraser)
+                tool(EditTool.HEAL,R.string.photo_heal)
                 tool(EditTool.CLONE,R.string.photo_clone)
                 if (model.tool == EditTool.CLONE && model.cloneSource != null) item(options,R.string.photo_clone_source) {
                     model.cloneSource = null; model.cloneOffset = null; refresh()
@@ -280,7 +281,7 @@ class PhotoEditorActivity : ThemedActivity() {
         }
         when (model.tool) {
             EditTool.WAND, EditTool.BACKGROUND -> slider(0,150,model.tolerance,R.string.photo_tolerance) { model.tolerance = it }
-            EditTool.ADD, EditTool.SUBTRACT -> slider(1,18,model.brushSize,R.string.photo_size) { model.brushSize = it }
+            EditTool.ADD, EditTool.SUBTRACT, EditTool.HEAL -> slider(1,18,model.brushSize,R.string.photo_size) { model.brushSize = it }
             EditTool.BRUSH, EditTool.ERASER, EditTool.CLONE -> {
                 slider(1,18,model.brushSize,R.string.photo_size) { model.brushSize = it }
                 slider(5,100,model.opacity,R.string.photo_opacity) { model.opacity = it }
@@ -299,6 +300,7 @@ class PhotoEditorActivity : ThemedActivity() {
             EditTool.SUBJECT -> R.string.photo_hint_subject
             EditTool.BACKGROUND -> R.string.photo_hint_background
             EditTool.ADD, EditTool.SUBTRACT -> R.string.photo_hint_refine
+            EditTool.HEAL -> R.string.photo_hint_heal
             EditTool.CLONE -> if (model.cloneSource == null) R.string.photo_hint_clone_source else R.string.photo_hint_clone
             else -> if (selection != null) R.string.photo_hint_local else 0
         }
@@ -355,6 +357,7 @@ class PhotoEditorActivity : ThemedActivity() {
             }
             EditTool.BACKGROUND -> model.removeBackground(trace)
             EditTool.BRUSH, EditTool.ERASER -> model.edit(PhotoEdit.Ink(trace,model.ink,tool == EditTool.ERASER,previous,opacity))
+            EditTool.HEAL -> model.edit(PhotoEdit.Heal(trace,previous))
             EditTool.CLONE -> {
                 val source = model.cloneSource
                 if (source == null) { model.cloneSource = trace.points.last(); refresh() }

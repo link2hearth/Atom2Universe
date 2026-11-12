@@ -124,6 +124,25 @@ class PhotoEditorTest {
         assertEquals(Color.RED,faint.getPixel(40,10))
     }
 
+    @Test fun healContinuesTheSurroundingsOverADetail() {
+        // A sky fading from light to darker blue, with a black bird in the middle.
+        val sky = Bitmap.createBitmap(160,120,Bitmap.Config.ARGB_8888)
+        for (y in 0 until 120) for (x in 0 until 160) sky.setPixel(x,y,Color.rgb(90+y/2,150+y/3,230))
+        val clean = sky.copy(Bitmap.Config.ARGB_8888,true)
+        for (y in 54..66) for (x in 70..90) sky.setPixel(x,y,Color.BLACK)
+        val stroke = Trace(listOf(PointF(.42f,.5f),PointF(.58f,.5f)),.22f)
+        val healed = PhotoRender.apply(sky,PhotoEdit.Heal(stroke,null))
+        for (at in listOf(80 to 60,72 to 56,89 to 65)) {
+            val got = healed.getPixel(at.first,at.second)
+            val want = clean.getPixel(at.first,at.second)
+            assertTrue(kotlin.math.abs(Color.red(got)-Color.red(want)) < 12)
+            assertTrue(kotlin.math.abs(Color.green(got)-Color.green(want)) < 12)
+            assertTrue(Color.blue(got) > 215)
+        }
+        assertEquals(clean.getPixel(10,10),healed.getPixel(10,10))
+        assertEquals(clean.getPixel(80,110),healed.getPixel(80,110))
+    }
+
     @Test fun undoRedoAndExportReplayOnSourceAfterSmallPreview() {
         val app = RuntimeEnvironment.getApplication()
         val model = PhotoEditorModel(app)

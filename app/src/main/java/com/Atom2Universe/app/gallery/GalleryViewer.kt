@@ -37,8 +37,9 @@ internal fun LinearLayout.action(icon: Int, label: Int, click: () -> Unit): Imag
     return button
 }
 
-internal fun LinearLayout.heading(): TextView = TextView(context).also {
-    it.textSize = if (context.tablet()) 24f else 20f
+/** [compact] is for a file name beside other buttons; the large size is for screen titles. */
+internal fun LinearLayout.heading(compact: Boolean = false): TextView = TextView(context).also {
+    it.textSize = if (compact) (if (context.tablet()) 17f else 15f) else if (context.tablet()) 24f else 20f
     it.setTypeface(it.typeface, Typeface.BOLD)
     it.setTextColor(context.galleryColor(R.attr.a2uTextColor))
     it.setSingleLine()
@@ -59,7 +60,6 @@ internal class GalleryViewer(
         background = AppearanceStyle.drawable(context, R.attr.a2uPanelBackground)
     }
     private val top = bar()
-    private val bottom = bar()
     private val name: TextView
     private val heart: ImageButton?
     private val counter = TextView(context).apply {
@@ -72,25 +72,23 @@ internal class GalleryViewer(
         get() = top.visibility == VISIBLE
         set(value) {
             top.visibility = if (value) VISIBLE else GONE
-            bottom.visibility = top.visibility
         }
     init {
         setBackgroundColor(Color.BLACK)
         addView(pager, LayoutParams(-1, -1))
         top.action(R.drawable.ic_arrow_back_24, R.string.back, back)
-        name = top.heading()
+        name = top.heading(compact = true)
         top.addView(counter)
-        addView(top, LayoutParams(-1, -2, Gravity.TOP).apply { setMargins(context.dp(8), context.dp(8), context.dp(8), 0) })
         if (trash) {
             heart = null
-            bottom.action(R.drawable.ic_nt_restore, R.string.gallery_restore) { restore(current) }
+            top.action(R.drawable.ic_nt_restore, R.string.gallery_restore) { restore(current) }
         } else {
-            bottom.action(R.drawable.ic_edit_24, R.string.photo_edit) { edit(current) }
-            heart = bottom.action(R.drawable.ic_star_outline_24, R.string.gallery_favorite_add) { favorite(current) }
-            bottom.action(R.drawable.ic_share, R.string.gallery_share) { share(current) }
+            top.action(R.drawable.ic_edit_24, R.string.photo_edit) { edit(current) }
+            heart = top.action(R.drawable.ic_star_outline_24, R.string.gallery_favorite_add) { favorite(current) }
+            top.action(R.drawable.ic_share, R.string.gallery_share) { share(current) }
         }
-        bottom.action(R.drawable.ic_delete, if (trash) R.string.gallery_discard else R.string.gallery_trash) { remove(current) }
-        addView(bottom, LayoutParams(-2, -2, Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL).apply { bottomMargin = context.dp(12) })
+        top.action(R.drawable.ic_delete, if (trash) R.string.gallery_discard else R.string.gallery_trash) { remove(current) }
+        addView(top, LayoutParams(-1, -2, Gravity.TOP).apply { setMargins(context.dp(8), context.dp(8), context.dp(8), 0) })
         pager.adapter = Pages()
         pager.setCurrentItem(initial, false)
         pager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {

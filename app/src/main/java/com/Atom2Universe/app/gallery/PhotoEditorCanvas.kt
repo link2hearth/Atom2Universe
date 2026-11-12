@@ -62,7 +62,7 @@ internal class PhotoEditorCanvas(context: Context, private val model: PhotoEdito
         box.offset(panX,panY)
         return box
     }
-    private fun strokes(tool: EditTool) = tool == EditTool.ADD || tool == EditTool.SUBTRACT || paints(tool)
+    private fun strokes(tool: EditTool) = tool == EditTool.ADD || tool == EditTool.SUBTRACT || tool == EditTool.HEAL || paints(tool)
     private fun paints(tool: EditTool) = tool == EditTool.BRUSH || tool == EditTool.ERASER || tool == EditTool.CLONE
     private fun isBox(tool: EditTool) = tool == EditTool.RECT || tool == EditTool.OVAL || tool == EditTool.SUBJECT
     private fun trace(points: List<PointF>): Trace {
@@ -107,7 +107,7 @@ internal class PhotoEditorCanvas(context: Context, private val model: PhotoEdito
                 color = when (tool) {
                     EditTool.BRUSH -> (model.ink and 0xffffff) or ((model.opacity*255/100) shl 24)
                     EditTool.ERASER, EditTool.SUBTRACT -> 0xbbe56b62.toInt()
-                    EditTool.CLONE -> (accent and 0xffffff) or 0x68000000
+                    EditTool.CLONE, EditTool.HEAL -> (accent and 0xffffff) or 0x68000000
                     else -> accent
                 }
                 if (!strokes(tool)) {

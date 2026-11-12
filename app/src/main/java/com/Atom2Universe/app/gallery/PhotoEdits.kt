@@ -161,6 +161,8 @@ internal sealed interface PhotoEdit {
     data class Ink(val trace: Trace, val color: Int, val erase: Boolean, val mask: PhotoMask?, val opacity: Float = 1f) : PhotoEdit
     /** Paints with the image itself, read at [offset] (source minus destination) from the stroke. */
     data class Clone(val trace: Trace, val offset: PointF, val mask: PhotoMask?, val opacity: Float = 1f) : PhotoEdit
+    /** Erases what lies under the stroke by continuing its surroundings. */
+    data class Heal(val trace: Trace, val mask: PhotoMask?) : PhotoEdit
     data class Fill(val color: Int, val mask: PhotoMask, val opacity: Float = 1f) : PhotoEdit
     data class Cut(val mask: PhotoMask, val keep: Boolean) : PhotoEdit
     /** Straighten by [angle] degrees (the picture is enlarged to stay full), then crop to [rect]. */
@@ -240,6 +242,7 @@ internal object PhotoRender {
                 return Bitmap.createBitmap(src, 0, 0, w, h, m, true)
             }
             is PhotoEdit.Adjust -> if (edit.mask == null) return adjusted(src, edit)
+            is PhotoEdit.Heal -> if (edit.mask == null) return healed(src, edit)
             else -> Unit
         }
         val result = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
@@ -249,6 +252,11 @@ internal object PhotoRender {
             is PhotoEdit.Tone -> tone(canvas, src, edit, isolate = false)
             is PhotoEdit.Adjust -> {
                 val filtered = adjusted(src, edit)
+                blend(canvas, src, edit.mask, false) { it.drawBitmap(filtered, 0f, 0f, null) }
+                filtered.recycle()
+            }
+            is PhotoEdit.Heal -> {
+                val filtered = healed(src, edit)
                 blend(canvas, src, edit.mask, false) { it.drawBitmap(filtered, 0f, 0f, null) }
                 filtered.recycle()
             }
@@ -280,6 +288,176 @@ internal object PhotoRender {
             }
         }
         return result
+    }
+
+    private class HealLevel(val w: Int, val h: Int) {
+        val r = FloatArray(w*h)
+        val g = FloatArray(w*h)
+        val b = FloatArray(w*h)
+        val weight = FloatArray(w*h)
+    }
+
+    /**
+     * Removes what lies under the stroke by continuing the surroundings into it: colours are
+     * averaged from coarse to fine, relaxed into a smooth blend, then given the grain measured around.
+     */
+    fun healed(src: Bitmap, edit: PhotoEdit.Heal): Bitmap {
+        val w = src.width
+        val h = src.height
+        val out = src.copy(Bitmap.Config.ARGB_8888, true)
+        val reach = edit.trace.width * minOf(w, h) / 2f + 2f
+        val around = reach + maxOf(12f, reach)
+        val points = edit.trace.points
+        val left = (points.minOf { it.x } * w - around).toInt().coerceIn(0, w-1)
+        val top = (points.minOf { it.y } * h - around).toInt().coerceIn(0, h-1)
+        val rw = ((points.maxOf { it.x } * w + around).toInt().coerceIn(left, w-1)) - left + 1
+        val rh = ((points.maxOf { it.y } * h + around).toInt().coerceIn(top, h-1)) - top + 1
+        // The fill is smooth by nature: solving it on a reduced copy of the area costs nothing visible.
+        val scale = minOf(1f, kotlin.math.sqrt(400_000f / (rw.toFloat() * rh)))
+        val sw = (rw * scale).roundToInt().coerceAtLeast(1)
+        val sh = (rh * scale).roundToInt().coerceAtLeast(1)
+        val n = sw * sh
+        fun brush() = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.WHITE }
+        val cover = IntArray(n)
+        Bitmap.createBitmap(sw, sh, Bitmap.Config.ARGB_8888).let { sheet ->
+            Canvas(sheet).apply { scale(sw.toFloat()/rw, sh.toFloat()/rh); translate(-left.toFloat(), -top.toFloat()) }
+                .let { edit.trace.draw(it, w, h, brush()) }
+            sheet.getPixels(cover, 0, sw, 0, 0, sw, sh)
+            sheet.recycle()
+        }
+        val px = IntArray(n)
+        Bitmap.createBitmap(src, left, top, rw, rh).let { area ->
+            val small = if (sw == rw && sh == rh) area else Bitmap.createScaledBitmap(area, sw, sh, true)
+            small.getPixels(px, 0, sw, 0, 0, sw, sh)
+            if (small !== area && small !== src) small.recycle()
+            if (area !== src) area.recycle()
+        }
+        var holes = 0
+        for (i in 0 until n) { cover[i] = cover[i] ushr 24; if (cover[i] != 0) holes++ }
+        if (holes == 0 || holes == n) return out
+
+        // Pull: each coarser level averages whatever is known below it.
+        val levels = ArrayList<HealLevel>()
+        levels.add(HealLevel(sw, sh).also {
+            for (i in 0 until n) if (cover[i] == 0) {
+                val c = px[i]
+                it.r[i] = ((c shr 16) and 255).toFloat(); it.g[i] = ((c shr 8) and 255).toFloat()
+                it.b[i] = (c and 255).toFloat(); it.weight[i] = 1f
+            }
+        })
+        while (levels.last().w > 1 || levels.last().h > 1) {
+            val fine = levels.last()
+            val coarse = HealLevel((fine.w+1)/2, (fine.h+1)/2)
+            for (y in 0 until fine.h) for (x in 0 until fine.w) {
+                val i = y*fine.w + x
+                val weight = fine.weight[i]
+                if (weight == 0f) continue
+                val j = (y/2)*coarse.w + x/2
+                coarse.r[j] += fine.r[i]*weight; coarse.g[j] += fine.g[i]*weight
+                coarse.b[j] += fine.b[i]*weight; coarse.weight[j] += weight
+            }
+            for (j in coarse.weight.indices) {
+                val weight = coarse.weight[j]
+                if (weight == 0f) continue
+                coarse.r[j] /= weight; coarse.g[j] /= weight; coarse.b[j] /= weight
+                coarse.weight[j] = minOf(1f, weight)
+            }
+            levels.add(coarse)
+        }
+        // Push: what a level lacks comes from the level above, smoothly enlarged.
+        for (k in levels.size-2 downTo 0) {
+            val fine = levels[k]
+            val coarse = levels[k+1]
+            for (y in 0 until fine.h) for (x in 0 until fine.w) {
+                val i = y*fine.w + x
+                val weight = fine.weight[i]
+                if (weight >= 1f) continue
+                val fx = ((x + 0.5f)/2f - 0.5f).coerceIn(0f, coarse.w - 1f)
+                val fy = ((y + 0.5f)/2f - 0.5f).coerceIn(0f, coarse.h - 1f)
+                val x0 = fx.toInt()
+                val y0 = fy.toInt()
+                val x1 = minOf(x0+1, coarse.w-1)
+                val y1 = minOf(y0+1, coarse.h-1)
+                val tx = fx - x0
+                val ty = fy - y0
+                val a = y0*coarse.w + x0
+                val b = y0*coarse.w + x1
+                val c = y1*coarse.w + x0
+                val d = y1*coarse.w + x1
+                val wa = (1f-tx)*(1f-ty); val wb = tx*(1f-ty); val wc = (1f-tx)*ty; val wd = tx*ty
+                val rest = 1f - weight
+                fine.r[i] = fine.r[i]*weight + rest*(coarse.r[a]*wa + coarse.r[b]*wb + coarse.r[c]*wc + coarse.r[d]*wd)
+                fine.g[i] = fine.g[i]*weight + rest*(coarse.g[a]*wa + coarse.g[b]*wb + coarse.g[c]*wc + coarse.g[d]*wd)
+                fine.b[i] = fine.b[i]*weight + rest*(coarse.b[a]*wa + coarse.b[b]*wb + coarse.b[c]*wc + coarse.b[d]*wd)
+                fine.weight[i] = 1f
+            }
+        }
+        val fill = levels[0]
+        val hole = IntArray(holes)
+        var count = 0
+        for (i in 0 until n) if (cover[i] != 0) hole[count++] = i
+        // Relax: every filled pixel settles on the mean of its neighbours, which erases the seams.
+        for (channel in arrayOf(fill.r, fill.g, fill.b)) repeat(48) {
+            for (i in hole) {
+                val x = i % sw
+                val y = i / sw
+                channel[i] = (channel[if (x > 0) i-1 else i] + channel[if (x < sw-1) i+1 else i] +
+                    channel[if (y > 0) i-sw else i] + channel[if (y < sh-1) i+sw else i]) / 4f
+            }
+        }
+        // Grain of the untouched surroundings, so the patch does not look polished.
+        var energy = 0.0
+        var samples = 0
+        fun luma(i: Int) = ((px[i] shr 16) and 255)*0.3f + ((px[i] shr 8) and 255)*0.59f + (px[i] and 255)*0.11f
+        for (y in 1 until sh-1) for (x in 1 until sw-1) {
+            val i = y*sw + x
+            if (cover[i] != 0 || cover[i-1] != 0 || cover[i+1] != 0 || cover[i-sw] != 0 || cover[i+sw] != 0) continue
+            val d = luma(i) - (luma(i-1) + luma(i+1) + luma(i-sw) + luma(i+sw)) / 4f
+            energy += d*d
+            samples++
+        }
+        val grain = if (samples == 0) 0f else kotlin.math.sqrt(energy / samples / 1.25).toFloat().coerceAtMost(8f)
+        for (i in hole) px[i] = (px[i] and 0xff000000.toInt()) or (fill.r[i].roundToInt().coerceIn(0, 255) shl 16) or
+            (fill.g[i].roundToInt().coerceIn(0, 255) shl 8) or fill.b[i].roundToInt().coerceIn(0, 255)
+        val filled = Bitmap.createBitmap(px, sw, sh, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(out)
+        val area = RectF(left.toFloat(), top.toFloat(), (left + rw).toFloat(), (top + rh).toFloat())
+        val layer = canvas.saveLayer(area, null)
+        edit.trace.draw(canvas, w, h, brush())
+        canvas.drawBitmap(filled, null, area, Paint(Paint.FILTER_BITMAP_FLAG).apply { xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN) })
+        canvas.restoreToCount(layer)
+        filled.recycle()
+        if (grain <= 0.4f) return out
+        // Grain is added at full size, in bands, wherever the stroke covers.
+        val random = java.util.Random(points.hashCode().toLong())
+        val rows = (262144 / rw).coerceIn(1, rh)
+        val band = IntArray(rw * rows)
+        val covered = IntArray(rw * rows)
+        val sheet = Bitmap.createBitmap(rw, rows, Bitmap.Config.ARGB_8888)
+        val drawer = Canvas(sheet)
+        var y = 0
+        while (y < rh) {
+            val count = minOf(rows, rh - y)
+            sheet.eraseColor(0)
+            drawer.save()
+            drawer.translate(-left.toFloat(), -(top + y).toFloat())
+            edit.trace.draw(drawer, w, h, brush())
+            drawer.restore()
+            sheet.getPixels(covered, 0, rw, 0, 0, rw, count)
+            out.getPixels(band, 0, rw, left, top + y, rw, count)
+            for (i in 0 until rw * count) {
+                val amount = covered[i] ushr 24
+                if (amount == 0) continue
+                val c = band[i]
+                val noise = (random.nextGaussian() * grain * amount / 255.0).roundToInt()
+                band[i] = (c and 0xff000000.toInt()) or ((((c shr 16) and 255) + noise).coerceIn(0, 255) shl 16) or
+                    ((((c shr 8) and 255) + noise).coerceIn(0, 255) shl 8) or ((c and 255) + noise).coerceIn(0, 255)
+            }
+            out.setPixels(band, 0, rw, left, top + y, rw, count)
+            y += count
+        }
+        sheet.recycle()
+        return out
     }
 
     /** Levels that stretch the darkest and brightest parts of the image to full range, if worth it. */

@@ -18,7 +18,7 @@ import kotlinx.coroutines.withContext
 import kotlin.math.abs
 
 internal enum class EditTab { FRAME, LIGHT, LOOK, SELECT, CUTOUT, DRAW }
-internal enum class EditTool { PAN, CROP, RECT, OVAL, LASSO, WAND, SUBJECT, ADD, SUBTRACT, BACKGROUND, BRUSH, ERASER, CLONE, PICKER }
+internal enum class EditTool { PAN, CROP, RECT, OVAL, LASSO, WAND, SUBJECT, ADD, SUBTRACT, BACKGROUND, BRUSH, ERASER, CLONE, HEAL, PICKER }
 
 /** [value] is the long side over the short side; the crop frame follows the picture's orientation. */
 internal enum class CropRatio(val label: Int, private val value: Float) {
