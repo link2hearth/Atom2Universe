@@ -54,3 +54,6 @@ play-billing*.json
 # Packs de données et d'images optionnels, conservés uniquement sur cette machine
 /app/src/main/assets/science/
 /app/src/main/assets/Assets/
+
+# Caches Python des outils
+__pycache__/
