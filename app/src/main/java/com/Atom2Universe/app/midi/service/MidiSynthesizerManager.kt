@@ -25,6 +25,9 @@ class MidiSynthesizerManager(private val context: Context) : MidiEngine {
     private companion object {
         // Marge en amont du mélange, même lorsque le gain du lecteur est à 100 %.
         const val SOUNDFONT_GAIN = 0.2f
+        // La banque Orchestral est écrite 12 dB sous un SoundFont ordinaire : ses instruments très sonores
+        // gardent ainsi de la marge sous la pleine échelle de leurs échantillons.
+        const val ORCHESTRAL_GAIN = SOUNDFONT_GAIN * OrchestralSoundBank.GAIN_OVER_SOUNDFONT
     }
 
     private var focusVolume = 1f
@@ -539,7 +542,7 @@ class MidiSynthesizerManager(private val context: Context) : MidiEngine {
     private fun newPlaybackSf2Engine() = Sf2Engine(context).apply {
         applyMixerGain = false // Le volume maître arrive déjà par setVolume.
         // Les modèles Studio ont déjà leur niveau de sortie calibré. Garder de la marge pour les tutti.
-        setGlobalGain(if (currentSoundFontPath == OrchestralSoundBank.ID) 0.4f else SOUNDFONT_GAIN)
+        setGlobalGain(if (currentSoundFontPath == OrchestralSoundBank.ID) ORCHESTRAL_GAIN else SOUNDFONT_GAIN)
     }
 
     /**

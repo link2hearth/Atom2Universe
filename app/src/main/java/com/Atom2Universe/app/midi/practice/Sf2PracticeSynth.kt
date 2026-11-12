@@ -86,7 +86,12 @@ class Sf2PracticeSynth(
             android.util.Log.d(TAG, "initialize: SF2 loaded, name=${sf2File?.name}")
 
             // Create synthesizer
-            synthesizer = Sf2Synthesizer(sf2File!!, SAMPLE_RATE)
+            synthesizer = Sf2Synthesizer(sf2File!!, SAMPLE_RATE).apply {
+                // La banque Orchestral est écrite plus bas qu'un SoundFont : même rattrapage que dans le lecteur.
+                if (soundFontPath == OrchestralSoundBank.ID) {
+                    globalGain *= OrchestralSoundBank.GAIN_OVER_SOUNDFONT
+                }
+            }
 
             // Create and start audio renderer with low-latency mode for responsive keyboard
             // Force speaker output to prevent audio routing to USB MIDI devices

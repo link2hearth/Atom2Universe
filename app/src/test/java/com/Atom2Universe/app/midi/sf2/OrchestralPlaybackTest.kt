@@ -37,8 +37,11 @@ class OrchestralPlaybackTest {
         try {
             for (program in 0..127) {
                 bank.preparePrograms(setOf(program))
-                val profile = bank.file.getPreset(0, program)!!.regions.first().orchestralProgram?.profile()
-                val key = if (profile == null) 64 else (profile.firstKey + profile.lastKey) / 2
+                val regions = bank.file.getPreset(0, program)!!.regions
+                val profile = regions.first().orchestralProgram?.profile()
+                // Un instrument en échantillons ne joue que son étendue : prendre une note en son milieu.
+                val key = if (profile == null) (regions.minOf { it.keyRange.first } + regions.maxOf { it.keyRange.last }) / 2
+                    else (profile.firstKey + profile.lastKey) / 2
                 synth.reset()
                 synth.programChange(0, program)
                 synth.noteOn(0, key, 100)

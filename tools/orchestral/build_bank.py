@@ -39,9 +39,15 @@ import soundfile
 from scipy.signal import butter, resample_poly, sosfiltfilt
 
 OUT = Path(__file__).resolve().parents[2] / "app/src/main/resources/studio/orchestral/bank.sf2"
-PROGRAMS = {0: 25}          # programme -> atténuation du preset en centibels (niveau égal au SF2 d'origine)
-# programme -> prises enregistrées. Tout le clavier joue : hors de l'étendue de l'instrument, la prise
-# la plus proche est transposée (le lecteur ne retombe pas sur le piano).
+# Toute la banque est écrite 6 dB plus bas que son niveau d'écoute, et le lecteur la joue 6 dB plus fort
+# (gain 0,8 au lieu de 0,4) : cette marge laisse monter les instruments très sonores de la référence
+# (piccolo, violoncelle) sans écrêter leurs prises.
+PROGRAMS = {0: 85}          # programme -> atténuation du preset en centibels (niveau égal au SF2 d'origine)
+# programme -> prises enregistrées. Un instrument ne joue que les notes du vrai instrument (span, en
+# notes MIDI) : au-delà il se tait, rien n'est fabriqué pour une note qu'il ne possède pas (une prise
+# transposée de plusieurs octaves gronde). À l'intérieur, la prise la plus proche est transposée.
+# Les fichiers MIDI débordent souvent un peu de l'étendue réelle : SPAN_TOLERANCE demi-tons sont admis
+# de part et d'autre. Sans span, l'étendue est celle des prises, plus RANGE_MARGIN demi-tons.
 # folders : dossiers de prises, les suivants l'emportent sur les précédents pour une même note ;
 # keep : note frappée ou pincée (absent : note tenue, bouclée) ; c'est la durée gardée, en secondes,
 # quand la prise est trop brève pour recevoir une boucle décroissante ;
@@ -60,77 +66,77 @@ PROGRAMS = {0: 25}          # programme -> atténuation du preset en centibels (
 STRINGS = ["Strings/Solo Contrabass/SusVib", "Strings/Cello Section/susvib", "Strings/Viola Section/susvib",
            "Strings/Violin Section/susVib"]
 WAVES = {
-    3: dict(name="Honky-tonk Piano", source="FreePats/old-piano-FB", folders=["samples/small"],
+    3: dict(name="Honky-tonk Piano", span=(21, 108), source="FreePats/old-piano-FB", folders=["samples/small"],
             keep=3.0, release=0.4, gain=0.0),
-    9: dict(name="Glockenspiel", folders=["Percussion/Glock"], keep=2.0, release=1.0, gain=-7.3),
-    12: dict(name="Marimba", folders=["Percussion/Marimba"], keep=1.5, release=0.8, gain=8.0),
-    13: dict(name="Xylophone", folders=["Percussion/Xylo"], keep=1.0, release=0.6, gain=4.5),
-    14: dict(name="Tubular Bells", source="FreePats/tubular-bells1", folders=["samples/small"],
+    9: dict(name="Glockenspiel", span=(72, 108), folders=["Percussion/Glock"], keep=2.0, release=1.0, gain=-7.3),
+    12: dict(name="Marimba", span=(36, 96), folders=["Percussion/Marimba"], keep=1.5, release=0.8, gain=8.0),
+    13: dict(name="Xylophone", span=(65, 108), folders=["Percussion/Xylo"], keep=1.0, release=0.6, gain=4.5),
+    14: dict(name="Tubular Bells", span=(60, 79), source="FreePats/tubular-bells1", folders=["samples/small"],
              keep=3.0, release=2.0, gain=0.0),
-    16: dict(name="Drawbar Organ", source="FreePats/DrawbarOrganEmulation-SFZ-20190712", folders=["samples"],
+    16: dict(name="Drawbar Organ", span=(24, 108), source="FreePats/DrawbarOrganEmulation-SFZ-20190712", folders=["samples"],
              release=0.1, gain=0.0),
-    17: dict(name="Percussive Organ", source="FreePats/PercussiveOrganEmulation-SFZ-20190715", folders=["samples"],
+    17: dict(name="Percussive Organ", span=(24, 108), source="FreePats/PercussiveOrganEmulation-SFZ-20190715", folders=["samples"],
              only="L", release=0.1, gain=0.0),
-    18: dict(name="Rock Organ", source="FreePats/RockOrganEmulation-SFZ-20190715", folders=["samples"],
+    18: dict(name="Rock Organ", span=(24, 108), source="FreePats/RockOrganEmulation-SFZ-20190715", folders=["samples"],
              only="L", release=0.1, gain=0.0),
-    19: dict(name="Church Organ", folders=["Keys/Organ/Loud"], only="Man3Open", numbered=35, release=0.6, gain=-0.5),
+    19: dict(name="Church Organ", span=(24, 108), folders=["Keys/Organ/Loud"], only="Man3Open", numbered=35, release=0.6, gain=-0.5),
     # L'orgue à anches reprend les anches de l'accordéon : même famille de son, pas de prise d'harmonium en CC0.
     20: dict(name="Reed Organ", same=21, attenuation=170),
-    21: dict(name="Accordion", source="FreePats/button-accordion-HN", folders=["."], release=0.2, gain=0.0),
-    24: dict(name="Nylon Guitar", source="FreePats/spanish-classical-guitar",
+    21: dict(name="Accordion", span=(29, 93), source="FreePats/button-accordion-HN", folders=["."], release=0.2, gain=0.0),
+    24: dict(name="Nylon Guitar", span=(40, 83), source="FreePats/spanish-classical-guitar",
              folders=["SpanishClassicalGuitar-SFZ+FLAC-20190618/samples"], spacing=3, keep=2.5, release=0.3, gain=4.9),
-    26: dict(name="Jazz Guitar", source="FreePats/electric-guitar-FSBS-jazz", folders=["samples/bridge/small"],
+    26: dict(name="Jazz Guitar", span=(40, 88), source="FreePats/electric-guitar-FSBS-jazz", folders=["samples/bridge/small"],
              keep=3.0, release=0.3, gain=4.1),
-    27: dict(name="Clean Guitar", source="FreePats/electric-guitar-FSBS-clean", folders=["samples/bridge/small"],
+    27: dict(name="Clean Guitar", span=(40, 88), source="FreePats/electric-guitar-FSBS-clean", folders=["samples/bridge/small"],
              keep=3.0, release=0.3, gain=4.6),
     # La guitare folk reprend les prises de la guitare classique (pas de folk en licence libre), à son propre niveau.
-    25: dict(name="Steel Guitar", source="FreePats/spanish-classical-guitar",
+    25: dict(name="Steel Guitar", span=(40, 88), source="FreePats/spanish-classical-guitar",
              folders=["SpanishClassicalGuitar-SFZ+FLAC-20190618/samples"], spacing=3, keep=2.5, release=0.3, gain=0.0),
-    29: dict(name="Overdriven Guitar", source="FreePats/electric-guitar-FSBS-dist1", folders=["samples/bridge"],
+    29: dict(name="Overdriven Guitar", span=(40, 88), source="FreePats/electric-guitar-FSBS-dist1", folders=["samples/bridge"],
              skip="soft", spacing=3, lowcut=(230, 18.0), release=0.3, gain=1.2, attenuation=50),
     30: dict(name="Distortion Guitar", same=29),
-    32: dict(name="Acoustic Bass", source="Karoryfer/meatbass", folders=["Samples/pizz"], skip="perc",
+    32: dict(name="Acoustic Bass", span=(24, 67), source="Karoryfer/meatbass", folders=["Samples/pizz"], skip="perc",
              keep=2.5, release=0.4, gain=8.0),
-    33: dict(name="Finger Bass", source="FreePats/electric-bass-YR", folders=["samples/finger"],
+    33: dict(name="Finger Bass", span=(28, 67), source="FreePats/electric-bass-YR", folders=["samples/finger"],
              lowest=28, shelf=(250, 8.0), keep=2.5, release=0.3, gain=7.3),
-    34: dict(name="Picked Bass", source="FreePats/electric-bass-YR", folders=["samples/pick"],
+    34: dict(name="Picked Bass", span=(28, 67), source="FreePats/electric-bass-YR", folders=["samples/pick"],
              lowest=28, keep=2.5, release=0.3, gain=6.4),
-    40: dict(name="Violin", folders=["Strings/Solo Violin/Arco Vib"], release=0.5, gain=1.0),
-    41: dict(name="Viola", folders=["Strings/Viola Section/susvib"], release=0.5, gain=2.5),
-    42: dict(name="Cello", folders=["Strings/Cello Section/susvib"], release=0.5, gain=8.0),
-    43: dict(name="Contrabass", folders=["Strings/Solo Contrabass/SusVib"], release=0.5, gain=8.0),
-    44: dict(name="Tremolo Strings", folders=["Strings/Violin Section/Trem"], release=0.5, gain=2.6),
-    45: dict(name="Pizzicato Strings", folders=["Strings/Solo Contrabass/Pizz", "Strings/Cello Section/pizzT",
+    40: dict(name="Violin", span=(55, 103), folders=["Strings/Solo Violin/Arco Vib"], release=0.5, gain=1.0),
+    41: dict(name="Viola", span=(48, 91), folders=["Strings/Viola Section/susvib"], release=0.5, gain=2.5),
+    42: dict(name="Cello", span=(36, 84), folders=["Strings/Cello Section/susvib"], release=0.5, gain=8.0),
+    43: dict(name="Contrabass", span=(24, 67), folders=["Strings/Solo Contrabass/SusVib"], release=0.5, gain=8.0),
+    44: dict(name="Tremolo Strings", span=(28, 103), folders=["Strings/Violin Section/Trem"], release=0.5, gain=2.6),
+    45: dict(name="Pizzicato Strings", span=(28, 100), folders=["Strings/Solo Contrabass/Pizz", "Strings/Cello Section/pizzT",
                                                "Strings/Viola Section/pizz", "Strings/Violin Section/Pizz"],
              octave=12, keep=1.2, release=0.6, gain=-0.7),
-    46: dict(name="Harp", folders=["Strings/Harp"], keep=2.5, release=1.5, gain=5.3),
-    47: dict(name="Timpani", folders=["Percussion/Timpani"], keep=2.5, release=2.0, gain=7.9,
+    46: dict(name="Harp", span=(24, 103), folders=["Strings/Harp"], keep=2.5, release=1.5, gain=5.3),
+    47: dict(name="Timpani", span=(38, 60), folders=["Percussion/Timpani"], keep=2.5, release=2.0, gain=7.9,
              pitches={"Timpani1": 41.45, "Timpani2": 46.8, "Timpani3": 49.45, "Timpani4": 52.4, "Timpani5": 54.6}),
-    48: dict(name="String Ensemble 1", folders=STRINGS, release=0.6, gain=5.4),
+    48: dict(name="String Ensemble 1", span=(28, 103), folders=STRINGS, release=0.6, gain=5.4),
     49: dict(name="String Ensemble 2", same=48),
-    50: dict(name="Synth Strings 1", source="FreePats/synth-strings-1", folders=["samples"], release=0.6, gain=0.0),
-    51: dict(name="Synth Strings 2", source="FreePats/synth-strings-2", folders=["samples"], numbered=0,
+    50: dict(name="Synth Strings 1", span=(24, 108), source="FreePats/synth-strings-1", folders=["samples"], release=0.6, gain=0.0),
+    51: dict(name="Synth Strings 2", span=(24, 108), source="FreePats/synth-strings-2", folders=["samples"], numbered=0,
              release=0.6, gain=0.0),
-    52: dict(name="Choir Aahs", source="epic-choir", only="_ah_mf_",
+    52: dict(name="Choir Aahs", span=(36, 84), source="epic-choir", only="_ah_mf_",
              folders=["samples/B", "samples/T", "samples/A", "samples/S"], release=0.55, gain=0.0),
-    53: dict(name="Voice Oohs", source="epic-choir", only="_oo_mf_",
+    53: dict(name="Voice Oohs", span=(36, 84), source="epic-choir", only="_oo_mf_",
              folders=["samples/B", "samples/T", "samples/A", "samples/S"], release=0.55, gain=0.0),
-    56: dict(name="Trumpet", folders=["Brass/Trumpet/sus"], release=0.3, gain=0.3),
-    57: dict(name="Trombone", folders=["Brass/Tenor Trombone/sus"], release=0.3, gain=0.3),
-    58: dict(name="Tuba", folders=["Brass/Tuba/sus"], release=0.3, gain=0.7),
-    59: dict(name="Muted Trumpet", folders=["Brass/Trumpet/harmonM-sus"], release=0.3, gain=1.4),
-    60: dict(name="French Horn", folders=["Brass/F Horn/sus"], release=0.4, gain=4.4),
-    68: dict(name="Oboe", folders=["Woodwinds/Oboe/Sus"], release=0.4, gain=1.3),
-    70: dict(name="Bassoon", folders=["Woodwinds/Bassoon/sus"], release=0.4, gain=7.2),
-    71: dict(name="Clarinet", folders=["Woodwinds/Clarinet/susLong"], release=0.4, gain=7.4),
-    72: dict(name="Piccolo", folders=["Woodwinds/Piccolo/Sus"], release=0.4, gain=15.5),
-    73: dict(name="Flute", folders=["Woodwinds/Flute/susvib"], release=0.5, gain=3.3),
-    74: dict(name="Recorder", source="VCSL",
+    56: dict(name="Trumpet", span=(52, 87), folders=["Brass/Trumpet/sus"], release=0.3, gain=0.3),
+    57: dict(name="Trombone", span=(34, 77), folders=["Brass/Tenor Trombone/sus"], release=0.3, gain=0.3),
+    58: dict(name="Tuba", span=(26, 65), folders=["Brass/Tuba/sus"], release=0.3, gain=0.7),
+    59: dict(name="Muted Trumpet", span=(52, 87), folders=["Brass/Trumpet/harmonM-sus"], release=0.3, gain=1.4),
+    60: dict(name="French Horn", span=(34, 77), folders=["Brass/F Horn/sus"], release=0.4, gain=4.4),
+    68: dict(name="Oboe", span=(58, 93), folders=["Woodwinds/Oboe/Sus"], release=0.4, gain=1.3),
+    70: dict(name="Bassoon", span=(34, 77), folders=["Woodwinds/Bassoon/sus"], release=0.4, gain=7.2),
+    71: dict(name="Clarinet", span=(50, 96), folders=["Woodwinds/Clarinet/susLong"], release=0.4, gain=7.4),
+    72: dict(name="Piccolo", span=(74, 108), folders=["Woodwinds/Piccolo/Sus"], release=0.4, gain=15.5),
+    73: dict(name="Flute", span=(59, 98), folders=["Woodwinds/Flute/susvib"], release=0.5, gain=3.3),
+    74: dict(name="Recorder", span=(60, 98), source="VCSL",
              folders=["Aerophones/Edge-blown Aerophones/Baroque Soprano Recorder/Sustain"], release=0.3, gain=0.0),
     # La flûte de pan reprend les prises de l'ocarina (pas de flûte de pan en licence libre), à son propre niveau.
-    75: dict(name="Pan Flute", source="FreePats/ocarina1", folders=["samples"], release=0.25, gain=0.0),
-    79: dict(name="Ocarina", source="FreePats/ocarina1", folders=["samples"], release=0.25, gain=0.0),
-    80: dict(name="Square Lead", source="FreePats/synth-square", folders=["samples"], release=0.2, gain=0.0),
+    75: dict(name="Pan Flute", span=(60, 96), source="FreePats/ocarina1", folders=["samples"], release=0.25, gain=0.0),
+    79: dict(name="Ocarina", span=(60, 96), source="FreePats/ocarina1", folders=["samples"], release=0.25, gain=0.0),
+    80: dict(name="Square Lead", span=(24, 108), source="FreePats/synth-square", folders=["samples"], release=0.2, gain=0.0),
 }
 DYNAMICS = {"pp": 0, "p": 1, "mp": 2, "mf": 3, "f": 4, "ff": 5}
 NOTE = re.compile(r"(?<![A-Za-z])([A-Ga-g])(#|b|s)?(\d)(?![0-9])")
@@ -138,7 +144,9 @@ STEPS = {"C": 0, "D": 2, "E": 4, "F": 5, "G": 7, "A": 9, "B": 11}
 # Corrections de niveau par touche (dB), mesurées contre le SF2 de référence aux réglages du lecteur :
 # {programme: {touche: dB}}. Chaque prise reçoit la médiane des touches proches de sa note.
 LEVELS = Path(__file__).with_name("wave_levels.json")
-WAVE_LEVEL = 3300           # niveau efficace commun des notes tenues (-20 dB)
+RANGE_MARGIN = 3
+SPAN_TOLERANCE = 5
+WAVE_LEVEL = 1650           # niveau efficace commun des notes tenues (-26 dB, marge comprise)
 NO_SHORTENING = range(112, 128)   # percussions et bruitages : sons qui évoluent, jamais bouclés ici
 BRIGHT_DB = -15.0           # part d'énergie au-dessus de 9,5 kHz à partir de laquelle la fréquence est gardée
 MONO_GAIN = 10 ** (-3 / 20) # un son mono centré sonne 3 dB plus fort qu'une paire : niveau commun
@@ -665,23 +673,32 @@ class Bank:
         for root in sorted(made):
             if not roots or root - roots[-1] >= spec.get("spacing", 1):
                 roots.append(root)
+        if "span" in spec:
+            bottom, top = max(0, spec["span"][0] - SPAN_TOLERANCE), min(127, spec["span"][1] + SPAN_TOLERANCE)
+        else:
+            bottom, top = max(0, roots[0] - RANGE_MARGIN), min(127, roots[-1] + RANGE_MARGIN)
         for i, root in enumerate(roots):
             signal, loop_start, loop_end, rate, correction, decay = made[root]
-            low = 0 if i == 0 else (roots[i - 1] + root) // 2 + 1
-            high = 127 if i == len(roots) - 1 else (root + roots[i + 1]) // 2
+            low = bottom if i == 0 else max(bottom, (roots[i - 1] + root) // 2 + 1)
+            high = top if i == len(roots) - 1 else min(top, (root + roots[i + 1]) // 2)
+            if low > high:
+                continue        # prise tout entière hors de l'étendue de l'instrument
             near = [levels[str(key)] for key in range(max(low, root - 6), min(high, root + 6) + 1) if str(key) in levels]
             base = float(np.median(near)) if near else 0.0
             if near:
                 signal = signal * 10 ** (base / 20)
                 over = float(np.abs(signal).max()) / 32000
-                if over > 1:
-                    # Les crêtes qui dépassent sont arrondies : jusqu'à 8 dB sur une note frappée, 3 dB sur une
-                    # note tenue (au-delà cela s'entendrait). Ce qui manque encore laisse la prise plus faible.
-                    signal = signal * min(1.0, (1.41 if looped else 2.5) / over)
+                if over > 1 and looped:
+                    # Une note tenue n'est jamais déformée : elle reste simplement plus faible que demandé.
+                    signal = signal / over
+                    capped.append(f"{root} (reste {-20 * math.log10(over):.0f} dB sous la référence)")
+                elif over > 1:
+                    # Sur une note frappée, les crêtes de l'attaque sont arrondies, jusqu'à 8 dB.
+                    signal = signal * min(1.0, 2.5 / over)
                     knee = 20000.0
                     size = np.abs(signal)
                     signal = np.where(size > knee, np.sign(signal) * (knee + 12000 * np.tanh((size - knee) / 12000)), signal)
-                    capped.append(f"{root} ({20 * math.log10(over):+.0f} dB)")
+                    capped.append(f"{root} (crêtes arrondies de {20 * math.log10(over):.0f} dB)")
             shape = {G_RELEASE: timecents(spec["release"], 8000)}
             if decay:
                 self.envelope(shape, {}, decay, root)
@@ -718,10 +735,10 @@ class Bank:
             self.pcm.append(np.zeros(46, dtype="<i2"))
             self.position += len(signal) + 46
         if capped:
-            print("    crêtes arrondies :", ", ".join(capped))
+            print("    limite de crête :", ", ".join(capped))
         self.wave_instruments[program] = len(self.instrument_zones)
         self.instrument_zones.append((spec["name"], zones_))
-        self.ranges[program] = (roots[0], roots[-1])
+        self.ranges[program] = (bottom, top)
         return spec["name"], program, quieter + [[(G_INSTRUMENT, self.wave_instruments[program])]]
 
     def build(self, recordings=None):

@@ -43,8 +43,9 @@ internal class SampledVoice(private val rate: Int) {
             first = minOf(first, regions[i].keyRange.first)
             last = maxOf(last, regions[i].keyRange.last)
         }
-        if (first > last) return
-        val nearest = key.coerceIn(first, last)
+        // Hors de l'étendue enregistrée, l'instrument se tait.
+        if (key !in first..last) return
+        val nearest = key
         val force = (velocity * 127f).roundToInt().coerceIn(1, 127)
         var region: Sf2Region? = null
         for (i in regions.indices) if (regions[i].matches(nearest, force)) { region = regions[i]; break }
@@ -125,6 +126,6 @@ internal class SampledVoice(private val rate: Int) {
 
     private companion object {
         // Niveau dans Studio, à côté des autres préréglages (mesuré égal à l'ancien piano calculé).
-        const val STUDIO_GAIN = 1f
+        const val STUDIO_GAIN = 2f
     }
 }

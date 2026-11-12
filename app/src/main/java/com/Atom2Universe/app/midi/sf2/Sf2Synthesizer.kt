@@ -381,6 +381,10 @@ class Sf2Synthesizer(
             return
         }
 
+        // Le preset demandé existe mais n'a aucune zone pour cette touche : l'instrument ne possède pas
+        // cette note, il se tait (le repli sur le piano ne sert qu'aux presets absents du SoundFont).
+        if (sf2File.getPreset(bank, program) != null) return
+
         // For melodic channels, try bank 0 with same program
         if (bank != 0 && sf2File.collectRegions(0, program, note, velocity, out)) return
 

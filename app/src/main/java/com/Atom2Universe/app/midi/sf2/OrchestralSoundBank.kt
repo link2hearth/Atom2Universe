@@ -31,6 +31,11 @@ internal class OrchestralSoundBank {
         const val ID = "builtin:orchestral"
         private const val DRUM_RATE = 24000
         private const val SNARE_KEY = 40
+        // Centibels retirés aux percussions et aux voix recalculées : toute la banque joue 6 dB sous son
+        // niveau d'écoute, que le lecteur rattrape (MidiSynthesizerManager.ORCHESTRAL_GAIN).
+        private const val HEADROOM = 60
+        /** Ce que le lecteur doit ajouter au gain d'un SoundFont ordinaire pour jouer cette banque à son niveau. */
+        const val GAIN_OVER_SOUNDFONT = 4f
 
         // Les percussions de Studio sont des frappes synthétisées. Les partager sous forme de PCM
         // permet au canal GM 10 de les jouer comme un kit SF2 ordinaire (hauteur et charlestons étouffés).
@@ -96,7 +101,7 @@ internal class OrchestralSoundBank {
                            root: Int, program: OrchestralProgram?) = Sf2Region(
             keyRange = keys, velRange = 0..127, sampleId = id, sampleRate = rate, sampleStart = start,
             sampleEnd = end, loopStart = 0, loopEnd = 0, hasLoop = false, rootKey = root, coarseTune = 0,
-            fineTune = 0, scaleTuning = if (program == null) 100 else 0, pitchCorrection = 0, attenuation = 0,
+            fineTune = 0, scaleTuning = if (program == null) 100 else 0, pitchCorrection = 0, attenuation = HEADROOM,
             pan = 0f, exclusiveClass = 0, reverbSend = null, chorusSend = null,
             volumeEnvelope = VolumeEnvelope(attack = 0f, release = 2f),
             sampleName = program?.let { ProgramInfo.GM_PROGRAM_NAMES[it.number] } ?: "Studio",
