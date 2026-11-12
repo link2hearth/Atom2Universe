@@ -16,6 +16,8 @@ import androidx.appcompat.widget.SwitchCompat
 import androidx.lifecycle.lifecycleScope
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
+import com.Atom2Universe.app.crypto.CivitaiSite
+import com.Atom2Universe.app.crypto.CivitaiSlideshow
 import com.Atom2Universe.app.crypto.clicker.ClickerOfflineRepository
 import com.Atom2Universe.app.crypto.clicker.ClickerRepository
 import com.Atom2Universe.app.crypto.clicker.ClickerStatsRepository
@@ -119,6 +121,11 @@ class ClickerStatsActivity : ThemedActivity() {
 
             confirmBtn.setOnClickListener {
                 val word = wordInput.text.toString().trim()
+                if (word == CivitaiSite.RED.host) {
+                    CivitaiSlideshow.toggleRedVisibility(this)
+                    dialog.dismiss()
+                    return@setOnClickListener
+                }
                 if (word == "quark") {
                     dialog.dismiss()
                     startActivity(Intent(this, DevCheatActivity::class.java))

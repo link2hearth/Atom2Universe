@@ -1,6 +1,7 @@
 package com.Atom2Universe.app.crypto
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.view.View
 import android.view.ViewGroup
@@ -115,6 +116,13 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
     private val shuffleManager by lazy { MainClickerShuffleManager(backgroundRepository) }
 
     private val civitai by lazy { CivitaiSlideshow(applicationContext, httpClient) }
+    private var refreshSettingsSources: (() -> Unit)? = null
+    private val redVisibilityListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+        if (key == CivitaiSlideshow.RED_VISIBLE) {
+            if (syncBackgroundSource() && clickerInForeground) reloadBackground(force = false)
+            refreshSettingsSources?.invoke()
+        }
+    }
     private var backgroundSource = ClickerBackgroundSource.FOLDER
     private val usingCivitai get() = backgroundSource != ClickerBackgroundSource.FOLDER
     private var backgroundReloadJob: Job? = null
@@ -712,6 +720,7 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
         cryptoWidgetView.updatePrices(null, null, null, null)
         cryptoWidgetView.showLoading()
         reloadPreferences()
+        CivitaiSlideshow.preferences(this).registerOnSharedPreferenceChangeListener(redVisibilityListener)
     }
 
     override fun onStart() {
@@ -810,6 +819,7 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
     }
 
     override fun onDestroy() {
+        CivitaiSlideshow.preferences(this).unregisterOnSharedPreferenceChangeListener(redVisibilityListener)
         floatingWebWidget.onDestroy()
         super.onDestroy()
     }
@@ -2078,6 +2088,22 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
 
     private fun applySystemBarsPreference() {
         updateSystemBarsVisibility()
+    }
+
+    private fun syncBackgroundSource(): Boolean {
+        val selected = civitai.source
+        if (selected == backgroundSource) return false
+        stopBackgroundLoop()
+        civitaiImageJob?.cancel()
+        backgroundReloadJob?.cancel()
+        cancelCivitaiBatch()
+        midnightJob?.cancel()
+        positionJob?.cancel()
+        civitaiPosition = CivitaiSlideshow.Position()
+        clearDisplayedBackground()
+        backgroundSource = selected
+        resetSlideshowCountdown()
+        return true
     }
 
     private fun reloadBackground(force: Boolean) {
@@ -3413,13 +3439,18 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
             favoritesModeSwitch.isVisible = !usingCivitai
             currentImageNameView.isVisible = !usingCivitai && currentImageNameView.text.isNotEmpty()
         }
-        sources.check(when (backgroundSource.site) {
-            CivitaiSite.STANDARD -> R.id.source_civitai
-            CivitaiSite.RED -> R.id.source_red
-            null -> R.id.source_folder
-        })
+        fun updateSources() {
+            view.findViewById<View>(R.id.source_red).isVisible = civitai.redVisible
+            sources.check(when (backgroundSource.site) {
+                CivitaiSite.STANDARD -> R.id.source_civitai
+                CivitaiSite.RED -> R.id.source_red
+                null -> R.id.source_folder
+            })
+            updateFolderControls()
+        }
         sorts.check(if (civitai.weeklySort) R.id.source_week else R.id.source_recent)
-        updateFolderControls()
+        updateSources()
+        refreshSettingsSources = ::updateSources
         fun applySourceSelection() {
             val site = when (sources.checkedChipId) {
                 R.id.source_civitai -> CivitaiSite.STANDARD
@@ -3429,20 +3460,10 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
             val newSource = site?.let { ClickerBackgroundSource.feed(it, sorts.checkedChipId == R.id.source_week) }
                 ?: ClickerBackgroundSource.FOLDER
             if (newSource == backgroundSource) return
-            stopBackgroundLoop()
-            civitaiImageJob?.cancel()
-            backgroundReloadJob?.cancel()
-            cancelCivitaiBatch()
-            midnightJob?.cancel()
-            positionJob?.cancel()
-            initialProgress = null
-            civitaiPosition = CivitaiSlideshow.Position()
-            clearDisplayedBackground()
-            backgroundSource = newSource
             civitai.source = newSource
+            if (!syncBackgroundSource()) return
             currentImageNameView.text = ""
             updateFolderControls()
-            resetSlideshowCountdown()
             reloadBackground(force = false)
         }
 
@@ -3487,7 +3508,10 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
         bannerList.adapter = bannerAdapter
         touchHelper.attachToRecyclerView(bannerList)
 
-        dialog.setOnDismissListener { settingsDialogFolderView = null }
+        dialog.setOnDismissListener {
+            settingsDialogFolderView = null
+            refreshSettingsSources = null
+        }
         dialog.setContentView(view)
         dialog.show()
     }

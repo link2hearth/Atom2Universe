@@ -1,6 +1,7 @@
 package com.Atom2Universe.app.crypto
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.net.Uri
 import androidx.core.content.edit
 import androidx.work.CoroutineWorker
@@ -63,9 +64,30 @@ internal class CivitaiSlideshow(
         private const val MAX_IMAGE_BYTES = 4L * 1024 * 1024
         private const val CACHE_BYTES = 64L * 1024 * 1024
         private val mutex = Mutex()
+        const val RED_VISIBLE = "red_visible"
+
+        fun preferences(context: Context): SharedPreferences =
+            context.getSharedPreferences("clicker_civitai", Context.MODE_PRIVATE)
+
+        private fun storedSource(prefs: SharedPreferences): ClickerBackgroundSource {
+            val name = prefs.getString("source", null)
+            return ClickerBackgroundSource.entries.firstOrNull { it.name == name } ?: ClickerBackgroundSource.FOLDER
+        }
+
+        fun toggleRedVisibility(context: Context) {
+            val prefs = preferences(context)
+            val selected = storedSource(prefs)
+            prefs.edit {
+                putBoolean(RED_VISIBLE, !prefs.getBoolean(RED_VISIBLE, false))
+                if (selected.site == CivitaiSite.RED) {
+                    putString("source", ClickerBackgroundSource.feed(CivitaiSite.STANDARD, selected.weekly).name)
+                }
+            }
+        }
     }
 
-    private val prefs = context.getSharedPreferences("clicker_civitai", Context.MODE_PRIVATE)
+    private val prefs = preferences(context)
+    val redVisible: Boolean get() = prefs.getBoolean(RED_VISIBLE, false)
     private val directory = File(context.cacheDir, "clicker-civitai")
     private data class Entry(val id: Long, val url: String, val title: String, val date: String)
     private fun file(id: Long) = File(directory, "$id.webp")
@@ -124,13 +146,18 @@ internal class CivitaiSlideshow(
     private val unavailable = mutableMapOf<Long, Long>()
     private val retryImagesAfter = mutableMapOf<CivitaiSite, Long>()
 
+    private fun available(feed: ClickerBackgroundSource) = feed.site != CivitaiSite.RED || redVisible
+
+    private fun visibleSource(feed: ClickerBackgroundSource) =
+        if (available(feed)) feed else ClickerBackgroundSource.feed(CivitaiSite.STANDARD, feed.weekly)
+
     var source: ClickerBackgroundSource
-        get() = ClickerBackgroundSource.entries.firstOrNull { it.name == prefs.getString("source", null) }
-            ?: ClickerBackgroundSource.FOLDER
+        get() = visibleSource(storedSource(prefs))
         set(value) {
+            val selected = visibleSource(value)
             prefs.edit {
-                putString("source", value.name)
-                if (value.site != null) putBoolean("weekly_sort", value.weekly)
+                putString("source", selected.name)
+                if (selected.site != null) putBoolean("weekly_sort", selected.weekly)
             }
         }
 
@@ -309,6 +336,7 @@ internal class CivitaiSlideshow(
 
     suspend fun select(feed: ClickerBackgroundSource, direction: Int, displayedId: Long?): File? =
         withContext(Dispatchers.IO) {
+            if (!available(feed)) return@withContext null
             // Published WebPs can be read while a download or a trash sweep holds the writer lock.
             selectCached(feed, direction, displayedId) ?: mutex.withLock {
                 selectCached(feed, direction, displayedId)?.let { return@withLock it }
@@ -369,6 +397,7 @@ internal class CivitaiSlideshow(
 
     // Each step commits its own file and cursor so cancelling a batch keeps its completed images.
     private suspend fun addOne(feed: ClickerBackgroundSource, manual: Boolean): File? {
+        if (!available(feed)) return null
         val site = requireNotNull(feed.site)
         val key = feed.name
         val now = System.currentTimeMillis()

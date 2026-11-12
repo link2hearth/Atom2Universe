@@ -1,6 +1,14 @@
 package com.Atom2Universe.app.crypto
 
 import android.content.Context
+import android.view.View
+import android.widget.EditText
+import com.Atom2Universe.app.R
+import com.Atom2Universe.app.clickerstats.ClickerStatsActivity
+import org.robolectric.Robolectric
+import org.robolectric.Shadows.shadowOf
+import org.robolectric.shadows.ShadowDialog
+import org.robolectric.shadows.ShadowToast
 import android.content.pm.ProviderInfo
 import android.database.MatrixCursor
 import android.os.CancellationSignal
@@ -158,6 +166,7 @@ class CivitaiSlideshowTest {
     }
 
     @Test fun switchingSitesKeepsEachReserveAndItsOwnPagination() = runBlocking {
+        CivitaiSlideshow.toggleRedVisibility(context)
         val red = ClickerBackgroundSource.RED_RECENT
         assertEquals("1", display(recent, 0).nameWithoutExtension)
         assertEquals("1001", display(red, 0).nameWithoutExtension)
@@ -174,6 +183,7 @@ class CivitaiSlideshowTest {
     }
 
     @Test fun bothSortsUseTheSelectedHostAndPersist() {
+        CivitaiSlideshow.toggleRedVisibility(context)
         for (feed in ClickerBackgroundSource.feeds) {
             slideshow.source = feed
             slideshow = CivitaiSlideshow(context, client)
@@ -189,6 +199,87 @@ class CivitaiSlideshowTest {
         }
         slideshow.source = ClickerBackgroundSource.FOLDER
         assertTrue(CivitaiSlideshow(context, client).weeklySort)
+    }
+
+    @Test fun resetCodeTogglesRedSilentlyAndKeepsTheSelectedSort() = runBlocking {
+        val controller = Robolectric.buildActivity(ClickerStatsActivity::class.java).create().start()
+        val activity = controller.get()
+        val game = context.getSharedPreferences("clicker_achievements", Context.MODE_PRIVATE)
+        game.edit().putBoolean("test_achievement", true).commit()
+
+        fun submitCode() {
+            activity.findViewById<View>(R.id.stats_reset_btn).performClick()
+            val dialog = ShadowDialog.getLatestDialog()
+            dialog.findViewById<EditText>(R.id.reset_word_input).setText("civitai.red")
+            val toasts = ShadowToast.shownToastCount()
+            dialog.findViewById<View>(R.id.reset_confirm_btn).performClick()
+            assertFalse(dialog.isShowing)
+            assertFalse(activity.isFinishing)
+            assertNull(shadowOf(activity).nextStartedActivity)
+            assertEquals(toasts, ShadowToast.shownToastCount())
+            assertTrue(game.getBoolean("test_achievement", false))
+        }
+
+        try {
+            assertFalse(slideshow.redVisible)
+            assertNull(slideshow.select(ClickerBackgroundSource.RED_WEEK, 0, null))
+            assertTrue(requests.isEmpty())
+            submitCode()
+            slideshow = CivitaiSlideshow(context, client)
+            assertTrue(slideshow.redVisible)
+            assertEquals(ClickerBackgroundSource.FOLDER, slideshow.source)
+            slideshow.source = ClickerBackgroundSource.RED_WEEK
+            val cached = requireNotNull(slideshow.select(slideshow.source, 0, null))
+            submitCode()
+            slideshow = CivitaiSlideshow(context, client)
+            assertFalse(slideshow.redVisible)
+            assertEquals(week, slideshow.source)
+            assertTrue(slideshow.weeklySort)
+            assertTrue(cached.isFile)
+            requests.clear()
+            assertNull(slideshow.select(ClickerBackgroundSource.RED_WEEK, 0, null))
+            assertEquals(0, slideshow.addBatch(ClickerBackgroundSource.RED_WEEK) {})
+            assertTrue(requests.isEmpty())
+            submitCode()
+            assertEquals(week, slideshow.source)
+        } finally {
+            controller.stop().destroy()
+        }
+    }
+
+    @Test fun openClickerSettingsFollowTheRedToggleAndSwitchBackToTheStandardSite() {
+        val controller = Robolectric.buildActivity(MainClickerActivity::class.java).create()
+        val activity = controller.get()
+        activity.findViewById<View>(R.id.main_clicker_settings_button).performClick()
+        val dialog = ShadowDialog.getLatestDialog()
+        try {
+            val red = dialog.findViewById<View>(R.id.source_red)
+            val sources = dialog.findViewById<com.google.android.material.chip.ChipGroup>(R.id.settings_image_source)
+            val sorts = dialog.findViewById<com.google.android.material.chip.ChipGroup>(R.id.settings_civitai_sort)
+            assertEquals(View.GONE, red.visibility)
+            CivitaiSlideshow.toggleRedVisibility(context)
+            assertEquals(View.VISIBLE, red.visibility)
+            red.performClick()
+            sorts.check(R.id.source_week)
+            assertEquals(ClickerBackgroundSource.RED_WEEK, slideshow.source)
+            CivitaiSlideshow.toggleRedVisibility(context)
+            assertEquals(View.GONE, red.visibility)
+            assertEquals(R.id.source_civitai, sources.checkedChipId)
+            assertEquals(R.id.source_week, sorts.checkedChipId)
+            assertEquals(week, slideshow.source)
+        } finally {
+            dialog.dismiss()
+            controller.destroy()
+        }
+    }
+
+    @Test fun previouslySelectedRedRemainsHiddenUntilExplicitlyChosenAgain() {
+        prefs.edit().putString("source", ClickerBackgroundSource.RED_RECENT.name).commit()
+        assertFalse(slideshow.redVisible)
+        assertEquals(recent, slideshow.source)
+        CivitaiSlideshow.toggleRedVisibility(context)
+        assertTrue(slideshow.redVisible)
+        assertEquals(recent, slideshow.source)
     }
 
     @Test fun widgetArrowsMoveBackwardAndForward() {
@@ -212,12 +303,13 @@ class CivitaiSlideshowTest {
         val sources = view.findViewById<com.google.android.material.chip.ChipGroup>(com.Atom2Universe.app.R.id.settings_image_source)
         val sorts = view.findViewById<com.google.android.material.chip.ChipGroup>(com.Atom2Universe.app.R.id.settings_civitai_sort)
         sorts.visibility = android.view.View.VISIBLE
-        sources.check(com.Atom2Universe.app.R.id.source_red)
+        assertEquals(View.GONE, sources.findViewById<View>(R.id.source_red).visibility)
+        sources.check(R.id.source_civitai)
         sorts.check(com.Atom2Universe.app.R.id.source_week)
         val width = (320 * context.resources.displayMetrics.density).toInt()
         view.measure(android.view.View.MeasureSpec.makeMeasureSpec(width, android.view.View.MeasureSpec.EXACTLY), 0)
         view.layout(0, 0, width, view.measuredHeight)
-        assertEquals(com.Atom2Universe.app.R.id.source_red, sources.checkedChipId)
+        assertEquals(R.id.source_civitai, sources.checkedChipId)
         assertEquals(com.Atom2Universe.app.R.id.source_week, sorts.checkedChipId)
         assertTrue(sources.width in 1..width)
         assertTrue(sorts.width in 1..width)
