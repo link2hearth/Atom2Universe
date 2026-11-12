@@ -2,6 +2,7 @@ package com.Atom2Universe.app.creative
 
 import android.content.Intent
 import com.Atom2Universe.app.R
+import com.Atom2Universe.app.gallery.GalleryActivity
 import com.Atom2Universe.app.hub.BaseHubActivity
 import com.Atom2Universe.app.hub.HubTile
 import com.Atom2Universe.app.notes.ui.NotesActivity
@@ -32,6 +33,14 @@ class CreativeHubActivity : BaseHubActivity() {
     override fun getHubSubtitle(): Int = R.string.creative_hub_subtitle
 
     override fun getDefaultTiles(): List<HubTile> = listOf(
+        HubTile(
+            id = "gallery",
+            titleRes = R.string.gallery_title,
+            descriptionRes = R.string.gallery_description,
+            iconRes = R.drawable.ic_px_image,
+            defaultColorRes = R.color.creative_hub_tile_canvas,
+            activityClass = GalleryActivity::class.java
+        ),
         HubTile(
             id = TILE_NOTES,
             titleRes = R.string.hub_notes_title,

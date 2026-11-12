@@ -33,6 +33,27 @@ private fun AudioTileScene.book() {
     polygon(0xFFCA6F73.toInt(), 207f, 69f, 223f, 67f, 223f, 119f, 215f, 111f, 207f, 122f)
 }
 
+class GalleryHubTileDrawable(context: Context) : AudioHubTileDrawable(
+    com.Atom2Universe.app.AppearanceStyle.color(context, com.Atom2Universe.app.R.attr.a2uMidiAccent)
+) {
+    override fun drawScene(scene: AudioTileScene, accent: Int) = with(scene) {
+        glow(150f, 99f, 110f, accent)
+        canvas.save()
+        canvas.rotate(-12f, 146f, 104f)
+        box(58f, 34f, 171f, 142f, PAPER, 4f)
+        box(65f, 41f, 157f, 112f, 0xFF536D8A.toInt(), 1f)
+        canvas.restore()
+        canvas.save()
+        canvas.rotate(7f, 153f, 112f)
+        box(67f, 45f, 179f, 144f, 0xFFFAF3E6.toInt(), 4f)
+        box(74f, 52f, 165f, 112f, 0xFFDC9D80.toInt(), 1f)
+        oval(174f, 64f, 30f, 30f, 0xFFFFDC9E.toInt())
+        polygon(0xFF786B85.toInt(), 74f, 126f, 120f, 86f, 162f, 119f, 200f, 93f, 239f, 127f, 239f, 164f, 74f, 164f)
+        polygon(0xFF385B66.toInt(), 74f, 145f, 120f, 128f, 172f, 141f, 214f, 116f, 239f, 123f, 239f, 164f, 74f, 164f)
+        canvas.restore()
+    }
+}
+
 class BooksHubTileDrawable(@Suppress("UNUSED_PARAMETER") context: Context) : AudioHubTileDrawable(0xFFE8BC7C.toInt()) {
     override fun drawScene(scene: AudioTileScene, accent: Int) = with(scene) {
         glow(150f, 90f, 115f, accent)

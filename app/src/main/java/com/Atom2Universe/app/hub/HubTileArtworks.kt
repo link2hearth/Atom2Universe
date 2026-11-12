@@ -165,6 +165,7 @@ object HubTileArtworks {
         com.Atom2Universe.app.dictaphone.DictaphoneActivity::class.java.name to
             com.Atom2Universe.app.audio.DictaphoneHubTileDrawable::class,
         // Lecture, création et statistiques.
+        com.Atom2Universe.app.gallery.GalleryActivity::class.java.name to GalleryHubTileDrawable::class,
         com.Atom2Universe.app.books.BookLibraryActivity::class.java.name to BooksHubTileDrawable::class,
         com.Atom2Universe.app.comics.ComicsLibraryActivity::class.java.name to ComicsHubTileDrawable::class,
         com.Atom2Universe.app.notes.ui.NotesActivity::class.java.name to NotesHubTileDrawable::class,

@@ -34,6 +34,8 @@ class ZoomableImageView @JvmOverloads constructor(
     var onSwipeLeft: (() -> Unit)? = null
     var onSwipeRight: (() -> Unit)? = null
     var onTap: (() -> Unit)? = null
+    /** In a pager, single-finger drags turn pages at fit size and pan a zoomed image. */
+    var insidePager = false
 
     private var lastPanX = 0f
     private var lastPanY = 0f
@@ -179,6 +181,9 @@ class ZoomableImageView @JvmOverloads constructor(
     // ── Touch ─────────────────────────────────────────────────────────────────
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (insidePager && (event.actionMasked == MotionEvent.ACTION_DOWN || event.pointerCount > 1)) {
+            parent.requestDisallowInterceptTouchEvent(event.pointerCount > 1 || currentScale > 1.01f)
+        }
         scaleDetector.onTouchEvent(event)
         gestureDetector.onTouchEvent(event)
         when (event.actionMasked) {
