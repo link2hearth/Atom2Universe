@@ -131,6 +131,7 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
     private var civitaiBatchJob: Job? = null
     private var civitaiActionJob: Job? = null
     private var civitaiUndoJob: Job? = null
+    private var civitaiDirection = 1
     private var positionJob: Job? = null
     private var initialProgress: Int? = null
     private var batchProgress: Int? = null
@@ -2337,6 +2338,7 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
             (direction != 0 && civitaiActionJob?.isActive == true)) return
         stopBackgroundLoop()
         val source = backgroundSource
+        if (direction != 0) civitaiDirection = direction
         val currentId = targetId ?: displayedBackgroundUri?.lastPathSegment?.substringBeforeLast('.')
         imageOptionsUpdate?.invoke(null)
         civitaiImageJob = lifecycleScope.launch {
@@ -3193,7 +3195,8 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
                     if (removed) {
                         startCivitaiUndo()
                         clearDisplayedBackground()
-                        showCivitaiImage(1, notifyIfMissing = true)
+                        // Hiding leaves the list on the image before the hidden one: going backward, that is the next to show.
+                        showCivitaiImage(if (civitaiDirection < 0) 0 else 1, notifyIfMissing = true)
                     } else {
                         showToast(getString(R.string.civitai_trash_error))
                         startBackgroundLoop()
