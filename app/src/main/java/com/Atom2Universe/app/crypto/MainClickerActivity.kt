@@ -978,6 +978,7 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
         bindShopQuantity(view.findViewById(R.id.shop_star_core_mult), AtomShopUpgrade.STAR_CORE)
         bindShopPlusToggle(view.findViewById(R.id.shop_star_core_plus), AtomShopUpgrade.STAR_CORE)
         view.findViewById<SwitchCompat>(R.id.shop_auto_buy).apply {
+            visibility = if (shopHasHadBigBang) View.VISIBLE else View.GONE
             isChecked = clickerViewModel.shopAutoBuyEnabled
             setOnCheckedChangeListener { _, enabled -> clickerViewModel.shopAutoBuyEnabled = enabled }
         }
