@@ -2136,6 +2136,21 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
         return true
     }
 
+    // The pool changed: stop what is running, drop the picture on screen and start again with the new orientation.
+    private fun applyCivitaiOrientation() {
+        if (!usingCivitai) return
+        stopBackgroundLoop()
+        civitaiImageJob?.cancel()
+        backgroundReloadJob?.cancel()
+        cancelCivitaiBatch()
+        endCivitaiUndo()
+        positionJob?.cancel()
+        civitaiPosition = CivitaiSlideshow.Position()
+        clearDisplayedBackground()
+        resetSlideshowCountdown()
+        reloadBackground(force = false)
+    }
+
     private fun toggleCivitaiSort() {
         val site = backgroundSource.site ?: return
         civitai.source = ClickerBackgroundSource.feed(site, !backgroundSource.weekly)
@@ -3486,10 +3501,25 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
                 updateCivitaiWidget()
             }
         }
+        val orientationButton = view.findViewById<TextView>(R.id.civitai_orientation)
+        fun updateOrientationLabel() {
+            orientationButton.text = getString(R.string.civitai_orientation, getString(when (civitai.orientation) {
+                ImageOrientation.ALL -> R.string.civitai_orientation_all
+                ImageOrientation.PORTRAIT -> R.string.civitai_orientation_portrait
+                ImageOrientation.LANDSCAPE -> R.string.civitai_orientation_landscape
+            }))
+        }
+        updateOrientationLabel()
+        orientationButton.setOnClickListener {
+            civitai.orientation = civitai.orientation.next()
+            updateOrientationLabel()
+            applyCivitaiOrientation()
+        }
         fun updateFolderControls() {
             updateDestination()
             view.findViewById<View>(R.id.civitai_transparency_row).isVisible = usingCivitai
             sorts.isVisible = usingCivitai
+            orientationButton.isVisible = usingCivitai
             view.findViewById<View>(R.id.civitai_destination_controls).isVisible = usingCivitai
             view.findViewById<View>(R.id.settings_choose_folder_btn).isVisible = !usingCivitai
             folderView.isVisible = !usingCivitai

@@ -2,6 +2,7 @@ package com.Atom2Universe.app.crypto
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.core.content.edit
 import kotlinx.coroutines.ensureActive
@@ -30,6 +31,18 @@ internal enum class CivitaiSite(val host: String, val browsingLevel: Int) {
     STANDARD("civitai.com", 1),
     RED("civitai.red", 4 or 8 or 16),
     WALLHAVEN("wallhaven.cc", 0)
+}
+
+internal enum class ImageOrientation(val shape: Int) {
+    ALL(0), PORTRAIT(1), LANDSCAPE(2);
+
+    fun accepts(imageShape: Int) = this == ALL || imageShape == shape
+    fun next() = entries[(ordinal + 1) % entries.size]
+
+    companion object {
+        // 1 = taller than wide, 2 = wider than tall, 0 = square or unknown.
+        fun shapeOf(width: Int, height: Int) = if (width <= 0 || height <= 0) 0 else if (height > width) 1 else if (width > height) 2 else 0
+    }
 }
 
 internal enum class ClickerBackgroundSource(val site: CivitaiSite? = null, val weekly: Boolean = false) {
@@ -102,7 +115,7 @@ internal class CivitaiSlideshow(
     }
     val redVisible: Boolean get() = prefs.getBoolean(RED_VISIBLE, false)
     private val directory = File(context.cacheDir, "clicker-civitai")
-    private data class Entry(val id: String, val url: String, val title: String, val date: String)
+    private data class Entry(val id: String, val url: String, val title: String, val date: String, val shape: Int = 0)
     private fun file(id: String) = File(directory, "$id.webp")
     private fun ids(key: String) = prefs.getString(key, "").orEmpty().split(',').filter { it.isNotEmpty() }
     private fun isCacheFile(file: File) = file.parentFile == directory && file.extension == "webp" &&
@@ -134,8 +147,31 @@ internal class CivitaiSlideshow(
     fun allowed(file: File) = allowed(id(file))
     private fun allowed(id: String) = prefs.getLong("reject_$id", -1) <= today().toEpochDay()
 
-    private fun pool(feed: ClickerBackgroundSource): List<String> =
+    private fun rawPool(feed: ClickerBackgroundSource): List<String> =
         ids("pool_$feed").filter { file(it).isFile && allowed(it) }
+
+    // The pool seen by the player: only the downloaded images that fit the chosen orientation.
+    private fun pool(feed: ClickerBackgroundSource): List<String> = rawPool(feed).filter { fits(it) }
+
+    private val shapes = java.util.concurrent.ConcurrentHashMap<String, Int>()
+    private fun shapeOfFile(id: String): Int = shapes.getOrPut(id) {
+        val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+        BitmapFactory.decodeFile(file(id).path, bounds)
+        ImageOrientation.shapeOf(bounds.outWidth, bounds.outHeight)
+    }
+    private fun fits(id: String) = orientation == ImageOrientation.ALL || orientation.accepts(shapeOfFile(id))
+    fun fits(file: File) = fits(id(file))
+
+    var orientation: ImageOrientation
+        get() = ImageOrientation.entries.firstOrNull { it.name == prefs.getString("orientation", null) } ?: ImageOrientation.ALL
+        set(value) {
+            if (value == orientation) return
+            prefs.edit {
+                putString("orientation", value.name)
+                // The first twenty images are gathered again for the new orientation.
+                for (feed in ClickerBackgroundSource.feeds) remove("initial_day_$feed")
+            }
+        }
 
     data class Position(val current: Int = 0, val total: Int = 0)
 
@@ -308,7 +344,7 @@ internal class CivitaiSlideshow(
         val last = displayedId ?: lastId(feed)
         if (direction == 0 && last != null && last in ids("pool_$feed")) {
             val cached = file(last)
-            if (cached.isFile && allowed(last)) return cached
+            if (cached.isFile && allowed(last) && fits(last)) return cached
         }
         val ready = pool(feed)
         if (ready.isEmpty()) return null
@@ -387,18 +423,20 @@ internal class CivitaiSlideshow(
         val site = requireNotNull(feed.site)
         val key = feed.name
         val now = System.currentTimeMillis()
-        val already = (pool(feed) + history(key)).toHashSet()
-        var page = readPage(key)
+        val shape = orientation
+        val already = (rawPool(feed) + history(key)).toHashSet()
+        val sameShape = prefs.getString("shape_$key", null) == shape.name
+        var page = if (sameShape) readPage(key) else Page(emptyList(), "")
         val mayFetch = now >= prefs.getLong("retry_$key", 0)
         suspend fun fetch(url: String, append: Boolean): Boolean {
             return try {
                 val newPage = fetchPage(url, site)
                 val head = newPage.entries.joinToString(",") { it.id.toString() }
-                if (append || head != prefs.getString("head_$key", null)) {
+                if (append || !sameShape || head != prefs.getString("head_$key", null)) {
                     page = newPage.copy(next = newPage.next.takeUnless { it == url }.orEmpty())
                 }
                 if (!append) prefs.edit { putString("head_$key", head) }
-                writePage(key, page, now, append)
+                writePage(key, page, now, append, shape)
                 true
             } catch (_: IOException) {
                 prefs.edit { putLong("retry_$key", now + RETRY_DELAY) }
@@ -409,8 +447,8 @@ internal class CivitaiSlideshow(
             }
         }
         var online = mayFetch
-        if (mayFetch && now - prefs.getLong("updated_$key", 0) >= HOUR) {
-            online = fetch(firstUrl(site, feed.weekly), false)
+        if (mayFetch && (!sameShape || now - prefs.getLong("updated_$key", 0) >= HOUR)) {
+            online = fetch(firstUrl(site, feed.weekly, shape), false)
         }
         var attempted = 0
         // Pages holding only known images are crossed freely: after the first page moved, the walk
@@ -420,6 +458,7 @@ internal class CivitaiSlideshow(
             var fresh = false
             for (entry in page.entries) {
                 if (entry.id in already || !allowed(entry.id)) continue
+                if (shape != ImageOrientation.ALL && !shape.accepts(entry.shape)) continue
                 fresh = true
                 if (now < (unavailable[entry.id] ?: 0)) continue
                 val target = file(entry.id)
@@ -445,7 +484,7 @@ internal class CivitaiSlideshow(
                     }
                 }
                 prefs.edit {
-                    putString("pool_$key", (pool(feed) + entry.id).distinct().joinToString(","))
+                    putString("pool_$key", (rawPool(feed) + entry.id).distinct().joinToString(","))
                     putString("title_" + entry.id, entry.title)
                     putString("date_" + entry.id, entry.date)
                 }
@@ -484,9 +523,16 @@ internal class CivitaiSlideshow(
     }
 
 
-    private fun firstUrl(site: CivitaiSite, weekly: Boolean): String = if (site == CivitaiSite.WALLHAVEN) {
+    private fun firstUrl(site: CivitaiSite, weekly: Boolean, shape: ImageOrientation): String = if (site == CivitaiSite.WALLHAVEN) {
         "https://wallhaven.cc/api/v1/search".toHttpUrl().newBuilder()
             .addQueryParameter("purity", "100")
+            .apply {
+                when (shape) {
+                    ImageOrientation.PORTRAIT -> addQueryParameter("ratios", "portrait")
+                    ImageOrientation.LANDSCAPE -> addQueryParameter("ratios", "landscape")
+                    ImageOrientation.ALL -> Unit
+                }
+            }
             .addQueryParameter("sorting", if (weekly) "toplist" else "date_added")
             .apply { if (weekly) addQueryParameter("topRange", "1w") }
             .build().toString()
@@ -514,7 +560,8 @@ internal class CivitaiSlideshow(
                 if (imageUrl.isHttps && (imageUrl.host.endsWith(".civitai.com") || imageUrl.host.endsWith(".${site.host}"))) {
                     val title = item.optString("title").takeUnless { it.isBlank() || it == "null" }.orEmpty()
                     val date = runCatching { LocalDate.parse(item.optString("createdAt").take(10)) }.getOrNull() ?: today()
-                    add(Entry(id.toString(), imageUrl.toString(), title.take(200), date.toString()))
+                    add(Entry(id.toString(), imageUrl.toString(), title.take(200), date.toString(),
+                        ImageOrientation.shapeOf(item.optInt("width"), item.optInt("height"))))
                 }
             }
         }
@@ -535,7 +582,8 @@ internal class CivitaiSlideshow(
                 val image = path?.toHttpUrlOrNull() ?: continue
                 if (!image.isHttps || image.host !in setOf("w.wallhaven.cc", "th.wallhaven.cc")) continue
                 val date = runCatching { LocalDate.parse(item.optString("created_at").take(10)) }.getOrElse { today() }
-                add(Entry(key, image.toString(), "", date.toString()))
+                add(Entry(key, image.toString(), "", date.toString(),
+                    ImageOrientation.shapeOf(item.optInt("dimension_x"), item.optInt("dimension_y"))))
             }
         }
         val meta = json.getJSONObject("meta")
@@ -549,16 +597,17 @@ internal class CivitaiSlideshow(
         val entries = JSONArray(prefs.getString("entries_$key", "[]"))
         return Page(List(entries.length()) { i ->
             val row = entries.getJSONArray(i)
-            Entry(row.getString(0), row.getString(1), row.optString(2), row.optString(3, today().toString()))
+            Entry(row.getString(0), row.getString(1), row.optString(2), row.optString(3, today().toString()), row.optInt(4, 0))
         }, prefs.getString("next_$key", "").orEmpty())
     }
 
-    private fun writePage(key: String, page: Page, now: Long, append: Boolean) {
+    private fun writePage(key: String, page: Page, now: Long, append: Boolean, shape: ImageOrientation) {
         val rows = JSONArray()
-        page.entries.forEach { rows.put(JSONArray().put(it.id).put(it.url).put(it.title).put(it.date)) }
+        page.entries.forEach { rows.put(JSONArray().put(it.id).put(it.url).put(it.title).put(it.date).put(it.shape)) }
         prefs.edit {
             putString("entries_$key", rows.toString())
             putString("next_$key", page.next)
+            putString("shape_$key", shape.name)
             if (!append) putLong("updated_$key", now)
             remove("retry_$key")
         }

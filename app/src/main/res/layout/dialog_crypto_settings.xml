@@ -107,6 +107,12 @@
                     android:layout_height="wrap_content"
                     android:text="@string/clicker_source_week" />
             </com.google.android.material.chip.ChipGroup>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/civitai_orientation"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:visibility="gone" />
         </com.google.android.flexbox.FlexboxLayout>
 
         <com.google.android.flexbox.FlexboxLayout android:id="@+id/civitai_destination_controls"

@@ -411,6 +411,10 @@
     <string name="civitai_saved">Image sauvegardée</string>
     <string name="civitai_sort_recent">Récent</string>
     <string name="civitai_sort_top">Top</string>
+    <string name="civitai_orientation">Format : %1$s</string>
+    <string name="civitai_orientation_all">Tout</string>
+    <string name="civitai_orientation_portrait">Portrait</string>
+    <string name="civitai_orientation_landscape">Paysage</string>
     <string name="civitai_position">%1$d/%2$d</string>
     <string name="civitai_loading_batch">%1$s · Chargement %2$d/%3$d</string>
     <string name="civitai_partial_batch">%1$d images ajoutées sur %2$d</string>
