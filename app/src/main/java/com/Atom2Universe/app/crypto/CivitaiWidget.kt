@@ -10,7 +10,8 @@ import androidx.core.view.isVisible
 import com.Atom2Universe.app.R
 
 internal class CivitaiWidget(private val card: View, navigate: (Int) -> Unit,
-                            save: () -> Unit, reject: () -> Unit, add: () -> Unit) {
+                            save: () -> Unit, reject: () -> Unit, add: () -> Unit, sort: () -> Unit) {
+    private val sortButton = card.findViewById<TextView>(R.id.civitai_sort)
     private val count = card.findViewById<TextView>(R.id.civitai_count)
     private val accept = card.findViewById<ImageButton>(R.id.civitai_accept)
     private val cross = card.findViewById<ImageButton>(R.id.civitai_reject)
@@ -24,6 +25,7 @@ internal class CivitaiWidget(private val card: View, navigate: (Int) -> Unit,
         back.setOnClickListener { navigate(-1) }
         next.setOnClickListener { navigate(1) }
         more.setOnClickListener { add() }
+        sortButton.setOnClickListener { sort() }
         val normal = accept.imageTintList?.defaultColor ?: count.currentTextColor
         accept.imageTintList = ColorStateList(
             arrayOf(intArrayOf(android.R.attr.state_selected), intArrayOf()), intArrayOf(Color.rgb(46, 184, 108), normal))
@@ -52,13 +54,15 @@ internal class CivitaiWidget(private val card: View, navigate: (Int) -> Unit,
     }
 
     fun render(visible: Boolean, label: String?, position: CivitaiSlideshow.Position, batch: Int?, saved: Boolean, busy: Boolean,
-               transparency: Int, source: ClickerBackgroundSource = ClickerBackgroundSource.RECENT) {
+               transparency: Int, source: ClickerBackgroundSource = ClickerBackgroundSource.RECENT,
+               batchTotal: Int = source.batchSize) {
         card.isVisible = visible
         if (!visible) return
         card.alpha = 1f - transparency / 100f
+        sortButton.setText(if (source.weekly) R.string.civitai_sort_top else R.string.civitai_sort_recent)
         more.contentDescription = card.context.getString(R.string.civitai_add_batch, source.batchSize)
         val index = card.context.getString(R.string.civitai_position, position.current, position.total)
-        count.text = if (batch == null) index else card.context.getString(R.string.civitai_loading_batch, index, batch, source.batchSize)
+        count.text = if (batch == null) index else card.context.getString(R.string.civitai_loading_batch, index, batch, batchTotal)
         accept.isSelected = saved
         accept.contentDescription = card.context.getString(if (saved) R.string.civitai_unvalidate else R.string.clicker_civitai_save)
         accept.isEnabled = label != null && !busy

@@ -148,23 +148,13 @@ class CivitaiSlideshowTest {
         assertEquals(18, imageRequests())
     }
 
-    @Test fun expiredLastImageFallsBackToAnotherCachedImageWithoutARequest() = runBlocking {
-        val first = display(recent, 0)
-        val last = display(recent, 1)
-        prefs.edit().putLong("expires_" + last.nameWithoutExtension, 1L).commit()
-        requests.clear()
-        slideshow = CivitaiSlideshow(context, client)
-        assertEquals(first, slideshow.select(recent, 0, null))
-        assertTrue(requests.isEmpty())
-    }
-
     @Test fun countsReadyFilesAndKeepsTheSameImageWhenAppendingAndReopening() = runBlocking {
         val first = display(recent, 0)
         assertEquals(CivitaiSlideshow.Position(1, 20), slideshow.position(recent, first))
         val second = display(recent, 1)
         assertEquals(CivitaiSlideshow.Position(2, 20), slideshow.position(recent, second))
         assertEquals(20, imageRequests())
-        assertEquals(20, slideshow.addBatch(recent) {})
+        assertEquals(20, slideshow.addBatch(recent, 20) {})
         assertEquals(CivitaiSlideshow.Position(2, 40), slideshow.position(recent, second))
         assertTrue(requests.any { "cursor=21" in it })
         slideshow = CivitaiSlideshow(context, client)
@@ -180,7 +170,7 @@ class CivitaiSlideshowTest {
         val red = ClickerBackgroundSource.RED_RECENT
         assertEquals("1", display(recent, 0).nameWithoutExtension)
         assertEquals("1001", display(red, 0).nameWithoutExtension)
-        assertEquals(20, slideshow.addBatch(red) {})
+        assertEquals(20, slideshow.addBatch(red, 20) {})
         assertEquals(40, slideshow.position(red, null).total)
         assertEquals(20, slideshow.position(recent, null).total)
         assertEquals("1002", display(red, 1).nameWithoutExtension)
@@ -190,6 +180,22 @@ class CivitaiSlideshowTest {
         assertEquals("1001", display(red, 0).nameWithoutExtension)
         assertTrue(requests.any { it.startsWith("https://civitai.red/api/") && "cursor=1021" in it })
         assertFalse(requests.any { it.endsWith("/9000.png") })
+    }
+
+    @Test fun eachSortOfASiteKeepsItsOwnListPositionAndPagination() = runBlocking {
+        assertEquals("1", display(recent, 0).nameWithoutExtension)
+        assertEquals(20, slideshow.addBatch(recent, 20) {})
+        assertEquals("2", display(recent, 1).nameWithoutExtension)
+        assertEquals(0, slideshow.position(week, null).total)
+        assertEquals("1", display(week, 0).nameWithoutExtension)
+        assertEquals(20, slideshow.position(week, null).total)
+        assertEquals(40, slideshow.position(recent, null).total)
+        slideshow = CivitaiSlideshow(context, client)
+        assertEquals("2", display(recent, 0).nameWithoutExtension)
+        assertEquals("1", display(week, 0).nameWithoutExtension)
+        assertEquals(20, slideshow.addBatch(week, 20) {})
+        assertEquals(40, slideshow.position(week, null).total)
+        assertEquals(40, slideshow.position(recent, null).total)
     }
 
     @Test fun bothSortsUseTheSelectedHostAndPersist() {
@@ -300,7 +306,7 @@ class CivitaiSlideshowTest {
         assertEquals("wallhaven-1.webp", first.name)
         val second = display(feed, 1)
         assertEquals(CivitaiSlideshow.Position(2, 24), slideshow.position(feed, second))
-        assertEquals(24, slideshow.addBatch(feed) {})
+        assertEquals(24, slideshow.addBatch(feed, 24) {})
         assertEquals(CivitaiSlideshow.Position(2, 48), slideshow.position(feed, second))
         assertTrue(requests.any { it.contains("topRange=1w") && it.contains("sorting=toplist") && it.contains("page=2") })
         assertTrue(slideshow.save(first))
@@ -327,8 +333,13 @@ class CivitaiSlideshowTest {
         val themed = android.view.ContextThemeWrapper(context, com.Atom2Universe.app.R.style.Theme_A2U)
         val view = android.view.LayoutInflater.from(themed).inflate(com.Atom2Universe.app.R.layout.view_civitai_widget, null)
         val steps = mutableListOf<Int>()
-        val widget = CivitaiWidget(view, { steps.add(it) }, {}, {}, {})
-        widget.render(true, "Civitai", CivitaiSlideshow.Position(2, 20), null, true, false, 35)
+        var sorts = 0
+        val widget = CivitaiWidget(view, { steps.add(it) }, {}, {}, {}, { sorts++ })
+        widget.render(true, "Civitai", CivitaiSlideshow.Position(2, 20), null, true, false, 35, week)
+        val sort = view.findViewById<android.widget.TextView>(com.Atom2Universe.app.R.id.civitai_sort)
+        assertEquals(themed.getString(com.Atom2Universe.app.R.string.civitai_sort_top), sort.text.toString())
+        sort.performClick()
+        assertEquals(1, sorts)
         assertEquals(.65f, view.alpha, .001f)
         assertEquals("2/20", view.findViewById<android.widget.TextView>(com.Atom2Universe.app.R.id.civitai_count).text.toString())
         assertFalse(view.findViewById<android.view.View>(com.Atom2Universe.app.R.id.civitai_reject).isEnabled)
@@ -359,7 +370,7 @@ class CivitaiSlideshowTest {
     @Test fun hiddenImageStaysHiddenAcrossFeedsAndRestart() {
         val first = display(recent, 0)
         assertEquals("1", first.nameWithoutExtension)
-        assertTrue("Trash at ${slideshow.trashDirectory()}, cache exists: ${first.isFile}", runBlocking { slideshow.hide(first) })
+        assertTrue(runBlocking { slideshow.hide(first) })
         assertFalse(first.exists())
         slideshow = CivitaiSlideshow(context, client)
         assertEquals("2", display(week, 0).nameWithoutExtension)
@@ -381,10 +392,19 @@ class CivitaiSlideshowTest {
         assertEquals(20, imageRequests())
     }
 
+    @Test fun batchCrossesKnownPagesWhenTheFirstPageMoved() = runBlocking {
+        display(week, 0)
+        repeat(3) { assertEquals(20, slideshow.addBatch(week, 20) {}) }
+        prefs.edit().putLong("updated_$week", 0).putString("head_$week", "moved").commit()
+        assertEquals(20, slideshow.addBatch(week, 20) {})
+        assertEquals(100, slideshow.position(week, null).total)
+        assertEquals(100, imageRequests())
+    }
+
     @Test fun manualBatchAddsTwentyMoreRealImages() = runBlocking {
         val first = display(recent, 0)
         val counts = mutableListOf<Int>()
-        assertEquals(20, slideshow.addBatch(recent) { counts += it })
+        assertEquals(20, slideshow.addBatch(recent, 20) { counts += it })
         assertEquals((1..20).toList(), counts)
         assertEquals(40, slideshow.position(recent, first).total)
         slideshow = CivitaiSlideshow(context, client)
@@ -393,27 +413,27 @@ class CivitaiSlideshowTest {
         assertEquals(40, imageRequests())
     }
 
-    @Test @Config(sdk = [28]) fun savedFilesStayInTodaysLoopAndRejectionsExpireAfterTwoMonths() = runBlocking {
+    @Test @Config(sdk = [28]) fun imagesStayUntilHiddenAndRejectionsExpireAfterTwoMonths() = runBlocking {
         var day = LocalDate.of(2026, 1, 31)
         slideshow = CivitaiSlideshow(context, client) { day }
         val kept = display(recent, 0)
         assertTrue(slideshow.save(kept))
+        val waiting = display(recent, 1)
         val rejected = display(recent, 1)
         slideshow.hide(rejected)
-        assertTrue(slideshow.allowed(kept))
         assertFalse(slideshow.allowed(rejected))
-        assertEquals(kept, display(recent, 1, 20L))
-        day = day.plusDays(1)
+        day = day.plusDays(30)
         slideshow = CivitaiSlideshow(context, client) { day }
-        assertFalse(slideshow.allowed(kept))
-        assertNotEquals(kept, display(week, 0))
+        assertTrue(kept.isFile && slideshow.allowed(kept))
+        assertTrue(waiting.isFile && slideshow.allowed(waiting))
+        assertEquals(19, slideshow.position(recent, null).total)
+        assertEquals(kept, display(recent, 1, 20L))
         val pictures = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
         assertTrue(File(pictures, "Atom2Universe/2026-11-12-Civitai-1.webp").isFile)
         day = LocalDate.of(2026, 3, 30)
         assertFalse(slideshow.allowed(rejected))
         day = day.plusDays(1)
         assertTrue(slideshow.allowed(rejected))
-        assertFalse(slideshow.allowed(kept))
     }
 
     @Test fun exportingToSelectedDocumentTreeUsesWebpAndUpdatesTheLocalFolder() = runBlocking {
@@ -485,34 +505,18 @@ class CivitaiSlideshowTest {
         assertTrue(slideshow.save(cached))
         assertTrue(slideshow.unvalidate(cached))
         slideshow = CivitaiSlideshow(context, client)
-        assertTrue("Trash at ${slideshow.trashDirectory()}", slideshow.hide(cached))
+        assertTrue(slideshow.hide(cached))
         assertFalse(cached.exists())
         assertArrayEquals(bytes, export.readBytes())
-        assertArrayEquals(bytes, slideshow.trashDirectory().listFiles()!!
-            .single { it.name.startsWith("2026-11-12-Civitai-1-trash-") }.readBytes())
         assertEquals(19, slideshow.position(recent, null).total)
         assertEquals(20, imageRequests())
     }
 
-    @Test @Config(sdk = [28]) fun uncheckingRestartsTheFull24HoursAndExpiryKeepsTheCopy() = runBlocking {
-        var now = System.currentTimeMillis()
-        slideshow = CivitaiSlideshow(context, client, nowMillis = { now })
-        val cached = display(recent, 0)
-        val bytes = cached.readBytes()
-        assertTrue(slideshow.save(cached))
-        now += 23 * 3_600_000L
-        assertTrue(slideshow.unvalidate(cached))
-        now += 24 * 3_600_000L - 1
-        slideshow.cleanExpired()
-        assertEquals(CivitaiSlideshow.Position(1, 1), slideshow.position(recent, cached))
-        now++
-        slideshow.cleanExpired()
-        assertFalse(cached.exists())
-        assertEquals(0, slideshow.position(recent, null).total)
-        val export = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-            "Atom2Universe/2026-11-12-Civitai-1.webp")
-        assertArrayEquals(bytes, export.readBytes())
-        assertArrayEquals(bytes, slideshow.trashDirectory().listFiles()!!
-            .single { it.name.startsWith("2026-11-12-Civitai-1-trash-") }.readBytes())
+    @Test fun fullBatchIsTwoHundredWhileTheFirstLoadStaysAtOnePage() = runBlocking {
+        val first = display(recent, 0)
+        assertEquals(20, slideshow.position(recent, first).total)
+        assertEquals(200, slideshow.addBatch(recent) {})
+        assertEquals(220, slideshow.position(recent, first).total)
+        assertEquals(220, imageRequests())
     }
 }

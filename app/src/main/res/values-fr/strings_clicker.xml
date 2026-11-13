@@ -409,6 +409,8 @@
     <string name="civitai_default_destination">Utiliser le dossier par défaut</string>
     <string name="civitai_pictures_path">Pictures/Atom2Universe</string>
     <string name="civitai_saved">Image sauvegardée</string>
+    <string name="civitai_sort_recent">Récent</string>
+    <string name="civitai_sort_top">Top</string>
     <string name="civitai_position">%1$d/%2$d</string>
     <string name="civitai_loading_batch">%1$s · Chargement %2$d/%3$d</string>
     <string name="civitai_partial_batch">%1$d images ajoutées sur %2$d</string>
@@ -417,5 +419,5 @@
     <string name="civitai_unvalidate">Décocher l’image</string>
     <string name="civitai_transparency">Transparence du widget</string>
     <string name="civitai_transparency_value">%1$d%%</string>
-    <string name="civitai_trash_error">Impossible de déplacer l’image dans la corbeille</string>
+    <string name="civitai_trash_error">Impossible de supprimer l’image</string>
 </resources>

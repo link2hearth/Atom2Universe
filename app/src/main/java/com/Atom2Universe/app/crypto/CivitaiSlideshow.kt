@@ -4,12 +4,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.net.Uri
 import androidx.core.content.edit
-import androidx.work.CoroutineWorker
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
-import androidx.work.WorkerParameters
-import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -47,7 +41,8 @@ internal enum class ClickerBackgroundSource(val site: CivitaiSite? = null, val w
     WALLHAVEN_RECENT(CivitaiSite.WALLHAVEN),
     WALLHAVEN_WEEK(CivitaiSite.WALLHAVEN, true);
 
-    val batchSize get() = if (site == CivitaiSite.WALLHAVEN) 24 else 20
+    val pageSize get() = if (site == CivitaiSite.WALLHAVEN) 24 else 20
+    val batchSize get() = 200
 
     companion object {
         val feeds = entries.filter { it.site != null }
@@ -58,15 +53,16 @@ internal enum class ClickerBackgroundSource(val site: CivitaiSite? = null, val w
 internal class CivitaiSlideshow(
     private val context: Context,
     private val client: OkHttpClient,
-    private val nowMillis: () -> Long = System::currentTimeMillis,
     private val today: () -> LocalDate = LocalDate::now
 ) {
     companion object {
         private const val HOUR = 3_600_000L
-        private const val DAY = 24 * HOUR
         private const val RETRY_DELAY = 60_000L
+        private const val MAX_PAGES_PER_IMAGE = 40
         private const val MAX_IMAGE_BYTES = 4L * 1024 * 1024
-        private const val CACHE_BYTES = 200L * 1024 * 1024
+        private const val SITE_FILES = 1000
+        // Safety net only: the file count of each site is the real limit.
+        private const val CACHE_BYTES = 3L * 1024 * 1024 * 1024
         private val mutex = Mutex()
         const val RED_VISIBLE = "red_visible"
 
@@ -91,6 +87,17 @@ internal class CivitaiSlideshow(
     }
 
     private val prefs = preferences(context)
+
+    // Hidden images used to be kept a month in a folder nobody could browse: remove what is left of it.
+    suspend fun removeOldTrash() = withContext(Dispatchers.IO) {
+        if (prefs.getBoolean("old_trash_removed", false)) return@withContext
+        runCatching {
+            File(android.os.Environment.getExternalStorageDirectory(),
+                "Android/media/${context.packageName}/Civitai-Trash").deleteRecursively()
+            androidx.work.WorkManager.getInstance(context).cancelUniqueWork("clicker-civitai-cleanup")
+        }
+        prefs.edit { putBoolean("old_trash_removed", true) }
+    }
     val redVisible: Boolean get() = prefs.getBoolean(RED_VISIBLE, false)
     private val directory = File(context.cacheDir, "clicker-civitai")
     private data class Entry(val id: String, val url: String, val title: String, val date: String)
@@ -123,15 +130,7 @@ internal class CivitaiSlideshow(
     fun title(file: File): String? = prefs.getString("title_" + id(file), null)?.takeIf(String::isNotBlank)
     fun saved(file: File) = prefs.contains("saved_" + id(file))
     fun allowed(file: File) = allowed(id(file))
-    private fun allowed(id: String): Boolean {
-        val day = today().toEpochDay()
-        if (prefs.getLong("reject_$id", -1) > day) return false
-        if (prefs.contains("saved_$id")) return prefs.getLong("saved_$id", -1) >= day
-        val cached = file(id)
-        return !cached.isFile || expiresAt(cached) > nowMillis()
-    }
-
-    private fun expiresAt(file: File) = prefs.getLong("expires_" + id(file), file.lastModified() + DAY)
+    private fun allowed(id: String) = prefs.getLong("reject_$id", -1) <= today().toEpochDay()
 
     private fun pool(feed: ClickerBackgroundSource): List<String> =
         ids("pool_$feed").filter { file(it).isFile && allowed(it) }
@@ -150,6 +149,8 @@ internal class CivitaiSlideshow(
             if (key.startsWith("hidden_") && value == true) {
                 editor.remove(key).putLong("reject_" + key.removePrefix("hidden_"), day.plusMonths(2).toEpochDay())
             } else if (key.startsWith("reject_") && value is Long && value <= day.toEpochDay()) {
+                editor.remove(key)
+            } else if (key.startsWith("expires_")) {
                 editor.remove(key)
             }
         }
@@ -181,10 +182,11 @@ internal class CivitaiSlideshow(
 
     suspend fun hide(file: File) = withContext(Dispatchers.IO) {
         mutex.withLock {
-            if (!isCacheFile(file) || saved(file) || !moveToTrash(file)) return@withLock false
+            if (!isCacheFile(file) || saved(file) || !file.delete()) return@withLock false
             val id = id(file)
             prefs.edit {
-                remove("expires_$id")
+                remove("title_$id")
+                remove("date_$id")
                 putLong("reject_$id", today().plusMonths(2).toEpochDay())
                 for (feed in ClickerBackgroundSource.feeds) {
                     if (lastId(feed) == id) {
@@ -204,10 +206,7 @@ internal class CivitaiSlideshow(
     suspend fun unvalidate(file: File): Boolean = withContext(Dispatchers.IO) {
         mutex.withLock {
             if (!isCacheFile(file) || !file.isFile || !allowed(file) || !saved(file)) return@withLock false
-            prefs.edit {
-                remove("saved_" + id(file))
-                putLong("expires_" + id(file), nowMillis() + DAY)
-            }
+            prefs.edit { remove("saved_" + id(file)) }
             true
         }
     }
@@ -237,79 +236,6 @@ internal class CivitaiSlideshow(
                 if (local != null && includesDestination(local, destination)) putString("refresh_folder", local.toString())
             }
             copy != null
-        }
-    }
-
-    // Android/media is accessible in Files. .nomedia keeps rejected images out of galleries.
-    internal fun trashDirectory(): File = File(android.os.Environment.getExternalStorageDirectory(),
-        "Android/media/${context.packageName}/Civitai-Trash")
-
-    private fun moveToTrash(source: File): Boolean {
-        if (!source.isFile) return false
-        val trash = trashDirectory()
-        return try {
-            if (!trash.isDirectory && !trash.mkdirs()) return false
-            File(trash, ".nomedia").createNewFile()
-            val part = File.createTempFile("${imageName(source)}-trash-", ".part", trash)
-            val target = File(trash, part.nameWithoutExtension + ".webp")
-            try {
-                source.copyTo(part, overwrite = true)
-                if (!part.renameTo(target)) return false
-                target.setLastModified(nowMillis())
-                source.delete()
-            } finally {
-                part.delete()
-            }
-        } catch (_: IOException) {
-            false
-        } catch (_: SecurityException) {
-            false
-        }
-    }
-
-    private fun cleanExpiredLocked() {
-        val removed = mutableSetOf<String>()
-        for (cached in directory.listFiles().orEmpty()) {
-            if (!isCacheFile(cached)) continue
-            val id = id(cached)
-            if (allowed(id)) continue
-            val cleared = if (saved(cached)) cached.delete() else moveToTrash(cached)
-            if (cleared) removed.add(id)
-        }
-        if (removed.isNotEmpty()) prefs.edit {
-            for (id in removed) {
-                remove("expires_$id")
-                remove("title_$id")
-                remove("date_$id")
-            }
-            for (feed in ClickerBackgroundSource.feeds) {
-                val order = ids("pool_$feed")
-                val expired = order.filter { it in removed }
-                if (expired.isEmpty()) continue
-                val remaining = order - removed
-                putString("pool_$feed", remaining.joinToString(","))
-                if (remaining.none { file(it).isFile && allowed(it) }) remove("initial_day_$feed")
-                putString("seen_$feed", (history(feed.name) + expired).distinct().takeLast(500).joinToString(","))
-            }
-        }
-        val now = nowMillis()
-        if (now - prefs.getLong("last_trash_sweep", 0) >= HOUR) {
-            val trash = trashDirectory().listFiles() ?: return
-            for (item in trash) {
-                if ("-trash-" in item.name && item.extension in listOf("webp", "part") &&
-                    item.lastModified() <= now - 30 * DAY) item.delete()
-            }
-            prefs.edit { putLong("last_trash_sweep", now) }
-        }
-    }
-
-    suspend fun cleanExpired() = withContext(Dispatchers.IO) { mutex.withLock { cleanExpiredLocked() } }
-
-    suspend fun nextExpiryDelay(): Long = withContext(Dispatchers.IO) {
-        mutex.withLock {
-            val now = nowMillis()
-            directory.listFiles().orEmpty().asSequence().filter { it.extension == "webp" && !saved(it) }
-                .map { expiresAt(it) - now }.filter { it > 0 }.minOrNull() ?: DAY
         }
     }
 
@@ -347,7 +273,6 @@ internal class CivitaiSlideshow(
             // Published WebPs can be read while a download or a trash sweep holds the writer lock.
             selectCached(feed, direction, displayedId) ?: mutex.withLock {
                 selectCached(feed, direction, displayedId)?.let { return@withLock it }
-                cleanExpiredLocked()
                 if (ids("pool_$feed").any { !file(it).isFile }) {
                     prefs.edit { remove("pool_$feed"); remove("initial_day_$feed") }
                 }
@@ -364,7 +289,7 @@ internal class CivitaiSlideshow(
         if (prefs.getLong("initial_day_$feed", -1) != day) {
             prefs.edit {
                 putLong("initial_day_$feed", day)
-                putInt("initial_left_$feed", (feed.batchSize - pool(feed).size).coerceAtLeast(0))
+                putInt("initial_left_$feed", (feed.pageSize - pool(feed).size).coerceAtLeast(0))
             }
         }
         val left = prefs.getInt("initial_left_$feed", 0)
@@ -380,17 +305,19 @@ internal class CivitaiSlideshow(
                 ensureActive()
                 val done = mutex.withLock {
                     addInitialImage(feed) ?: return@withContext
-                    feed.batchSize - prefs.getInt("initial_left_$feed", 0)
+                    feed.pageSize - prefs.getInt("initial_left_$feed", 0)
                 }
                 progress(done)
             }
         }
 
-    suspend fun addBatch(feed: ClickerBackgroundSource, progress: (Int) -> Unit): Int = withContext(Dispatchers.IO) {
-        mutex.withLock {
-            cleanExpiredLocked()
+    // One lock per image: browsing, keeping and hiding stay possible while a long batch downloads.
+    suspend fun addBatch(feed: ClickerBackgroundSource, size: Int = feed.batchSize, progress: (Int) -> Unit): Int =
+        withContext(Dispatchers.IO) {
             var added = 0
-            while (added < feed.batchSize && addOne(feed) != null) {
+            while (added < size) {
+                ensureActive()
+                mutex.withLock { addOne(feed) } ?: break
                 added++
                 progress(added)
             }
@@ -400,7 +327,6 @@ internal class CivitaiSlideshow(
             }
             added
         }
-    }
 
     // Each step commits its own file and cursor so cancelling a batch keeps its completed images.
     private suspend fun addOne(feed: ClickerBackgroundSource): File? {
@@ -434,13 +360,20 @@ internal class CivitaiSlideshow(
             online = fetch(firstUrl(site, feed.weekly), false)
         }
         var attempted = 0
-        repeat(3) { pageIndex ->
+        // Pages holding only known images are crossed freely: after the first page moved, the walk
+        // restarts from the top and must get past everything already taken.
+        var freshPages = 0
+        repeat(MAX_PAGES_PER_IMAGE) {
+            var fresh = false
             for (entry in page.entries) {
-                if (entry.id in already || !allowed(entry.id) || now < (unavailable[entry.id] ?: 0)) continue
+                if (entry.id in already || !allowed(entry.id)) continue
+                fresh = true
+                if (now < (unavailable[entry.id] ?: 0)) continue
                 val target = file(entry.id)
                 if (!target.isFile) {
                     if (now < (retryImagesAfter[site] ?: 0L)) continue
-                    if (directory.listFiles().orEmpty().count { it.extension == "webp" } >= 1000) return null
+                    if (ClickerBackgroundSource.feeds.filter { it.site == site }.flatMap { ids("pool_$it") }
+                            .distinct().count { file(it).isFile } >= SITE_FILES) return null
                     if (attempted >= 3) return null
                     attempted++
                     try {
@@ -465,7 +398,8 @@ internal class CivitaiSlideshow(
                 }
                 return target
             }
-            if (pageIndex == 2 || !online || page.next.isEmpty() || !fetch(page.next, true)) return null
+            if (fresh) freshPages++
+            if (freshPages >= 3 || !online || page.next.isEmpty() || !fetch(page.next, true)) return null
         }
         return null
     }
@@ -589,7 +523,6 @@ internal class CivitaiSlideshow(
             }
             if (existing.sumOf { it.length() } + part.length() > CACHE_BYTES) throw CacheFull()
             if (!part.renameTo(target)) throw IOException("Cannot publish WebP")
-            prefs.edit { putLong("expires_" + entry.id, nowMillis() + DAY) }
         } finally {
             part.delete()
         }
@@ -619,19 +552,4 @@ internal class CivitaiSlideshow(
                 }
             })
         }
-}
-
-class CivitaiCacheWorker(context: Context, parameters: WorkerParameters) : CoroutineWorker(context, parameters) {
-    override suspend fun doWork(): Result {
-        CivitaiSlideshow(applicationContext, OkHttpClient()).cleanExpired()
-        return Result.success()
-    }
-
-    companion object {
-        fun schedule(context: Context) {
-            val request = PeriodicWorkRequestBuilder<CivitaiCacheWorker>(1, TimeUnit.HOURS).build()
-            WorkManager.getInstance(context).enqueueUniquePeriodicWork("clicker-civitai-cleanup",
-                ExistingPeriodicWorkPolicy.KEEP, request)
-        }
-    }
 }

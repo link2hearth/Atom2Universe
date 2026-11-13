@@ -412,6 +412,8 @@
     <string name="civitai_default_destination">Use default folder</string>
     <string name="civitai_pictures_path">Pictures/Atom2Universe</string>
     <string name="civitai_saved">Image saved</string>
+    <string name="civitai_sort_recent">Recent</string>
+    <string name="civitai_sort_top">Top</string>
     <string name="civitai_position">%1$d/%2$d</string>
     <string name="civitai_loading_batch">%1$s · Loading %2$d/%3$d</string>
     <string name="civitai_partial_batch">%1$d of %2$d images added</string>
@@ -420,5 +422,5 @@
     <string name="civitai_unvalidate">Uncheck image</string>
     <string name="civitai_transparency">Widget transparency</string>
     <string name="civitai_transparency_value">%1$d%%</string>
-    <string name="civitai_trash_error">Could not move the image to the trash</string>
+    <string name="civitai_trash_error">Could not delete the image</string>
 </resources>
