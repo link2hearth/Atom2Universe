@@ -20,7 +20,13 @@
     <string name="gallery_choose">Choisir ce dossier</string>
     <string name="gallery_browse_device">Parcourir l’appareil</string>
     <string name="gallery_no_folders">Aucun dossier ici</string>
-    <string name="gallery_title">Galerie</string>
+    <string name="gallery_title">Galeries</string>
+    <string name="gallery_temp_title">Galerie temporaire</string>
+    <string name="gallery_validate">Valider</string>
+    <string name="gallery_discard">Abandonner</string>
+    <string name="gallery_pending">Appliquer tes check et tes croix ?</string>
+    <string name="gallery_multi_check">Cocher plusieurs images</string>
+    <string name="gallery_multi_cross">Rayer plusieurs images</string>
     <string name="gallery_description">Parcourir tes dossiers d’images</string>
     <string name="gallery_image">Image</string>
     <string name="gallery_add">Ajouter un dossier d’images</string>

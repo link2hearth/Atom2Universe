@@ -2,15 +2,20 @@ package com.Atom2Universe.app.crypto
 
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.view.HapticFeedbackConstants
+import android.view.MotionEvent
 import android.view.View
+import android.view.animation.LinearInterpolator
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.core.view.isVisible
 import com.Atom2Universe.app.R
 
+private const val HOLD_MS = 2500L
+
 internal class CivitaiWidget(private val card: View, navigate: (Int) -> Unit,
                             save: () -> Unit, reject: () -> Unit, add: () -> Unit, sort: () -> Unit,
-                            undo: () -> Unit = {}) {
+                            undo: () -> Unit = {}, sorter: () -> Unit = {}) {
     private val sortButton = card.findViewById<TextView>(R.id.civitai_sort)
     private val count = card.findViewById<TextView>(R.id.civitai_count)
     private val accept = card.findViewById<ImageButton>(R.id.civitai_accept)
@@ -18,13 +23,40 @@ internal class CivitaiWidget(private val card: View, navigate: (Int) -> Unit,
     private val back = card.findViewById<ImageButton>(R.id.civitai_back)
     private val next = card.findViewById<ImageButton>(R.id.civitai_next)
     private var undoing = false
+    private var held = false
+    private var holdTimer: Runnable? = null
 
     init {
         accept.setOnClickListener { save() }
         cross.setOnClickListener { reject() }
         back.setOnClickListener { if (undoing) undo() else navigate(-1) }
         next.setOnClickListener { navigate(1) }
-        count.setOnClickListener { add() }
+        // Pressing the counter for 2.5 s opens the sorting gallery; it grows while the press lasts.
+        // A slide is a move of the widget: the card takes the touch over and the press is cancelled.
+        count.setOnClickListener { if (held) held = false else add() }
+        count.setOnTouchListener { view, event ->
+            when (event.actionMasked) {
+                MotionEvent.ACTION_DOWN -> {
+                    held = false
+                    holdTimer?.let(view::removeCallbacks)
+                    holdTimer = Runnable {
+                        held = true
+                        view.animate().cancel()
+                        view.scaleX = 1f
+                        view.scaleY = 1f
+                        view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+                        sorter()
+                    }.also { view.postDelayed(it, HOLD_MS) }
+                    view.animate().scaleX(1.3f).scaleY(1.3f).setDuration(HOLD_MS).setInterpolator(LinearInterpolator()).start()
+                }
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                    holdTimer?.let(view::removeCallbacks)
+                    holdTimer = null
+                    if (!held) view.animate().scaleX(1f).scaleY(1f).setDuration(120).setInterpolator(android.view.animation.DecelerateInterpolator()).start()
+                }
+            }
+            false
+        }
         sortButton.setOnClickListener { sort() }
         val normal = accept.imageTintList?.defaultColor ?: count.currentTextColor
         accept.imageTintList = ColorStateList(

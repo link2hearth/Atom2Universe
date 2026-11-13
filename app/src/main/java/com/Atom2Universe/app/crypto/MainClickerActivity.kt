@@ -29,6 +29,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.lifecycleScope
 import com.Atom2Universe.app.R
+import com.Atom2Universe.app.gallery.GalleryActivity
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.crypto.data.MainClickerDatabase
 import com.Atom2Universe.app.news.NewsFetchInterval
@@ -145,6 +146,18 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
         val file = pictureAwaitingPermission?.let { java.io.File(it) }
         pictureAwaitingPermission = null
         if (granted && file != null) saveCivitaiPicture(file)
+    }
+
+    // Result of the sorting gallery: ids to copy and ids to drop from the rotation, applied once the clicker is back in front.
+    private class CivitaiSorting(val save: List<String>, val reject: List<String>)
+    private var pendingSorting: CivitaiSorting? = null
+    private val civitaiSorter = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        val data = result.data
+        if (result.resultCode == RESULT_OK && data != null) {
+            pendingSorting = CivitaiSorting(
+                data.getStringArrayExtra(GalleryActivity.RESULT_SAVE).orEmpty().toList(),
+                data.getStringArrayExtra(GalleryActivity.RESULT_REJECT).orEmpty().toList())
+        }
     }
 
     private var bannerExpanded = false
@@ -519,7 +532,8 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
             reject = { currentCivitaiFile()?.let(::discardCivitaiPicture) },
             add = ::addCivitaiBatch,
             sort = ::toggleCivitaiSort,
-            undo = ::undoCivitaiHide)
+            undo = ::undoCivitaiHide,
+            sorter = ::openCivitaiSorter)
         lifecycleScope.launch { civitai.removeOldTrash() }
         newsToggle = findViewById(R.id.main_clicker_news_toggle)
         solitaireWidgetView = findViewById(R.id.solitaire_widget)
@@ -798,7 +812,9 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
         clickerViewModel.awardGachaTickets()
         clickerViewModel.refreshNeutrinoBalance()
         reloadPreferences()
-        reloadBackground(force = false)
+        val sorting = pendingSorting
+        pendingSorting = null
+        if (sorting != null) applyCivitaiSorting(sorting) else reloadBackground(force = false)
         if (MainClickerPreferences.isChessWidgetEnabled(this)) {
             chessWidgetView.reload()
         }
@@ -3220,6 +3236,45 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
                     refreshCivitaiPosition()
                 }
                 updateCivitaiWidget()
+            }
+        }
+        updateCivitaiWidget()
+    }
+
+    // Long press on the counter: the images of the current list open in a gallery where they are checked or crossed.
+    private fun openCivitaiSorter() {
+        if (!usingCivitai || !backgroundDisplayEnabled || !clickerInForeground || civitaiActionJob?.isActive == true) return
+        val source = backgroundSource
+        lifecycleScope.launch {
+            val files = civitai.sortList(source)
+            if (files.isEmpty() || source != backgroundSource) {
+                showToast(getString(R.string.clicker_civitai_unavailable))
+                return@launch
+            }
+            civitaiSorter.launch(Intent(this@MainClickerActivity, GalleryActivity::class.java)
+                .putExtra(GalleryActivity.EXTRA_PATHS, files.map { it.absolutePath }.toTypedArray())
+                .putExtra(GalleryActivity.EXTRA_SAVED, files.filter(civitai::saved).map { it.nameWithoutExtension }.toTypedArray()))
+        }
+    }
+
+    // Validation of the sorting gallery: the copies are made first, then the crossed images leave the rotation.
+    private fun applyCivitaiSorting(sorting: CivitaiSorting) {
+        val site = backgroundSource.site
+        stopBackgroundLoop()
+        civitaiImageJob?.cancel()
+        endCivitaiUndo()
+        var failed = 0
+        civitaiActionJob = lifecycleScope.launch {
+            if (site != null) for (id in sorting.save) {
+                val file = civitai.cached(id) ?: continue
+                if (!civitai.save(file, site)) failed++
+            }
+            civitai.discard(sorting.reject.mapNotNull(civitai::cached))
+        }
+        civitaiActionJob?.invokeOnCompletion {
+            runOnUiThread {
+                if (failed > 0) showToast(getString(R.string.floating_web_image_error_save))
+                reloadBackground(force = false)
             }
         }
         updateCivitaiWidget()

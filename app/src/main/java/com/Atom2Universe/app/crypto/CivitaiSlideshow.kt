@@ -173,6 +173,16 @@ internal class CivitaiSlideshow(
             }
         }
 
+    // What the widget scrolls through, in its order: the content of the sorting gallery.
+    suspend fun sortList(feed: ClickerBackgroundSource): List<File> = withContext(Dispatchers.IO) { pool(feed).map(::file) }
+
+    fun cached(id: String): File? = file(id).takeIf { cacheId.matches(id) && it.isFile }
+
+    // Each image leaves the rotation for good: no undo, the batch is validated in the sorting gallery.
+    suspend fun discard(files: List<File>) {
+        for (file in files) if (hide(file)) confirmHide()
+    }
+
     data class Position(val current: Int = 0, val total: Int = 0)
 
     suspend fun position(feed: ClickerBackgroundSource, displayed: File?): Position = withContext(Dispatchers.IO) {

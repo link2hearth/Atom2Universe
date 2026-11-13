@@ -142,6 +142,13 @@ internal class GalleryTiles(
 ) : RecyclerView.Adapter<GalleryTiles.Holder>() {
     var showCovers = false
     var canSetCover = false
+    /** Sorting gallery: the star and the options give way to a check and a cross. */
+    var temp: GalleryTemp? = null
+    var toggleMark: (Photo, TempMark) -> Unit = { _, _ -> }
+    fun updateMarks(id: String) {
+        val index = tiles.indexOfFirst { it is Photo && it.id == id }
+        if (index >= 0) notifyItemChanged(index, "controls")
+    }
     var selected: Set<String> = emptySet()
         set(value) {
             if (field == value) return
@@ -309,6 +316,8 @@ internal class GalleryTiles(
         val star = badge()
         val more = badge().apply { setImageResource(R.drawable.ic_more_vert_24) }
         val check = badge()
+        val keep = badge()
+        val drop = badge()
         var hold: Runnable? = null
         var suppressClick = false
         fun cancelHold() { hold?.let(tile::removeCallbacks); hold = null }
@@ -320,7 +329,7 @@ internal class GalleryTiles(
             tile.addView(preview, FrameLayout.LayoutParams(-1, -1))
             tile.addView(glyph, FrameLayout.LayoutParams(context.dp(38), context.dp(38), Gravity.CENTER))
             tile.addView(label, FrameLayout.LayoutParams(-1, -2, Gravity.BOTTOM))
-            for (button in listOf(star, more, check)) tile.addView(button)
+            for (button in listOf(star, more, check, keep, drop)) tile.addView(button)
         }
     }
 
@@ -332,7 +341,48 @@ internal class GalleryTiles(
         else onBindViewHolder(holder, position)
     }
 
+    private fun sortControls(holder: Holder, photo: Photo, sorting: GalleryTemp) = with(holder) {
+        star.visibility = View.GONE
+        more.visibility = View.GONE
+        check.visibility = View.GONE
+        keep.visibility = View.VISIBLE
+        drop.visibility = View.VISIBLE
+        tile.isSelected = false
+        val size = (grid.width / grid.columns.spanCount / 2 - context.dp(3)).coerceIn(context.dp(20), context.dp(48))
+        fun corner(offset: Int) = FrameLayout.LayoutParams(size, size, Gravity.TOP or Gravity.END).apply {
+            topMargin = context.dp(3); marginEnd = context.dp(3) + offset
+        }
+        drop.layoutParams = corner(0)
+        keep.layoutParams = corner(size + context.dp(4))
+        val kept = photo.id in sorting.checked
+        val dropped = photo.id in sorting.crossed
+        fun paint(button: ImageView, icon: Int, on: Boolean, color: Int) {
+            button.setImageResource(icon)
+            (button.background as GradientDrawable).apply {
+                setColor(if (on) color else 0xA6000000.toInt())
+                setStroke(context.dp(1), if (on) Color.WHITE else 0x99FFFFFF.toInt())
+            }
+            button.imageTintList = ColorStateList.valueOf(Color.WHITE)
+        }
+        paint(keep, R.drawable.ic_check, kept, Color.rgb(46, 184, 108))
+        paint(drop, R.drawable.ic_close, dropped, Color.rgb(228, 88, 88))
+        keep.contentDescription = context.getString(R.string.clicker_civitai_save)
+        drop.contentDescription = context.getString(R.string.clicker_civitai_hide)
+        keep.alpha = if (photo.id in sorting.locked) 0.8f else 1f
+        keep.setOnClickListener { toggleMark(photo, TempMark.CHECK) }
+        drop.setOnClickListener { toggleMark(photo, TempMark.CROSS) }
+        preview.alpha = if (dropped) 0.35f else 1f
+    }
+
     private fun controls(holder: Holder, photo: Photo?) = with(holder) {
+        val sorting = temp
+        if (sorting != null && photo != null) {
+            sortControls(holder, photo, sorting)
+            return@with
+        }
+        keep.visibility = View.GONE
+        drop.visibility = View.GONE
+        preview.alpha = 1f
         val selecting = selected.isNotEmpty()
         star.visibility = if (photo != null && !selecting) View.VISIBLE else View.GONE
         more.visibility = if (photo != null && !selecting) View.VISIBLE else View.GONE
@@ -423,7 +473,7 @@ internal class GalleryTiles(
         label.text = caption
         label.background = null
         controls(holder, photo)
-        watchHold(holder, item !is AddFolder,
+        watchHold(holder, item !is AddFolder && temp == null,
             if (photo == null) ViewConfiguration.getLongPressTimeout().toLong() else 1000L)
         tile.contentDescription = photo?.name ?: caption ?: context.getString(R.string.gallery_add)
         suppressClick = false

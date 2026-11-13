@@ -7,10 +7,14 @@ import android.view.MotionEvent
 import android.view.ViewConfiguration
 import com.google.android.material.card.MaterialCardView
 import kotlin.math.hypot
+import kotlin.math.max
 
-/** Card that can be dragged from anywhere, its buttons included: a tap still presses them, a slide moves the card. */
+/**
+ * Card that can be dragged from anywhere, its buttons included: a tap still presses them, a slide moves the card.
+ * A finger that wobbles a little while pressing is still a tap (and a long press): only a real slide is a drag.
+ */
 class DraggableCardView(context: Context, attrs: AttributeSet?) : MaterialCardView(context, attrs) {
-    private val slop = ViewConfiguration.get(context).scaledTouchSlop
+    private val slop = max(ViewConfiguration.get(context).scaledTouchSlop * 2.5f, resources.displayMetrics.density * 20f)
     private var downX = 0f
     private var downY = 0f
     private var dx = 0f

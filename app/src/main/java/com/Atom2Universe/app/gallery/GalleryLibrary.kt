@@ -32,7 +32,7 @@ internal data class Photo(
 /** Tuile de l'accueil qui ouvre « Récentes » ou « Favoris ». */
 internal data class Shortcut(val shelf: Shelf) : GalleryTile
 
-internal enum class Shelf { HOME, PICK, FOLDER, RECENT, FAVORITES }
+internal enum class Shelf { HOME, PICK, FOLDER, RECENT, FAVORITES, TEMP }
 
 internal enum class PhotoFileFormat(val extension: String, val mimeType: String) {
     WEBP("webp", "image/webp"),

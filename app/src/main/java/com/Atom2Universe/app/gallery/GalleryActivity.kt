@@ -39,6 +39,14 @@ import kotlinx.coroutines.withContext
 import java.io.File
 
 class GalleryActivity : ThemedActivity(), SystemBarsPreferenceOwner {
+    companion object {
+        /** Sorting mode, opened from the clicker widget: images to show (file paths) and those already copied (ids). */
+        const val EXTRA_PATHS = "temp_paths"
+        const val EXTRA_SAVED = "temp_saved"
+        const val RESULT_SAVE = "temp_save"
+        const val RESULT_REJECT = "temp_reject"
+    }
+    private val temp by lazy { ViewModelProvider(this)[GalleryTemp::class.java] }
     private val library by lazy { GalleryLibrary.get(this) }
     private val prefs by lazy { getSharedPreferences("gallery_view", MODE_PRIVATE) }
     private val batch by lazy { ViewModelProvider(this)[GalleryBatch::class.java] }
@@ -109,6 +117,10 @@ class GalleryActivity : ThemedActivity(), SystemBarsPreferenceOwner {
             gridOffset = state.getInt("offset")
             showControls = state.getBoolean("controls", true)
         }
+        if (intent.hasExtra(EXTRA_PATHS)) {
+            shelf = Shelf.TEMP
+            temp.start(intent.getStringArrayExtra(EXTRA_SAVED).orEmpty().toSet())
+        }
         buildBrowser()
         setContentView(root)
         batch.result.observe(this) { result ->
@@ -172,6 +184,7 @@ class GalleryActivity : ThemedActivity(), SystemBarsPreferenceOwner {
         tiles = GalleryTiles(lifecycleScope, ::select, ::toggleFavorite, ::selectPhoto, ::editPhoto, { items ->
             ordering().saveManual(items)
         }, ::useAsCover, ::folderPicked, ::homeDropped)
+        tiles.toggleMark = ::markPhoto
         grid.fingerListener = ::trackFinger
         grid.adapter = tiles
         body.addView(grid, FrameLayout.LayoutParams(-1, -1))
@@ -192,6 +205,7 @@ class GalleryActivity : ThemedActivity(), SystemBarsPreferenceOwner {
         Shelf.FOLDER -> path.last().name
         Shelf.RECENT -> getString(R.string.gallery_recent)
         Shelf.FAVORITES -> getString(R.string.gallery_favorites)
+        Shelf.TEMP -> getString(R.string.gallery_temp_title)
     }
     private fun selectionAction(icon: Int, label: Int, click: () -> Unit): View {
         if (resources.configuration.screenWidthDp < 600) return toolbar.action(icon, label, click)
@@ -214,8 +228,68 @@ class GalleryActivity : ThemedActivity(), SystemBarsPreferenceOwner {
             toolbar.addView(this, -2, dp(48))
         }
     }
+    private fun markPhoto(photo: Photo, mark: TempMark) {
+        temp.toggle(photo.id, mark)
+        tiles.updateMarks(photo.id)
+    }
+
+    /** « Valider » à la place de la flèche : c'est là que les copies et les retraits se font. */
+    private fun sortingHeader() {
+        val accent = galleryColor(R.attr.a2uMidiAccent)
+        toolbar.addView(TextView(this).apply {
+            setText(R.string.gallery_validate)
+            textSize = if (tablet()) 18f else 16f
+            setTypeface(typeface, android.graphics.Typeface.BOLD)
+            setTextColor(accent)
+            gravity = Gravity.CENTER
+            setPadding(dp(14), 0, dp(14), 0)
+            background = AppearanceStyle.drawable(context, androidx.appcompat.R.attr.selectableItemBackground)
+            isFocusable = true
+            setOnClickListener { finishSorting(true) }
+        }, LinearLayout.LayoutParams(-2, dp(48)))
+        toolbar.heading().text = title()
+        fun multi(mark: TempMark, icon: Int, label: Int, tint: Int) {
+            toolbar.action(icon, label) {
+                temp.multi = if (temp.multi == mark) null else mark
+                header()
+            }.apply {
+                imageTintList = android.content.res.ColorStateList.valueOf(tint)
+                if (temp.multi == mark) background = android.graphics.drawable.GradientDrawable().apply {
+                    shape = android.graphics.drawable.GradientDrawable.OVAL
+                    setColor((tint and 0xFFFFFF) or 0x44000000)
+                }
+            }
+        }
+        multi(TempMark.CHECK, R.drawable.ic_check, R.string.gallery_multi_check, android.graphics.Color.rgb(46, 184, 108))
+        multi(TempMark.CROSS, R.drawable.ic_close, R.string.gallery_multi_cross, android.graphics.Color.rgb(228, 88, 88))
+    }
+
+    private fun finishSorting(apply: Boolean) {
+        if (apply && temp.changed) {
+            setResult(RESULT_OK, Intent()
+                .putExtra(RESULT_SAVE, temp.toSave.toTypedArray())
+                .putExtra(RESULT_REJECT, temp.crossed.toTypedArray()))
+        }
+        finish()
+    }
+
+    private fun leaveSorting() {
+        if (!temp.changed) return finishSorting(false)
+        AlertDialog.Builder(this).setMessage(R.string.gallery_pending)
+            .setPositiveButton(R.string.gallery_validate) { _, _ -> finishSorting(true) }
+            .setNegativeButton(R.string.gallery_discard) { _, _ -> finishSorting(false) }
+            .setNeutralButton(R.string.cancel, null)
+            .create().apply { followImmersiveMode(); show() }
+    }
+
+    private fun tempPhotos(): List<GalleryTile> = intent.getStringArrayExtra(EXTRA_PATHS).orEmpty().mapNotNull { path ->
+        val file = File(path)
+        if (!file.isFile) null else Photo(file.nameWithoutExtension, Uri.fromFile(file), file.name, file.lastModified())
+    }
+
     private fun header() {
         toolbar.removeAllViews()
+        if (shelf == Shelf.TEMP) return sortingHeader()
         if (batch.selected.isNotEmpty()) {
             toolbar.action(R.drawable.ic_close, R.string.cancel) { clearSelection() }
             toolbar.heading().text = getString(R.string.gallery_selected, batch.selected.size)
@@ -404,6 +478,12 @@ class GalleryActivity : ThemedActivity(), SystemBarsPreferenceOwner {
 
     private fun select(item: GalleryTile) {
         if (batch.busy) return
+        if (shelf == Shelf.TEMP) {
+            // A tile has nothing to open here: it only takes the mark chosen in the banner, when there is one.
+            val mark = temp.multi
+            if (item is Photo && mark != null) markPhoto(item, mark)
+            return
+        }
         if (batch.selected.isNotEmpty()) {
             if (item is Photo) selectPhoto(item)
             return
@@ -443,6 +523,7 @@ class GalleryActivity : ThemedActivity(), SystemBarsPreferenceOwner {
         grid.zoomEnabled = section != Shelf.HOME && section != Shelf.PICK
         tiles.showCovers = section == Shelf.HOME
         tiles.canSetCover = section == Shelf.FOLDER
+        tiles.temp = if (section == Shelf.TEMP) temp else null
         grid.columns.spanCount = if (grid.zoomEnabled) photoColumns() else if (tablet()) 4 else 2
         grid.visibility = View.INVISIBLE
         empty.visibility = View.GONE
@@ -454,9 +535,10 @@ class GalleryActivity : ThemedActivity(), SystemBarsPreferenceOwner {
                         Shelf.HOME -> library.folders()
                         Shelf.PICK -> if (folder == null) library.pickerRoots() else library.contents(folder, directoriesOnly = true)
                         Shelf.FOLDER -> library.contents(requireNotNull(folder))
+                        Shelf.TEMP -> tempPhotos()
                         else -> library.collection(section)
                     }
-                    if (section == Shelf.HOME || section == Shelf.PICK) entries else order.arrange(entries)
+                    if (section == Shelf.HOME || section == Shelf.PICK || section == Shelf.TEMP) entries else order.arrange(entries)
                 }
             } catch (e: CancellationException) { throw e }
             catch (_: Exception) { null }
@@ -548,6 +630,7 @@ class GalleryActivity : ThemedActivity(), SystemBarsPreferenceOwner {
     }
     private fun back() {
         if (batch.busy) return
+        if (shelf == Shelf.TEMP) return leaveSorting()
         if (batch.selected.isNotEmpty()) clearSelection()
         else if (viewer != null) {
             val id = viewer?.current?.id
