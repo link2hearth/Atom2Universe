@@ -18,6 +18,8 @@ import java.io.File
 import java.io.IOException
 import java.security.MessageDigest
 import java.security.DigestInputStream
+import org.json.JSONArray
+import org.json.JSONObject
 
 internal sealed interface GalleryTile
 internal data object AddFolder : GalleryTile
@@ -25,10 +27,12 @@ internal data class Folder(val uri: Uri, val name: String) : GalleryTile
 internal data class Photo(
     val id: String, val uri: Uri, val name: String, val modified: Long,
     val parent: Uri? = null, val movable: Boolean = false,
-    val favorite: Boolean = false, val bin: Uri? = null
+    val favorite: Boolean = false
 ) : GalleryTile
+/** Tuile de l'accueil qui ouvre « Récentes » ou « Favoris ». */
+internal data class Shortcut(val shelf: Shelf) : GalleryTile
 
-internal enum class Shelf { HOME, PICK, FOLDER, RECENT, FAVORITES, TRASH }
+internal enum class Shelf { HOME, PICK, FOLDER, RECENT, FAVORITES }
 
 internal enum class PhotoFileFormat(val extension: String, val mimeType: String) {
     WEBP("webp", "image/webp"),
@@ -46,7 +50,7 @@ internal data class PhotoExportOptions(val format: PhotoFileFormat = PhotoFileFo
 
 /** Only user-selected folders and marked photos are indexed. Folder contents stay with the provider. */
 internal class GalleryLibrary(private val app: Context) :
-    SQLiteOpenHelper(app, "gallery.db", null, 1) {
+    SQLiteOpenHelper(app, "gallery.db", null, 2) {
     companion object {
         @Volatile private var instance: GalleryLibrary? = null
         fun get(context: Context): GalleryLibrary = instance ?: synchronized(this) {
@@ -56,28 +60,65 @@ internal class GalleryLibrary(private val app: Context) :
     private val resolver get() = app.contentResolver
     private val copies get() = File(app.filesDir, "gallery-recent")
     override fun onCreate(db: SQLiteDatabase) {
-        db.execSQL("CREATE TABLE folders (uri TEXT PRIMARY KEY, name TEXT NOT NULL)")
-        db.execSQL("CREATE TABLE bins (parent TEXT PRIMARY KEY, uri TEXT NOT NULL)")
+        // alias = nom choisi dans la galerie : le dossier Android garde son nom.
+        db.execSQL("CREATE TABLE folders (uri TEXT PRIMARY KEY, name TEXT NOT NULL, alias TEXT)")
+        // trashed = -1 : image retirée de la galerie (le fichier reste sur l'appareil).
         db.execSQL("""CREATE TABLE photos (id TEXT PRIMARY KEY, uri TEXT NOT NULL, name TEXT NOT NULL,
             modified INTEGER NOT NULL, parent TEXT, movable INTEGER DEFAULT 0, favorite INTEGER DEFAULT 0,
-            recent INTEGER DEFAULT 0, trashed INTEGER DEFAULT 0, bin TEXT)""")
+            recent INTEGER DEFAULT 0, trashed INTEGER DEFAULT 0)""")
     }
-    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) = Unit
+    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+        if (oldVersion < 2) db.execSQL("ALTER TABLE folders ADD COLUMN alias TEXT")
+    }
 
     private fun Cursor.str(column: String): String = getString(getColumnIndexOrThrow(column))
     private fun Cursor.optionalUri(column: String): Uri? =
         getString(getColumnIndexOrThrow(column))?.let(Uri::parse)
     private fun Cursor.number(column: String): Long = getLong(getColumnIndexOrThrow(column))
     private fun Cursor.photo() = Photo(str("id"), Uri.parse(str("uri")), str("name"), number("modified"),
-        optionalUri("parent"), number("movable") != 0L, number("favorite") != 0L, optionalUri("bin"))
+        optionalUri("parent"), number("movable") != 0L, number("favorite") != 0L)
 
     private fun <T> rows(sql: String, vararg args: String, read: Cursor.() -> T): List<T> =
         readableDatabase.rawQuery(sql, args).use { cursor ->
             buildList { while (cursor.moveToNext()) add(cursor.read()) }
         }
 
-    fun folders(): List<GalleryTile> =
-        rows("SELECT * FROM folders ORDER BY rowid") { Folder(Uri.parse(str("uri")), str("name")) } + AddFolder
+    /** Ordre de l'accueil (Récentes, Favoris et galeries mélangés) : clés enregistrées, le reste vient à la suite. */
+    private val homePrefs get() = app.getSharedPreferences("gallery_home", Context.MODE_PRIVATE)
+    private fun homeKey(tile: GalleryTile) = when (tile) {
+        is Shortcut -> "shortcut:${tile.shelf.name}"
+        is Folder -> tile.uri.toString()
+        is Photo -> tile.id
+        AddFolder -> "add"
+    }
+
+    fun folders(): List<GalleryTile> {
+        val items = listOf<GalleryTile>(Shortcut(Shelf.RECENT), Shortcut(Shelf.FAVORITES)) +
+            rows("SELECT * FROM folders ORDER BY rowid") {
+                Folder(Uri.parse(str("uri")), getString(getColumnIndexOrThrow("alias"))?.takeIf { it.isNotBlank() } ?: str("name"))
+            }
+        val saved = homePrefs.getString("order", null)?.let { JSONArray(it) }
+        val rank = saved?.let { list -> (0 until list.length()).associate { list.getString(it) to it } }.orEmpty()
+        return items.sortedBy { rank[homeKey(it)] ?: Int.MAX_VALUE } + AddFolder
+    }
+
+    /** Image choisie pour la tuile d'une galerie ; sans choix, la tuile montre la première image du dossier. */
+    fun setCover(folder: Folder, photo: Photo) {
+        val saved = JSONObject().put("uri", photo.uri.toString()).put("name", photo.name).put("modified", photo.modified)
+        homePrefs.edit().putString("cover/${folder.uri}", saved.toString()).apply()
+    }
+
+    fun cover(folder: Folder): Photo? = homePrefs.getString("cover/${folder.uri}", null)?.let { saved ->
+        runCatching {
+            val json = JSONObject(saved)
+            val uri = Uri.parse(json.getString("uri"))
+            Photo(identity(uri), uri, json.getString("name"), json.getLong("modified"))
+        }.getOrNull()
+    }
+
+    fun reorderHome(order: List<GalleryTile>) {
+        homePrefs.edit().putString("order", JSONArray(order.map(::homeKey)).toString()).apply()
+    }
 
     fun rootFolder(tree: Uri): Folder {
         val root = DocumentsContract.buildDocumentUriUsingTree(tree, DocumentsContract.getTreeDocumentId(tree))
@@ -94,8 +135,15 @@ internal class GalleryLibrary(private val app: Context) :
         writableDatabase.insertWithOnConflict("folders", null, values, SQLiteDatabase.CONFLICT_IGNORE)
     }
 
+    /** Nom affiché dans la galerie seulement : le dossier de l'appareil n'est pas renommé. Vide = nom d'origine. */
+    fun renameFolder(folder: Folder, alias: String) {
+        val values = ContentValues().apply { put("alias", alias.trim().takeIf { it.isNotEmpty() }) }
+        writableDatabase.update("folders", values, "uri=?", arrayOf(folder.uri.toString()))
+    }
+
     fun unlink(folder: Folder) {
         writableDatabase.delete("folders", "uri=?", arrayOf(folder.uri.toString()))
+        homePrefs.edit().remove("cover/${folder.uri}").apply()
         // Favorites and trashed documents may still rely on the tree grant.
     }
 
@@ -115,7 +163,6 @@ internal class GalleryLibrary(private val app: Context) :
     fun contents(folder: Folder, directoriesOnly: Boolean = false, coverOnly: Boolean = false): List<GalleryTile> {
         val favorites = rows("SELECT id FROM photos WHERE favorite=1") { str("id") }.toHashSet()
         val hidden = rows("SELECT id FROM photos WHERE trashed!=0") { str("id") }.toHashSet()
-        val bins = rows("SELECT uri FROM bins") { identity(Uri.parse(str("uri"))) }.toHashSet()
         val children = DocumentsContract.buildChildDocumentsUriUsingTree(folder.uri, DocumentsContract.getDocumentId(folder.uri))
         val projection = arrayOf(Doc.COLUMN_DOCUMENT_ID, Doc.COLUMN_DISPLAY_NAME, Doc.COLUMN_MIME_TYPE,
             Doc.COLUMN_LAST_MODIFIED, Doc.COLUMN_FLAGS)
@@ -130,7 +177,8 @@ internal class GalleryLibrary(private val app: Context) :
                 val name = cursor.getString(1) ?: continue
                 val mime = cursor.getString(2).orEmpty()
                 if (mime == Doc.MIME_TYPE_DIR) {
-                    if (!coverOnly && id !in bins) directories.add(Folder(child, name))
+                    // Les dossiers cachés (nom commençant par un point) n'ont rien à faire dans une galerie.
+                    if (!coverOnly && !name.startsWith(".")) directories.add(Folder(child, name))
                 } else if (!directoriesOnly && id !in hidden && (mime.startsWith("image/") ||
                         MimeTypeMap.getSingleton().getMimeTypeFromExtension(name.substringAfterLast('.').lowercase())?.startsWith("image/") == true)) {
                     val movable = writable && cursor.getInt(4) and Doc.FLAG_SUPPORTS_MOVE != 0
@@ -147,7 +195,6 @@ internal class GalleryLibrary(private val app: Context) :
         val where = when (shelf) {
             Shelf.FAVORITES -> "favorite=1 AND trashed=0 ORDER BY name COLLATE NOCASE"
             Shelf.RECENT -> "recent>0 AND trashed=0 ORDER BY recent DESC, rowid DESC"
-            Shelf.TRASH -> "trashed>0 ORDER BY trashed DESC, rowid DESC"
             else -> error("Expected a photo collection")
         }
         return rows("SELECT * FROM photos WHERE $where") { photo() }
@@ -187,7 +234,7 @@ internal class GalleryLibrary(private val app: Context) :
             }
             val photo = Photo(identity(uri), uri, displayName(uri), System.currentTimeMillis(), parent,
                 documentFlags(uri) and Doc.FLAG_SUPPORTS_MOVE != 0)
-            record(photo) { put("recent",System.currentTimeMillis()); put("favorite",false); put("trashed",0); putNull("bin") }
+            record(photo) { put("recent",System.currentTimeMillis()); put("favorite",false); put("trashed",0) }
             return photo
         } catch (e: Exception) {
             DocumentsContract.deleteDocument(resolver, uri)
@@ -207,13 +254,13 @@ internal class GalleryLibrary(private val app: Context) :
         }
         val sourceId = identity(source)
         val entry = rows("SELECT * FROM photos WHERE id=?", sourceId) { photo() }.firstOrNull()
-        val id = if (entry?.bin != null) "external:$sourceId" else sourceId
-        val previous = if (id == sourceId) entry else rows("SELECT * FROM photos WHERE id=?", id) { photo() }.firstOrNull()
+        val id = sourceId
+        val previous = entry
         val name = runCatching { displayName(source) }.getOrNull() ?: source.lastPathSegment?.substringAfterLast('/')
             ?: app.getString(com.Atom2Universe.app.R.string.gallery_image)
         val persisted = source.scheme == "content" && flags and Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION != 0 &&
             runCatching { resolver.takePersistableUriPermission(source, Intent.FLAG_GRANT_READ_URI_PERMISSION) }.isSuccess
-        val retained = previous?.takeIf { it.parent != null && it.bin == null }?.uri
+        val retained = previous?.takeIf { it.parent != null }?.uri
         val needsCopy = !persisted && retained == null
         val copy = if (needsCopy) {
             copies.mkdirs()
@@ -230,7 +277,7 @@ internal class GalleryLibrary(private val app: Context) :
             }
             val photo = Photo(id, retained ?: copy?.let(Uri::fromFile) ?: source, name, System.currentTimeMillis(),
                 previous?.parent, previous?.movable == true)
-            record(photo) { put("recent", System.currentTimeMillis()); put("trashed", 0); putNull("bin") }
+            record(photo) { put("recent", System.currentTimeMillis()); put("trashed", 0) }
         } catch (e: Exception) {
             copy?.delete()
             throw e
@@ -334,61 +381,18 @@ internal class GalleryLibrary(private val app: Context) :
         writableDatabase.update("photos", values, "id=? AND trashed=0", arrayOf(photo.id))
     }
 
-    /** A dedicated provider directory makes moves reversible without rewriting the image bytes. */
-    @Synchronized fun trash(photo: Photo) {
-        var target: Uri? = null
-        var moved = photo.uri
-        val parent = photo.parent
-        if (parent != null && photo.movable) {
-            val existing = rows("SELECT uri FROM bins WHERE parent=?", parent.toString()) { Uri.parse(str("uri")) }.firstOrNull()
-            target = existing?.takeIf { uri ->
-                resolver.query(uri, arrayOf(Doc.COLUMN_DOCUMENT_ID), null, null)?.use { it.moveToFirst() } == true
-            } ?: requireNotNull(DocumentsContract.createDocument(resolver, parent, Doc.MIME_TYPE_DIR, ".Atom2Universe-Trash")).also {
-                writableDatabase.replaceOrThrow("bins", null, ContentValues().apply {
-                    put("parent", parent.toString()); put("uri", it.toString())
-                })
-            }
-            moved = requireNotNull(DocumentsContract.moveDocument(resolver, photo.uri, parent, target))
-        }
-        try {
-            record(photo.copy(uri = moved)) {
-                put("trashed", System.currentTimeMillis())
-                put("bin", target?.toString())
-                if (target != null) put("id", identity(moved))
-            }
-        } catch (e: Exception) {
-            if (target != null && parent != null) DocumentsContract.moveDocument(resolver, moved, target, parent)
-            throw e
-        }
+    /** Retire l'image de la galerie. Le fichier reste sur l'appareil, sauf notre copie privée (inutile sans la galerie). */
+    @Synchronized fun hide(photo: Photo) {
+        if (isOwnedCopy(photo.uri)) {
+            writableDatabase.delete("photos", "id=?", arrayOf(photo.id))
+            deleteOwnedCopy(photo.uri)
+        } else record(photo) { put("trashed", -1); put("favorite", false); put("recent", 0) }
     }
 
-    private fun requireTrashed(photo: Photo) {
-        check(rows("SELECT id FROM photos WHERE id=? AND uri=? AND trashed>0",
-            photo.id, photo.uri.toString()) { str("id") }.isNotEmpty())
-    }
-
-    @Synchronized fun restore(photo: Photo) {
-        requireTrashed(photo)
-        val restored = if (photo.bin != null) requireNotNull(DocumentsContract.moveDocument(
-            resolver, photo.uri, photo.bin, requireNotNull(photo.parent))) else photo.uri
-        try {
-            val values = ContentValues().apply {
-                put("trashed", 0); putNull("bin"); put("uri", restored.toString())
-                if (photo.bin != null) { put("id", identity(restored)); put("name", displayName(restored)) }
-            }
-            check(writableDatabase.update("photos", values, "id=?", arrayOf(photo.id)) == 1)
-        } catch (e: Exception) {
-            if (photo.bin != null && photo.parent != null) DocumentsContract.moveDocument(resolver, restored, photo.parent, photo.bin)
-            throw e
-        }
-    }
-
-    @Synchronized fun discard(photo: Photo) {
-        requireTrashed(photo)
-        if (photo.bin != null) check(DocumentsContract.deleteDocument(resolver, photo.uri))
-        deleteOwnedCopy(photo.uri)
-        if (photo.bin == null && photo.parent != null) {
-            record(photo) { put("trashed", -1); put("favorite", false); put("recent", 0) }
-        } else writableDatabase.delete("photos", "id=?", arrayOf(photo.id))
+    /** Supprime le fichier de l'appareil, puis son entrée dans la galerie. */
+    @Synchronized fun delete(photo: Photo) {
+        if (isOwnedCopy(photo.uri)) deleteOwnedCopy(photo.uri)
+        else check(DocumentsContract.deleteDocument(resolver, photo.uri))
+        writableDatabase.delete("photos", "id=?", arrayOf(photo.id))
     }
 }

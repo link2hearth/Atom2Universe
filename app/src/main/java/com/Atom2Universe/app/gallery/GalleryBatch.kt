@@ -9,7 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-internal enum class BatchAction { COPY, MOVE, TRASH, RESTORE, DISCARD }
+internal enum class BatchAction { COPY, MOVE, HIDE, DELETE }
 internal data class BatchResult(val failures: List<Photo>, val total: Int)
 
 /** A rotation can replace the screen while a provider is still writing a large file. */
@@ -31,9 +31,8 @@ internal class GalleryBatch(app: Application) : AndroidViewModel(app) {
                         when (action) {
                             BatchAction.COPY, BatchAction.MOVE -> library.transfer(photo, requireNotNull(folder),
                                 action == BatchAction.MOVE, requireNotNull(names))
-                            BatchAction.TRASH -> library.trash(photo)
-                            BatchAction.RESTORE -> library.restore(photo)
-                            BatchAction.DISCARD -> library.discard(photo)
+                            BatchAction.HIDE -> library.hide(photo)
+                            BatchAction.DELETE -> library.delete(photo)
                         }
                         false
                     } catch (e: CancellationException) { throw e }

@@ -50,8 +50,8 @@ internal fun LinearLayout.heading(compact: Boolean = false): TextView = TextView
 
 internal class GalleryViewer(
     context: Context, private val scope: CoroutineScope, items: List<Photo>, initial: Int,
-    private val trash: Boolean, back: () -> Unit, favorite: (Photo) -> Unit, share: (Photo) -> Unit,
-    restore: (Photo) -> Unit, remove: (Photo) -> Unit, edit: (Photo) -> Unit
+    back: () -> Unit, favorite: (Photo) -> Unit, share: (Photo) -> Unit,
+    remove: (Photo) -> Unit, edit: (Photo) -> Unit
 ) : FrameLayout(context) {
     private val photos = items.toMutableList()
     private val pager = ViewPager2(context)
@@ -61,7 +61,7 @@ internal class GalleryViewer(
     }
     private val top = bar()
     private val name: TextView
-    private val heart: ImageButton?
+    private val heart: ImageButton
     private val counter = TextView(context).apply {
         textSize = if (context.tablet()) 16f else 14f
         setTextColor(context.galleryColor(R.attr.a2uSecondaryTextColor))
@@ -79,15 +79,10 @@ internal class GalleryViewer(
         top.action(R.drawable.ic_arrow_back_24, R.string.back, back)
         name = top.heading(compact = true)
         top.addView(counter)
-        if (trash) {
-            heart = null
-            top.action(R.drawable.ic_nt_restore, R.string.gallery_restore) { restore(current) }
-        } else {
-            top.action(R.drawable.ic_edit_24, R.string.photo_edit) { edit(current) }
-            heart = top.action(R.drawable.ic_star_outline_24, R.string.gallery_favorite_add) { favorite(current) }
-            top.action(R.drawable.ic_share, R.string.gallery_share) { share(current) }
-        }
-        top.action(R.drawable.ic_delete, if (trash) R.string.gallery_discard else R.string.gallery_trash) { remove(current) }
+        top.action(R.drawable.ic_edit_24, R.string.photo_edit) { edit(current) }
+        heart = top.action(R.drawable.ic_star_outline_24, R.string.gallery_favorite_add) { favorite(current) }
+        top.action(R.drawable.ic_share, R.string.gallery_share) { share(current) }
+        top.action(R.drawable.ic_delete, R.string.gallery_delete) { remove(current) }
         addView(top, LayoutParams(-1, -2, Gravity.TOP).apply { setMargins(context.dp(8), context.dp(8), context.dp(8), 0) })
         pager.adapter = Pages()
         pager.setCurrentItem(initial, false)
@@ -100,9 +95,9 @@ internal class GalleryViewer(
         val photo = photos[index]
         name.text = photo.name
         counter.text = context.getString(R.string.gallery_position, index + 1, photos.size)
-        heart?.setImageResource(if (photo.favorite) R.drawable.ic_star_filled_24 else R.drawable.ic_star_outline_24)
-        heart?.contentDescription = context.getString(if (photo.favorite) R.string.gallery_favorite_remove else R.string.gallery_favorite_add)
-        heart?.tooltipText = heart?.contentDescription
+        heart.setImageResource(if (photo.favorite) R.drawable.ic_star_filled_24 else R.drawable.ic_star_outline_24)
+        heart.contentDescription = context.getString(if (photo.favorite) R.string.gallery_favorite_remove else R.string.gallery_favorite_add)
+        heart.tooltipText = heart.contentDescription
     }
     fun release() { pager.adapter = null }
     fun updateFavorite(photo: Photo) {

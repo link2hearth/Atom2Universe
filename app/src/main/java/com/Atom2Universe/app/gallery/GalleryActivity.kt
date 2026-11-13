@@ -5,8 +5,12 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.Gravity
+import android.view.MotionEvent
 import android.view.View
+import android.view.WindowManager
+import android.view.inputmethod.EditorInfo
 import android.webkit.MimeTypeMap
+import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.ProgressBar
@@ -56,6 +60,11 @@ class GalleryActivity : ThemedActivity(), SystemBarsPreferenceOwner {
     private var gridOffset = 0
     private var resumeRefresh = false
     private var showControls = true
+    private enum class DropZone { NONE, REMOVE, RENAME }
+    private var draggingFolder = false
+    private var hoveredZone = DropZone.NONE
+    private var droppedZone = DropZone.NONE
+    private val zoneButtons = mutableMapOf<DropZone, View>()
     private val editor = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         val data = result.data
         val id = data?.getStringExtra(PhotoEditorActivity.RESULT_ID)
@@ -162,14 +171,8 @@ class GalleryActivity : ThemedActivity(), SystemBarsPreferenceOwner {
         grid.setPadding(dp(6), dp(4), dp(6), dp(8))
         tiles = GalleryTiles(lifecycleScope, ::select, ::toggleFavorite, ::selectPhoto, ::editPhoto, { items ->
             ordering().saveManual(items)
-        }) { folder ->
-            if (shelf == Shelf.HOME) {
-                confirm(folder.name, R.string.gallery_unlink_message, R.string.gallery_unlink) {
-                    change({ library.unlink(folder) }) { load() }
-                }
-                true
-            } else false
-        }
+        }, ::useAsCover, ::folderPicked, ::homeDropped)
+        grid.fingerListener = ::trackFinger
         grid.adapter = tiles
         body.addView(grid, FrameLayout.LayoutParams(-1, -1))
         empty = TextView(this).apply {
@@ -189,7 +192,6 @@ class GalleryActivity : ThemedActivity(), SystemBarsPreferenceOwner {
         Shelf.FOLDER -> path.last().name
         Shelf.RECENT -> getString(R.string.gallery_recent)
         Shelf.FAVORITES -> getString(R.string.gallery_favorites)
-        Shelf.TRASH -> getString(R.string.gallery_bin)
     }
     private fun selectionAction(icon: Int, label: Int, click: () -> Unit): View {
         if (resources.configuration.screenWidthDp < 600) return toolbar.action(icon, label, click)
@@ -217,33 +219,32 @@ class GalleryActivity : ThemedActivity(), SystemBarsPreferenceOwner {
         if (batch.selected.isNotEmpty()) {
             toolbar.action(R.drawable.ic_close, R.string.cancel) { clearSelection() }
             toolbar.heading().text = getString(R.string.gallery_selected, batch.selected.size)
-            if (shelf == Shelf.TRASH) {
-                selectionAction(R.drawable.ic_nt_restore, R.string.gallery_restore) { startBatch(BatchAction.RESTORE) }
-                selectionAction(R.drawable.ic_delete, R.string.gallery_discard) { confirmBatchDelete() }
-            } else {
-                selectionAction(R.drawable.ic_px_move, R.string.gallery_move) { destination(BatchAction.MOVE) }
-                    .apply {
-                        isEnabled = selectedPhotos().all(library::canRelocate)
-                        alpha = if (isEnabled) 1f else 0.4f
-                    }
-                selectionAction(R.drawable.ic_px_copy, R.string.gallery_copy) { destination(BatchAction.COPY) }
-                selectionAction(R.drawable.ic_delete, R.string.gallery_discard) { confirmBatchDelete() }
-            }
+            selectionAction(R.drawable.ic_px_move, R.string.gallery_move) { destination(BatchAction.MOVE) }
+                .apply {
+                    isEnabled = selectedPhotos().all(library::canRelocate)
+                    alpha = if (isEnabled) 1f else 0.4f
+                }
+            selectionAction(R.drawable.ic_px_copy, R.string.gallery_copy) { destination(BatchAction.COPY) }
+            selectionAction(R.drawable.ic_delete, R.string.gallery_delete) { confirmBatchDelete() }
             for (i in 0 until toolbar.childCount) if (batch.busy) toolbar.getChildAt(i).isEnabled = false
             return
         }
         toolbar.action(R.drawable.ic_arrow_back_24, R.string.back, ::back)
         toolbar.heading().text = title()
-        if (shelf == Shelf.HOME) {
-            toolbar.action(R.drawable.ic_sleep_timer, R.string.gallery_recent) { navigate(Shelf.RECENT) }
-            toolbar.action(R.drawable.ic_star_outline_24, R.string.gallery_favorites) { navigate(Shelf.FAVORITES) }
-            toolbar.action(R.drawable.ic_delete, R.string.gallery_bin) { navigate(Shelf.TRASH) }
-        } else if (shelf == Shelf.PICK) {
+        if (shelf == Shelf.PICK) {
             toolbar.action(R.drawable.ic_folder_open, R.string.gallery_browse_device) { pickOnDevice() }
             path.lastOrNull()?.let { folder ->
                 toolbar.action(R.drawable.ic_check, R.string.gallery_choose) {
                     change({ library.addFolder(folder) }) { navigate(Shelf.HOME) }
                 }
+            }
+        } else if (shelf == Shelf.HOME) {
+            zoneButtons.clear()
+            if (draggingFolder) {
+                // Zones de dépôt : on lâche la tuile sur le crayon pour renommer, sur la corbeille pour la retirer.
+                zoneButtons[DropZone.RENAME] = toolbar.action(R.drawable.ic_edit_24, R.string.gallery_rename) {}
+                zoneButtons[DropZone.REMOVE] = toolbar.action(R.drawable.ic_delete, R.string.gallery_unlink) {}
+                zoneButtons.values.forEach { it.alpha = 0.7f }
             }
         } else {
             toolbar.action(R.drawable.ic_sort_24, R.string.gallery_sort) {
@@ -252,13 +253,104 @@ class GalleryActivity : ThemedActivity(), SystemBarsPreferenceOwner {
         }
     }
 
+    /** L'image devient la tuile de la galerie d'où l'on est parti (le dossier de l'accueil). */
+    private fun useAsCover(photo: Photo) {
+        val home = path.firstOrNull() ?: return
+        change({ library.setCover(home, photo) }) {}
+    }
+
+    private fun folderPicked(folder: Folder) {
+        draggingFolder = true
+        droppedZone = DropZone.NONE
+        header()
+    }
+
+    private fun zoneAt(x: Float, y: Float): DropZone {
+        val margin = dp(16)
+        val at = IntArray(2)
+        for ((zone, view) in zoneButtons) {
+            view.getLocationOnScreen(at)
+            if (x >= at[0] - margin && x <= at[0] + view.width + margin &&
+                y >= at[1] - margin && y <= at[1] + view.height + margin) return zone
+        }
+        return DropZone.NONE
+    }
+
+    private fun hover(zone: DropZone) {
+        if (zone == hoveredZone) return
+        hoveredZone = zone
+        for ((target, view) in zoneButtons) {
+            val over = target == zone
+            view.animate().scaleX(if (over) 1.35f else 1f).scaleY(if (over) 1.35f else 1f).alpha(if (over) 1f else 0.7f)
+                .setDuration(120).start()
+        }
+    }
+
+    /** Suit le doigt pendant qu'une tuile-galerie est glissée, même au-dessus de la bannière. */
+    private fun trackFinger(event: MotionEvent) {
+        if (!draggingFolder) return
+        when (event.actionMasked) {
+            MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE -> hover(zoneAt(event.rawX, event.rawY))
+            MotionEvent.ACTION_UP -> droppedZone = zoneAt(event.rawX, event.rawY)
+            MotionEvent.ACTION_CANCEL -> droppedZone = DropZone.NONE
+        }
+    }
+
+    private fun homeDropped(tile: GalleryTile, order: List<GalleryTile>, reordered: Boolean) {
+        val zone = droppedZone
+        droppedZone = DropZone.NONE
+        draggingFolder = false
+        hoveredZone = DropZone.NONE
+        val folder = tile as? Folder
+        grid.post {
+            header()
+            when (zone) {
+                DropZone.REMOVE -> if (folder != null) {
+                    load()
+                    confirm(folder.name, R.string.gallery_unlink_message, R.string.gallery_unlink) {
+                        change({ library.unlink(folder) }) { load() }
+                    }
+                }
+                DropZone.RENAME -> if (folder != null) {
+                    load()
+                    renameFolder(folder)
+                }
+                DropZone.NONE -> if (reordered) change({ library.reorderHome(order) }) {}
+            }
+        }
+    }
+
+    /** Le nom ne change que dans la galerie ; le dossier de l'appareil garde le sien. Vide : nom d'origine. */
+    private fun renameFolder(folder: Folder) {
+        val input = EditText(this).apply {
+            setSingleLine()
+            imeOptions = EditorInfo.IME_ACTION_DONE
+            setText(folder.name)
+            setSelection(text.length)
+        }
+        val frame = FrameLayout(this).apply {
+            setPadding(dp(20), dp(8), dp(20), 0)
+            addView(input, FrameLayout.LayoutParams(-1, -2))
+        }
+        AlertDialog.Builder(this).setTitle(R.string.gallery_rename).setView(frame)
+            .setNegativeButton(R.string.cancel, null)
+            .setPositiveButton(R.string.ok) { _, _ ->
+                val name = input.text.toString()
+                change({ library.renameFolder(folder, name) }) { load() }
+            }
+            .create().apply {
+                window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+                followImmersiveMode()
+                show()
+            }
+    }
+
     private fun ordering() = GalleryOrdering(prefs, path.lastOrNull()?.uri?.toString() ?: shelf.name, shelf)
 
     private fun sortMenu(anchor: View) {
         val order = ordering()
         PopupMenu(this, anchor).apply {
             for (mode in GalleryOrder.entries) {
-                if (mode == GalleryOrder.MANUAL && shelf == Shelf.TRASH) continue
                 menu.add(1, mode.ordinal + 1, mode.ordinal, mode.label).apply {
                     isCheckable = true
                     isChecked = mode == order.mode
@@ -298,17 +390,8 @@ class GalleryActivity : ThemedActivity(), SystemBarsPreferenceOwner {
 
     private fun confirmBatchDelete() {
         if (batch.busy) return
-        val trash = shelf == Shelf.TRASH
-        val photos = selectedPhotos()
-        val prompt = when {
-            trash -> R.string.gallery_batch_discard
-            photos.all { it.movable && it.parent != null } -> R.string.gallery_batch_trash
-            else -> R.string.gallery_batch_hide
-        }
-        confirm(getString(R.string.gallery_selected, photos.size), prompt,
-            if (trash) R.string.gallery_discard else R.string.gallery_trash) {
-            startBatch(if (trash) BatchAction.DISCARD else BatchAction.TRASH)
-        }
+        confirmDelete(getString(R.string.gallery_selected, selectedPhotos().size),
+            { startBatch(BatchAction.HIDE) }, { startBatch(BatchAction.DELETE) })
     }
 
     private fun startBatch(action: BatchAction, target: Folder? = null) {
@@ -327,6 +410,7 @@ class GalleryActivity : ThemedActivity(), SystemBarsPreferenceOwner {
         }
         when (item) {
             AddFolder -> pickOnDevice()
+            is Shortcut -> navigate(item.shelf)
             is Folder -> { path.add(item); navigate(if (shelf == Shelf.PICK) Shelf.PICK else Shelf.FOLDER) }
             is Photo -> {
                 if (shelf == Shelf.FOLDER || shelf == Shelf.FAVORITES) {
@@ -358,7 +442,7 @@ class GalleryActivity : ThemedActivity(), SystemBarsPreferenceOwner {
         header()
         grid.zoomEnabled = section != Shelf.HOME && section != Shelf.PICK
         tiles.showCovers = section == Shelf.HOME
-        tiles.inTrash = section == Shelf.TRASH
+        tiles.canSetCover = section == Shelf.FOLDER
         grid.columns.spanCount = if (grid.zoomEnabled) photoColumns() else if (tablet()) 4 else 2
         grid.visibility = View.INVISIBLE
         empty.visibility = View.GONE
@@ -387,7 +471,6 @@ class GalleryActivity : ThemedActivity(), SystemBarsPreferenceOwner {
             empty.setText(if (result == null) R.string.gallery_folder_unavailable else when (section) {
                 Shelf.FAVORITES -> R.string.gallery_no_favorites
                 Shelf.RECENT -> R.string.gallery_no_recent
-                Shelf.TRASH -> R.string.gallery_no_trash
                 Shelf.PICK -> R.string.gallery_no_folders
                 else -> R.string.gallery_no_images
             })
@@ -428,9 +511,8 @@ class GalleryActivity : ThemedActivity(), SystemBarsPreferenceOwner {
         val index = photos.indexOfFirst { it.id == id }
         if (index < 0) return
         closeViewer()
-        val screen = GalleryViewer(this, lifecycleScope, photos, index, shelf == Shelf.TRASH,
-            ::back, ::toggleFavorite,
-            ::share, { photo -> removeFromView(photo) { library.restore(photo) } }, ::remove, ::editPhoto)
+        val screen = GalleryViewer(this, lifecycleScope, photos, index,
+            ::back, ::toggleFavorite, ::share, ::remove, ::editPhoto)
         viewer = screen
         screen.controlsVisible = showControls
         root.addView(screen, FrameLayout.LayoutParams(-1, -1))
@@ -501,16 +583,8 @@ class GalleryActivity : ThemedActivity(), SystemBarsPreferenceOwner {
         }
     }
     private fun remove(photo: Photo) {
-        val inTrash = shelf == Shelf.TRASH
-        val prompt = when {
-            inTrash && photo.bin != null -> R.string.gallery_delete_file_message
-            inTrash -> R.string.gallery_discard_message
-            photo.parent != null && photo.movable -> R.string.gallery_move_message
-            else -> R.string.gallery_hide_message
-        }
-        confirm(photo.name, prompt, if (inTrash) R.string.gallery_discard else R.string.gallery_trash) {
-            removeFromView(photo) { if (inTrash) library.discard(photo) else library.trash(photo) }
-        }
+        confirmDelete(photo.name, { removeFromView(photo) { library.hide(photo) } },
+            { removeFromView(photo) { library.delete(photo) } })
     }
     private fun share(photo: Photo) {
         try {
@@ -539,6 +613,14 @@ class GalleryActivity : ThemedActivity(), SystemBarsPreferenceOwner {
     private fun confirm(name: String, prompt: Int, accept: Int, run: () -> Unit) {
         AlertDialog.Builder(this).setTitle(name).setMessage(prompt).setNegativeButton(R.string.cancel, null)
             .setPositiveButton(accept) { _, _ -> run() }.create().apply { followImmersiveMode(); show() }
+    }
+    /** Trois issues : supprimer le fichier, seulement le retirer de la galerie, ou annuler. */
+    private fun confirmDelete(name: String, hide: () -> Unit, delete: () -> Unit) {
+        AlertDialog.Builder(this).setTitle(name).setMessage(R.string.gallery_delete_message)
+            .setPositiveButton(R.string.gallery_delete_forever) { _, _ -> delete() }
+            .setNegativeButton(R.string.gallery_hide) { _, _ -> hide() }
+            .setNeutralButton(R.string.cancel, null)
+            .create().apply { followImmersiveMode(); show() }
     }
     private fun message(text: Int) {
         AlertDialog.Builder(this).setMessage(text).setPositiveButton(R.string.ok, null)

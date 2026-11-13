@@ -73,9 +73,9 @@ class GalleryLibraryTest {
         val copy = File(requireNotNull(recent.uri.path))
         assertEquals(source.name, recent.name)
         assertArrayEquals(File(context.cacheDir, "no-longer-shared.png").readBytes(), copy.readBytes())
-        library.trash(recent)
-        library.restore(library.collection(Shelf.TRASH).single())
-        assertEquals(recent, library.collection(Shelf.RECENT).single())
+        library.hide(recent)
+        assertTrue(library.collection(Shelf.RECENT).isEmpty())
+        assertFalse(copy.exists())
     }
 
     /** Like external storage, this provider changes document IDs when a file moves. */
@@ -126,7 +126,7 @@ class GalleryLibraryTest {
         })
     }
 
-    @Test fun trashAndRestoreKeepImageBytesAndFavoriteAcrossDocumentIdChanges() {
+    @Test fun hideKeepsTheFileOnTheDeviceAndDeleteRemovesIt() {
         val base = RuntimeEnvironment.getApplication().cacheDir
         val album = File(base, "album").apply { mkdirs() }
         val original = File(album, "photo.jpg").apply { writeBytes(byteArrayOf(1, 2, 3)) }
@@ -134,22 +134,44 @@ class GalleryLibraryTest {
         installProvider(base, authority)
         val folder = library.rootFolder(DocumentsContract.buildTreeDocumentUri(authority, "album"))
         library.addFolder(folder)
-        assertEquals(listOf(folder, AddFolder), library.folders())
+        assertEquals(listOf(Shortcut(Shelf.RECENT), Shortcut(Shelf.FAVORITES), folder, AddFolder), library.folders())
         val photo = library.contents(folder).filterIsInstance<Photo>().single().copy(movable = true)
         library.setFavorite(photo, true)
         library.opened(photo)
-        library.trash(photo)
-        assertFalse(original.exists())
+        library.hide(photo)
+        assertArrayEquals(byteArrayOf(1, 2, 3), original.readBytes())
         assertTrue(library.contents(folder).isEmpty())
         assertTrue(library.collection(Shelf.FAVORITES).isEmpty())
-        val trashed = library.collection(Shelf.TRASH).single()
-        assertTrue(trashed.favorite)
-        library.restore(trashed)
-        assertArrayEquals(byteArrayOf(1, 2, 3), original.readBytes())
-        assertTrue(library.collection(Shelf.TRASH).isEmpty())
-        assertEquals(photo.id, library.collection(Shelf.RECENT).single().id)
-        assertEquals(photo.id, library.collection(Shelf.FAVORITES).single().id)
-        assertTrue(library.contents(folder).filterIsInstance<Photo>().single().favorite)
+        assertTrue(library.collection(Shelf.RECENT).isEmpty())
+        val other = File(album, "other.jpg").apply { writeBytes(byteArrayOf(4)) }
+        val doomed = library.contents(folder).filterIsInstance<Photo>().single().copy(movable = true)
+        library.delete(doomed)
+        assertFalse(other.exists())
+        assertTrue(original.exists())
+        assertTrue(library.contents(folder).isEmpty())
+    }
+
+    @Test fun galleryOrderAndNamesAreKeptWithoutTouchingTheDeviceFolders() {
+        val base = RuntimeEnvironment.getApplication().cacheDir
+        val authority = "test.gallery.order"
+        val albums = listOf("order-a", "order-b", "order-c").map { File(base, it).apply { mkdirs() } }
+        installProvider(base, authority)
+        val (a, b, c) = albums.map { library.rootFolder(DocumentsContract.buildTreeDocumentUri(authority, it.name)) }
+        val shortcuts = listOf(Shortcut(Shelf.RECENT), Shortcut(Shelf.FAVORITES))
+        library.addFolder(a)
+        library.addFolder(b)
+        assertEquals(shortcuts + listOf(a, b, AddFolder), library.folders())
+        library.reorderHome(listOf(b, shortcuts[1], a, shortcuts[0]))
+        library.addFolder(c)
+        assertEquals(listOf(b, shortcuts[1], a, shortcuts[0], c, AddFolder), library.folders())
+        library.renameFolder(a, "Vacances")
+        assertEquals(listOf(b, shortcuts[1], a.copy(name = "Vacances"), shortcuts[0], c, AddFolder), library.folders())
+        assertTrue(albums[0].exists())
+        library.renameFolder(a, "  ")
+        assertEquals(listOf(b, shortcuts[1], a, shortcuts[0], c, AddFolder), library.folders())
+        library.unlink(b)
+        assertEquals(listOf(shortcuts[1], a, shortcuts[0], c, AddFolder), library.folders())
+        assertTrue(albums[1].exists())
     }
 
     @Test fun copyAndMoveAcrossAlbumsPreserveBytesNamesAndFavorite() {

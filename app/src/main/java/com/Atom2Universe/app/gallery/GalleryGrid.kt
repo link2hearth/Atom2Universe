@@ -98,7 +98,11 @@ internal class GalleryGrid(context: Context, initialColumns: Int, private val sa
         clipToPadding = false
     }
 
+    /** Reçoit tous les gestes de la grille, y compris quand le doigt sort de ses bords en glissant une tuile. */
+    var fingerListener: ((MotionEvent) -> Unit)? = null
+
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        fingerListener?.invoke(event)
         if (!zoomEnabled) return super.dispatchTouchEvent(event)
         detector.onTouchEvent(event)
         if (event.actionMasked == MotionEvent.ACTION_POINTER_DOWN && !pinching) {
@@ -134,10 +138,10 @@ internal class GalleryTiles(
     private val scope: CoroutineScope, private val click: (GalleryTile) -> Unit,
     private val favorite: (Photo) -> Unit, private val selectPhoto: (Photo) -> Unit,
     private val edit: (Photo) -> Unit, private val manualOrder: (List<GalleryTile>) -> Unit,
-    private val holdFolder: (Folder) -> Boolean
+    private val setCover: (Photo) -> Unit, private val folderPicked: (Folder) -> Unit, private val homeDropped: (GalleryTile, List<GalleryTile>, Boolean) -> Unit
 ) : RecyclerView.Adapter<GalleryTiles.Holder>() {
     var showCovers = false
-    var inTrash = false
+    var canSetCover = false
     var selected: Set<String> = emptySet()
         set(value) {
             if (field == value) return
@@ -187,6 +191,7 @@ internal class GalleryTiles(
     private var appContext: Context? = null
     private var prefetch: Job? = null
     private var dragged = false
+    private var draggedHome: GalleryTile? = null
     private val drag = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
         ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT, 0
     ) {
@@ -195,7 +200,11 @@ internal class GalleryTiles(
         override fun onMove(rv: RecyclerView, from: RecyclerView.ViewHolder, to: RecyclerView.ViewHolder): Boolean {
             val a = from.bindingAdapterPosition
             val b = to.bindingAdapterPosition
-            if (tiles.getOrNull(a) !is Photo || tiles.getOrNull(b) !is Photo) return false
+            val first = tiles.getOrNull(a)
+            val second = tiles.getOrNull(b)
+            // Les photos se mélangent entre elles ; Récentes, Favoris et les galeries entre eux ; le « + » reste en dernier.
+            val home = { tile: GalleryTile? -> tile is Folder || tile is Shortcut }
+            if (!((first is Photo && second is Photo) || (home(first) && home(second)))) return false
             entries.add(b, entries.removeAt(a))
             notifyItemMoved(a, b)
             dragged = true
@@ -206,9 +215,14 @@ internal class GalleryTiles(
             if (actionState == ItemTouchHelper.ACTION_STATE_DRAG && holder is Holder) {
                 holder.grid.dragging(true)
                 holder.itemView.alpha = 0.85f
+                draggedHome = tiles.getOrNull(holder.bindingAdapterPosition)?.takeIf { it is Folder || it is Shortcut }
+                (draggedHome as? Folder)?.let(folderPicked)
             }
-            if (actionState == ItemTouchHelper.ACTION_STATE_IDLE && dragged) {
-                manualOrder(tiles)
+            if (actionState == ItemTouchHelper.ACTION_STATE_IDLE) {
+                val tile = draggedHome
+                draggedHome = null
+                if (tile != null) homeDropped(tile, entries.filter { it is Folder || it is Shortcut }, dragged)
+                else if (dragged) manualOrder(tiles)
                 dragged = false
             }
         }
@@ -320,7 +334,7 @@ internal class GalleryTiles(
 
     private fun controls(holder: Holder, photo: Photo?) = with(holder) {
         val selecting = selected.isNotEmpty()
-        star.visibility = if (photo != null && !selecting && !inTrash) View.VISIBLE else View.GONE
+        star.visibility = if (photo != null && !selecting) View.VISIBLE else View.GONE
         more.visibility = if (photo != null && !selecting) View.VISIBLE else View.GONE
         check.visibility = if (photo != null && selecting) View.VISIBLE else View.GONE
         tile.isSelected = photo != null && photo.id in selected
@@ -339,10 +353,9 @@ internal class GalleryTiles(
         more.contentDescription = context.getString(R.string.gallery_options, photo.name)
         more.setOnClickListener { anchor ->
             PopupMenu(context, anchor).apply {
-                if (!inTrash) {
-                    setForceShowIcon(true)
-                    menu.add(R.string.photo_edit).setIcon(R.drawable.ic_edit_24).setOnMenuItemClickListener { edit(photo); true }
-                }
+                setForceShowIcon(true)
+                menu.add(R.string.photo_edit).setIcon(R.drawable.ic_edit_24).setOnMenuItemClickListener { edit(photo); true }
+                if (canSetCover) menu.add(R.string.gallery_use_as_cover).setOnMenuItemClickListener { setCover(photo); true }
                 menu.add(R.string.gallery_select).setOnMenuItemClickListener { selectPhoto(photo); true }
             }.show()
         }
@@ -355,9 +368,9 @@ internal class GalleryTiles(
         check.imageTintList = ColorStateList.valueOf(if (checked) context.galleryColor(R.attr.a2uOnAccentColor) else Color.WHITE)
     }
 
-    private fun watchHold(holder: Holder, photo: Photo?) = with(holder) {
+    private fun watchHold(holder: Holder, draggable: Boolean, delay: Long) = with(holder) {
         cancelHold()
-        if (photo == null || inTrash) { tile.setOnTouchListener(null); return@with }
+        if (!draggable) { tile.setOnTouchListener(null); return@with }
         var x = 0f
         var y = 0f
         val slop = ViewConfiguration.get(context).scaledTouchSlop
@@ -374,7 +387,7 @@ internal class GalleryTiles(
                             tile.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
                             drag.startDrag(holder)
                         }
-                    }.also { tile.postDelayed(it, 1000) }
+                    }.also { tile.postDelayed(it, delay) }
                 }
                 MotionEvent.ACTION_MOVE -> if (kotlin.math.abs(event.x - x) > slop || kotlin.math.abs(event.y - y) > slop) cancelHold()
                 MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL, MotionEvent.ACTION_POINTER_DOWN -> cancelHold()
@@ -397,30 +410,44 @@ internal class GalleryTiles(
         glyph.visibility = View.VISIBLE
         glyph.setImageResource(when (item) {
             is Folder -> R.drawable.ic_folder_open
+            is Shortcut -> if (item.shelf == Shelf.RECENT) R.drawable.ic_sleep_timer else R.drawable.ic_star_filled_24
             is Photo -> R.drawable.ic_px_image
             AddFolder -> R.drawable.ic_add_24
         })
-        label.visibility = if (folder == null) View.GONE else View.VISIBLE
-        label.text = folder?.name
+        val caption = when (item) {
+            is Folder -> item.name
+            is Shortcut -> context.getString(if (item.shelf == Shelf.RECENT) R.string.gallery_recent else R.string.gallery_favorites)
+            else -> null
+        }
+        label.visibility = if (caption == null) View.GONE else View.VISIBLE
+        label.text = caption
         label.background = null
         controls(holder, photo)
-        watchHold(holder, photo)
-        tile.contentDescription = photo?.name ?: folder?.name ?: context.getString(R.string.gallery_add)
+        watchHold(holder, item !is AddFolder,
+            if (photo == null) ViewConfiguration.getLongPressTimeout().toLong() else 1000L)
+        tile.contentDescription = photo?.name ?: caption ?: context.getString(R.string.gallery_add)
         suppressClick = false
         tile.setOnClickListener {
             if (!suppressClick || selected.isNotEmpty()) click(item)
             suppressClick = false
         }
-        tile.setOnLongClickListener(if (folder == null) null else View.OnLongClickListener { holdFolder(folder) })
-        tile.isLongClickable = folder != null
+        tile.setOnLongClickListener(null)
+        tile.isLongClickable = false
         task?.cancel()
         if (photo != null || (showCovers && folder != null)) {
             val size = grid.width / grid.columns.spanCount
             task = scope.launch {
-                val source = photo ?: withContext(CoverThumbs.dispatcher) {
-                    runCatching { GalleryLibrary.get(context).contents(requireNotNull(folder), coverOnly = true).firstOrNull() as? Photo }.getOrNull()
+                val library = GalleryLibrary.get(context)
+                val chosen = photo ?: folder?.let(library::cover)
+                var bitmap = chosen?.let { GalleryImages.thumbnail(context, it, size) }
+                if (bitmap == null && folder != null) {
+                    // Pas d'image choisie (ou elle a disparu) : la première image du dossier.
+                    val first = withContext(CoverThumbs.dispatcher) {
+                        runCatching { library.contents(folder, coverOnly = true).firstOrNull() as? Photo }.getOrNull()
+                    }
+                    bitmap = first?.let { GalleryImages.thumbnail(context, it, size) }
                 }
-                source?.let { GalleryImages.thumbnail(context, it, size) }?.let {
+                bitmap?.let {
                     if (aspectKey != null) {
                         val ratio = it.width.toFloat() / it.height
                         if (kotlin.math.abs(tile.aspect - ratio) > 0.01f) {

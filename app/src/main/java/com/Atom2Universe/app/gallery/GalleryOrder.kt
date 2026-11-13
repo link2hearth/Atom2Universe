@@ -39,8 +39,8 @@ internal class GalleryOrdering(private val prefs: SharedPreferences, val key: St
                 photos.sortedWith(if (mode == GalleryOrder.AZ) comparator else comparator.reversed())
             }
             GalleryOrder.NEWEST, GalleryOrder.OLDEST -> {
-                // The repository already orders recent opens and trash entries by their event date.
-                if (shelf == Shelf.RECENT || shelf == Shelf.TRASH) {
+                // The repository already orders recent opens by their event date.
+                if (shelf == Shelf.RECENT) {
                     if (mode == GalleryOrder.NEWEST) photos else photos.asReversed()
                 } else {
                     val comparator = compareBy<Photo> { it.modified }.thenBy { it.id }
