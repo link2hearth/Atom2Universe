@@ -37,6 +37,20 @@ internal object GalleryImages {
         }
     }
 
+    /** Largeur / hauteur de l'image orientée, lue dans l'en-tête seul (sans décoder les pixels). */
+    fun aspect(context: Context, uri: Uri): Float? = try {
+        val resolver = context.contentResolver
+        val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+        resolver.openInputStream(uri)?.use { BitmapFactory.decodeStream(it, null, bounds) }
+        if (bounds.outWidth <= 0 || bounds.outHeight <= 0) null else {
+            val orientation = runCatching {
+                resolver.openInputStream(uri)?.use { ExifInterface(it).getAttributeInt(ExifInterface.TAG_ORIENTATION, 1) }
+            }.getOrNull()
+            val swapped = orientation in 5..8
+            if (swapped) bounds.outHeight.toFloat() / bounds.outWidth else bounds.outWidth.toFloat() / bounds.outHeight
+        }
+    } catch (_: Exception) { null }
+
     suspend fun screen(context: Context, uri: Uri, edge: Int): Bitmap? =
         withContext(CoverThumbs.dispatcher) { decode(context, uri, edge.coerceIn(1200, 4096), 4_500_000) }
 

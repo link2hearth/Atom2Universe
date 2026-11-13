@@ -25,7 +25,9 @@ import com.Atom2Universe.app.AppearanceStyle
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.music.MusicPreferences
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import com.Atom2Universe.app.reading.CoverThumbs
@@ -147,7 +149,43 @@ internal class GalleryTiles(
                 if (index >= 0) notifyItemChanged(index, "controls")
             }
         }
-    private val aspects = LruCache<String, Float>(6000)
+    private companion object {
+        /** Partagé entre les ouvertures de la galerie : les hauteurs sont connues avant même d'afficher une tuile. */
+        val aspects = LruCache<String, Float>(20000)
+        val boundsDispatcher = Dispatchers.IO.limitedParallelism(1)
+        fun keyOf(photo: Photo) = "${photo.uri}|${photo.modified}"
+
+        private var loaded = false
+        private fun cacheFile(context: Context) = java.io.File(context.cacheDir, "gallery_aspects.txt")
+
+        /** Relit les proportions du dernier lancement : « proportion espace clé » par ligne. */
+        @Synchronized fun loadSaved(context: Context) {
+            if (loaded) return
+            loaded = true
+            runCatching {
+                cacheFile(context).useLines { lines ->
+                    for (line in lines) {
+                        val cut = line.indexOf(' ')
+                        val ratio = if (cut > 0) line.substring(0, cut).toFloatOrNull() else null
+                        if (ratio != null && ratio > 0f) aspects.put(line.substring(cut + 1), ratio)
+                    }
+                }
+            }
+        }
+
+        @Synchronized fun save(context: Context) {
+            runCatching {
+                val file = cacheFile(context)
+                val temp = java.io.File(file.parentFile, file.name + ".tmp")
+                temp.bufferedWriter().use { out ->
+                    for ((key, ratio) in aspects.snapshot()) out.append(ratio.toString()).append(' ').append(key).append('\n')
+                }
+                if (!temp.renameTo(file)) { file.delete(); temp.renameTo(file) }
+            }
+        }
+    }
+    private var appContext: Context? = null
+    private var prefetch: Job? = null
     private var dragged = false
     private val drag = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
         ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT, 0
@@ -180,8 +218,38 @@ internal class GalleryTiles(
             (rv as GalleryGrid).dragging(false)
         }
     })
-    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) = drag.attachToRecyclerView(recyclerView)
-    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) = drag.attachToRecyclerView(null)
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        appContext = recyclerView.context.applicationContext
+        loadSaved(recyclerView.context.applicationContext)
+        drag.attachToRecyclerView(recyclerView)
+    }
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+        prefetch?.cancel()
+        drag.attachToRecyclerView(null)
+    }
+
+    /**
+     * Les tuiles démarraient carrées puis changeaient de hauteur à l'arrivée de la miniature : en remontant vers
+     * le haut, le contenu sautait. On lit donc les proportions de toutes les photos en arrière-plan, sans toucher
+     * aux tuiles affichées ; une tuile liée ensuite a tout de suite sa bonne hauteur.
+     */
+    private fun prefetchAspects(items: List<GalleryTile>) {
+        prefetch?.cancel()
+        val context = appContext ?: return
+        val missing = items.filterIsInstance<Photo>().filter { aspects.get(keyOf(it)) == null }
+        if (missing.isEmpty()) return
+        prefetch = scope.launch(boundsDispatcher) {
+            var added = 0
+            try {
+                for (photo in missing) {
+                    ensureActive()
+                    GalleryImages.aspect(context, photo.uri)?.let { aspects.put(keyOf(photo), it); added++ }
+                }
+            } finally {
+                if (added > 0) save(context)
+            }
+        }
+    }
     private val entries = mutableListOf<GalleryTile>()
     val tiles: List<GalleryTile> get() = entries
     private var byId = mutableMapOf<String, Photo>()
@@ -192,6 +260,7 @@ internal class GalleryTiles(
         entries.addAll(items)
         byId = items.filterIsInstance<Photo>().associateByTo(mutableMapOf()) { it.id }
         notifyDataSetChanged()
+        prefetchAspects(items)
     }
 
     fun updateFavorite(photo: Photo) {
@@ -322,7 +391,7 @@ internal class GalleryTiles(
         tile.background = AppearanceStyle.drawable(context, if (photo == null) R.attr.a2uProjectBackground else R.attr.a2uPanelBackground)
         tile.setPadding(0, 0, 0, 0)
         preview.scaleType = if (photo == null) ImageView.ScaleType.CENTER_CROP else ImageView.ScaleType.FIT_CENTER
-        val aspectKey = photo?.let { "${it.uri}|${it.modified}" }
+        val aspectKey = photo?.let(::keyOf)
         tile.aspect = aspectKey?.let(aspects::get) ?: 1f
         preview.setImageDrawable(null)
         glyph.visibility = View.VISIBLE
@@ -354,9 +423,11 @@ internal class GalleryTiles(
                 source?.let { GalleryImages.thumbnail(context, it, size) }?.let {
                     if (aspectKey != null) {
                         val ratio = it.width.toFloat() / it.height
-                        if (kotlin.math.abs(tile.aspect - ratio) > 0.01f) grid.aspectDiscovered()
-                        tile.aspect = ratio
-                        aspects.put(aspectKey, ratio)
+                        if (kotlin.math.abs(tile.aspect - ratio) > 0.01f) {
+                            grid.aspectDiscovered()
+                            tile.aspect = ratio
+                            aspects.put(aspectKey, ratio)
+                        }
                     }
                     preview.setImageBitmap(it)
                     glyph.visibility = View.GONE
