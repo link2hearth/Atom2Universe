@@ -342,10 +342,19 @@ class CivitaiSlideshowTest {
         assertEquals(1, sorts)
         assertEquals(.65f, view.alpha, .001f)
         assertEquals("2/20", view.findViewById<android.widget.TextView>(com.Atom2Universe.app.R.id.civitai_count).text.toString())
-        assertFalse(view.findViewById<android.view.View>(com.Atom2Universe.app.R.id.civitai_reject).isEnabled)
+        assertTrue(view.findViewById<android.view.View>(com.Atom2Universe.app.R.id.civitai_reject).isEnabled)
         assertTrue(view.findViewById<android.view.View>(com.Atom2Universe.app.R.id.civitai_accept).isEnabled)
         view.findViewById<android.view.View>(com.Atom2Universe.app.R.id.civitai_back).performClick()
         view.findViewById<android.view.View>(com.Atom2Universe.app.R.id.civitai_next).performClick()
+        assertEquals(listOf(-1, 1), steps)
+        var undone = 0
+        var added = 0
+        val undoable = CivitaiWidget(view, { steps.add(it) }, {}, {}, { added++ }, {}, { undone++ })
+        undoable.render(true, null, CivitaiSlideshow.Position(0, 0), null, false, false, 0, week, undo = true)
+        view.findViewById<android.view.View>(com.Atom2Universe.app.R.id.civitai_back).performClick()
+        view.findViewById<android.view.View>(com.Atom2Universe.app.R.id.civitai_count).performClick()
+        assertEquals(1, undone)
+        assertEquals(1, added)
         assertEquals(listOf(-1, 1), steps)
     }
 
@@ -472,8 +481,6 @@ class CivitaiSlideshowTest {
         assertArrayEquals(file.readBytes(), File(root, "2026-11-12-Civitai-1.webp").readBytes())
         assertTrue(slideshow.unvalidate(file))
         assertTrue(slideshow.save(file))
-        assertFalse(slideshow.hide(file))
-        assertTrue(slideshow.unvalidate(file))
         assertTrue(slideshow.hide(file))
         assertTrue(File(root, "2026-11-12-Civitai-1.webp").length() > 0)
         assertEquals(1, root.listFiles()!!.size)
@@ -499,7 +506,6 @@ class CivitaiSlideshowTest {
         val export = File(pictures, "Atom2Universe/2026-11-12-Civitai-1.webp")
         assertTrue(slideshow.save(cached))
         assertFalse(slideshow.hide(export))
-        assertFalse(slideshow.hide(cached))
         assertTrue(slideshow.unvalidate(cached))
         assertArrayEquals(bytes, export.readBytes())
         assertTrue(slideshow.save(cached))
@@ -509,6 +515,33 @@ class CivitaiSlideshowTest {
         assertFalse(cached.exists())
         assertArrayEquals(bytes, export.readBytes())
         assertEquals(19, slideshow.position(recent, null).total)
+        assertEquals(20, imageRequests())
+    }
+
+    @Test @Config(sdk = [28]) fun hiddenImageComesBackAtItsPlaceUntilTheNextHide() = runBlocking {
+        display(recent, 0)
+        val second = display(recent, 1)
+        val bytes = second.readBytes()
+        assertTrue(slideshow.save(second))
+        assertTrue(slideshow.hide(second))
+        assertFalse(second.exists())
+        assertEquals(19, slideshow.position(recent, null).total)
+        assertEquals(second, slideshow.undoHide())
+        assertArrayEquals(bytes, second.readBytes())
+        assertTrue(slideshow.allowed(second) && slideshow.saved(second))
+        assertEquals(CivitaiSlideshow.Position(2, 20), slideshow.position(recent, second))
+        assertNull(slideshow.undoHide())
+
+        assertTrue(slideshow.hide(second))
+        slideshow.confirmHide()
+        assertNull(slideshow.undoHide())
+        assertFalse(slideshow.saved(second))
+        val third = display(recent, 1, 1L)
+        assertTrue(slideshow.hide(third))
+        slideshow = CivitaiSlideshow(context, client)
+        assertNull(slideshow.undoHide())
+        assertTrue(third.parentFile!!.listFiles()!!.none { it.extension == "undo" })
+        assertEquals(18, slideshow.position(recent, null).total)
         assertEquals(20, imageRequests())
     }
 

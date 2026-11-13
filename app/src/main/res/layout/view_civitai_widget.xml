@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.Atom2Universe.app.crypto.DraggableCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content" android:layout_height="wrap_content"
     app:cardBackgroundColor="?attr/a2uSurfaceColor" app:cardCornerRadius="?attr/a2uCorner18"
@@ -7,30 +7,29 @@
 
     <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
         android:orientation="vertical" android:padding="4dp">
-        <LinearLayout android:id="@+id/civitai_handle" android:layout_width="240dp"
+        <LinearLayout android:layout_width="240dp"
             android:layout_height="wrap_content" android:minHeight="48dp" android:gravity="center_vertical"
-            android:paddingStart="2dp" android:paddingEnd="10dp" android:orientation="horizontal">
+            android:paddingHorizontal="2dp" android:orientation="horizontal">
             <TextView android:id="@+id/civitai_sort" android:layout_width="wrap_content"
                 android:layout_height="48dp" android:gravity="center_vertical" android:paddingHorizontal="10dp"
                 android:background="?attr/selectableItemBackground" android:textSize="16sp"
                 android:textStyle="bold" android:maxLines="1" android:textColor="?attr/a2uTextColor" />
-            <TextView android:id="@+id/civitai_count" android:layout_width="0dp" android:layout_weight="1"
-                android:layout_height="wrap_content" android:textSize="16sp" android:textStyle="bold"
-                android:gravity="end" android:maxLines="1" android:ellipsize="start"
-                android:textColor="?attr/a2uTextColor" />
+            <View android:layout_width="0dp" android:layout_height="1dp" android:layout_weight="1" />
+            <TextView android:id="@+id/civitai_count" android:layout_width="wrap_content"
+                android:layout_height="48dp" android:gravity="center_vertical" android:paddingStart="10dp"
+                android:paddingEnd="6dp" android:background="?attr/selectableItemBackground"
+                android:textSize="16sp" android:textStyle="bold" android:maxLines="1" android:ellipsize="start"
+                android:drawablePadding="4dp" app:drawableEndCompat="@drawable/ic_add"
+                app:drawableTint="?attr/a2uTextColor" android:textColor="?attr/a2uTextColor" />
         </LinearLayout>
-        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:orientation="horizontal">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:gravity="center_vertical" android:orientation="horizontal">
             <androidx.appcompat.widget.AppCompatImageButton android:id="@+id/civitai_back"
                 android:layout_width="48dp" android:layout_height="48dp" android:padding="12dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/crypto_image_previous" app:srcCompat="@drawable/ic_arrow_back"
                 app:tint="?attr/a2uTextColor" />
-            <androidx.appcompat.widget.AppCompatImageButton android:id="@+id/civitai_next"
-                android:layout_width="48dp" android:layout_height="48dp" android:padding="12dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/crypto_image_next" app:srcCompat="@drawable/ic_arrow_forward"
-                app:tint="?attr/a2uTextColor" />
+            <View android:layout_width="0dp" android:layout_height="1dp" android:layout_weight="1" />
             <androidx.appcompat.widget.AppCompatImageButton android:id="@+id/civitai_accept"
                 android:layout_width="48dp" android:layout_height="48dp" android:padding="12dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -38,14 +37,16 @@
                 app:tint="?attr/a2uTextColor" />
             <androidx.appcompat.widget.AppCompatImageButton android:id="@+id/civitai_reject"
                 android:layout_width="48dp" android:layout_height="48dp" android:padding="12dp"
+                android:layout_marginStart="24dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/clicker_civitai_hide" app:srcCompat="@drawable/ic_close"
                 app:tint="#E45858" />
-            <androidx.appcompat.widget.AppCompatImageButton android:id="@+id/civitai_more"
+            <View android:layout_width="0dp" android:layout_height="1dp" android:layout_weight="1" />
+            <androidx.appcompat.widget.AppCompatImageButton android:id="@+id/civitai_next"
                 android:layout_width="48dp" android:layout_height="48dp" android:padding="12dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/civitai_add_batch" app:srcCompat="@drawable/ic_add"
+                android:contentDescription="@string/crypto_image_next" app:srcCompat="@drawable/ic_arrow_forward"
                 app:tint="?attr/a2uTextColor" />
         </LinearLayout>
     </LinearLayout>
-</com.google.android.material.card.MaterialCardView>
+</com.Atom2Universe.app.crypto.DraggableCardView>

@@ -86,6 +86,7 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
     override val showNavigationBar: Boolean get() = MainClickerPreferences.isNavBarVisible(this)
 
     companion object {
+        private const val CIVITAI_UNDO_MS = 10_000L
         private val SLIDESHOW_STEPS = intArrayOf(0, 1, 2, 3, 4, 5, 10, 15, 30, 45, 60)
         private const val CRYPTO_WIDGET_BASE_URL = "https://api.binance.com"
         private const val BTC_ENDPOINT_USD = "/api/v3/ticker/price?symbol=BTCUSDT"
@@ -129,6 +130,7 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
     private var civitaiImageJob: Job? = null
     private var civitaiBatchJob: Job? = null
     private var civitaiActionJob: Job? = null
+    private var civitaiUndoJob: Job? = null
     private var positionJob: Job? = null
     private var initialProgress: Int? = null
     private var batchProgress: Int? = null
@@ -514,7 +516,8 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
             save = { currentCivitaiFile()?.let(::saveCivitaiPicture) },
             reject = { currentCivitaiFile()?.let(::discardCivitaiPicture) },
             add = ::addCivitaiBatch,
-            sort = ::toggleCivitaiSort)
+            sort = ::toggleCivitaiSort,
+            undo = ::undoCivitaiHide)
         lifecycleScope.launch { civitai.removeOldTrash() }
         newsToggle = findViewById(R.id.main_clicker_news_toggle)
         solitaireWidgetView = findViewById(R.id.solitaire_widget)
@@ -2121,6 +2124,7 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
         civitaiImageJob?.cancel()
         backgroundReloadJob?.cancel()
         cancelCivitaiBatch()
+        endCivitaiUndo()
         positionJob?.cancel()
         civitaiPosition = CivitaiSlideshow.Position()
         clearDisplayedBackground()
@@ -2327,12 +2331,12 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
         updateCivitaiWidget()
     }
 
-    private fun showCivitaiImage(direction: Int, notifyIfMissing: Boolean) {
+    private fun showCivitaiImage(direction: Int, notifyIfMissing: Boolean, targetId: String? = null) {
         if (!usingCivitai || !backgroundDisplayEnabled || !clickerInForeground || civitaiImageJob?.isActive == true ||
             (direction != 0 && civitaiActionJob?.isActive == true)) return
         stopBackgroundLoop()
         val source = backgroundSource
-        val currentId = displayedBackgroundUri?.lastPathSegment?.substringBeforeLast('.')
+        val currentId = targetId ?: displayedBackgroundUri?.lastPathSegment?.substringBeforeLast('.')
         imageOptionsUpdate?.invoke(null)
         civitaiImageJob = lifecycleScope.launch {
             val file = civitai.select(source, direction, currentId)
@@ -2368,7 +2372,8 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
             civitaiPosition, batchProgress ?: initialProgress, file?.let(civitai::saved) == true,
             civitaiImageJob?.isActive == true || civitaiActionJob?.isActive == true,
             civitai.transparency, backgroundSource,
-            if (batchProgress != null) backgroundSource.batchSize else backgroundSource.pageSize)
+            if (batchProgress != null) backgroundSource.batchSize else backgroundSource.pageSize,
+            civitaiUndoJob?.isActive == true)
     }
 
     private fun refreshCivitaiPosition() {
@@ -3170,7 +3175,7 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
     }
 
     private fun discardCivitaiPicture(file: java.io.File) {
-        if (civitaiActionJob?.isActive == true || civitai.saved(file) || file != currentCivitaiFile()) return
+        if (civitaiActionJob?.isActive == true || file != currentCivitaiFile()) return
         val source = backgroundSource
         stopBackgroundLoop()
         civitaiImageJob?.cancel()
@@ -3180,6 +3185,7 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
             runOnUiThread {
                 if (error == null && source == backgroundSource && file == currentCivitaiFile()) {
                     if (removed) {
+                        startCivitaiUndo()
                         clearDisplayedBackground()
                         showCivitaiImage(1, notifyIfMissing = true)
                     } else {
@@ -3187,6 +3193,43 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
                         startBackgroundLoop()
                     }
                     refreshCivitaiPosition()
+                }
+                updateCivitaiWidget()
+            }
+        }
+        updateCivitaiWidget()
+    }
+
+    private fun startCivitaiUndo() {
+        civitaiUndoJob?.cancel()
+        civitaiUndoJob = lifecycleScope.launch {
+            delay(CIVITAI_UNDO_MS)
+            civitai.confirmHide()
+        }
+        civitaiUndoJob?.invokeOnCompletion { runOnUiThread { updateCivitaiWidget() } }
+    }
+
+    private fun endCivitaiUndo() {
+        if (civitaiUndoJob?.isActive != true) return
+        civitaiUndoJob?.cancel()
+        lifecycleScope.launch { civitai.confirmHide() }
+    }
+
+    private fun undoCivitaiHide() {
+        if (civitaiUndoJob?.isActive != true || civitaiActionJob?.isActive == true) return
+        civitaiUndoJob?.cancel()
+        val source = backgroundSource
+        stopBackgroundLoop()
+        civitaiImageJob?.cancel()
+        var restored: java.io.File? = null
+        civitaiActionJob = lifecycleScope.launch { restored = civitai.undoHide() }
+        civitaiActionJob?.invokeOnCompletion { error ->
+            runOnUiThread {
+                val file = restored
+                if (error == null && file != null && source == backgroundSource) {
+                    showCivitaiImage(0, notifyIfMissing = false, targetId = file.nameWithoutExtension)
+                } else {
+                    startBackgroundLoop()
                 }
                 updateCivitaiWidget()
             }
@@ -3228,7 +3271,7 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
                 val file = java.io.File(currentUri.path ?: return)
                 val saved = civitai.saved(file)
                 btnFavorite.isEnabled = civitaiActionJob?.isActive != true
-                btnRemove.isEnabled = !saved && btnFavorite.isEnabled
+                btnRemove.isEnabled = btnFavorite.isEnabled
                 btnFavorite.setText(if (saved) R.string.civitai_unvalidate else R.string.clicker_civitai_save)
                 pathView.text = civitaiLabel(file)
                 return

@@ -423,4 +423,5 @@
     <string name="civitai_transparency">Widget transparency</string>
     <string name="civitai_transparency_value">%1$d%%</string>
     <string name="civitai_trash_error">Could not delete the image</string>
+    <string name="civitai_undo">Undo the deletion</string>
 </resources>

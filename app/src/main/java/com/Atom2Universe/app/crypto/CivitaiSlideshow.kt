@@ -155,6 +155,7 @@ internal class CivitaiSlideshow(
             }
         }
         editor.apply()
+        directory.listFiles()?.forEach { if (it.extension == "undo") it.delete() }
     }
     private data class Page(val entries: List<Entry>, val next: String)
     private class InvalidImage : IOException()
@@ -180,26 +181,74 @@ internal class CivitaiSlideshow(
 
     val weeklySort: Boolean get() = prefs.getBoolean("weekly_sort", source.weekly)
 
+    private class Hidden(val id: String, val backup: File, val places: Map<String, Int>, val seen: Set<String>)
+    private var hidden: Hidden? = null
+
+    // Called under the writer lock: the last hidden image can no longer come back.
+    private fun forgetHidden() {
+        val last = hidden ?: return
+        hidden = null
+        last.backup.delete()
+        prefs.edit {
+            remove("title_" + last.id)
+            remove("date_" + last.id)
+            remove("saved_" + last.id)
+        }
+    }
+
+    suspend fun confirmHide() = withContext(Dispatchers.IO) { mutex.withLock { forgetHidden() } }
+
+    // The file is only set aside: undoHide() brings it back until the next hide or confirmHide().
     suspend fun hide(file: File) = withContext(Dispatchers.IO) {
         mutex.withLock {
-            if (!isCacheFile(file) || saved(file) || !file.delete()) return@withLock false
+            if (!isCacheFile(file) || !file.isFile) return@withLock false
+            forgetHidden()
             val id = id(file)
+            val backup = File(directory, "$id.undo")
+            if (!file.renameTo(backup)) return@withLock false
+            val places = mutableMapOf<String, Int>()
+            val seen = mutableSetOf<String>()
             prefs.edit {
-                remove("title_$id")
-                remove("date_$id")
                 putLong("reject_$id", today().plusMonths(2).toEpochDay())
                 for (feed in ClickerBackgroundSource.feeds) {
+                    val order = ids("pool_$feed")
+                    val place = order.indexOf(id)
                     if (lastId(feed) == id) {
-                        val order = ids("pool_$feed")
                         remove("last_$feed")
-                        putString("last_image_$feed", order.getOrNull(order.indexOf(id) - 1))
+                        putString("last_image_$feed", order.getOrNull(place - 1))
                     }
-                    for (key in listOf("pool_$feed", "seen_$feed")) {
-                        putString(key, ids(key).filterNot { it == id }.joinToString(","))
+                    if (place >= 0) {
+                        places["pool_$feed"] = place
+                        putString("pool_$feed", (order - id).joinToString(","))
+                    }
+                    val history = ids("seen_$feed")
+                    if (id in history) {
+                        seen += "seen_$feed"
+                        putString("seen_$feed", (history - id).joinToString(","))
                     }
                 }
             }
+            hidden = Hidden(id, backup, places, seen)
             true
+        }
+    }
+
+    suspend fun undoHide(): File? = withContext(Dispatchers.IO) {
+        mutex.withLock {
+            val last = hidden ?: return@withLock null
+            val target = file(last.id)
+            if (!last.backup.renameTo(target)) return@withLock null
+            hidden = null
+            prefs.edit {
+                remove("reject_" + last.id)
+                for ((key, place) in last.places) {
+                    val order = ids(key).filterNot { it == last.id }.toMutableList()
+                    order.add(place.coerceAtMost(order.size), last.id)
+                    putString(key, order.joinToString(","))
+                }
+                for (key in last.seen) putString(key, (ids(key) + last.id).distinct().joinToString(","))
+            }
+            target
         }
     }
 

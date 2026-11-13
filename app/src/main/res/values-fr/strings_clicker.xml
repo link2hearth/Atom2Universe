@@ -420,4 +420,5 @@
     <string name="civitai_transparency">Transparence du widget</string>
     <string name="civitai_transparency_value">%1$d%%</string>
     <string name="civitai_trash_error">Impossible de supprimer l’image</string>
+    <string name="civitai_undo">Annuler la suppression</string>
 </resources>
