@@ -326,11 +326,7 @@ class GalleryActivity : ThemedActivity(), SystemBarsPreferenceOwner {
             return
         }
         when (item) {
-            AddFolder -> {
-                if (contentResolver.persistedUriPermissions.any { it.isReadPermission && android.provider.DocumentsContract.isTreeUri(it.uri) }) {
-                    navigate(Shelf.PICK)
-                } else pickOnDevice()
-            }
+            AddFolder -> pickOnDevice()
             is Folder -> { path.add(item); navigate(if (shelf == Shelf.PICK) Shelf.PICK else Shelf.FOLDER) }
             is Photo -> {
                 if (shelf == Shelf.FOLDER || shelf == Shelf.FAVORITES) {
