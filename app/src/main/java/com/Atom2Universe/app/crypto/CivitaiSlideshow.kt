@@ -59,7 +59,9 @@ internal class CivitaiSlideshow(
         private const val HOUR = 3_600_000L
         private const val RETRY_DELAY = 60_000L
         private const val MAX_PAGES_PER_IMAGE = 40
-        private const val MAX_IMAGE_BYTES = 4L * 1024 * 1024
+        // Originals are often 3 to 9 MB; they are shrunk while decoding, so a large download costs no extra memory.
+        private const val MAX_IMAGE_BYTES = 16L * 1024 * 1024
+        private const val MAX_FAILED_IMAGES = 20
         private const val SITE_FILES = 1000
         // Safety net only: the file count of each site is the real limit.
         private const val CACHE_BYTES = 3L * 1024 * 1024 * 1024
@@ -425,17 +427,17 @@ internal class CivitaiSlideshow(
                     if (now < (retryImagesAfter[site] ?: 0L)) continue
                     if (ClickerBackgroundSource.feeds.filter { it.site == site }.flatMap { ids("pool_$it") }
                             .distinct().count { file(it).isFile } >= SITE_FILES) return null
-                    if (attempted >= 3) return null
+                    if (attempted >= MAX_FAILED_IMAGES) return null
                     attempted++
                     try {
                         cacheImage(entry)
                     } catch (_: InvalidImage) {
-                        unavailable[entry.id] = now + HOUR
+                        skipForGood(entry.id)
                         continue
                     } catch (_: CacheFull) {
                         return null
                     } catch (_: TooLarge) {
-                        unavailable[entry.id] = now + HOUR
+                        skipForGood(entry.id)
                         continue
                     } catch (_: IOException) {
                         retryImagesAfter[site] = now + RETRY_DELAY
@@ -454,6 +456,10 @@ internal class CivitaiSlideshow(
         }
         return null
     }
+
+    // An image that cannot be fetched or read is set aside like a hidden one: it is never asked again,
+    // and it no longer stops the batch that met it.
+    private fun skipForGood(id: String) = prefs.edit { putLong("reject_$id", today().plusMonths(2).toEpochDay()) }
 
     suspend fun rejectUnreadable(file: File) = withContext(Dispatchers.IO) {
         mutex.withLock {

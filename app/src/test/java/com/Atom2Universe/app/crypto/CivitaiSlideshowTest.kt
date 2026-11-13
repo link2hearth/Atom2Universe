@@ -55,6 +55,7 @@ class CivitaiSlideshowTest {
         Bitmap.createBitmap(2, 2, Bitmap.Config.ARGB_8888).compress(Bitmap.CompressFormat.PNG, 100, it)
     }.toByteArray()
     @Volatile private var beforeRequest: ((okhttp3.HttpUrl) -> Unit)? = null
+    private val missing = Collections.synchronizedSet(mutableSetOf<String>())
     private val client = OkHttpClient.Builder().addInterceptor { chain ->
         val request = chain.request()
         val url = request.url
@@ -85,7 +86,8 @@ class CivitaiSlideshowTest {
             JSONObject().put("data", items).put("meta", JSONObject().put("current_page", page).put("last_page", 3))
                 .toString().toResponseBody("application/json".toMediaType())
         } else png.toResponseBody("image/png".toMediaType())
-        Response.Builder().request(request).protocol(Protocol.HTTP_1_1).code(200).message("OK").body(body).build()
+        val code = if (url.encodedPath in missing) 404 else 200
+        Response.Builder().request(request).protocol(Protocol.HTTP_1_1).code(code).message("OK").body(body).build()
     }.build()
     private var slideshow = CivitaiSlideshow(context, client)
     private val recent = ClickerBackgroundSource.RECENT
@@ -555,6 +557,19 @@ class CivitaiSlideshowTest {
         assertEquals(45, slideshow.position(recent, first).total)
         for (id in 2..45) assertEquals(id.toString(), display(recent, 1).nameWithoutExtension)
         assertEquals(45, imageRequests())
+    }
+
+    @Test fun unreadableImagesAreSkippedForGoodAndNeverStopABatch() = runBlocking {
+        val first = display(recent, 0)
+        for (id in 21..26) missing += "/$id.png"
+        assertEquals(20, slideshow.addBatch(recent, 20) {})
+        assertEquals(40, slideshow.position(recent, first).total)
+        assertEquals(46, imageRequests())
+        slideshow = CivitaiSlideshow(context, client)
+        prefs.edit().putLong("updated_$recent", 0).putString("head_$recent", "moved").commit()
+        assertEquals(20, slideshow.addBatch(recent, 20) {})
+        assertEquals(60, slideshow.position(recent, first).total)
+        assertEquals(66, imageRequests())
     }
 
     @Test fun fullBatchIsTwoHundredWhileTheFirstLoadStaysAtOnePage() = runBlocking {
