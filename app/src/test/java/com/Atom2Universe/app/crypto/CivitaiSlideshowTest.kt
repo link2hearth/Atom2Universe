@@ -545,6 +545,18 @@ class CivitaiSlideshowTest {
         assertEquals(20, imageRequests())
     }
 
+    @Test fun stoppedBatchKeepsItsImagesAndTheNextOneContinues() = runBlocking {
+        val first = display(recent, 0)
+        var done = 0
+        assertEquals(5, slideshow.addBatch(recent, 20, { done >= 5 }) { done = it })
+        assertEquals(25, slideshow.position(recent, first).total)
+        assertEquals(0, slideshow.addBatch(recent, 20, { true }) {})
+        assertEquals(20, slideshow.addBatch(recent, 20) {})
+        assertEquals(45, slideshow.position(recent, first).total)
+        for (id in 2..45) assertEquals(id.toString(), display(recent, 1).nameWithoutExtension)
+        assertEquals(45, imageRequests())
+    }
+
     @Test fun fullBatchIsTwoHundredWhileTheFirstLoadStaysAtOnePage() = runBlocking {
         val first = display(recent, 0)
         assertEquals(20, slideshow.position(recent, first).total)

@@ -53,7 +53,6 @@ internal class CivitaiWidget(private val card: View, navigate: (Int) -> Unit,
         }
         back.isEnabled = (label != null || undo) && !busy
         next.isEnabled = !busy
-        count.isEnabled = batch == null && !busy
         for (v in listOf(cross, back, next, accept)) v.alpha = if (v.isEnabled || v.isSelected) 1f else .45f
     }
 }

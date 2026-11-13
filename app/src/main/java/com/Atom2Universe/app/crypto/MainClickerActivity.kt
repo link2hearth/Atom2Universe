@@ -134,6 +134,7 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
     private var positionJob: Job? = null
     private var initialProgress: Int? = null
     private var batchProgress: Int? = null
+    @Volatile private var batchStopRequested = false
     private var civitaiPosition = CivitaiSlideshow.Position()
     private lateinit var civitaiWidget: CivitaiWidget
     private lateinit var widgetPlaces: FloatingWidgetPlaces
@@ -2412,13 +2413,18 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
     }
 
     private fun addCivitaiBatch() {
+        if (batchProgress != null) {
+            batchStopRequested = true
+            return
+        }
         if (!usingCivitai || !backgroundDisplayEnabled || !clickerInForeground || civitaiBatchJob?.isActive == true ||
             civitaiImageJob?.isActive == true || civitaiActionJob?.isActive == true) return
         val source = backgroundSource
+        batchStopRequested = false
         batchProgress = 0
         updateCivitaiWidget()
         civitaiBatchJob = lifecycleScope.launch {
-            val added = civitai.addBatch(source) { done ->
+            val added = civitai.addBatch(source, stop = { batchStopRequested }) { done ->
                 runOnUiThread {
                     if (backgroundSource == source && batchProgress != null) {
                         batchProgress = done
@@ -2430,7 +2436,7 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
             batchProgress = null
             refreshCivitaiPosition()
             if (currentCivitaiFile() == null && added > 0) showCivitaiImage(0, notifyIfMissing = false)
-            if (added < source.batchSize) showToast(getString(R.string.civitai_partial_batch, added, source.batchSize))
+            if (added < source.batchSize && !batchStopRequested) showToast(getString(R.string.civitai_partial_batch, added, source.batchSize))
             updateCivitaiWidget()
         }
     }

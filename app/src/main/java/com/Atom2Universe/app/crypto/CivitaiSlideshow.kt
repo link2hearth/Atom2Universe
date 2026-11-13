@@ -361,10 +361,12 @@ internal class CivitaiSlideshow(
         }
 
     // One lock per image: browsing, keeping and hiding stay possible while a long batch downloads.
-    suspend fun addBatch(feed: ClickerBackgroundSource, size: Int = feed.batchSize, progress: (Int) -> Unit): Int =
+    // stop() is read between two images: the one being fetched is finished and kept, then nothing more is requested.
+    suspend fun addBatch(feed: ClickerBackgroundSource, size: Int = feed.batchSize, stop: () -> Boolean = { false },
+                         progress: (Int) -> Unit): Int =
         withContext(Dispatchers.IO) {
             var added = 0
-            while (added < size) {
+            while (added < size && !stop()) {
                 ensureActive()
                 mutex.withLock { addOne(feed) } ?: break
                 added++

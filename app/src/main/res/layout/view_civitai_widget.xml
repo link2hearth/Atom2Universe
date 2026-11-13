@@ -17,10 +17,9 @@
             <View android:layout_width="0dp" android:layout_height="1dp" android:layout_weight="1" />
             <TextView android:id="@+id/civitai_count" android:layout_width="wrap_content"
                 android:layout_height="48dp" android:gravity="center_vertical" android:paddingStart="10dp"
-                android:paddingEnd="6dp" android:background="?attr/selectableItemBackground"
+                android:paddingEnd="10dp" android:background="?attr/selectableItemBackground"
                 android:textSize="16sp" android:textStyle="bold" android:maxLines="1" android:ellipsize="start"
-                android:drawablePadding="4dp" app:drawableEndCompat="@drawable/ic_add"
-                app:drawableTint="?attr/a2uTextColor" android:textColor="?attr/a2uTextColor" />
+                android:textColor="?attr/a2uTextColor" />
         </LinearLayout>
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
             android:gravity="center_vertical" android:orientation="horizontal">
