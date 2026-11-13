@@ -145,6 +145,7 @@ internal class GalleryTiles(
     /** Sorting gallery: the star and the options give way to a check and a cross. */
     var temp: GalleryTemp? = null
     var toggleMark: (Photo, TempMark) -> Unit = { _, _ -> }
+    fun updateAllMarks() = notifyItemRangeChanged(0, itemCount, "controls")
     fun updateMarks(id: String) {
         val index = tiles.indexOfFirst { it is Photo && it.id == id }
         if (index >= 0) notifyItemChanged(index, "controls")

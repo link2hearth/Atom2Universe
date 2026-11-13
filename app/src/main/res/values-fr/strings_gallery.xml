@@ -22,6 +22,7 @@
     <string name="gallery_no_folders">Aucun dossier ici</string>
     <string name="gallery_title">Galeries</string>
     <string name="gallery_temp_title">Galerie temporaire</string>
+    <string name="gallery_all">Tout</string>
     <string name="gallery_validate">Valider</string>
     <string name="gallery_discard">Abandonner</string>
     <string name="gallery_pending">Appliquer tes check et tes croix ?</string>

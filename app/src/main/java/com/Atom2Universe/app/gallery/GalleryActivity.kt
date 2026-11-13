@@ -262,6 +262,22 @@ class GalleryActivity : ThemedActivity(), SystemBarsPreferenceOwner {
         }
         multi(TempMark.CHECK, R.drawable.ic_check, R.string.gallery_multi_check, android.graphics.Color.rgb(46, 184, 108))
         multi(TempMark.CROSS, R.drawable.ic_close, R.string.gallery_multi_cross, android.graphics.Color.rgb(228, 88, 88))
+        val mark = temp.multi ?: return
+        // Une case « Tout » apparaît à côté du bouton choisi.
+        toolbar.addView(TextView(this).apply {
+            setText(R.string.gallery_all)
+            textSize = if (tablet()) 18f else 16f
+            setTypeface(typeface, android.graphics.Typeface.BOLD)
+            setTextColor(accent)
+            gravity = Gravity.CENTER
+            setPadding(dp(12), 0, dp(12), 0)
+            background = AppearanceStyle.drawable(context, androidx.appcompat.R.attr.selectableItemBackground)
+            isFocusable = true
+            setOnClickListener {
+                temp.markAll(tiles.tiles.filterIsInstance<Photo>().map { it.id }, mark)
+                tiles.updateAllMarks()
+            }
+        }, LinearLayout.LayoutParams(-2, dp(48)))
     }
 
     private fun finishSorting(apply: Boolean) {

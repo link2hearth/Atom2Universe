@@ -30,6 +30,17 @@ internal class GalleryTemp : ViewModel() {
         }
     }
 
+    /** « Tout » : pose la marque sur toutes les images ; si elles l'ont déjà toutes, la retire de toutes. */
+    fun markAll(ids: Collection<String>, mark: TempMark) {
+        when (mark) {
+            TempMark.CHECK -> {
+                val free = ids.filter { it !in locked }
+                checked = if (free.all { it in checked }) checked - free.toSet() else checked + free
+            }
+            TempMark.CROSS -> crossed = if (ids.all { it in crossed }) crossed - ids.toSet() else crossed + ids
+        }
+    }
+
     val toSave: Set<String> get() = checked - locked
     val changed: Boolean get() = toSave.isNotEmpty() || crossed.isNotEmpty()
 }

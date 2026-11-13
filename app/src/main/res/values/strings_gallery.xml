@@ -22,6 +22,7 @@
     <string name="gallery_no_folders">No folders here</string>
     <string name="gallery_title">Galleries</string>
     <string name="gallery_temp_title">Sorting</string>
+    <string name="gallery_all">All</string>
     <string name="gallery_validate">Apply</string>
     <string name="gallery_discard">Discard</string>
     <string name="gallery_pending">Apply your checks and crosses?</string>
