@@ -153,7 +153,8 @@ class LinkBoardView @JvmOverloads constructor(
         val bmp = baked?.takeIf { it.width == width && it.height == height }
             ?: Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888).also { baked?.recycle(); baked = it }
         val c = Canvas(bmp)
-        painter.backdrop(c, width.toFloat(), height.toFloat(), 17 + g.floor, cell, g.isBoss)
+        // Pas de fond propre : la grille se pose sur le fond du thème de l'appli.
+        bmp.eraseColor(android.graphics.Color.TRANSPARENT)
         for (y in 0 until g.height) for (x in 0 until g.width) painter.cellFrame(c, ox + x * cell, oy + y * cell, cell)
         bakedFor = key
     }

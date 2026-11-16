@@ -1,5 +1,7 @@
 package com.Atom2Universe.app.games.draughts
 
+import com.Atom2Universe.app.util.Landscape
+import android.content.res.Configuration
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
@@ -61,6 +63,7 @@ class DraughtsActivity : ThemedActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_draughts)
+        Landscape.bindSidePanel(this)
 
         enableImmersiveMode()
 
@@ -78,6 +81,11 @@ class DraughtsActivity : ThemedActivity(),
         setupBackButton()
 
         loadSavedGame()
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        Landscape.swapLayout(this, R.layout.activity_draughts)
     }
 
     private fun setupBackButton() {

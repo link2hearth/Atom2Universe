@@ -1,5 +1,7 @@
 package com.Atom2Universe.app.games.sudoku
 
+import com.Atom2Universe.app.util.Landscape
+import android.content.res.Configuration
 import android.content.Context
 import com.Atom2Universe.app.crypto.clicker.GameStatsRepository
 import android.os.Bundle
@@ -83,10 +85,16 @@ class SudokuActivity : ThemedActivity(), SudokuGridView.OnCellSelectedListener {
         super.onCreate(savedInstanceState)
         enableImmersiveMode()
         setContentView(R.layout.activity_sudoku)
+        Landscape.bindSidePanel(this)
 
         initViews()
         setupListeners()
         loadSavedGame()
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        Landscape.swapLayout(this, R.layout.activity_sudoku)
     }
 
     private fun initViews() {

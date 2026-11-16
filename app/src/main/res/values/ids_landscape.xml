@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- La bulle des écrans couchés (voir util/SidePanel). -->
+    <item name="side_panel" type="id" />
+    <!-- Sur la vue de contenu : l'orientation de la mise en page posée (voir util/Landscape). -->
+    <item name="landscape_arranged" type="id" />
+</resources>

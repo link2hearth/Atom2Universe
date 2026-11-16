@@ -1,6 +1,7 @@
 package com.Atom2Universe.app.games.kit
 
 import android.content.res.ColorStateList
+import android.content.res.Configuration
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
@@ -23,8 +24,13 @@ import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
+import com.Atom2Universe.app.util.Landscape
+import com.Atom2Universe.app.util.SidePanel
 import com.Atom2Universe.app.util.showGameRules
 import com.Atom2Universe.app.util.enableImmersiveMode
+import com.google.android.flexbox.FlexWrap
+import com.google.android.flexbox.FlexboxLayout
+import com.google.android.flexbox.JustifyContent
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -529,24 +535,22 @@ abstract class PuzzleActivity<S : Any> : ThemedActivity() {
 
     // ── Écran ───────────────────────────────────────────────────────────────────────────────
 
-    private fun buildScreen(): View {
-        val root = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            background = AppearanceStyle.screen(this@PuzzleActivity) ?: GradientDrawable().apply {
-                setColor(palette.background)
-            }
-            setTag(R.id.app_effects_scene, true)
-        }
+    // Les vues de l'écran, créées une fois : la rotation ne fait que les redisposer.
+    private lateinit var topBar: LinearLayout
+    private lateinit var boardFrame: FrameLayout
+    private var controlsView: View? = null
+    private lateinit var actionButtons: List<MaterialButton>
+    private var arrangedLandscape: Boolean? = null
 
+    private fun buildScreen(): View {
         // Barre de titre : retour, nom du jeu, règles.
-        val top = LinearLayout(this).apply {
+        topBar = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
-            setPadding((8 * dp).toInt(), (6 * dp).toInt(), (8 * dp).toInt(), (2 * dp).toInt())
         }
-        top.addView(iconButton(R.drawable.ic_app_back, R.string.back, palette.text) { finish() },
+        topBar.addView(iconButton(R.drawable.ic_app_back, R.string.back, palette.text) { finish() },
             LinearLayout.LayoutParams((44 * dp).toInt(), (44 * dp).toInt()))
-        top.addView(TextView(this).apply {
+        topBar.addView(TextView(this).apply {
             setText(titleRes)
             textSize = 20f
             typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
@@ -554,46 +558,30 @@ abstract class PuzzleActivity<S : Any> : ThemedActivity() {
             setPadding((8 * dp).toInt(), 0, 0, 0)
             maxLines = 1
         }, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
-        top.addView(iconButton(R.drawable.ic_info, R.string.kit_rules, palette.accent) { showRules() },
+        topBar.addView(iconButton(R.drawable.ic_info, R.string.kit_rules, palette.accent) { showRules() },
             LinearLayout.LayoutParams((44 * dp).toInt(), (44 * dp).toInt()))
-        root.addView(top)
 
         // Préréglages.
         if (presets.size > 1) {
-            val chips = LinearLayout(this).apply {
-                orientation = LinearLayout.HORIZONTAL
-                setPadding((12 * dp).toInt(), (2 * dp).toInt(), (12 * dp).toInt(), (2 * dp).toInt())
-            }
             presets.forEachIndexed { index, p ->
-                val chip = TextView(this).apply {
+                presetChips.add(TextView(this).apply {
                     text = getString(p.labelRes, *p.args)
                     textSize = 13f
                     gravity = Gravity.CENTER
                     minWidth = (56 * dp).toInt()
                     setPadding((14 * dp).toInt(), (7 * dp).toInt(), (14 * dp).toInt(), (7 * dp).toInt())
                     setOnClickListener { if (generation?.isActive != true) newGame(index) }
-                }
-                presetChips.add(chip)
-                chips.addView(chip, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT).apply { marginEnd = (6 * dp).toInt() })
+                })
             }
-            root.addView(HorizontalScrollView(this).apply {
-                isHorizontalScrollBarEnabled = false
-                addView(chips)
-            })
         }
 
         statusView = TextView(this).apply {
             gravity = Gravity.CENTER
-            textSize = 14f
             setTextColor(palette.secondary)
-            setPadding(0, (6 * dp).toInt(), 0, (2 * dp).toInt())
         }
-        root.addView(statusView)
 
         // Plateau, avec la roue de génération par-dessus.
-        val boardFrame = FrameLayout(this)
-        board.setPadding((12 * dp).toInt(), (8 * dp).toInt(), (12 * dp).toInt(), (8 * dp).toInt())
+        boardFrame = FrameLayout(this)
         boardFrame.addView(board, FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.MATCH_PARENT))
         progress = ProgressBar(this).apply {
@@ -602,21 +590,9 @@ abstract class PuzzleActivity<S : Any> : ThemedActivity() {
             visibility = View.GONE
         }
         boardFrame.addView(progress, FrameLayout.LayoutParams((48 * dp).toInt(), (48 * dp).toInt(), Gravity.CENTER))
-        root.addView(boardFrame, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f))
 
-        createControls()?.let { controls ->
-            root.addView(controls, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT).apply {
-                setMargins((12 * dp).toInt(), (4 * dp).toInt(), (12 * dp).toInt(), 0)
-            })
-        }
+        controlsView = createControls()
 
-        // Actions.
-        val actions = LinearLayout(this).apply {
-            orientation = LinearLayout.HORIZONTAL
-            gravity = Gravity.CENTER
-            setPadding((10 * dp).toInt(), (8 * dp).toInt(), (10 * dp).toInt(), (10 * dp).toInt())
-        }
         undoButton = actionButton(R.string.kit_undo, R.drawable.ic_px_undo, primary = false) { stopDemo(); undo() }
         redoButton = actionButton(R.string.kit_redo, R.drawable.ic_px_redo, primary = false) { stopDemo(); redo() }
         restartButton = actionButton(R.string.kit_restart, R.drawable.ic_restart, primary = false) { stopDemo(); restart() }
@@ -628,7 +604,76 @@ abstract class PuzzleActivity<S : Any> : ThemedActivity() {
                 text = getString(R.string.kit_hint, NeutrinoRewards.HINT_COST)
             }
         }
-        for (b in listOfNotNull(undoButton, redoButton, restartButton, hintButton, newButton)) {
+        actionButtons = listOfNotNull(undoButton, redoButton, restartButton, hintButton, newButton)
+        return arrange()
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        if (::boardFrame.isInitialized && arrangedLandscape != Landscape.isLandscape(this)) setContentView(arrange())
+    }
+
+    /**
+     * Dispose les vues selon l'orientation. Debout : titre, pastilles, chrono, plateau, commandes,
+     * actions, les uns sous les autres. Couché : le plateau prend toute la hauteur à droite ; à
+     * gauche, une colonne porte le titre, les pastilles et un grand chrono, puis en bas les
+     * commandes du jeu et les actions, à portée de pouce.
+     */
+    private fun arrange(): View {
+        val landscape = Landscape.isLandscape(this)
+        arrangedLandscape = landscape
+        landscapeLayout = landscape
+        listOfNotNull(topBar, statusView, boardFrame, controlsView).forEach { Landscape.detach(it) }
+        presetChips.forEach { Landscape.detach(it) }
+        actionButtons.forEach { Landscape.detach(it) }
+        val screen = AppearanceStyle.screen(this@PuzzleActivity) ?: GradientDrawable().apply {
+            setColor(palette.background)
+        }
+        return if (landscape) arrangeLandscape(screen) else arrangePortrait(screen)
+    }
+
+    /** Debout : titre, pastilles, chrono, plateau, commandes, actions, les uns sous les autres. */
+    private fun arrangePortrait(screen: android.graphics.drawable.Drawable): View {
+        val root = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            background = screen
+            setTag(R.id.app_effects_scene, true)
+        }
+        topBar.setPadding((8 * dp).toInt(), (6 * dp).toInt(), (8 * dp).toInt(), (2 * dp).toInt())
+        root.addView(topBar)
+        if (presetChips.isNotEmpty()) {
+            val chips = LinearLayout(this).apply {
+                orientation = LinearLayout.HORIZONTAL
+                setPadding((12 * dp).toInt(), (2 * dp).toInt(), (12 * dp).toInt(), (2 * dp).toInt())
+            }
+            presetChips.forEach { chip ->
+                chips.addView(chip, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT).apply { marginEnd = (6 * dp).toInt() })
+            }
+            root.addView(HorizontalScrollView(this).apply {
+                isHorizontalScrollBarEnabled = false
+                addView(chips)
+            })
+        }
+        statusView.textSize = 14f
+        statusView.setPadding(0, (6 * dp).toInt(), 0, (2 * dp).toInt())
+        root.addView(statusView)
+        board.setPadding((12 * dp).toInt(), (8 * dp).toInt(), (12 * dp).toInt(), (8 * dp).toInt())
+        root.addView(boardFrame, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f))
+        onArranged(false)
+        controlsView?.let { controls ->
+            root.addView(controls, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+                setMargins((12 * dp).toInt(), (4 * dp).toInt(), (12 * dp).toInt(), 0)
+            })
+        }
+        val actions = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER
+            setPadding((10 * dp).toInt(), (8 * dp).toInt(), (10 * dp).toInt(), (10 * dp).toInt())
+        }
+        for (b in actionButtons) {
+            styleAction(b, column = false)
             actions.addView(b, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f).apply {
                 marginStart = (3 * dp).toInt()
                 marginEnd = (3 * dp).toInt()
@@ -637,6 +682,80 @@ abstract class PuzzleActivity<S : Any> : ThemedActivity() {
         root.addView(actions)
         return root
     }
+
+    /**
+     * Couché : le plateau prend toute la hauteur ; tout le reste tient dans une bulle en colonne
+     * (titre, pastilles, grand chrono, commandes du jeu, actions), qu'on glisse à gauche ou à droite.
+     */
+    private fun arrangeLandscape(screen: android.graphics.drawable.Drawable): View {
+        val panel = sidePanel ?: SidePanel(this).also {
+            sidePanel = it
+        }
+        val col = panel.content
+        col.removeAllViews()
+        topBar.setPadding((8 * dp).toInt(), (6 * dp).toInt(), (8 * dp).toInt(), 0)
+        if (presetChips.isNotEmpty()) {
+            val flow = FlexboxLayout(this).apply {
+                flexWrap = FlexWrap.WRAP
+                justifyContent = JustifyContent.CENTER
+                setPadding((4 * dp).toInt(), 0, (4 * dp).toInt(), 0)
+            }
+            presetChips.forEach { chip ->
+                flow.addView(chip, FlexboxLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+                    marginStart = (3 * dp).toInt(); marginEnd = (3 * dp).toInt(); bottomMargin = (6 * dp).toInt()
+                })
+            }
+            col.addView(flow)
+        }
+        statusView.textSize = 28f
+        statusView.setPadding(0, (8 * dp).toInt(), 0, (12 * dp).toInt())
+        col.addView(statusView)
+        onArranged(true)
+        controlsView?.let { controls ->
+            col.addView(controls, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+                setMargins((4 * dp).toInt(), 0, (4 * dp).toInt(), (10 * dp).toInt())
+            })
+        }
+        for (b in actionButtons) {
+            styleAction(b, column = true)
+            col.addView(b, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+                setMargins((4 * dp).toInt(), (3 * dp).toInt(), (4 * dp).toInt(), (3 * dp).toInt())
+            })
+        }
+        board.setPadding((16 * dp).toInt(), (12 * dp).toInt(), (16 * dp).toInt(), (12 * dp).toInt())
+        return panel.compose(boardFrame, screen, topBar)
+    }
+
+    private var sidePanel: SidePanel? = null
+
+    /** Rangés en ligne, icône au-dessus du mot ; en colonne, icône devant le mot, aligné à gauche. */
+    private fun styleAction(b: MaterialButton, column: Boolean) {
+        if (column) {
+            b.iconGravity = MaterialButton.ICON_GRAVITY_START
+            b.iconPadding = (12 * dp).toInt()
+            b.gravity = Gravity.START or Gravity.CENTER_VERTICAL
+            b.textSize = 15f
+            b.minHeight = (48 * dp).toInt()
+            b.setPadding((16 * dp).toInt(), (6 * dp).toInt(), (12 * dp).toInt(), (6 * dp).toInt())
+        } else {
+            b.iconGravity = MaterialButton.ICON_GRAVITY_TOP
+            b.iconPadding = (2 * dp).toInt()
+            b.gravity = Gravity.CENTER
+            b.textSize = 12f
+            b.minHeight = (52 * dp).toInt()
+            b.setPadding((4 * dp).toInt(), (6 * dp).toInt(), (4 * dp).toInt(), (6 * dp).toInt())
+        }
+    }
+
+    /** Vrai quand l'écran est disposé couché (bulle de côté). */
+    protected var landscapeLayout = false
+        private set
+
+    /** Appelé à chaque disposition, avant que les commandes du jeu soient posées. */
+    protected open fun onArranged(landscape: Boolean) {}
 
     private fun showRules() {
         showGameRules(titleRes, rulesRes)

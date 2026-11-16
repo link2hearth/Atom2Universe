@@ -1,5 +1,7 @@
 package com.Atom2Universe.app.games.othello
 
+import com.Atom2Universe.app.util.Landscape
+import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -39,6 +41,7 @@ class OthelloActivity : ThemedActivity(), OthelloBoardView.OnCellClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_othello)
+        Landscape.bindSidePanel(this)
         enableImmersiveMode()
 
         boardView = findViewById(R.id.othello_board)
@@ -56,6 +59,11 @@ class OthelloActivity : ThemedActivity(), OthelloBoardView.OnCellClickListener {
         newGameButton.setOnClickListener { startNewGame() }
 
         loadSave()
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        Landscape.swapLayout(this, R.layout.activity_othello)
     }
 
     private fun toggleMode() {

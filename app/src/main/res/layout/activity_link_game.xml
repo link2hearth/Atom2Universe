@@ -4,14 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/a2uBackgroundColor">
+    android:background="?attr/a2uScreenBackground">
+    <tag android:id="@id/app_effects_scene" android:value="true" />
 
     <!-- Bannière -->
     <LinearLayout
         android:id="@+id/link_header"
         android:layout_width="0dp"
         android:layout_height="52dp"
-        android:background="?attr/a2uSurfaceColor"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingHorizontal="4dp"
@@ -113,7 +113,6 @@
         android:id="@+id/link_hand_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="?attr/a2uSurfaceColor"
         android:paddingHorizontal="16dp"
         android:paddingTop="12dp"
         android:paddingBottom="18dp"

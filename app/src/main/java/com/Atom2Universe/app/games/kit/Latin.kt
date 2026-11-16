@@ -6,10 +6,12 @@ import android.graphics.RectF
 import android.graphics.drawable.GradientDrawable
 import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.Atom2Universe.app.AppearanceStyle
 import com.Atom2Universe.app.R
+import com.Atom2Universe.app.util.Landscape
 import kotlin.random.Random
 
 /**
@@ -268,7 +270,9 @@ abstract class LatinView<S : LatinHolder<S>>(context: Context) : PuzzleView<S>(c
  */
 abstract class LatinPuzzleActivity<S : LatinHolder<S>> : PuzzleActivity<S>() {
     private var notesMode = false
-    private var padRow: LinearLayout? = null
+    private var pad: LinearLayout? = null
+    private val keys = ArrayList<TextView>()
+    private var keysFor = 0
     private var pencil: TextView? = null
     private val latinView get() = board as LatinView<S>
 
@@ -277,28 +281,65 @@ abstract class LatinPuzzleActivity<S : LatinHolder<S>> : PuzzleActivity<S>() {
     override fun hint(state: S): S? = state.board.hint()?.let { state.withBoard(it) }
 
     override fun createControls(): View = LinearLayout(this).apply {
-        orientation = LinearLayout.HORIZONTAL
-        gravity = Gravity.CENTER
-        padRow = this
+        orientation = LinearLayout.VERTICAL
+        pad = this
     }
 
     override fun onStateShown(state: S) {
-        val row = padRow ?: return
         val n = state.board.n
-        if (row.childCount != n + 2) {
-            row.removeAllViews()
-            for (d in 1..n) row.addView(key(d.toString()) { press(d) }, weight())
-            row.addView(key(getString(R.string.kit_erase)) {
+        if (keysFor != n) {
+            keysFor = n
+            keys.clear()
+            for (d in 1..n) keys.add(key(d.toString()) { press(d) })
+            keys.add(key(getString(R.string.kit_erase)) {
                 latinView.edit { b -> b.clear(latinView.selected) }
-            }, weight())
+            })
             pencil = key(getString(R.string.kit_pencil)) {
                 notesMode = !notesMode
                 stylePencil()
-            }
-            row.addView(pencil, weight())
+            }.also { keys.add(it) }
             stylePencil()
+            layoutPad()
         }
         if (latinView.selected >= n * n) latinView.selected = -1
+    }
+
+    override fun onArranged(landscape: Boolean) = layoutPad()
+
+    /**
+     * Debout, une seule rangée sous la grille. Couché, la colonne a de la hauteur : un vrai pavé,
+     * grandes touches en grille (3 × 3 pour 9 chiffres), la gomme et le crayon sur la dernière ligne.
+     */
+    private fun layoutPad() {
+        val box = pad ?: return
+        if (keys.isEmpty()) return
+        keys.forEach { Landscape.detach(it) }
+        box.removeAllViews()
+        val n = keys.size - 2
+        val landscape = landscapeLayout
+        val height = ((if (landscape) 62 else 46) * dp).toInt()
+        keys.forEach { it.textSize = if (landscape) 22f else 18f }
+        fun row() = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }.also {
+            box.addView(it, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT).apply { bottomMargin = (if (landscape) 4 * dp else 0f).toInt() })
+        }
+        if (!landscape) {
+            val r = row()
+            keys.forEach { r.addView(it, weight(height)) }
+            return
+        }
+        val cols = when (n) { in 0..5 -> n; 6, 9 -> 3; else -> 4 }
+        var r: LinearLayout? = null
+        for (i in 0 until n) {
+            if (i % cols == 0) r = row()
+            r!!.addView(keys[i], weight(height))
+        }
+        // Une rangée incomplète garde des touches de la même largeur.
+        val rest = (cols - n % cols) % cols
+        repeat(rest) { r!!.addView(View(this), weight(height)) }
+        val last = row()
+        last.addView(keys[n], weight(height))
+        last.addView(keys[n + 1], weight(height))
     }
 
     private fun press(d: Int) {
@@ -312,7 +353,7 @@ abstract class LatinPuzzleActivity<S : LatinHolder<S>> : PuzzleActivity<S>() {
         }
     }
 
-    private fun weight() = LinearLayout.LayoutParams(0, (46 * dp).toInt(), 1f).apply {
+    private fun weight(height: Int) = LinearLayout.LayoutParams(0, height, 1f).apply {
         marginStart = (2 * dp).toInt(); marginEnd = (2 * dp).toInt()
     }
 

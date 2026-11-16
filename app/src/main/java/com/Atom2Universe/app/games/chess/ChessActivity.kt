@@ -69,6 +69,7 @@ class ChessActivity : ThemedActivity(),
         super.onCreate(savedInstanceState)
         enableImmersiveMode()
         setContentView(R.layout.activity_chess)
+        com.Atom2Universe.app.util.Landscape.bindSidePanel(this)
 
         initViews()
         setupListeners()
@@ -544,6 +545,7 @@ class ChessActivity : ThemedActivity(),
 
     override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
         super.onConfigurationChanged(newConfig)
+        com.Atom2Universe.app.util.Landscape.swapLayout(this, R.layout.activity_chess)
         // Rafraîchir l'affichage après le changement d'orientation
         chessView.refresh()
         updateCapturedPieces()

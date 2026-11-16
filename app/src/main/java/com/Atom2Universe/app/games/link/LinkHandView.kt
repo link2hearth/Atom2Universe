@@ -23,11 +23,12 @@ class LinkHandView @JvmOverloads constructor(
         set(value) { if (field != value) { field = value; invalidate() } }
 
     private val density = resources.displayMetrics.density
-    /** Côté d'une case de pièce, et écarts. */
-    private val unit = 13f * density
-    private val gap = 1.5f * density
-    private val spacing = 14f * density
-    private val rowGap = 10f * density
+    /** Côté d'une case de pièce, et écarts : plus grands couché, où la main a sa bulle. */
+    private val landscape get() = com.Atom2Universe.app.util.Landscape.isLandscape(context)
+    private val unit get() = (if (landscape) 22f else 13f) * density
+    private val gap get() = (if (landscape) 2.5f else 1.5f) * density
+    private val spacing get() = (if (landscape) 20f else 14f) * density
+    private val rowGap get() = (if (landscape) 16f else 10f) * density
 
     private val fill = Paint(Paint.ANTI_ALIAS_FLAG)
     private val painter = QuantumPainter()

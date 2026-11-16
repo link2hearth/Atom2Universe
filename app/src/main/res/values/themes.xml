@@ -203,6 +203,28 @@
         <item name="cornerRadius">?attr/a2uCorner8</item>
     </style>
 
+    <!-- Sudoku couché : le pavé 3 × 3 et les actions de la bulle -->
+    <style name="SudokuLandPadRow">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+    <style name="SudokuLandPadButton" parent="SudokuPadButton">
+        <item name="android:layout_height">60dp</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+    <style name="SudokuLandActionButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_margin">2dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:textColor">@color/startup_text_primary</item>
+        <item name="strokeColor">?attr/a2uOutlineColor</item>
+        <item name="backgroundTint">@color/sudoku_pad_button_background</item>
+    </style>
+
     <!-- Styles Shop (clicker) -->
     <style name="ShopStatRow">
         <item name="android:layout_width">match_parent</item>

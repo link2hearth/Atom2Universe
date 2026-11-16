@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Intrication couchée : la bande du titre en haut, la grille sur toute la hauteur, et la bulle
+     (étage, points, annuler / recommencer, la main de pièces) qu'on déplace à volonté. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/a2uScreenBackground"
+    android:orientation="vertical">
+    <tag android:id="@id/app_effects_scene" android:value="true" />
+
+    <LinearLayout
+        android:id="@+id/link_header"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="4dp">
+
+        <ImageButton
+            android:id="@+id/link_back_button"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/back"
+            android:padding="10dp"
+            android:src="@drawable/ic_arrow_back_24"
+            app:tint="?attr/a2uSecondaryTextColor" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_weight="1"
+            android:fontFamily="sans-serif-light"
+            android:letterSpacing="0.06"
+            android:text="@string/link_title"
+            android:textColor="?attr/a2uMusicAccent"
+            android:textSize="20sp" />
+
+        <ImageButton
+            android:id="@+id/link_info_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/kit_rules"
+            android:padding="10dp"
+            android:src="@drawable/ic_info"
+            android:tint="?attr/a2uMusicAccent" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <com.Atom2Universe.app.games.link.LinkBoardView
+            android:id="@+id/link_board_view"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="16dp" />
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/side_panel"
+                android:layout_width="320dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/link_level"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="#4FC3F7"
+                    android:textSize="22sp" />
+
+                <TextView
+                    android:id="@+id/link_score"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="?attr/a2uSecondaryTextColor"
+                    android:textSize="16sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageButton
+                        android:id="@+id/link_btn_undo"
+                        android:layout_width="52dp"
+                        android:layout_height="52dp"
+                        android:layout_marginHorizontal="10dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/link_btn_undo"
+                        android:padding="12dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_undo"
+                        app:tint="?attr/a2uSecondaryTextColor" />
+
+                    <ImageButton
+                        android:id="@+id/link_btn_restart"
+                        android:layout_width="52dp"
+                        android:layout_height="52dp"
+                        android:layout_marginHorizontal="10dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/link_btn_restart"
+                        android:padding="12dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_restart"
+                        app:tint="?attr/a2uSecondaryTextColor" />
+                </LinearLayout>
+
+                <!-- La main ; la victoire s'affiche par-dessus. -->
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp">
+
+                    <com.Atom2Universe.app.games.link.LinkHandView
+                        android:id="@+id/link_hand_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingHorizontal="8dp"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp" />
+
+                    <LinearLayout
+                        android:id="@+id/link_victory_overlay"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingHorizontal="8dp"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="4dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/link_victory_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-light"
+                            android:gravity="center"
+                            android:text="@string/link_victory_title"
+                            android:textColor="?attr/a2uTextColor"
+                            android:textSize="26sp" />
+
+                        <TextView
+                            android:id="@+id/link_victory_moves"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:gravity="center"
+                            android:textColor="?attr/a2uSecondaryTextColor"
+                            android:textSize="14sp" />
+
+                        <GridLayout
+                            android:id="@+id/link_run_breakdown"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:columnCount="5"
+                            android:visibility="gone" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/link_victory_new_btn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="14dp"
+                            android:backgroundTint="?attr/a2uMusicAccent"
+                            android:text="@string/link_next_floor"
+                            android:textColor="?attr/a2uOnAccentColor" />
+                    </LinearLayout>
+                </FrameLayout>
+            </LinearLayout>
+        </FrameLayout>
+    </LinearLayout>
+</LinearLayout>

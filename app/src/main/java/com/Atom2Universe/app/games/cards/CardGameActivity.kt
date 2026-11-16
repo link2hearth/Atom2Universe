@@ -1,6 +1,7 @@
 package com.Atom2Universe.app.games.cards
 
 import android.content.res.ColorStateList
+import android.content.res.Configuration
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
@@ -21,6 +22,8 @@ import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.games.kit.KitPalette
 import com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder
+import com.Atom2Universe.app.util.Landscape
+import com.Atom2Universe.app.util.SidePanel
 import com.Atom2Universe.app.util.showGameRules
 import com.Atom2Universe.app.util.enableImmersiveMode
 import com.google.android.material.button.MaterialButton
@@ -361,12 +364,77 @@ abstract class CardGameActivity : ThemedActivity() {
             .show()
     }
 
-    private fun buttonParams() = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f).apply {
+    private fun buttonParams() = if (arrangedLandscape == true)
+        // Couché, les boutons s'empilent dans la bulle.
+        LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+            topMargin = (3 * dp).toInt(); bottomMargin = (3 * dp).toInt()
+        }
+    else LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f).apply {
         marginStart = (3 * dp).toInt()
         marginEnd = (3 * dp).toInt()
     }
 
+    // Les vues de l'écran, créées une fois : la rotation ne fait que les redisposer.
+    private lateinit var backButton: View
+    private lateinit var titleView: TextView
+    private lateinit var rulesButton: View
+    private var arrangedLandscape: Boolean? = null
+    private var sidePanel: SidePanel? = null
+
+    private fun screenBackground() = AppearanceStyle.screen(this) ?: GradientDrawable().apply { setColor(palette.background) }
+
     private fun buildScreen(): View {
+        backButton = iconButton(R.drawable.ic_app_back, R.string.back, palette.text) { finish() }
+        titleView = TextView(this).apply {
+            setText(titleRes)
+            textSize = 20f
+            typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
+            setTextColor(palette.text)
+            setPadding((8 * dp).toInt(), 0, (8 * dp).toInt(), 0)
+            maxLines = 1
+        }
+        rulesButton = iconButton(R.drawable.ic_info, R.string.kit_rules, palette.accent) { showRules() }
+
+        // Les trois niveaux.
+        val labels = intArrayOf(R.string.kit_easy, R.string.kit_medium, R.string.kit_hard)
+        for (i in 0 until CardLevel.COUNT) {
+            levelChips.add(TextView(this).apply {
+                setText(labels[i])
+                textSize = 13f
+                gravity = Gravity.CENTER
+                minWidth = (56 * dp).toInt()
+                setPadding((14 * dp).toInt(), (7 * dp).toInt(), (14 * dp).toInt(), (7 * dp).toInt())
+                setOnClickListener { chooseLevel(i) }
+            })
+        }
+
+        statusView = TextView(this).apply {
+            textSize = 14f
+            setTextColor(palette.secondary)
+        }
+
+        controlsRow = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+        }
+        return arrange()
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        if (::controlsRow.isInitialized && arrangedLandscape != Landscape.isLandscape(this)) setContentView(arrange())
+    }
+
+    /**
+     * Debout : titre, niveaux, ligne d'état, table, boutons, les uns sous les autres. Couché : la
+     * bande du titre en haut, la table sur toute la hauteur restante, et à côté une bulle
+     * ([SidePanel]) avec les niveaux, la ligne d'état et les boutons en colonne.
+     */
+    private fun arrange(): View {
+        val landscape = Landscape.isLandscape(this)
+        arrangedLandscape = landscape
+        listOf(backButton, titleView, rulesButton, statusView, table, controlsRow).forEach { Landscape.detach(it) }
+        levelChips.forEach { Landscape.detach(it) }
+
         val root = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             background = AppearanceStyle.screen(this@CardGameActivity) ?: GradientDrawable().apply {
@@ -374,67 +442,77 @@ abstract class CardGameActivity : ThemedActivity() {
             }
             setTag(R.id.app_effects_scene, true)
         }
-
+        val icon = LinearLayout.LayoutParams((44 * dp).toInt(), (44 * dp).toInt())
+        val chips = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+        levelChips.forEach { chip ->
+            chips.addView(chip, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT).apply { marginEnd = (6 * dp).toInt() })
+        }
         val top = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
             setPadding((8 * dp).toInt(), (6 * dp).toInt(), (8 * dp).toInt(), (2 * dp).toInt())
         }
-        top.addView(iconButton(R.drawable.ic_app_back, R.string.back, palette.text) { finish() },
-            LinearLayout.LayoutParams((44 * dp).toInt(), (44 * dp).toInt()))
-        top.addView(TextView(this).apply {
-            setText(titleRes)
-            textSize = 20f
-            typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
-            setTextColor(palette.text)
-            setPadding((8 * dp).toInt(), 0, 0, 0)
-            maxLines = 1
-        }, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
-        top.addView(iconButton(R.drawable.ic_info, R.string.kit_rules, palette.accent) { showRules() },
-            LinearLayout.LayoutParams((44 * dp).toInt(), (44 * dp).toInt()))
-        root.addView(top)
+        top.addView(backButton, icon)
 
-        // Les trois niveaux.
-        val chips = LinearLayout(this).apply {
-            orientation = LinearLayout.HORIZONTAL
-            setPadding((12 * dp).toInt(), (2 * dp).toInt(), (12 * dp).toInt(), (2 * dp).toInt())
-        }
-        val labels = intArrayOf(R.string.kit_easy, R.string.kit_medium, R.string.kit_hard)
-        for (i in 0 until CardLevel.COUNT) {
-            val chip = TextView(this).apply {
-                setText(labels[i])
-                textSize = 13f
-                gravity = Gravity.CENTER
-                minWidth = (56 * dp).toInt()
-                setPadding((14 * dp).toInt(), (7 * dp).toInt(), (14 * dp).toInt(), (7 * dp).toInt())
-                setOnClickListener { chooseLevel(i) }
+        if (landscape) {
+            top.addView(titleView, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
+            top.addView(rulesButton, LinearLayout.LayoutParams(icon))
+
+            // La bulle : niveaux, ligne d'état, boutons en colonne.
+            val panel = sidePanel ?: SidePanel(this).also {
+                sidePanel = it
             }
-            levelChips.add(chip)
-            chips.addView(chip, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT).apply { marginEnd = (6 * dp).toInt() })
+            val col = panel.content
+            col.removeAllViews()
+            chips.gravity = Gravity.CENTER
+            chips.setPadding(0, 0, 0, (4 * dp).toInt())
+            col.addView(chips, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+            statusView.gravity = Gravity.CENTER
+            statusView.textSize = 17f
+            statusView.setPadding((8 * dp).toInt(), (10 * dp).toInt(), (8 * dp).toInt(), (12 * dp).toInt())
+            statusView.maxLines = Int.MAX_VALUE
+            col.addView(statusView)
+            controlsRow.orientation = LinearLayout.VERTICAL
+            controlsRow.gravity = Gravity.CENTER
+            controlsRow.setPadding((4 * dp).toInt(), 0, (4 * dp).toInt(), 0)
+            controlsRow.minimumHeight = 0
+            for (k in 0 until controlsRow.childCount) controlsRow.getChildAt(k).layoutParams = buttonParams()
+            col.addView(controlsRow)
+
+            table.setPadding((12 * dp).toInt(), (4 * dp).toInt(), (12 * dp).toInt(), (8 * dp).toInt())
+            updateChips()
+            return panel.compose(table, screenBackground(), top)
+        } else {
+            top.addView(titleView, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
+            top.addView(rulesButton, LinearLayout.LayoutParams(icon))
+            root.addView(top)
+            chips.setPadding((12 * dp).toInt(), (2 * dp).toInt(), (12 * dp).toInt(), (2 * dp).toInt())
+            root.addView(HorizontalScrollView(this).apply {
+                isHorizontalScrollBarEnabled = false
+                addView(chips)
+            })
+            statusView.gravity = Gravity.CENTER
+            statusView.textSize = 14f
+            statusView.setPadding(0, (6 * dp).toInt(), 0, (2 * dp).toInt())
+            statusView.maxLines = Int.MAX_VALUE
+            root.addView(statusView)
+
+            table.setPadding((8 * dp).toInt(), (4 * dp).toInt(), (8 * dp).toInt(), (4 * dp).toInt())
+            root.addView(table, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f))
+
+            controlsRow.orientation = LinearLayout.HORIZONTAL
+            controlsRow.gravity = Gravity.CENTER
+            controlsRow.setPadding((10 * dp).toInt(), (8 * dp).toInt(), (10 * dp).toInt(), (10 * dp).toInt())
+            controlsRow.minimumHeight = 0
         }
-        root.addView(HorizontalScrollView(this).apply {
-            isHorizontalScrollBarEnabled = false
-            addView(chips)
-        })
-
-        statusView = TextView(this).apply {
-            gravity = Gravity.CENTER
-            textSize = 14f
-            setTextColor(palette.secondary)
-            setPadding(0, (6 * dp).toInt(), 0, (2 * dp).toInt())
-        }
-        root.addView(statusView)
-
-        table.setPadding((8 * dp).toInt(), (4 * dp).toInt(), (8 * dp).toInt(), (4 * dp).toInt())
-        root.addView(table, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f))
-
-        controlsRow = LinearLayout(this).apply {
-            orientation = LinearLayout.HORIZONTAL
-            gravity = Gravity.CENTER
-            setPadding((10 * dp).toInt(), (8 * dp).toInt(), (10 * dp).toInt(), (10 * dp).toInt())
+        // Les boutons déjà posés prennent la forme de la nouvelle orientation.
+        for (i in 0 until controlsRow.childCount) {
+            val b = controlsRow.getChildAt(i)
+            b.layoutParams = buttonParams()
         }
         root.addView(controlsRow)
+        updateChips()
         return root
     }
 

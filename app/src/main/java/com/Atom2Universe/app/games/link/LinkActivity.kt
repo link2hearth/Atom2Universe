@@ -1,5 +1,7 @@
 package com.Atom2Universe.app.games.link
 
+import com.Atom2Universe.app.util.Landscape
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
@@ -54,6 +56,7 @@ class LinkActivity : ThemedActivity(), LinkBoardView.Listener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_link_game)
+        Landscape.bindSidePanel(this)
         enableImmersiveMode()
 
         boardView     = findViewById(R.id.link_board_view)
@@ -87,6 +90,11 @@ class LinkActivity : ThemedActivity(), LinkBoardView.Listener {
             game.isRunOver -> showRunOver(newBest = false, neutrinos = NeutrinoRewards.link(game.totalScore))
             game.floorScored -> showFloorDone()
         }
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        Landscape.swapLayout(this, R.layout.activity_link_game)
     }
 
     override fun onPause() {
