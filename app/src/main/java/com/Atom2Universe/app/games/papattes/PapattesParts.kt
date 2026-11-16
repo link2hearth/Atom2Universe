@@ -143,6 +143,9 @@ enum class Legs(
 
     val length: Float get() = thigh + shin
 
+    /** Les sauts et la glisse se prêtent aux passages en mesure ; la marche, trop imprécise, non. */
+    val rhythm: Boolean get() = gait != Gait.WALK
+
     /** Portée d'un bond à pleine charge sur du plat, en mètres. */
     val maxJump: Float get() = jumpSpeed * jumpSpeed * kotlin.math.sin(2 * Math.toRadians(jumpAngle.toDouble())).toFloat() / 9.81f
 

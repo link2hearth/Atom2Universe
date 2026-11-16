@@ -16,8 +16,11 @@ enum class Surface(val friction: Float) {
 
 enum class DecorKind { ROCK, BUSH, MUSHROOM, REEDS, LILY_PAD, SNOW_PILE }
 
-/** Ce qui flotte sur l'eau : un rondin solide, ou une planche (ou un glaçon) qui cède sous le pied. */
-enum class Floater { NONE, LOG, PLANK }
+/**
+ * Ce qui flotte sur l'eau : un rondin solide, une planche (ou un glaçon) qui cède sous le pied, ou
+ * un îlot d'un passage en mesure (pierre plate, motte d'herbe, plaque de neige selon le biome).
+ */
+enum class Floater { NONE, LOG, PLANK, ISLET }
 
 /** Un morceau de sol : le dessus d'un bloc, de ([x0], [y0]) à ([x1], [y1]). */
 class Segment(val x0: Float, val y0: Float, val x1: Float, val y1: Float, val surface: Surface, val floater: Floater = Floater.NONE) {
@@ -41,7 +44,18 @@ class Wind(val x0: Float, val x1: Float, val push: Float, val period: Float, val
     fun at(t: Float): Float = push * (.35f + .65f * maxOf(0f, kotlin.math.sin(2f * PI.toFloat() * t / period + phase)))
 }
 
-class GoldSeed(val x: Float, val y: Float)
+/** Une graine d'or ; celle d'un passage en mesure ([passage] ≥ 0) n'apparaît qu'une fois le passage réussi. */
+class GoldSeed(val x: Float, val y: Float, val passage: Int = -1)
+
+/**
+ * Un passage en mesure : une suite d'îlots sur l'eau, de [x0] à [x1], dont les longueurs et les
+ * écarts suivent un motif court répété trois fois (îlot court et écart étroit, ou îlot long et
+ * écart large). Rien n'est marqué : on lit le motif dans le terrain, et le dernier îlot de chaque
+ * mesure porte le même petit détail ([accents]). Les îlots sont les segments [first] à
+ * [first] + [count] − 1 ; les toucher tous, dans l'ordre et sans en sauter, fait apparaître une
+ * graine d'or juste après.
+ */
+class Passage(val x0: Float, val x1: Float, val first: Int, val count: Int, val accents: BooleanArray, val long: BooleanArray)
 
 /**
  * Le parcours d'une étape, tiré de son numéro : le même numéro donne toujours le même parcours.
@@ -66,6 +80,7 @@ class PapattesCourse(val stage: Int, val legs: Legs = Legs.STILTS) {
     val mushrooms = ArrayList<Mushroom>()
     val winds = ArrayList<Wind>()
     val goldSeeds = ArrayList<GoldSeed>()
+    val passages = ArrayList<Passage>()
     var checkpointX = 0f; private set
     var finishX = 0f; private set
     var endX = 0f; private set
@@ -83,18 +98,41 @@ class PapattesCourse(val stage: Int, val legs: Legs = Legs.STILTS) {
     val gapScale = (legs.reach / WIDEST_GAP).coerceAtMost(1f)
     /** Hauteur d'une graine perchée au-dessus du sol : à portée de tête de la bestiole debout. */
     private val seedLift = legs.length + .25f
+    /** Graines d'or des passages en mesure, toujours gardées parmi les trois de l'étape. */
+    private val passageSeeds = ArrayList<GoldSeed>()
+    /**
+     * Longueur d'un bond ou d'un petit saut de glisse « ordinaire », rapportée à la grenouille : les
+     * îlots des passages en mesure s'y règlent. Les marcheurs n'ont pas de passages ([Legs.rhythm]).
+     */
+    private val pace = when (legs.gait) {
+        Gait.WALK -> 1f
+        Gait.HOP -> legs.maxJump / HOP_PACE
+        Gait.GLIDE -> GLIDE_PACE
+    }.coerceIn(.5f, 1.8f)
 
     init {
         val target = 34f + 3f * difficulty
         flat(13f)
         var checkpointPlaced = false
-        while (x < target) {
+        // Un passage en mesure par étape, deux à partir du troisième niveau (le second après le drapeau bleu).
+        // Pas pour les marcheurs : leur pied glisse encore trop après le contact pour viser un îlot.
+        val passageAt = when {
+            !legs.rhythm -> floatArrayOf()
+            level >= 2 -> floatArrayOf(target * .22f, target * .68f)
+            else -> floatArrayOf(target * .3f)
+        }
+        var nextPassage = 0
+        // Un long passage peut enjamber le milieu : on ne finit jamais sans drapeau bleu.
+        while (x < target || !checkpointPlaced) {
             if (!checkpointPlaced && x > target / 2) {
                 flat(3.2f)
                 checkpointX = x - 1.6f
                 checkpointPlaced = true
             }
-            feature()
+            if (nextPassage < passageAt.size && x > passageAt[nextPassage]) {
+                passage()
+                nextPassage++
+            } else feature()
             flat(rnd.range(.6f, 1.1f))
         }
         flat(6f)
@@ -249,6 +287,58 @@ class PapattesCourse(val stage: Int, val legs: Legs = Legs.STILTS) {
         flat(rnd.range(1.6f, 2.2f))
     }
 
+    /**
+     * Un passage en mesure : le motif (court = îlot court + écart étroit, long = îlot long + écart
+     * large) est joué trois fois ; dès le troisième niveau, la troisième fois change d'un temps.
+     * Les mesures se suivent sans pause : seul le détail posé sur leur dernier îlot les sépare.
+     */
+    private fun passage() {
+        val choices = when {
+            difficulty < 2 -> EASY_MOTIFS
+            difficulty < 5 -> MID_MOTIFS
+            else -> HARD_MOTIFS
+        }
+        var motif = choices[rnd.nextInt(choices.size)]
+        // Deux passages dans la même étape ne jouent pas le même motif.
+        if (passages.isNotEmpty() && choices.size > 1) while (motifOf(passages.last()) == motif) motif = choices[rnd.nextInt(choices.size)]
+        val beats = ArrayList<Boolean>()
+        val accents = ArrayList<Boolean>()
+        for (bar in 0 until BARS) {
+            val notes = BooleanArray(motif.length) { motif[it] == 'L' }
+            if (bar == BARS - 1 && level >= 2) {
+                val k = rnd.nextInt(notes.size)
+                notes[k] = !notes[k]
+            }
+            for ((i, long) in notes.withIndex()) { beats += long; accents += i == notes.lastIndex }
+        }
+        flat(.6f)
+        val left = x
+        val top = y - .03f
+        val narrow = maxOf(MIN_GAP, NARROW_GAP * gapScale)
+        val wide = maxOf(narrow + .12f, (WIDE_GAP + .03f * difficulty).coerceAtMost(WIDE_GAP_MAX) * gapScale)
+        val short = maxOf(MIN_ISLET, SHORT_ISLET * pace)
+        val long = maxOf(short * 1.9f, LONG_ISLET * pace)
+        val surface = when (biome) { Biome.MEADOW -> Surface.WOOD; Biome.MARSH -> Surface.GRASS; Biome.ICE -> Surface.SNOW }
+        val first = segments.size
+        var cursor = left + narrow
+        for (isLong in beats) {
+            val length = if (isLong) long else short
+            segments += Segment(cursor, top, cursor + length, top, surface, Floater.ISLET)
+            cursor += length + if (isLong) wide else narrow
+        }
+        waters += Water(left, cursor, y - .22f)
+        passages += Passage(left, cursor, first, beats.size, accents.toBooleanArray(), beats.toBooleanArray())
+        x = cursor
+        flat(rnd.range(1.1f, 1.5f))
+        passageSeeds += GoldSeed(cursor + .55f, y + seedLift, passages.lastIndex)
+    }
+
+    /** Le motif d'un passage, relu dans sa première mesure. */
+    private fun motifOf(p: Passage): String {
+        val bar = p.accents.indexOfFirst { it } + 1
+        return (0 until bar).joinToString("") { if (p.long[it]) "L" else "S" }
+    }
+
     /** Un plat battu par les rafales, de face le plus souvent. */
     private fun windy() {
         val length = rnd.range(3.5f, 5f + .2f * difficulty)
@@ -257,17 +347,24 @@ class PapattesCourse(val stage: Int, val legs: Legs = Legs.STILTS) {
         flat(length, if (biome == Biome.ICE && rnd.nextBoolean()) Surface.ICE else ground)
     }
 
-    /** Trois graines d'or, réparties le long du parcours parmi les places trouvées en route. */
+    /**
+     * Trois graines d'or : celles des passages en mesure d'abord, les autres réparties le long du
+     * parcours parmi les places trouvées en route.
+     */
     private fun placeGoldSeeds() {
-        val spots = seedSpots.filter { it.x > startX + 2f && it.x < finishX - 1f }.toMutableList()
-        while (spots.size < GOLD_SEEDS) {
+        val forced = passageSeeds.take(GOLD_SEEDS)
+        val free = GOLD_SEEDS - forced.size
+        fun outsidePassages(at: Float) = passages.none { at > it.x0 - .3f && at < it.x1 + 1.2f }
+        val spots = seedSpots.filter { it.x > startX + 2f && it.x < finishX - 1f && outsidePassages(it.x) }.toMutableList()
+        while (spots.size < free) {
             // Faute de trous ou de bonds, une graine haut perchée que seules les grandes bestioles et les bonds atteignent.
             val at = rnd.range(startX + 4f, finishX - 2f)
             val top = surfaceAt(at)
-            if (top.isFinite()) spots += GoldSeed(at, top + seedLift + .1f)
+            if (top.isFinite() && outsidePassages(at)) spots += GoldSeed(at, top + seedLift + .1f)
         }
         spots.sortBy { it.x }
-        for (i in 0 until GOLD_SEEDS) goldSeeds += spots[(i * spots.size + spots.size / 2) / GOLD_SEEDS]
+        val picked = (0 until free).map { spots[(it * spots.size + spots.size / 2) / free] }
+        goldSeeds += (forced + picked).sortedBy { it.x }
     }
 
     private fun placeDecor() {
@@ -284,7 +381,8 @@ class PapattesCourse(val stage: Int, val legs: Legs = Legs.STILTS) {
             if (top.isFinite() && segmentAt(at)?.floating != true && clear) decor += Decor(at, top, kinds[rnd.nextInt(kinds.size)], rnd.range(.25f, .5f))
             cursor += rnd.range(2.5f, 5f)
         }
-        if (biome == Biome.MARSH) for (w in waters) if (w.x1 - w.x0 > .6f && rnd.nextBoolean()) {
+        // Pas de nénuphar dans un passage en mesure : on le prendrait pour un îlot.
+        if (biome == Biome.MARSH) for (w in waters) if (w.x1 - w.x0 > .6f && rnd.nextBoolean() && passages.none { it.x0 == w.x0 }) {
             decor += Decor(rnd.range(w.x0 + .15f, w.x1 - .15f), w.level, DecorKind.LILY_PAD, .3f)
         }
     }
@@ -322,6 +420,25 @@ class PapattesCourse(val stage: Int, val legs: Legs = Legs.STILTS) {
         const val MAX_STEP = .16f
         /** Pour un corps qui flotte, l'eau porte à ce niveau-ci au-dessus de sa surface. */
         const val FLOAT_LIFT = .2f
+
+        /** Passages en mesure : nombre de mesures, et motifs (S = court, L = long) selon la difficulté. */
+        const val BARS = 3
+        val EASY_MOTIFS = listOf("SSL", "SL", "LSS")
+        val MID_MOTIFS = listOf("SSL", "SLS", "LSL", "SSLL", "LSS")
+        val HARD_MOTIFS = listOf("SSLS", "SLSS", "LSSL", "SSSL", "SLLS", "LSLS")
+        /**
+         * Îlots pour un bond de grenouille, en mètres (un îlot court = un bond), et le plus court qu'on tire.
+         */
+        const val SHORT_ISLET = 1f
+        const val LONG_ISLET = 2f
+        const val MIN_ISLET = .45f
+        /** Écarts entre îlots, avant d'être taillés à la portée des jambes. */
+        const val NARROW_GAP = .22f
+        const val WIDE_GAP = .45f
+        const val WIDE_GAP_MAX = .65f
+        /** Bond (portée maximale) qui vaut un pas d'échasses ; pas d'une glisse (un petit saut porte loin). */
+        const val HOP_PACE = 1.8f
+        const val GLIDE_PACE = 1.8f
     }
 }
 

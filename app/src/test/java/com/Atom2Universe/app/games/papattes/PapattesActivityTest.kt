@@ -111,9 +111,8 @@ class PapattesActivityTest {
     @Test fun bookFiltersThePenAndTheEggHatches() {
         val p = PapattesProgress()
         for (s in 1..3) p.clearStage(s, PapattesGame.STAR_FINISH)
-        p.buyEgg(kotlin.random.Random(4))
-        p.clearStage(4, PapattesGame.STAR_FINISH)
-        assertTrue(p.eggReady)
+        // Un œuf acheté il y a treize heures : il est prêt.
+        p.buyEgg(kotlin.random.Random(4), System.currentTimeMillis() - 13L * 60 * 60 * 1000)
         prefs.edit().putString("progress", p.encode()).commit()
         val controller = Robolectric.buildActivity(PapattesActivity::class.java).setup()
         try {
@@ -125,7 +124,7 @@ class PapattesActivityTest {
             val thumbs = views(activity).filter { it is android.widget.ImageView && it.parent?.parent is android.widget.HorizontalScrollView }.toList()
             assertTrue(thumbs.first().performClick())
             assertEquals(1, portraits())
-            click(activity, R.string.papattes_hatch)
+            assertTrue((views(activity).first { it is PapattesEggView && it.isShown }.parent as View).performClick())
             val hatch = views(activity).filterIsInstance<PapattesHatchView>().single()
             assertTrue(hatch.isShown)
             hatch.layout(0, 0, 412, 700)
@@ -174,9 +173,8 @@ class PapattesActivityTest {
     @Test fun progressIsSavedAndRestored() {
         val p = PapattesProgress()
         for (s in 1..3) p.clearStage(s, PapattesGame.STAR_FINISH)
-        p.buyEgg(kotlin.random.Random(4))
-        p.clearStage(4, PapattesGame.STAR_FINISH)
-        p.hatch()
+        p.buyEgg(kotlin.random.Random(4), 0L)
+        p.hatch(p.eggs.single(), PapattesProgress.HATCH_MS)
         prefs.edit().putString("progress", p.encode()).commit()
         val controller = Robolectric.buildActivity(PapattesActivity::class.java).setup()
         try {

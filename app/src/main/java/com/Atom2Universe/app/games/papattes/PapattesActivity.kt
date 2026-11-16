@@ -63,9 +63,20 @@ class PapattesActivity : ThemedActivity() {
     private lateinit var labCounts: TextView
     private lateinit var penGrid: GridLayout
     private lateinit var filterBox: LinearLayout
-    private lateinit var eggIcon: ImageView
-    private lateinit var eggLabel: TextView
+    private lateinit var eggTitle: TextView
     private lateinit var eggButton: MaterialButton
+    /** Les places de la couveuse : l'œuf et, dessous, le temps qu'il lui reste. */
+    private val eggSlots = ArrayList<Pair<PapattesEggView, TextView>>()
+    /** L'œuf qu'on est en train de faire éclore. */
+    private var hatching: PapattesProgress.Egg? = null
+    /** Tant que le Labo est ouvert, les temps de couvaison se mettent à jour. */
+    private val eggTicker = object : Runnable {
+        override fun run() {
+            if (screen != Screen.LAB) return
+            refreshEgg()
+            lab.postDelayed(this, EGG_TICK_MS)
+        }
+    }
     private lateinit var selectionLabel: TextView
     private lateinit var hatchLayer: FrameLayout
     private lateinit var hatchView: PapattesHatchView
@@ -228,19 +239,35 @@ class PapattesActivity : ThemedActivity() {
         val column = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
         labCounts = label("", 13f, palette.secondary).apply { gravity = Gravity.CENTER }
         column.addView(labCounts, LinearLayout.LayoutParams(-1, -2))
-        // L'œuf mystère : à acheter, en couveuse, ou prêt à éclore.
-        val eggRow = LinearLayout(this).apply {
-            gravity = Gravity.CENTER_VERTICAL
+        // La couveuse : cinq nids, un œuf mystère acheté dort douze heures dans le sien.
+        val wide = resources.configuration.screenWidthDp >= 600
+        val incubator = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
             setPadding(dp(12), dp(8), dp(12), dp(8))
             background = shape(palette.surface, 18f, palette.outline)
         }
-        eggIcon = ImageView(this).apply { setImageBitmap(sprites.egg.bitmap); scaleType = ImageView.ScaleType.FIT_CENTER }
-        eggRow.addView(eggIcon, LinearLayout.LayoutParams(dp(36), dp(44)))
-        eggLabel = label("", 15f).apply { typeface = Typeface.DEFAULT_BOLD; setPadding(dp(10), 0, dp(6), 0) }
-        eggRow.addView(eggLabel, LinearLayout.LayoutParams(0, -2, 1f))
-        eggButton = button(R.string.papattes_hatch, primary = true) { onEggButton() }
-        eggRow.addView(eggButton, LinearLayout.LayoutParams(-2, -2))
-        column.addView(eggRow, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(8) })
+        val head = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL }
+        eggTitle = label("", if (wide) 18f else 15f).apply { typeface = Typeface.DEFAULT_BOLD }
+        head.addView(eggTitle, LinearLayout.LayoutParams(0, -2, 1f))
+        eggButton = button(R.string.papattes_egg_buy, primary = true) { buyEgg() }
+        head.addView(eggButton, LinearLayout.LayoutParams(-2, -2))
+        incubator.addView(head, LinearLayout.LayoutParams(-1, -2))
+        val nests = LinearLayout(this)
+        repeat(PapattesProgress.INCUBATOR) { slot ->
+            val cell = LinearLayout(this).apply {
+                orientation = LinearLayout.VERTICAL
+                gravity = Gravity.CENTER_HORIZONTAL
+                setOnClickListener { onEggSlot(slot) }
+            }
+            val view = PapattesEggView(this).apply { inkColor = palette.text }
+            cell.addView(view, LinearLayout.LayoutParams(-1, dp(if (wide) 96 else 64)))
+            val time = label("", if (wide) 15f else 12f, palette.secondary).apply { gravity = Gravity.CENTER; maxLines = 1 }
+            cell.addView(time, LinearLayout.LayoutParams(-1, -2))
+            eggSlots += view to time
+            nests.addView(cell, LinearLayout.LayoutParams(0, -2, 1f))
+        }
+        incubator.addView(nests, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(4) })
+        column.addView(incubator, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(8) })
         column.addView(label(R.string.papattes_book, 17f).apply {
             typeface = Typeface.DEFAULT_BOLD
             setPadding(dp(2), dp(14), 0, 0)
@@ -299,7 +326,8 @@ class PapattesActivity : ThemedActivity() {
         bottom.addView(hatchButton, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(8) })
         layer.addView(bottom, FrameLayout.LayoutParams(-1, -2, Gravity.BOTTOM))
         hatchView.onDone = {
-            val critter = progress.hatch()
+            val critter = hatching?.let { progress.hatch(it, System.currentTimeMillis()) }
+            hatching = null
             if (critter != null) {
                 save()
                 clearFilters()
@@ -324,6 +352,8 @@ class PapattesActivity : ThemedActivity() {
         else window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         overlay.visibility = if (next == Screen.HOME || next == Screen.PAUSE || next == Screen.END) View.VISIBLE else View.GONE
         lab.visibility = if (next == Screen.LAB) View.VISIBLE else View.GONE
+        lab.removeCallbacks(eggTicker)
+        if (next == Screen.LAB) lab.postDelayed(eggTicker, EGG_TICK_MS)
         hatchLayer.visibility = if (next == Screen.HATCH) View.VISIBLE else View.GONE
         pauseButton.visibility = if (playing) View.VISIBLE else View.GONE
         titleLabel.text = when (next) {
@@ -340,7 +370,7 @@ class PapattesActivity : ThemedActivity() {
                 hero.critter = progress.activeCritter
                 hero.visibility = View.VISIBLE
                 heading.setText(R.string.papattes_title)
-                wildLabel.visibility = View.GONE
+                showEggHint()
                 stageRow.visibility = View.VISIBLE
                 updateStageLabel()
                 result.visibility = View.GONE
@@ -443,9 +473,8 @@ class PapattesActivity : ThemedActivity() {
             getString(R.string.papattes_reward, reward.seeds, neutrinos)
         hero.critter = progress.activeCritter
         hero.visibility = View.VISIBLE
-        wildLabel.setText(R.string.papattes_egg_ready)
-        wildLabel.visibility = if (reward.eggReady) View.VISIBLE else View.GONE
         show(Screen.END)
+        showEggHint()
     }
 
     /** Hors jeu, la réserve de graines ; en marche, les graines d'or ramassées sur l'étape. */
@@ -526,52 +555,66 @@ class PapattesActivity : ThemedActivity() {
         })
     }
 
-    /** Le panneau de l'œuf mystère, selon où il en est. */
+    /** La couveuse : chaque nid avec son œuf qui dort (et le temps qu'il lui reste) ou qui est prêt. */
     private fun refreshEgg() {
-        val egg = progress.egg
-        eggIcon.alpha = if (egg == null) .55f else 1f
-        when {
-            egg == null -> {
-                eggLabel.setText(R.string.papattes_egg_mystery)
-                eggButton.text = getString(R.string.papattes_egg_buy, PapattesProgress.EGG_COST)
-                eggButton.visibility = View.VISIBLE
-                eggButton.isEnabled = progress.canBuyEgg
+        val now = System.currentTimeMillis()
+        eggTitle.text = getString(R.string.papattes_incubator, progress.eggs.size, PapattesProgress.INCUBATOR)
+        eggButton.text = getString(R.string.papattes_egg_buy, PapattesProgress.EGG_COST)
+        eggButton.visibility = if (progress.incubatorFull) View.GONE else View.VISIBLE
+        eggButton.isEnabled = progress.canBuyEgg
+        eggButton.alpha = if (eggButton.isEnabled) 1f else .45f
+        for ((slot, pair) in eggSlots.withIndex()) {
+            val (view, time) = pair
+            val egg = progress.eggs.getOrNull(slot)
+            view.state = when {
+                egg == null -> PapattesEggView.State.EMPTY
+                egg.ready(now) -> PapattesEggView.State.READY
+                else -> PapattesEggView.State.SLEEPING
             }
-            !progress.eggReady -> {
-                eggLabel.setText(R.string.papattes_egg_incubating)
-                eggButton.visibility = View.GONE
+            time.text = when {
+                egg == null -> ""
+                !egg.ready(now) -> remainingText(egg.remaining(now))
+                progress.penFull -> getString(R.string.papattes_pen_full)
+                else -> getString(R.string.papattes_egg_ready_short)
             }
-            else -> {
-                eggLabel.setText(if (progress.penFull) R.string.papattes_pen_full else R.string.papattes_egg_ready_short)
-                eggButton.setText(R.string.papattes_hatch)
-                eggButton.visibility = View.VISIBLE
-                eggButton.isEnabled = progress.canHatch
+            view.contentDescription = when (view.state) {
+                PapattesEggView.State.EMPTY -> null
+                PapattesEggView.State.SLEEPING -> getString(R.string.papattes_egg_sleeping)
+                PapattesEggView.State.READY -> getString(R.string.papattes_egg_ready_short)
             }
         }
-        eggButton.alpha = if (eggButton.isEnabled) 1f else .45f
-        // L'œuf prêt se dandine pour attirer l'œil.
-        eggIcon.animate().cancel()
-        eggIcon.rotation = 0f
-        if (egg != null && progress.eggReady) eggIcon.animate().rotation(10f).setDuration(260).withEndAction {
-            eggIcon.animate().rotation(-10f).setDuration(260).withEndAction { eggIcon.animate().rotation(0f).setDuration(200).start() }.start()
-        }.start()
     }
 
-    private fun onEggButton() {
-        val egg = progress.egg
-        when {
-            egg == null -> {
-                if (!progress.buyEgg(Random.Default)) return
-                save()
-                refreshLab()
-            }
-            progress.canHatch -> {
-                hatchView.critter = egg
-                hatchName.visibility = View.INVISIBLE
-                hatchButton.visibility = View.INVISIBLE
-                show(Screen.HATCH)
-            }
-        }
+    /** Le temps qu'il reste à couver, arrondi à la minute du dessus : « 11 h 32 », ou « 8 min » sous l'heure. */
+    private fun remainingText(ms: Long): String {
+        val minutes = ((ms + 59_999) / 60_000).toInt()
+        return if (minutes >= 60) getString(R.string.papattes_egg_hours, minutes / 60, minutes % 60)
+        else getString(R.string.papattes_egg_minutes, minutes)
+    }
+
+    private fun buyEgg() {
+        if (!progress.buyEgg(Random.Default, System.currentTimeMillis())) return
+        save()
+        refreshLab()
+    }
+
+    /** Toucher un œuf prêt le fait éclore ; un œuf qui dort, on le laisse dormir. */
+    private fun onEggSlot(slot: Int) {
+        val egg = progress.eggs.getOrNull(slot) ?: return
+        if (!progress.canHatch(egg, System.currentTimeMillis())) return
+        hatching = egg
+        hatchView.critter = egg.critter
+        hatchName.visibility = View.INVISIBLE
+        hatchButton.visibility = View.INVISIBLE
+        show(Screen.HATCH)
+    }
+
+    /** Au menu et à l'arrivée : un mot quand un œuf attend d'éclore. */
+    private fun showEggHint() {
+        val now = System.currentTimeMillis()
+        val waiting = !progress.penFull && progress.eggs.any { it.ready(now) }
+        wildLabel.setText(R.string.papattes_egg_ready)
+        wildLabel.visibility = if (waiting) View.VISIBLE else View.GONE
     }
 
     /** Une petite tuile d'enclos : la bestiole, ses jambes, et son pouvoir s'il en a un. */
@@ -757,5 +800,7 @@ class PapattesActivity : ThemedActivity() {
         const val KEY_STAGE = "stage"
         /** Largeur visée d'une tuile d'enclos, en dp. */
         const val CARD_DP = 118f
+        /** Mise à jour des temps de couvaison, Labo ouvert. */
+        const val EGG_TICK_MS = 20_000L
     }
 }

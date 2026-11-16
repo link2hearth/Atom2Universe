@@ -13,12 +13,11 @@ class PapattesGameTest {
     private val dt = 1f / 60f
     private val gold = PapattesGame.STAR_FINISH or PapattesGame.STAR_GOLD
 
-    /** Achète un œuf, finit l'étape nouvelle [stage] et le fait éclore : une bestiole de plus. */
-    private fun PapattesProgress.hatchOne(stage: Int): Critter {
+    /** Achète un œuf, le laisse couver douze heures et le fait éclore : une bestiole de plus. */
+    private fun PapattesProgress.hatchOne(seed: Int): Critter {
         while (!canBuyEgg) clearStage(1, PapattesGame.STAR_FINISH)
-        assertTrue(buyEgg(Random(stage)))
-        clearStage(stage, PapattesGame.STAR_FINISH)
-        return hatch()!!
+        assertTrue(buyEgg(Random(seed), 0L))
+        return hatch(eggs.last(), PapattesProgress.HATCH_MS)!!
     }
 
     private fun PapattesGame.run(seconds: Float, each: (PapattesGame) -> Unit = {}) {
@@ -62,6 +61,33 @@ class PapattesGameTest {
             assertTrue(course.surfaceAt(course.checkpointX).isFinite())
             assertTrue(course.surfaceAt(course.finishX).isFinite())
             assertEquals(PapattesCourse.GOLD_SEEDS, course.goldSeeds.size)
+        }
+    }
+
+    @Test
+    fun `chaque etape a un passage en mesure dont la graine d'or attend la reussite`() {
+        for (stage in 1..36) for (legs in Legs.entries) {
+            val course = PapattesCourse(stage, legs)
+            assertEquals("étape $stage, $legs", legs.rhythm, course.passages.isNotEmpty())
+            for ((p, passage) in course.passages.withIndex()) {
+                assertEquals(PapattesCourse.BARS, passage.accents.count { it })
+                assertTrue(passage.accents.last())
+                for (j in 0 until passage.count) assertEquals(Floater.ISLET, course.segments[passage.first + j].floater)
+                assertEquals(1, course.goldSeeds.count { it.passage == p })
+            }
+        }
+        val game = PapattesGame(1, Critter(Head.CAT, Body.POMPOM, Legs.FROG))
+        val hidden = game.course.goldSeeds.indexOfFirst { it.passage >= 0 }
+        assertTrue(!game.goldVisible(hidden))
+    }
+
+    @Test
+    fun `le robot reussit le passage en mesure de la premiere prairie`() {
+        for (legs in Legs.entries.filter { it.rhythm }) {
+            val game = PapattesGame(1, Critter(Head.CAT, Body.POMPOM, legs))
+            PapattesRobot(game).run(120f)
+            assertEquals("$legs", PapattesGame.PASSAGE_DONE, game.passageState[0])
+            assertEquals("$legs", PapattesCourse.GOLD_SEEDS, game.goldCount)
         }
     }
 
@@ -185,29 +211,30 @@ class PapattesGameTest {
     }
 
     @Test
-    fun `l'oeuf mystere s'achete, couve jusqu'a une etape nouvelle puis eclot`() {
+    fun `cinq oeufs couvent douze heures reelles puis eclosent`() {
         val p = PapattesProgress()
-        assertFalse("pas assez de graines", p.buyEgg(Random(1)))
-        p.clearStage(1, PapattesGame.STAR_FINISH)
-        p.clearStage(2, PapattesGame.STAR_FINISH)
-        p.clearStage(3, PapattesGame.STAR_FINISH)
+        val hour = 60L * 60 * 1000
+        assertFalse("pas assez de graines", p.buyEgg(Random(1), 0L))
+        while (p.seeds < PapattesProgress.EGG_COST * (PapattesProgress.INCUBATOR + 1)) p.clearStage(1, PapattesGame.STAR_FINISH)
         val seeds = p.seeds
-        assertTrue(p.buyEgg(Random(1)))
-        assertEquals(seeds - PapattesProgress.EGG_COST, p.seeds)
-        assertFalse("un seul œuf à la fois", p.buyEgg(Random(2)))
-        // Rejouer une étape déjà finie ne le réchauffe pas.
-        assertFalse(p.clearStage(2, PapattesGame.STAR_FINISH).eggReady)
-        assertNull(p.hatch())
-        // Une étape nouvelle, si.
-        assertTrue(p.clearStage(4, PapattesGame.STAR_FINISH).eggReady)
-        val inside = p.egg!!
+        // Cinq œufs achetés à une heure d'écart ; le sixième n'a pas de place.
+        for (k in 0 until PapattesProgress.INCUBATOR) assertTrue(p.buyEgg(Random(k), k * hour))
+        assertEquals(seeds - PapattesProgress.INCUBATOR * PapattesProgress.EGG_COST, p.seeds)
+        assertFalse("couveuse pleine", p.buyEgg(Random(9), 0L))
+        val first = p.eggs.first()
+        assertNull("pas avant douze heures", p.hatch(first, 12 * hour - 1))
+        assertEquals(1, p.eggs.count { it.ready(12 * hour) })
+        // Une horloge remise en arrière ne fait pas éclore plus tôt.
+        assertEquals(PapattesProgress.HATCH_MS, first.remaining(-5 * hour))
+        // La sauvegarde garde chaque œuf et son heure d'achat.
         val back = PapattesProgress.decode(p.encode())
-        assertEquals(inside, back.egg)
-        assertTrue(back.eggReady)
-        assertEquals(inside, p.hatch())
-        assertEquals(inside, p.pen.last())
-        assertNull(p.egg)
-        assertTrue(p.isDiscovered(Parts.index(inside.head)))
+        assertEquals(p.eggs.map { it.critter }, back.eggs.map { it.critter })
+        assertEquals(p.eggs.map { it.laidAt }, back.eggs.map { it.laidAt })
+        assertEquals(first.critter, p.hatch(first, 12 * hour))
+        assertEquals(first.critter, p.pen.last())
+        assertEquals(PapattesProgress.INCUBATOR - 1, p.eggs.size)
+        assertTrue(p.isDiscovered(Parts.index(first.critter.head)))
+        assertTrue("une place s'est libérée", p.buyEgg(Random(7), 12 * hour))
     }
 
     @Test

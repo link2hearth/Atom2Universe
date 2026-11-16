@@ -198,6 +198,12 @@ class PapattesView(context: Context) : View(context) {
                 performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
                 onChanged?.invoke()
             }
+            PapattesGame.Event.IN_TIME -> {
+                val seed = g.course.goldSeeds.firstOrNull { it.passage == g.lastPassage }
+                if (seed != null) burst(seed.x, seed.y, 18, 0xFFFFE27A.toInt(), 2.6f)
+                performHapticFeedback(HapticFeedbackConstants.CONFIRM)
+            }
+            PapattesGame.Event.BEAT, PapattesGame.Event.OFF_BEAT -> Unit
             PapattesGame.Event.SAVED -> {
                 w.torsoCenter(tmp)
                 burst(tmp[0], tmp[1] - walkerRadius(g), 12, 0xFFFF9FC4.toInt(), 2f)
@@ -444,9 +450,120 @@ class PapattesView(context: Context) : View(context) {
             when (s.floater) {
                 Floater.LOG -> drawLog(canvas, s)
                 Floater.PLANK -> drawPlank(canvas, g, i, s)
-                Floater.NONE -> Unit
+                Floater.ISLET, Floater.NONE -> Unit
             }
         }
+        drawPassages(canvas, g)
+    }
+
+    /**
+     * Les îlots des passages en mesure. Un îlot touché dans l'ordre fait une onde et s'éclaire ; si
+     * on en saute un, tout le passage s'éteint. Le dernier îlot de chaque mesure porte un petit
+     * détail (fleur, iris, cristal) qui s'épanouit quand le passage est réussi.
+     */
+    private fun drawPassages(canvas: Canvas, g: PapattesGame) {
+        val biome = g.course.biome
+        for ((p, passage) in g.course.passages.withIndex()) {
+            if (!visible(passage.x0 - 1f, passage.x1 + 1f)) continue
+            val state = g.passageState[p]
+            val water = g.course.waterAt((passage.x0 + passage.x1) / 2)?.level ?: continue
+            val done = if (state == PapattesGame.PASSAGE_DONE) g.isletBeat[passage.first + passage.count - 1] else -1f
+            for (j in 0 until passage.count) {
+                val i = passage.first + j
+                val s = g.course.segments[i]
+                if (!visible(s.x0, s.x1)) continue
+                val beat = g.isletBeat[i]
+                val lit = beat >= 0f && state != PapattesGame.PASSAGE_MISSED
+                if (beat in 0f..RIPPLE_TIME) drawRipple(canvas, s, water, beat)
+                drawIslet(canvas, biome, s, water, lit)
+                if (passage.accents[j]) drawAccent(canvas, biome, s, if (done >= 0f) 1f + .7f * smooth(done / .6f) else 1f)
+            }
+        }
+    }
+
+    private fun smooth(t: Float): Float { val u = t.coerceIn(0f, 1f); return u * u * (3f - 2f * u) }
+
+    /** Une onde qui s'élargit sur l'eau autour d'un îlot qu'on vient de toucher. */
+    private fun drawRipple(canvas: Canvas, s: Segment, water: Float, t: Float) {
+        val k = t / RIPPLE_TIME
+        val half = (s.x1 - s.x0) / 2 + .08f + .5f * k
+        val cx = sx((s.x0 + s.x1) / 2)
+        stroke.color = Color.WHITE
+        stroke.alpha = (200 * (1f - k)).toInt().coerceIn(0, 255)
+        stroke.strokeWidth = .02f * ppm
+        rect.set(cx - half * ppm, sy(water) - half * .16f * ppm, cx + half * ppm, sy(water) + half * .16f * ppm)
+        canvas.drawOval(rect, stroke)
+        stroke.alpha = 255
+    }
+
+    /** Une pierre plate (prairie), une motte d'herbe (marais) ou une plaque de neige (banquise), plantée dans l'eau. */
+    private fun drawIslet(canvas: Canvas, biome: Biome, s: Segment, water: Float, lit: Boolean) {
+        val top = sy(s.y0)
+        val bottom = sy(water - .1f)
+        val round = when (biome) { Biome.MEADOW -> .07f; Biome.MARSH -> .12f; Biome.ICE -> .04f } * ppm
+        val colors = when (biome) {
+            Biome.MEADOW -> ISLET_STONE
+            Biome.MARSH -> ISLET_TUSSOCK
+            Biome.ICE -> ISLET_FLOE
+        }
+        rect.set(sx(s.x0), top, sx(s.x1), bottom)
+        fill.color = colors[0]
+        canvas.drawRoundRect(rect, round, round, fill)
+        // Le dessus, plus clair ; il s'éclaire quand on l'a touché dans l'ordre.
+        rect.set(sx(s.x0), top, sx(s.x1), top + ISLET_BAND * ppm)
+        fill.color = if (lit) colors[3] else colors[1]
+        canvas.drawRoundRect(rect, round, round, fill)
+        rect.set(sx(s.x0), top, sx(s.x1), bottom)
+        stroke.color = colors[2]
+        stroke.strokeWidth = .014f * ppm
+        canvas.drawRoundRect(rect, round, round, stroke)
+        // La ligne d'eau passe devant le pied de l'îlot.
+        fill.color = 0x66FFFFFF
+        canvas.drawRect(sx(s.x0) + 1f, sy(water) - .012f * ppm, sx(s.x1) - 1f, sy(water) + .012f * ppm, fill)
+        if (biome == Biome.MARSH) {
+            stroke.color = colors[4]
+            stroke.strokeWidth = .02f * ppm
+            var x = s.x0 + .09f
+            while (x < s.x1 - .05f) {
+                canvas.drawLine(sx(x), top + 2f, sx(x - .03f), top - .08f * ppm, stroke)
+                canvas.drawLine(sx(x + .03f), top + 2f, sx(x + .05f), top - .06f * ppm, stroke)
+                x += .27f
+            }
+        }
+    }
+
+    /** Le détail du dernier îlot de chaque mesure, agrandi de [bloom] une fois le passage réussi. */
+    private fun drawAccent(canvas: Canvas, biome: Biome, s: Segment, bloom: Float) {
+        val x = sx(s.x1 - .13f)
+        val base = sy(s.y0)
+        if (biome == Biome.ICE) {
+            // Un petit cristal de givre.
+            val cy = base - .09f * ppm * bloom
+            val r = .055f * ppm * bloom
+            stroke.color = 0xFF6FB3E0.toInt()
+            stroke.strokeWidth = .016f * ppm
+            for (k in 0 until 3) {
+                val a = k * PI_F / 3f
+                val dx = kotlin.math.cos(a) * r
+                val dy = sin(a) * r
+                canvas.drawLine(x - dx, cy - dy, x + dx, cy + dy, stroke)
+            }
+            if (bloom > 1.01f) { fill.color = 0xCCFFFFFF.toInt(); canvas.drawCircle(x, cy, r * .35f, fill) }
+            return
+        }
+        val stem = .17f * ppm * (.8f + .2f * bloom)
+        stroke.color = 0xFF4F8A3A.toInt()
+        stroke.strokeWidth = .016f * ppm
+        canvas.drawLine(x, base, x, base - stem, stroke)
+        val cy = base - stem
+        val petal = .033f * ppm * bloom
+        fill.color = if (biome == Biome.MEADOW) 0xFFFF9EC4.toInt() else 0xFFFFD84D.toInt()
+        for (k in 0 until 5) {
+            val a = k * 2f * PI_F / 5f + .3f
+            canvas.drawCircle(x + kotlin.math.cos(a) * petal * 1.1f, cy + sin(a) * petal * 1.1f, petal, fill)
+        }
+        fill.color = if (biome == Biome.MEADOW) 0xFFFFE066.toInt() else 0xFF9A6A2E.toInt()
+        canvas.drawCircle(x, cy, petal * .7f, fill)
     }
 
     /** Le sol en aplats : un dégradé par biome, coiffé d'une bande (herbe, mousse, neige) au bord festonné. */
@@ -612,6 +729,13 @@ class PapattesView(context: Context) : View(context) {
         for ((i, seed) in g.course.goldSeeds.withIndex()) {
             if (g.goldTaken[i] || !visible(seed.x - .3f, seed.x + .3f)) continue
             val bob = sin(time * 3f + i) * .04f
+            // Celle d'un passage en mesure n'est qu'un reflet tant que le passage n'est pas réussi.
+            if (!g.goldVisible(i)) {
+                bitmapPaint.alpha = 45
+                drawProp(canvas, sprites.seed, seed.x, seed.y + bob - .1f, .24f)
+                bitmapPaint.alpha = 255
+                continue
+            }
             fill.color = 0x55FFE27A
             canvas.drawCircle(sx(seed.x), sy(seed.y + bob), .2f * ppm, fill)
             drawProp(canvas, sprites.seed, seed.x, seed.y + bob - .1f, .24f)
@@ -775,6 +899,12 @@ class PapattesView(context: Context) : View(context) {
         private const val LOG_THICKNESS = .2f
         private const val PLANK_THICKNESS = .09f
         private const val WIND_STREAKS = 14
+        /** Îlots : corps, dessus, contour, dessus éclairé, brins d'herbe. */
+        private val ISLET_STONE = intArrayOf(0xFF8E989F.toInt(), 0xFFB9C2C8.toInt(), 0xFF5C666D.toInt(), 0xFFF3E9A8.toInt(), 0)
+        private val ISLET_TUSSOCK = intArrayOf(0xFF6B5A3A.toInt(), 0xFF8DB860.toInt(), 0xFF45382A.toInt(), 0xFFD3F28A.toInt(), 0xFF6F9A45.toInt())
+        private val ISLET_FLOE = intArrayOf(0xFFE6F3FB.toInt(), 0xFFFFFFFF.toInt(), 0xFF8DB9D8.toInt(), 0xFFC4F1FF.toInt(), 0)
+        private const val ISLET_BAND = .06f
+        private const val RIPPLE_TIME = .8f
         private const val PI_F = 3.1415927f
     }
 }

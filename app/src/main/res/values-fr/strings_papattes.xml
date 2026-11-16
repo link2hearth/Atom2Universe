@@ -12,7 +12,7 @@
     <string name="papattes_previous_stage">Étape précédente</string>
     <string name="papattes_next_stage">Étape suivante</string>
     <string name="papattes_lab">Labo</string>
-    <string name="papattes_rules">Un seul doigt, n’importe où sur l’écran. Ce qu’il fait dépend des jambes :\n\n• Marche : tiens pour lancer la jambe arrière en avant, lâche pour poser le pied. Trop tenu, c’est le grand écart.\n• Saut : tiens pour t’accroupir, lâche pour bondir. Plus tu tiens, plus tu vas loin.\n• Glisse : tiens pour pousser et prendre de l’élan, lâche pour filer. Un appui bref fait sauter.\n\nVa jusqu’au drapeau. Le drapeau bleu, à mi-chemin, garde ta place. Les graines d’or rapportent des graines en plus.\n\nTrois étoiles par étape : arriver, ramasser les trois graines d’or, ne jamais tomber.\n\nAu labo, achète un œuf mystère avec des graines. Il devient prêt à éclore quand tu finis une étape jamais faite. Pour l’ouvrir, frotte-le jusqu’à ce qu’il craque, puis retire les morceaux de coquille.\n\nCroise deux bestioles pour mélanger leurs pièces. Touche une pièce du carnet pour ne voir que les bestioles qui l’ont. Certains corps ont un pouvoir : ils flottent, planent, tiennent bon dans le vent ou rebondissent après une chute.</string>
+    <string name="papattes_rules">Un seul doigt, n’importe où sur l’écran. Ce qu’il fait dépend des jambes :\n\n• Marche : tiens pour lancer la jambe arrière en avant, lâche pour poser le pied. Trop tenu, c’est le grand écart.\n• Saut : tiens pour t’accroupir, lâche pour bondir. Plus tu tiens, plus tu vas loin.\n• Glisse : tiens pour pousser et prendre de l’élan, lâche pour filer. Un appui bref fait sauter.\n\nVa jusqu’au drapeau. Le drapeau bleu, à mi-chemin, garde ta place. Les graines d’or rapportent des graines en plus.\n\nTrois étoiles par étape : arriver, ramasser les trois graines d’or, ne jamais tomber.\n\nAu labo, achète des œufs mystère avec des graines : jusqu’à cinq dorment dans la couveuse. Chacun est prêt à éclore 12 heures après l’achat, même jeu fermé. Pour l’ouvrir, frotte-le jusqu’à ce qu’il craque, puis retire les morceaux de coquille.\n\nCroise deux bestioles pour mélanger leurs pièces. Touche une pièce du carnet pour ne voir que les bestioles qui l’ont. Certains corps ont un pouvoir : ils flottent, planent, tiennent bon dans le vent ou rebondissent après une chute.</string>
     <string name="papattes_back">Retour</string>
     <string name="papattes_pause">Pause</string>
     <string name="papattes_paused">Pause</string>
@@ -37,12 +37,9 @@
     <string name="papattes_hatched">Éclos !</string>
     <string name="papattes_card">%1$s · %2$s</string>
     <string name="papattes_reward_rate">1re fois : %1$d + étape ÷ %2$d, ensuite %3$d</string>
-    <string name="papattes_egg_mystery">Œuf mystère</string>
-    <string name="papattes_egg_buy">Acheter · %d</string>
-    <string name="papattes_egg_incubating">En couveuse</string>
-    <string name="papattes_egg_ready_short">Prêt à éclore</string>
-    <string name="papattes_egg_ready">Ton œuf est prêt à éclore !</string>
-    <string name="papattes_hatch">Faire éclore</string>
+    <string name="papattes_egg_buy">Acheter un œuf · %d</string>
+    <string name="papattes_egg_ready_short">Prêt !</string>
+    <string name="papattes_egg_ready">Un œuf est prêt à éclore !</string>
     <string name="papattes_hatch_title">Éclosion</string>
     <string name="papattes_hatch_description">Frotte l’œuf, puis retire les morceaux de coquille</string>
     <string name="papattes_to_lab">Au labo</string>
@@ -134,4 +131,8 @@
     <string name="papattes_trait_kangaroo">Bonds très longs et rasants</string>
     <string name="papattes_trait_skates">Filent sur la glace, rament dans l’herbe</string>
     <string name="papattes_trait_rollers">Rapides sur l’herbe et le bois</string>
+    <string name="papattes_incubator">Couveuse · %1$d/%2$d</string>
+    <string name="papattes_egg_hours">%1$d h %2$02d</string>
+    <string name="papattes_egg_minutes">%d min</string>
+    <string name="papattes_egg_sleeping">Œuf qui dort</string>
 </resources>

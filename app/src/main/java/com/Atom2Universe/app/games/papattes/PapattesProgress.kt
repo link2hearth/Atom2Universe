@@ -4,7 +4,7 @@ import kotlin.random.Random
 
 /**
  * Ce que le joueur possède : les étapes finies et leurs étoiles, les graines, l'enclos, le carnet
- * et l'œuf mystère en couveuse.
+ * et les œufs mystère en couveuse.
  *
  * Indépendant d'Android : l'activité le lit et l'écrit sous forme d'une chaîne ([encode] /
  * [decode]) dans ses préférences.
@@ -20,10 +20,18 @@ class PapattesProgress {
     private val seen = HashSet<Int>()
     /** Étoiles par étape, en bits (voir [PapattesGame.stars]). */
     private val stars = HashMap<Int, Int>()
-    /** L'œuf mystère acheté : la bestiole qu'il contient (tirée à l'achat), ou null. */
-    var egg: Critter? = null; private set
-    /** L'œuf est prêt à éclore : une étape nouvelle a été finie depuis l'achat. */
-    var eggReady = false; private set
+    /** Les œufs mystère en couveuse, au plus [INCUBATOR], du plus ancien au plus récent. */
+    val eggs = mutableListOf<Egg>()
+
+    /**
+     * Un œuf en couveuse : la bestiole qu'il contient (tirée à l'achat) et l'heure de l'achat, en
+     * millisecondes de l'horloge réelle. Il éclot [HATCH_MS] plus tard, jeu ouvert ou non.
+     */
+    class Egg(val critter: Critter, val laidAt: Long) {
+        /** Temps qu'il reste à couver ; une horloge remise en arrière ne fait pas éclore plus tôt. */
+        fun remaining(now: Long): Long = (HATCH_MS - (now - laidAt).coerceAtLeast(0L)).coerceAtLeast(0L)
+        fun ready(now: Long) = remaining(now) == 0L
+    }
 
     init { meet(Critter.STARTER) }
 
@@ -41,13 +49,10 @@ class PapattesProgress {
 
     class Reward(
         val stage: Int, val firstTime: Boolean, val seeds: Int, val gold: Int,
-        val stars: Int, val newStars: Int, val eggReady: Boolean
+        val stars: Int, val newStars: Int
     )
 
-    /**
-     * Une étape vient d'être finie avec [earned] étoiles et [gold] graines d'or. Une étape finie
-     * pour la première fois rend l'œuf en couveuse prêt à éclore.
-     */
+    /** Une étape vient d'être finie avec [earned] étoiles et [gold] graines d'or. */
     fun clearStage(stage: Int, earned: Int, gold: Int = 0): Reward {
         val first = stage > cleared
         val gained = (if (first) FIRST_SEEDS + SEEDS_PER_STAGE * stage else REPLAY_SEEDS) + GOLD_VALUE * gold
@@ -56,33 +61,29 @@ class PapattesProgress {
         val before = starsOf(stage)
         val newStars = earned and before.inv()
         stars[stage] = before or earned
-        val readied = first && egg != null && !eggReady
-        if (readied) eggReady = true
-        return Reward(stage, first, gained, gold, before or earned, newStars, readied)
+        return Reward(stage, first, gained, gold, before or earned, newStars)
     }
 
-    val canBuyEgg: Boolean get() = egg == null && seeds >= EGG_COST
+    val incubatorFull: Boolean get() = eggs.size >= INCUBATOR
+    val canBuyEgg: Boolean get() = !incubatorFull && seeds >= EGG_COST
 
-    /** Achète l'œuf mystère : n'importe quelle bestiole, pièces connues ou non. */
-    fun buyEgg(rnd: Random): Boolean {
+    /** Achète un œuf mystère, mis à couver à l'heure [now] : n'importe quelle bestiole, pièces connues ou non. */
+    fun buyEgg(rnd: Random, now: Long): Boolean {
         if (!canBuyEgg) return false
         seeds -= EGG_COST
-        egg = Critter(Head.entries.random(rnd), Body.entries.random(rnd), Legs.entries.random(rnd))
-        eggReady = false
+        eggs += Egg(Critter(Head.entries.random(rnd), Body.entries.random(rnd), Legs.entries.random(rnd)), now)
         return true
     }
 
-    val canHatch: Boolean get() = egg != null && eggReady && !penFull
+    fun canHatch(egg: Egg, now: Long) = egg in eggs && egg.ready(now) && !penFull
 
     /** L'œuf éclot : sa bestiole rejoint l'enclos et le carnet. */
-    fun hatch(): Critter? {
-        if (!canHatch) return null
-        val critter = egg ?: return null
-        egg = null
-        eggReady = false
-        pen += critter
-        meet(critter)
-        return critter
+    fun hatch(egg: Egg, now: Long): Critter? {
+        if (!canHatch(egg, now)) return null
+        eggs.remove(egg)
+        pen += egg.critter
+        meet(egg.critter)
+        return egg.critter
     }
 
     fun canBreed(a: Int, b: Int) = a != b && a in pen.indices && b in pen.indices && seeds >= BREED_COST && !penFull
@@ -137,7 +138,7 @@ class PapattesProgress {
         append(discovered.joinToString("") { if (it) "1" else "0" }).append(';')
         append(seen.sorted().joinToString(",")).append(';')
         append(stars.entries.sortedBy { it.key }.joinToString(",") { "${it.key}:${it.value}" }).append(';')
-        append(egg?.code ?: -1).append(';').append(if (eggReady) 1 else 0)
+        append(eggs.joinToString(",") { "${it.critter.code}:${it.laidAt}" })
     }
 
     companion object {
@@ -149,6 +150,9 @@ class PapattesProgress {
         /** Graines rapportées par chaque graine d'or ramassée. */
         const val GOLD_VALUE = 3
         const val EGG_COST = 30
+        /** Places de la couveuse, et durée de couvaison : 12 heures réelles. */
+        const val INCUBATOR = 5
+        const val HATCH_MS = 12L * 60 * 60 * 1000
         const val MUTATION_CHANCE = .1f
 
         fun decode(text: String?): PapattesProgress {
@@ -166,9 +170,12 @@ class PapattesProgress {
                 val (stage, bits) = entry.split(':').takeIf { it.size == 2 } ?: continue
                 p.stars[stage.toIntOrNull() ?: continue] = bits.toIntOrNull() ?: continue
             }
-            // Champs de l'œuf mystère, ajoutés après les autres.
-            p.egg = f.getOrNull(8)?.toIntOrNull()?.let(Critter::fromCode)
-            p.eggReady = p.egg != null && f.getOrNull(9) == "1"
+            // La couveuse : « code:heure d'achat » pour chaque œuf.
+            for (entry in f.getOrNull(8)?.split(',').orEmpty()) {
+                val (code, laid) = entry.split(':').takeIf { it.size == 2 } ?: continue
+                val critter = code.toIntOrNull()?.let(Critter::fromCode) ?: continue
+                if (p.eggs.size < INCUBATOR) p.eggs += Egg(critter, laid.toLongOrNull() ?: continue)
+            }
             p.pen.forEach { p.meet(it) }
             return p
         }

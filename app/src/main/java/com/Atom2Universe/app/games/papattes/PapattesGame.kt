@@ -19,7 +19,8 @@ import kotlin.math.sqrt
  */
 class PapattesGame(val stage: Int, val critter: Critter) {
     enum class Phase { WALKING, FALLEN, FINISHED }
-    enum class Event { STEP, CHECKPOINT, FALL, SPLASH, RESPAWN, FINISH, JUMP, LAND, BOUNCE, CRUMBLE, GOLD, SAVED }
+    /** [BEAT] : un îlot touché dans l'ordre ; [IN_TIME] : un passage en mesure réussi ; [OFF_BEAT] : un îlot sauté. */
+    enum class Event { STEP, CHECKPOINT, FALL, SPLASH, RESPAWN, FINISH, JUMP, LAND, BOUNCE, CRUMBLE, GOLD, SAVED, BEAT, IN_TIME, OFF_BEAT }
 
     val course = PapattesCourse(stage, critter.legs)
     val world = PhysWorld().apply {
@@ -41,6 +42,14 @@ class PapattesGame(val stage: Int, val critter: Critter) {
     /** La dernière graine d'or ramassée, pour ses étincelles. */
     var lastGold = -1; private set
 
+    /** Passages en mesure : prochain îlot attendu, et état ([PASSAGE_OPEN], [PASSAGE_DONE] ou [PASSAGE_MISSED]). */
+    val passageNext = IntArray(course.passages.size)
+    val passageState = IntArray(course.passages.size)
+    /** Le dernier passage qui a changé d'état, pour ses effets. */
+    var lastPassage = -1; private set
+    /** Par segment : temps depuis qu'on a touché cet îlot dans l'ordre (−1 = pas encore). */
+    val isletBeat = FloatArray(course.segments.size) { -1f }
+
     /** Planches : temps depuis le premier pied posé (−1 = jamais), et temps depuis qu'elles ont cédé (−1 = en place). */
     val plankTimer = FloatArray(course.segments.size) { -1f }
     val plankFall = FloatArray(course.segments.size) { -1f }
@@ -54,6 +63,7 @@ class PapattesGame(val stage: Int, val critter: Critter) {
     private var feetDown = 2
     private var fallingSpeed = 0f
     private val tmp = FloatArray(2)
+    private val landed = FloatArray(2)
     /** Torse, tête, puis pied et genou de chaque jambe : les points qui ramassent les graines d'or. */
     private var pickers = FloatArray(12)
     /** Segments rangés par début : une abscisse ne regarde que ceux qui peuvent encore l'atteindre. */
@@ -160,6 +170,7 @@ class PapattesGame(val stage: Int, val critter: Critter) {
         bounceCooldown -= STEP
         savedCooldown -= STEP
         for (i in plankFall.indices) if (plankFall[i] >= 0f) plankFall[i] += STEP
+        for (i in isletBeat.indices) if (isletBeat[i] >= 0f && isletBeat[i] < 30f) isletBeat[i] += STEP
         if (phase == Phase.FALLEN) {
             respawnTimer -= STEP
             if (respawnTimer <= 0f) return respawn()
@@ -184,15 +195,19 @@ class PapattesGame(val stage: Int, val critter: Critter) {
         if (walker.hipClearance() < SPLITS * critter.legs.length) return fall(Event.FALL)
         if (submerged(cx, cy - r)) return fall(Event.SPLASH)
         var down = 0
+        var landings = 0
         for ((i, leg) in walker.all.withIndex()) {
             val foot = leg.foot()
             if (submerged(foot[0], foot[1])) return fall(Event.SPLASH)
             val touching = foot[1] - groundAt(foot[0]) < FOOT_CONTACT
-            if (touching && !grounded[i]) events += Event.STEP
+            if (touching && !grounded[i]) { events += Event.STEP; landed[landings++] = foot[0] }
             grounded[i] = touching
             if (touching) { down++; touchPlank(foot[0]) }
             if (touching && !walker.pressed && leg === walker.swing) walker.swingLanded = true
         }
+        // Deux pieds posés ensemble (après un bond) comptent d'arrière en avant : à cheval sur deux îlots, ils touchent les deux.
+        if (landings == 2 && landed[1] < landed[0]) { val t = landed[0]; landed[0] = landed[1]; landed[1] = t }
+        for (k in 0 until landings) beat(landed[k])
         if (down == 0) fallingSpeed = maxOf(fallingSpeed, -walker.body.vy)
         else if (feetDown == 0) {
             events += Event.LAND
@@ -262,6 +277,51 @@ class PapattesGame(val stage: Int, val critter: Critter) {
         return true
     }
 
+    /**
+     * Un pied vient de se poser en [x] : dans un passage en mesure, il compte s'il touche l'îlot
+     * attendu ; s'il en saute un (ou repose pied sur la rive d'arrivée avant la fin), le passage est
+     * manqué jusqu'à la prochaine tentative.
+     */
+    private fun beat(x: Float) {
+        for ((p, passage) in course.passages.withIndex()) {
+            if (passageState[p] != PASSAGE_OPEN || x < passage.x0 - .3f) continue
+            val next = passageNext[p]
+            if (x > passage.x1 + ISLET_SLACK) {
+                passageState[p] = PASSAGE_MISSED
+                if (next > 0) { lastPassage = p; events += Event.OFF_BEAT }
+                continue
+            }
+            var k = -1
+            for (j in 0 until passage.count) {
+                val s = course.segments[passage.first + j]
+                if (x >= s.x0 - ISLET_SLACK && x <= s.x1 + ISLET_SLACK) { k = j; break }
+            }
+            when {
+                k == next -> {
+                    passageNext[p] = next + 1
+                    isletBeat[passage.first + k] = 0f
+                    events += Event.BEAT
+                    if (next + 1 == passage.count) {
+                        passageState[p] = PASSAGE_DONE
+                        lastPassage = p
+                        events += Event.IN_TIME
+                    }
+                }
+                k > next -> {
+                    passageState[p] = PASSAGE_MISSED
+                    lastPassage = p
+                    events += Event.OFF_BEAT
+                }
+            }
+        }
+    }
+
+    /** La graine d'or d'un passage n'existe qu'une fois ce passage réussi. */
+    fun goldVisible(i: Int): Boolean {
+        val p = course.goldSeeds[i].passage
+        return p < 0 || passageState[p] == PASSAGE_DONE
+    }
+
     private fun touchPlank(x: Float) {
         val i = segmentIndexUnder(x)
         if (i < 0 || course.segments[i].floater != Floater.PLANK) return
@@ -310,7 +370,7 @@ class PapattesGame(val stage: Int, val critter: Critter) {
         }
         val seeds = course.goldSeeds
         for (i in seeds.indices) {
-            if (goldTaken[i]) continue
+            if (goldTaken[i] || !goldVisible(i)) continue
             val g = seeds[i]
             var k = 0
             while (k < n) {
@@ -332,6 +392,12 @@ class PapattesGame(val stage: Int, val critter: Critter) {
             if (plankFall[i] >= 0f) { plankBodies[i]?.let { world.add(it) }; plankFall[i] = -1f }
         }
         for ((i, s) in course.seesaws.withIndex()) placeSeesaw(seesawBodies[i], s)
+        // Un passage pas encore réussi se rejoue du début.
+        for ((p, passage) in course.passages.withIndex()) if (passageState[p] != PASSAGE_DONE) {
+            passageState[p] = PASSAGE_OPEN
+            passageNext[p] = 0
+            for (j in 0 until passage.count) isletBeat[passage.first + j] = -1f
+        }
         walker = spawn(if (checkpointReached) course.checkpointX else course.startX)
         phase = Phase.WALKING
         accumulator = 0f
@@ -461,6 +527,11 @@ class PapattesGame(val stage: Int, val critter: Critter) {
         /** Un corps qui flotte ne coule qu'enfoncé de plus que ça sous la surface. */
         const val FLOAT_DEPTH = .35f
         const val GOLD_PICK = .32f
+        const val PASSAGE_OPEN = 0
+        const val PASSAGE_DONE = 1
+        const val PASSAGE_MISSED = -1
+        /** Un pied posé à moins de ça du bord d'un îlot compte encore pour lui (le pied est rond). */
+        const val ISLET_SLACK = .08f
         const val STAR_FINISH = 1
         const val STAR_GOLD = 2
         const val STAR_CLEAN = 4

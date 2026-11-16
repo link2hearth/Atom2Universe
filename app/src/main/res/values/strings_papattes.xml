@@ -12,7 +12,7 @@
     <string name="papattes_previous_stage">Previous stage</string>
     <string name="papattes_next_stage">Next stage</string>
     <string name="papattes_lab">Lab</string>
-    <string name="papattes_rules">One finger, anywhere on the screen. What it does depends on the legs:\n\n• Walk: hold to swing the back leg forward, let go to plant the foot. Hold too long and it ends in the splits.\n• Hop: hold to crouch, let go to leap. The longer you hold, the farther you go.\n• Glide: hold to push and build speed, let go to roll. A quick tap jumps.\n\nReach the flag. The blue flag halfway saves your spot. Golden seeds are worth extra seeds.\n\nThree stars per stage: finish, all three golden seeds, never fall.\n\nIn the lab, buy a mystery egg with seeds. It gets ready once you finish a stage you have never finished. To hatch it, rub it until it cracks, then pull the shell pieces off.\n\nBreed two critters to mix their parts. Tap a part in the book to show only the critters that have it. Some bodies have a power: they float, glide, hold firm in the wind or bounce back from a fall.</string>
+    <string name="papattes_rules">One finger, anywhere on the screen. What it does depends on the legs:\n\n• Walk: hold to swing the back leg forward, let go to plant the foot. Hold too long and it ends in the splits.\n• Hop: hold to crouch, let go to leap. The longer you hold, the farther you go.\n• Glide: hold to push and build speed, let go to roll. A quick tap jumps.\n\nReach the flag. The blue flag halfway saves your spot. Golden seeds are worth extra seeds.\n\nThree stars per stage: finish, all three golden seeds, never fall.\n\nIn the lab, buy mystery eggs with seeds: up to five sleep in the incubator. Each one hatches 12 hours after you buy it, even with the game closed. To hatch it, rub it until it cracks, then pull the shell pieces off.\n\nBreed two critters to mix their parts. Tap a part in the book to show only the critters that have it. Some bodies have a power: they float, glide, hold firm in the wind or bounce back from a fall.</string>
     <string name="papattes_back">Back</string>
     <string name="papattes_pause">Pause</string>
     <string name="papattes_paused">Paused</string>
@@ -37,12 +37,9 @@
     <string name="papattes_hatched">Hatched!</string>
     <string name="papattes_card">%1$s · %2$s</string>
     <string name="papattes_reward_rate">First time: %1$d + stage ÷ %2$d, then %3$d</string>
-    <string name="papattes_egg_mystery">Mystery egg</string>
-    <string name="papattes_egg_buy">Buy · %d</string>
-    <string name="papattes_egg_incubating">Incubating</string>
-    <string name="papattes_egg_ready_short">Ready to hatch</string>
-    <string name="papattes_egg_ready">Your egg is ready to hatch!</string>
-    <string name="papattes_hatch">Hatch</string>
+    <string name="papattes_egg_buy">Buy an egg · %d</string>
+    <string name="papattes_egg_ready_short">Ready!</string>
+    <string name="papattes_egg_ready">An egg is ready to hatch!</string>
     <string name="papattes_hatch_title">Hatching</string>
     <string name="papattes_hatch_description">Rub the egg, then pull the shell pieces off</string>
     <string name="papattes_to_lab">To the lab</string>
@@ -134,4 +131,8 @@
     <string name="papattes_trait_kangaroo">Very long, low leaps</string>
     <string name="papattes_trait_skates">Fly on ice, crawl on grass</string>
     <string name="papattes_trait_rollers">Fast on grass and wood</string>
+    <string name="papattes_incubator">Incubator · %1$d/%2$d</string>
+    <string name="papattes_egg_hours">%1$dh %2$02dm</string>
+    <string name="papattes_egg_minutes">%d min</string>
+    <string name="papattes_egg_sleeping">Sleeping egg</string>
 </resources>
