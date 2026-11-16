@@ -11,23 +11,24 @@ import android.view.View
 import android.view.ViewConfiguration
 import kotlin.math.abs
 import kotlin.math.hypot
-import kotlin.math.min
 import kotlin.math.sin
 
 /**
- * La carte des étages : un fil qui grimpe en serpentant, un bouton cousu par étage. Le premier est
- * tout en bas ; la carte s'arrête [AHEAD] étages au-dessus de celui à jouer, et s'allonge à mesure
- * que le joueur monte. Sous chaque bouton, ses étoiles et son meilleur score.
+ * La carte des niveaux : des boutons cousus le long d'un fil qui serpente, rangée après rangée, le
+ * premier en haut à gauche. Chaque rangée porte autant de boutons que la largeur en accueille, pour
+ * en montrer le plus possible à l'écran et remonter vite, même depuis le millième. La carte s'arrête
+ * [AHEAD] niveaux après celui à jouer. Sous chaque bouton, ses étoiles et son meilleur score.
  */
 @SuppressLint("ViewConstructor")
 class MercerieMapView(context: Context, private val progress: MercerieProgress, private val onPick: (Int) -> Unit) : View(context) {
     private val next = progress.next
     private val count = next + AHEAD
-    private val rowHeight = MercerieUi.dp(context, 128f)
-    private val radius = MercerieUi.dp(context, 33f)
-    private val padTop = MercerieUi.dp(context, 70f)
-    private val padBottom = MercerieUi.dp(context, 84f)
+    private val radius = MercerieUi.dp(context, 30f)
+    private val rowHeight = radius * 3.75f
+    private val padTop = MercerieUi.dp(context, 14f)
+    private val side = MercerieUi.dp(context, 10f)
     private val unit = MercerieUi.unit(context)
+    private var perRow = 4
     private val text = Paint(Paint.ANTI_ALIAS_FLAG).apply { typeface = MercerieUi.bold; textAlign = Paint.Align.CENTER }
     private val rim = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE }
     private val path = Path()
@@ -39,40 +40,45 @@ class MercerieMapView(context: Context, private val progress: MercerieProgress, 
     private val start = System.nanoTime()
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val wanted = (padTop + padBottom + count * rowHeight).toInt()
-        // Tant qu'il y a peu d'étages, la carte remplit quand même l'écran : le premier reste en bas.
+        val w = MeasureSpec.getSize(widthMeasureSpec)
+        perRow = ((w - 2 * side) / (radius * 2.9f)).toInt().coerceAtLeast(3)
+        val rows = (count + perRow - 1) / perRow
+        val wanted = (padTop * 2 + rows * rowHeight).toInt()
         val h = if (MeasureSpec.getMode(heightMeasureSpec) == MeasureSpec.EXACTLY) maxOf(wanted, MeasureSpec.getSize(heightMeasureSpec)) else wanted
-        setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec), h)
+        setMeasuredDimension(w, h)
     }
 
-    private fun nodeX(k: Int) = width / 2f + min(width * .3f, MercerieUi.dp(context, 150f)) * sin(k * 1.05f)
-    private fun nodeY(k: Int) = height - padBottom - radius - k * rowHeight
+    private fun nodeX(k: Int): Float {
+        val row = k / perRow
+        var col = k % perRow
+        // Une rangée sur deux repart dans l'autre sens : le fil ne saute jamais.
+        if (row % 2 == 1) col = perRow - 1 - col
+        return side + (col + .5f) * (width - 2 * side) / perRow
+    }
 
-    /** Hauteur de l'étage [level] dans la carte, pour amener l'écran dessus. */
+    private fun nodeY(k: Int) = padTop + (k / perRow) * rowHeight + radius * 1.25f
+
+    /** Hauteur du niveau [level] dans la carte, pour amener l'écran dessus. */
     fun levelY(level: Int) = nodeY(level - 1)
 
     private fun segment(from: Int) {
-        val x0 = nodeX(from); val y0 = nodeY(from)
-        val x1 = nodeX(from + 1); val y1 = nodeY(from + 1)
-        thread.moveTo(x0, y0)
-        thread.cubicTo(x0, y0 - rowHeight * .5f, x1, y1 + rowHeight * .5f, x1, y1)
+        thread.moveTo(nodeX(from), nodeY(from))
+        thread.lineTo(nodeX(from + 1), nodeY(from + 1))
     }
 
     override fun onDraw(canvas: Canvas) {
         canvas.getClipBounds(clip)
-        // Seuls les étages visibles sont dessinés : la carte peut devenir très longue.
-        val first = ((height - padBottom - clip.bottom) / rowHeight).toInt().coerceIn(0, count - 1)
-        val last = ((height - padBottom - clip.top) / rowHeight).toInt().plus(1).coerceIn(0, count - 1)
+        // Seules les rangées visibles sont dessinées : la carte peut devenir très longue.
+        val firstRow = ((clip.top - padTop) / rowHeight).toInt().coerceAtLeast(0)
+        val lastRow = ((clip.bottom - padTop) / rowHeight).toInt().coerceAtLeast(0)
+        val first = (firstRow * perRow).coerceAtMost(count - 1)
+        val last = ((lastRow + 1) * perRow - 1).coerceAtMost(count - 1)
         thread.rewind()
         for (k in maxOf(first - 1, 0) until minOf(last + 1, next - 1)) segment(k)
         Felt.stitches(canvas, thread, Felt.alpha(Felt.INK, 150), unit, .06f)
-        // Le fil des étages à venir est plus pâle, et s'efface au-dessus du dernier.
+        // Le fil des niveaux à venir est plus pâle.
         thread.rewind()
         for (k in maxOf(first - 1, next - 1) until minOf(last + 1, count - 1)) segment(k)
-        if (last >= count - 1) {
-            thread.moveTo(nodeX(count - 1), nodeY(count - 1))
-            thread.lineTo(nodeX(count - 1), nodeY(count - 1) - rowHeight * .55f)
-        }
         Felt.stitches(canvas, thread, Felt.alpha(Felt.INK, 60), unit, .06f)
 
         val t = (System.nanoTime() - start) / 1e9f
@@ -83,7 +89,7 @@ class MercerieMapView(context: Context, private val progress: MercerieProgress, 
             val current = level == next
             val x = nodeX(k)
             val y = nodeY(k)
-            val r = radius * (if (current) 1.18f + sin(t * 4f) * .05f else 1f)
+            val r = radius * (if (current) 1.16f + sin(t * 4f) * .05f else 1f)
             val color = if (!open) Felt.GREY else if (current) Felt.PINK else Felt.COLORS[k % Felt.COLORS.size]
             if (!open) canvas.saveLayerAlpha(x - r * 1.3f, y - r * 1.3f, x + r * 1.3f, y + r * 1.5f, 150)
             path.rewind()
@@ -97,7 +103,7 @@ class MercerieMapView(context: Context, private val progress: MercerieProgress, 
             text.color = if (open) Felt.CREAM else Felt.darker(Felt.GREY, .8f)
             canvas.drawText(digits, x, y + text.textSize * .35f, text)
             if (!open) { canvas.restore(); continue }
-            val sy = y + radius * 1.52f
+            val sy = y + radius * 1.5f
             for (s in 0 until 3) Felt.star(canvas, x + (s - 1) * radius * .62f, sy + (if (s == 1) radius * .08f else 0f), radius * .24f, s < stars)
             val best = progress.best(level)
             if (best > 0) {
@@ -115,9 +121,9 @@ class MercerieMapView(context: Context, private val progress: MercerieProgress, 
             MotionEvent.ACTION_DOWN -> { downX = event.x; downY = event.y }
             MotionEvent.ACTION_UP -> {
                 if (abs(event.x - downX) > slop || abs(event.y - downY) > slop) return true
-                val k = ((height - padBottom - radius - event.y) / rowHeight + .5f).toInt()
-                for (n in maxOf(k - 1, 0)..minOf(k + 1, count - 1)) {
-                    if (hypot(event.x - nodeX(n), event.y - nodeY(n)) <= radius * 1.5f) {
+                val row = ((event.y - padTop) / rowHeight).toInt().coerceAtLeast(0)
+                for (n in row * perRow until minOf((row + 1) * perRow, count)) {
+                    if (hypot(event.x - nodeX(n), event.y - nodeY(n)) <= radius * 1.45f) {
                         if (progress.unlocked(n + 1)) onPick(n + 1)
                         break
                     }
@@ -128,7 +134,7 @@ class MercerieMapView(context: Context, private val progress: MercerieProgress, 
     }
 
     companion object {
-        /** Étages visibles au-dessus de celui à jouer. */
+        /** Niveaux visibles après celui à jouer. */
         const val AHEAD = 3
     }
 }
