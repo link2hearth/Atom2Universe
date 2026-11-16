@@ -39,16 +39,18 @@ class EnamelPainter {
     /** Émail de chaque rang, à rayon 1 : la toile est mise à l'échelle du palet. */
     private val enamels = arrayOfNulls<Shader>(COLORS.size)
 
-    fun board(c: Canvas, height: Float = EnamelRules.HEIGHT) {
-        val base = height - EnamelRules.BASE_DEPTH
+    fun board(c: Canvas, height: Float = EnamelRules.HEIGHT, width: Float = EnamelRules.WIDTH,
+              baseDepth: Float = EnamelRules.BASE_DEPTH) {
+        val base = height - baseDepth
+        val mid = width / 2
         p.style = Paint.Style.FILL
-        p.shader = LinearGradient(0f, 0f, 10f, height, intArrayOf(0xFFEDD5AD.toInt(), 0xFFF5E5C8.toInt(), 0xFFE2C398.toInt()), null, Shader.TileMode.CLAMP)
-        c.drawRoundRect(-.16f, -.16f, 10.16f, height + .16f, .24f, .24f, p)
+        p.shader = LinearGradient(0f, 0f, width, height, intArrayOf(0xFFEDD5AD.toInt(), 0xFFF5E5C8.toInt(), 0xFFE2C398.toInt()), null, Shader.TileMode.CLAMP)
+        c.drawRoundRect(-.16f, -.16f, width + .16f, height + .16f, .24f, .24f, p)
         p.shader = null
         val random = Random(41)
         p.style = Paint.Style.STROKE; p.strokeWidth = .014f
-        repeat(90) {
-            val x = random.nextFloat() * 10
+        repeat((9 * width).toInt()) {
+            val x = random.nextFloat() * width
             val y = random.nextFloat() * height
             p.color = Color.argb(20 + random.nextInt(18), 132, 89, 45)
             path.reset(); path.moveTo(x, maxOf(0f, y - 4f))
@@ -56,29 +58,30 @@ class EnamelPainter {
             c.drawPath(path, p)
         }
         p.color = 0x20754A26; p.strokeWidth = .025f
-        for (i in 1..4) c.drawLine(i * 2f, 0f, i * 2f, height, p)
+        for (i in 1 until (width / 2).toInt()) c.drawLine(i * 2f, 0f, i * 2f, height, p)
         p.color = INK; p.strokeWidth = .18f
-        c.drawRoundRect(-.09f, -.09f, 10.09f, height + .09f, .24f, .24f, p)
+        c.drawRoundRect(-.09f, -.09f, width + .09f, height + .09f, .24f, .24f, p)
         p.color = GOLD; p.strokeWidth = .035f
-        c.drawRoundRect(-.09f, -.09f, 10.09f, height + .09f, .24f, .24f, p)
+        c.drawRoundRect(-.09f, -.09f, width + .09f, height + .09f, .24f, .24f, p)
         // Incrustation discrète, pour laisser les pièces dominer le plateau.
         p.color = 0x287F774F; p.strokeWidth = .022f
-        c.drawCircle(5f, 3.25f, 1.65f, p)
-        c.drawCircle(5f, 3.25f, 1.8f, p)
+        c.drawCircle(mid, 3.25f, 1.65f, p)
+        c.drawCircle(mid, 3.25f, 1.8f, p)
         repeat(24) {
             val a = it * PI.toFloat() / 12
-            c.drawLine(5 + cos(a) * 1.9f, 3.25f + sin(a) * 1.9f, 5 + cos(a) * 2.16f, 3.25f + sin(a) * 2.16f, p)
+            c.drawLine(mid + cos(a) * 1.9f, 3.25f + sin(a) * 1.9f, mid + cos(a) * 2.16f, 3.25f + sin(a) * 2.16f, p)
         }
         p.style = Paint.Style.FILL; p.color = 0x20173E40
-        c.drawRect(0f, base, 10f, height, p)
+        c.drawRect(0f, base, width, height, p)
         p.color = 0x99173E40.toInt(); p.strokeWidth = .045f
-        c.drawLine(.05f, base, 9.95f, base, p)
+        c.drawLine(.05f, base, width - .05f, base, p)
         p.color = 0x307A7353
-        for (row in 1..3) repeat(19) {
-            c.drawCircle(.5f + it * .5f, base + row * .7f, .018f, p)
+        for (row in 1..3) repeat((2 * width - 1).toInt()) {
+            val y = base + row * .7f * baseDepth / EnamelRules.BASE_DEPTH
+            c.drawCircle(.5f + it * .5f, y, .018f, p)
         }
         p.style = Paint.Style.FILL
-        for (x in floatArrayOf(-.09f, 10.09f)) for (y in floatArrayOf(.4f, height - .4f)) {
+        for (x in floatArrayOf(-.09f, width + .09f)) for (y in floatArrayOf(.4f, height - .4f)) {
             p.color = GOLD; c.drawCircle(x, y, .075f, p)
             p.color = INK; p.strokeWidth = .018f; c.drawLine(x - .04f, y, x + .04f, y, p)
         }

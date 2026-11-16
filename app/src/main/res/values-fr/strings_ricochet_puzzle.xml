@@ -9,7 +9,7 @@
     <string name="puzzle_finished_hud">Vidé en %1$d coups · %3$s</string>
     <string name="puzzle_no_record">Aucun record</string>
     <string name="puzzle_record">Record : %1$d coups</string>
-    <string name="puzzle_seed_mode">Seed %1$d · %2$s · Modifier</string>
+    <string name="puzzle_seed_mode">Seed %1$d · %2$s</string>
     <string name="puzzle_easy">Facile</string>
     <string name="puzzle_hard">Difficile</string>
     <string name="puzzle_easy_description">Facile · Sans obstacle</string>

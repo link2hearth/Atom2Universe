@@ -179,6 +179,9 @@ class BigPileGame(private val rng: Random = Random.Default) {
         private set
     val gridTop: Float get() = worldHeight - reserveBand
 
+    /** Vrai dès qu'une pièce a quitté la réserve : la hauteur de la grille ne doit plus changer. */
+    val started: Boolean get() = pieces.any { it.state != BigPiece.State.RESERVE }
+
     /** Chemin parcouru par la grille depuis le début, en mètres. */
     var shift = 0.0
         private set

@@ -57,10 +57,10 @@ class EnamelBot(private val random: Random = Random.Default) {
         }
         // Depuis le haut de la base : plus près des cibles, et le doigt a toute la base pour tirer.
         val y = game.baseTop + r + .05f
-        val spots = (0..5).map { r + it / 5f * (10f - 2 * r) }
+        val spots = (0..5).map { r + it / 5f * (game.width - 2 * r) }
         // Les plus proches de la base d'abord : ce sont les plus faciles à toucher.
         for (target in game.pucks.filter { it.tier == game.current }.sortedByDescending { it.y }.take(4)) {
-            for (x in spots + target.x.coerceIn(r, 10f - r)) {
+            for (x in spots + target.x.coerceIn(r, game.width - r)) {
                 val dx = target.x - x; val dy = target.y - y
                 val reach = hypot(dx, dy) - target.radius - r
                 // Juste assez pour arriver au contact, ou un peu plus pour pousser.
@@ -76,7 +76,7 @@ class EnamelBot(private val random: Random = Random.Default) {
         for (x in spots) for (power in floatArrayOf(.65f, 1f)) {
             add(x, y, 0f, -1f, power); add(x, y, .25f, -1f, power); add(x, y, -.25f, -1f, power)
         }
-        if (plans.isEmpty()) plans.add(Plan(5f, game.launchY, 0f, -1f, .6f))
+        if (plans.isEmpty()) plans.add(Plan(game.width / 2, game.launchY, 0f, -1f, .6f))
     }
 
     /** Chaque fusion compte beaucoup (plus pour les gros rangs) ; un palet près de la base coûte. */

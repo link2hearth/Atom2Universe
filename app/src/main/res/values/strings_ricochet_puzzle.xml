@@ -9,7 +9,7 @@
     <string name="puzzle_finished_hud">Cleared in %1$d shots · %3$s</string>
     <string name="puzzle_no_record">No record yet</string>
     <string name="puzzle_record">Best: %1$d shots</string>
-    <string name="puzzle_seed_mode">Seed %1$d · %2$s · Change</string>
+    <string name="puzzle_seed_mode">Seed %1$d · %2$s</string>
     <string name="puzzle_easy">Easy</string>
     <string name="puzzle_hard">Hard</string>
     <string name="puzzle_easy_description">Easy · No obstacle</string>

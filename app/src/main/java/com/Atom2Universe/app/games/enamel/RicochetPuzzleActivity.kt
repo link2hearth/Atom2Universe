@@ -1,12 +1,10 @@
 package com.Atom2Universe.app.games.enamel
 
 import android.graphics.Typeface
-import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.InputType
 import android.view.Gravity
 import android.view.WindowManager
-import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
@@ -20,6 +18,7 @@ import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.science.SciencePalette
 import com.Atom2Universe.app.games.bigger.BiggerSoundEngine
 import com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder
+import com.Atom2Universe.app.util.Landscape
 import com.Atom2Universe.app.util.enableImmersiveMode
 import com.Atom2Universe.app.util.showGameRules
 import kotlin.random.Random
@@ -30,7 +29,9 @@ class RicochetPuzzleActivity : ThemedActivity() {
     private val sound = BiggerSoundEngine()
     private lateinit var board: RicochetPuzzleView
     private lateinit var hud: TextView
-    private lateinit var seedButton: Button
+    private lateinit var seedText: TextView
+    private lateinit var bar: LinearLayout
+    private var arrangedLandscape: Boolean? = null
     private var dialog: AlertDialog? = null
     private var reported = false
     private var readingRules = false
@@ -43,10 +44,7 @@ class RicochetPuzzleActivity : ThemedActivity() {
         val model = RicochetPuzzleGame(Random.nextInt(RicochetPuzzleRules.MAX_SEED + 1))
         store.restore(model)
         reported = model.complete
-        val root = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL; setBackgroundColor(colors.background)
-        }
-        val bar = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL; minimumHeight = px(56) }
+        bar = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL; minimumHeight = px(56) }
         fun icon(image: Int, label: Int, action: () -> Unit) = ImageButton(this).apply {
             setImageResource(image); setColorFilter(colors.text); background = null
             setPadding(px(12), px(12), px(12), px(12)); contentDescription = getString(label)
@@ -59,30 +57,47 @@ class RicochetPuzzleActivity : ThemedActivity() {
         })
         hud = TextView(this).apply { textSize = 14f; setTextColor(colors.ink(colors.accent, colors.background)) }
         title.addView(hud)
+        // La seed et le mode, sous le score ; la toucher ouvre le choix du plateau.
+        seedText = TextView(this).apply {
+            textSize = 14f; setTextColor(colors.text); alpha = .8f
+            setOnClickListener { choose() }
+        }
+        title.addView(seedText)
         bar.addView(title, LinearLayout.LayoutParams(0, -2, 1f))
+        // Les actions du défi, en icônes dans la bannière : plus de barres de boutons.
+        bar.addView(icon(R.drawable.ic_edit, R.string.puzzle_choose) { choose() }, LinearLayout.LayoutParams(px(48), px(48)))
+        bar.addView(icon(R.drawable.ic_restart, R.string.puzzle_replay) { replace { start(game.seed, game.hard) } }, LinearLayout.LayoutParams(px(48), px(48)))
+        bar.addView(icon(R.drawable.ic_refresh, R.string.puzzle_new) { replace { start(Random.nextInt(RicochetPuzzleRules.MAX_SEED + 1), game.hard) } }, LinearLayout.LayoutParams(px(48), px(48)))
+        bar.addView(icon(R.drawable.ic_view_list, R.string.puzzle_history) { history() }, LinearLayout.LayoutParams(px(48), px(48)))
         bar.addView(icon(R.drawable.ic_info, R.string.kit_rules) { rules() }, LinearLayout.LayoutParams(px(48), px(48)))
-        root.addView(bar, LinearLayout.LayoutParams(-1, -2))
-        seedButton = action(R.string.puzzle_choose) { choose() }
-        root.addView(seedButton, LinearLayout.LayoutParams(-1, -2))
         board = RicochetPuzzleView(this, model).apply {
             sound = this@RicochetPuzzleActivity.sound
             onChanged = { changed() }
         }
-        root.addView(board, LinearLayout.LayoutParams(-1, 0, 1f))
-        val actions = LinearLayout(this)
-        actions.addView(action(R.string.puzzle_replay) { replace { start(game.seed, game.hard) } }, LinearLayout.LayoutParams(0, -1, 1f))
-        actions.addView(action(R.string.puzzle_new) { replace { start(Random.nextInt(RicochetPuzzleRules.MAX_SEED + 1), game.hard) } }, LinearLayout.LayoutParams(0, -1, 1f))
-        actions.addView(action(R.string.puzzle_history) { history() }, LinearLayout.LayoutParams(0, -1, 1f))
-        root.addView(actions)
-        setContentView(root)
+        setContentView(arrange())
         store.save(game); updateHud()
     }
 
-    private fun action(label: Int, click: () -> Unit) = Button(this).apply {
-        setText(label); isAllCaps = false; textSize = 14f
-        backgroundTintList = ColorStateList.valueOf(colors.accent)
-        minimumWidth = 0; minimumHeight = px(48)
-        setTextColor(colors.onAccent); setOnClickListener { click() }
+    /** Debout : la bannière puis la planche. Couché : la planche sur toute la hauteur, la bannière posée dessus. */
+    private fun arrange(): android.view.View {
+        val landscape = Landscape.isLandscape(this)
+        arrangedLandscape = landscape
+        Landscape.detach(bar); Landscape.detach(board)
+        if (landscape) return android.widget.FrameLayout(this).apply {
+            setBackgroundColor(colors.background)
+            addView(board, android.widget.FrameLayout.LayoutParams(-1, -1))
+            addView(bar, android.widget.FrameLayout.LayoutParams(-1, -2, Gravity.TOP))
+        }
+        return LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL; setBackgroundColor(colors.background)
+            addView(bar, LinearLayout.LayoutParams(-1, -2))
+            addView(board, LinearLayout.LayoutParams(-1, 0, 1f))
+        }
+    }
+
+    override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
+        super.onConfigurationChanged(newConfig)
+        if (::board.isInitialized && arrangedLandscape != Landscape.isLandscape(this)) setContentView(arrange())
     }
 
     private fun mode(hard: Boolean) = getString(if (hard) R.string.puzzle_hard else R.string.puzzle_easy)
@@ -94,7 +109,7 @@ class RicochetPuzzleActivity : ThemedActivity() {
     private fun updateHud() {
         hud.text = getString(if (game.complete) R.string.puzzle_finished_hud else R.string.puzzle_hud,
             game.shots, game.pairsLeft, bestText())
-        seedButton.text = getString(R.string.puzzle_seed_mode, game.seed, mode(game.hard))
+        seedText.text = getString(R.string.puzzle_seed_mode, game.seed, mode(game.hard))
     }
 
     /** La planche tourne : ni règles, ni fenêtre ouverte, ni activité en pause. */

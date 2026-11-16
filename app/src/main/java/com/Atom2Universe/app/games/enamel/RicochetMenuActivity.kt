@@ -13,6 +13,7 @@ import android.widget.TextView
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.science.SciencePalette
+import com.Atom2Universe.app.util.Landscape
 import com.Atom2Universe.app.util.enableImmersiveMode
 
 /** Accueil de Ricochet : une planche jouée par un robot, avec les deux façons de jouer posées dessus. */
@@ -27,8 +28,7 @@ class RicochetMenuActivity : ThemedActivity() {
         fun px(n: Int) = (n * dp).toInt()
         val colors = SciencePalette(this)
         val wide = resources.configuration.smallestScreenWidthDp >= 600
-        val root = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setBackgroundColor(colors.background) }
-        val header = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL; minimumHeight = px(56) }
+        header = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL; minimumHeight = px(56) }
         header.addView(ImageButton(this).apply {
             setImageResource(R.drawable.ic_arrow_back); setColorFilter(colors.text); background = null
             contentDescription = getString(R.string.back); setPadding(px(12), px(12), px(12), px(12))
@@ -37,9 +37,7 @@ class RicochetMenuActivity : ThemedActivity() {
         header.addView(TextView(this).apply {
             setText(R.string.enamel_title); textSize = if (wide) 26f else 23f; setTextColor(colors.text); typeface = Typeface.DEFAULT_BOLD
         }, LinearLayout.LayoutParams(0, -2, 1f))
-        root.addView(header)
-
-        val stage = FrameLayout(this)
+        stage = FrameLayout(this)
         demo = EnamelView(this).apply { this.demo = true; importantForAccessibility = android.view.View.IMPORTANT_FOR_ACCESSIBILITY_NO }
         stage.addView(demo, FrameLayout.LayoutParams(-1, -1))
         fun choice(label: Int, open: () -> Unit) = Button(this).apply {
@@ -56,15 +54,49 @@ class RicochetMenuActivity : ThemedActivity() {
             LinearLayout.LayoutParams(-2, -2))
         // Au milieu de la planche : la base, où le robot se place et tire, reste visible en bas.
         stage.addView(choices, FrameLayout.LayoutParams(-2, -2, Gravity.CENTER))
-        root.addView(stage, LinearLayout.LayoutParams(-1, 0, 1f))
-        setContentView(root)
+        setContentView(arrange())
+    }
+
+    private lateinit var header: LinearLayout
+    private lateinit var stage: FrameLayout
+    private var arrangedLandscape: Boolean? = null
+
+    /** Debout : la bannière puis la planche. Couché : la planche sur tout l'écran, la bannière posée dessus. */
+    private fun arrange(): android.view.View {
+        val landscape = Landscape.isLandscape(this)
+        arrangedLandscape = landscape
+        val background = SciencePalette(this).background
+        Landscape.detach(header); Landscape.detach(stage)
+        if (landscape) return FrameLayout(this).apply {
+            setBackgroundColor(background)
+            addView(stage, FrameLayout.LayoutParams(-1, -1))
+            addView(header, FrameLayout.LayoutParams(-1, -2, Gravity.TOP))
+        }
+        return LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL; setBackgroundColor(background)
+            addView(header)
+            addView(stage, LinearLayout.LayoutParams(-1, 0, 1f))
+        }
+    }
+
+    override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
+        super.onConfigurationChanged(newConfig)
+        if (::stage.isInitialized && arrangedLandscape != Landscape.isLandscape(this)) {
+            setContentView(arrange())
+            // Chaque orientation a sa partie : le bouton dit si celle-ci en a une en cours.
+            onResumeLabel()
+        }
+    }
+
+    private fun onResumeLabel() {
+        val saved = getSharedPreferences(EnamelActivity.PREFS, MODE_PRIVATE).getString(EnamelActivity.runKey(this), null) != null
+        classic.setText(if (saved) R.string.ricochet_continue else R.string.ricochet_new_game)
     }
 
     override fun onResume() {
         super.onResume()
         // Une partie classique en cours reprend là où on l'a laissée.
-        val saved = getSharedPreferences(EnamelActivity.PREFS, MODE_PRIVATE).getString("run_state", null) != null
-        classic.setText(if (saved) R.string.ricochet_continue else R.string.ricochet_new_game)
+        onResumeLabel()
         demo.resume()
     }
 

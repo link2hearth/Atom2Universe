@@ -14,6 +14,10 @@ object EnamelRules {
     const val MIN_HEIGHT = 10f
     const val MAX_HEIGHT = 24f
     const val BASE_DEPTH = 3f
+
+    /** La planche couchée peut s'élargir jusque-là, et sa base est moins profonde. */
+    const val MAX_WIDTH = 18f
+    const val LANDSCAPE_BASE = .7f
     const val RETURN_LIMIT = 1.5f
     const val LAUNCH_GRACE = 1.2f
     const val MAX_SPEED = 19f
@@ -47,8 +51,20 @@ class EnamelGame(private val random: Random = Random.Default) {
     var moving = false; private set
     var over = false; private set
     var height = EnamelRules.HEIGHT; private set
-    val baseTop get() = height - EnamelRules.BASE_DEPTH
-    val launchY get() = baseTop + EnamelRules.BASE_DEPTH / 2
+    /** Largeur de la planche : 10 debout, davantage couché. Fixée avant le premier tir. */
+    var width = EnamelRules.WIDTH; private set
+    /** Profondeur de la base de lancement : réduite couché. Fixée avant le premier tir. */
+    var baseDepth = EnamelRules.BASE_DEPTH; private set
+    val baseTop get() = height - baseDepth
+    val launchY get() = baseTop + baseDepth / 2
+
+    /** Largeur et profondeur de base d'une partie neuve (rien n'est encore sur la planche). */
+    fun reshape(newWidth: Float, newBaseDepth: Float) {
+        if (shots > 0 || !newWidth.isFinite() || !newBaseDepth.isFinite()) return
+        width = newWidth.coerceIn(EnamelRules.WIDTH, EnamelRules.MAX_WIDTH)
+        baseDepth = newBaseDepth.coerceIn(1.8f, EnamelRules.BASE_DEPTH)
+        for (p in pucks) p.x = p.x.coerceIn(p.radius, width - p.radius)
+    }
     var danger = 0f; private set
     private var quiet = 0f
     private var elapsed = 0f
@@ -89,7 +105,7 @@ class EnamelGame(private val random: Random = Random.Default) {
 
     fun isLaunchClear(x: Float, y: Float): Boolean {
         val r = EnamelRules.RADII[current]
-        if (!x.isFinite() || !y.isFinite() || x < r || x > EnamelRules.WIDTH - r ||
+        if (!x.isFinite() || !y.isFinite() || x < r || x > width - r ||
             y < baseTop + r || y > height - r) return false
         return pucks.none {
             hypot(it.x - x, it.y - y) < it.radius + r + .025f
@@ -174,7 +190,7 @@ class EnamelGame(private val random: Random = Random.Default) {
     private fun wall(p: EnamelPuck, returnToBoard: Boolean = false) {
         val r = p.radius
         if (p.x < r) { p.x = r; if (p.vx < 0) p.vx *= -.72f }
-        if (p.x > EnamelRules.WIDTH - r) { p.x = EnamelRules.WIDTH - r; if (p.vx > 0) p.vx *= -.72f }
+        if (p.x > width - r) { p.x = width - r; if (p.vx > 0) p.vx *= -.72f }
         if (p.y < r) { p.y = r; if (p.vy < 0) p.vy *= -.72f }
         // Bande à sens unique : le tir sort librement, puis les retours rebondissent.
         // Seulement avant les contacts : leur correction reste libre de dépasser la limite,
@@ -246,16 +262,23 @@ class EnamelGame(private val random: Random = Random.Default) {
 
     fun saveState(): String? {
         if (over || shots == 0) return null
-        return listOf("2", score, shots, bestTier, current, next, chain, if (moving) 1 else 0,
-            pucks.joinToString(";") { "${it.tier},${it.x},${it.y},${it.vx},${it.vy},${it.angle},${if (it.entered) 1 else 0},${it.age},${it.overflow}" }, height).joinToString("|")
+        return listOf("3", score, shots, bestTier, current, next, chain, if (moving) 1 else 0,
+            pucks.joinToString(";") { "${it.tier},${it.x},${it.y},${it.vx},${it.vy},${it.angle},${if (it.entered) 1 else 0},${it.age},${it.overflow}" },
+            height, width, baseDepth).joinToString("|")
     }
 
     /** Validation entière avant mutation : une sauvegarde tronquée ne laisse pas un demi-plateau. */
     fun restoreState(state: String): Boolean = try {
         val s = state.split('|')
         val legacy = s.size == 9 && s[0] == "1"
-        require(legacy || (s.size == 10 && s[0] == "2"))
+        // Les parties en cours enregistrées avant la planche variable (largeur 10, base 3) se relisent.
+        val shaped = s.size == 12 && s[0] == "3"
+        require(legacy || shaped || (s.size == 10 && s[0] == "2"))
         val savedHeight = if (legacy) EnamelRules.HEIGHT else s[9].toFloat()
+        val savedWidth = if (shaped) s[10].toFloat() else EnamelRules.WIDTH
+        val savedBase = if (shaped) s[11].toFloat() else EnamelRules.BASE_DEPTH
+        require(savedWidth.isFinite() && savedWidth in EnamelRules.WIDTH..EnamelRules.MAX_WIDTH)
+        require(savedBase.isFinite() && savedBase in 1.8f..EnamelRules.BASE_DEPTH)
         require(savedHeight.isFinite() && savedHeight in EnamelRules.MIN_HEIGHT..EnamelRules.MAX_HEIGHT)
         val numbers = (1..7).map { s[it].toInt() }
         require(numbers[0] >= 0 && numbers[1] > 0 && numbers[2] in -1..EnamelRules.LAST_TIER)
@@ -267,7 +290,7 @@ class EnamelGame(private val random: Random = Random.Default) {
             val tier = f[0].toInt(); require(tier in EnamelRules.RADII.indices)
             val v = (1..5).map { f[it].toFloat().also { value -> require(value.isFinite()) } }
             val r = EnamelRules.RADII[tier]
-            require(v[0] in r - .01f..EnamelRules.WIDTH - r + .01f && v[1] in r - .01f..savedHeight - r + .01f)
+            require(v[0] in r - .01f..savedWidth - r + .01f && v[1] in r - .01f..savedHeight - r + .01f)
             require(hypot(v[2], v[3]) <= 100f)
             EnamelPuck(tier, v[0], v[1], v[2], v[3]).apply {
                 angle = v[4]
@@ -282,7 +305,7 @@ class EnamelGame(private val random: Random = Random.Default) {
             }
         }
         require(restored.size <= 256)
-        reset(); height = savedHeight; pucks.addAll(restored)
+        reset(); height = savedHeight; width = savedWidth; baseDepth = savedBase; pucks.addAll(restored)
         score = numbers[0]; shots = numbers[1]; bestTier = numbers[2]; current = numbers[3]; next = numbers[4]; chain = numbers[5]
         danger = (pucks.maxOfOrNull { it.overflow } ?: 0f) / EnamelRules.RETURN_LIMIT
         // Recalcule contacts et dépassement, même pour un plateau sauvegardé au repos.

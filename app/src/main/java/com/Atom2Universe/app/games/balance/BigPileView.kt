@@ -124,14 +124,24 @@ class BigPileView @JvmOverloads constructor(
 
     override fun surfaceCreated(holder: SurfaceHolder) = resume()
 
-    override fun surfaceChanged(holder: SurfaceHolder, format: Int, w: Int, h: Int) {
+    override fun surfaceChanged(holder: SurfaceHolder, format: Int, w: Int, h: Int) = layoutWorld(w, h)
+
+    private fun layoutWorld(w: Int, h: Int) {
         // Couché, la réserve et les vies sont dans la bulle de l'écran (BigPileReserveView) :
         // l'échelle se règle aussi sur la hauteur et la grille monte presque jusqu'en haut.
         landscape = externalReserve
-        scale = if (landscape) minOf(w / BigPileRules.WORLD_WIDTH, h / LANDSCAPE_HEIGHT) else w / BigPileRules.WORLD_WIDTH
+        val band = if (landscape) LANDSCAPE_BAND else BigPileRules.RESERVE_HEIGHT
         cx = w / 2f
         synchronized(game) {
-            game.setViewport(h / scale, if (landscape) LANDSCAPE_BAND else BigPileRules.RESERVE_HEIGHT)
+            if (game.started) {
+                // Partie commencée : la grille garde sa hauteur, seule l'échelle suit l'écran.
+                val worldHeight = game.gridTop + band
+                scale = minOf(w / BigPileRules.WORLD_WIDTH, h / worldHeight)
+                game.setViewport(worldHeight, band)
+            } else {
+                scale = if (landscape) minOf(w / BigPileRules.WORLD_WIDTH, h / LANDSCAPE_HEIGHT) else w / BigPileRules.WORLD_WIDTH
+                game.setViewport(h / scale, band)
+            }
         }
         reveiller()
     }
@@ -268,6 +278,8 @@ class BigPileView @JvmOverloads constructor(
 
     fun newGame() {
         synchronized(game) { game.newGame() }
+        // Une partie neuve prend la hauteur de grille qui va à l'écran du moment.
+        if (width > 0 && height > 0) layoutWorld(width, height)
         reveiller()
     }
 

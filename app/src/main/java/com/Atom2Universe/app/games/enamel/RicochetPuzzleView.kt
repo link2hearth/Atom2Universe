@@ -82,11 +82,16 @@ class RicochetPuzzleView(context: Context, val game: RicochetPuzzleGame = Ricoch
         onChanged?.invoke(); invalidate()
     }
 
+    /** Couché : la bannière est posée sur le jeu et les couleurs passent en colonne à droite de la planche. */
+    private var landscape = false
+
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        // Ne jamais déformer la géométrie d'une seed en pivotant l'écran.
-        scale = min((w - 12 * dp) / 10.4f, (h - 44 * dp) / (RicochetPuzzleRules.HEIGHT + .4f)).coerceAtLeast(.1f)
+        // Ne jamais déformer la géométrie d'une seed en pivotant l'écran : seule l'échelle change.
+        landscape = w > h
+        val below = if (landscape) 8 * dp else 44 * dp
+        scale = min((w - 12 * dp) / 10.4f, (h - below) / (RicochetPuzzleRules.HEIGHT + .4f)).coerceAtLeast(.1f)
         left = (w - 10 * scale) / 2
-        top = 4 * dp + .2f * scale + maxOf(0f, (h - 44 * dp - (RicochetPuzzleRules.HEIGHT + .4f) * scale) / 2)
+        top = 4 * dp + .2f * scale + maxOf(0f, (h - below - (RicochetPuzzleRules.HEIGHT + .4f) * scale) / 2)
         board?.recycle()
         board = Bitmap.createBitmap(ceil(10.4f * scale).toInt(), ceil((RicochetPuzzleRules.HEIGHT + .4f) * scale).toInt(), Bitmap.Config.ARGB_8888).also {
             val c = Canvas(it); c.scale(scale, scale); c.translate(.2f, .2f); art.board(c, RicochetPuzzleRules.HEIGHT)
@@ -160,9 +165,18 @@ class RicochetPuzzleView(context: Context, val game: RicochetPuzzleGame = Ricoch
             hand.draw(c, hintX, hintY, hintPressed, (hintAlpha * 235).toInt(), RicochetPuzzleRules.PROJECTILE_RADIUS + .25f)
             c.restore()
         }
-        val unit = (width - 24 * dp) / 6
-        for (color in 0..5) art.puck(c, color, 12 * dp + unit * (color + .5f), height - 19 * dp,
-            min(11 * dp, unit * .2f), alpha = if (game.pucks.any { it.color == color }) 255 else 45)
+        if (landscape) {
+            // Couché : les six couleurs en colonne, à droite de la planche, sous les icônes de la bannière.
+            val x = (left + 10 * scale + width) / 2
+            val topY = 72 * dp
+            val unit = (height - topY - 12 * dp) / 6
+            for (color in 0..5) art.puck(c, color, x, topY + unit * (color + .5f),
+                min(16 * dp, unit * .3f), alpha = if (game.pucks.any { it.color == color }) 255 else 45)
+        } else {
+            val unit = (width - 24 * dp) / 6
+            for (color in 0..5) art.puck(c, color, 12 * dp + unit * (color + .5f), height - 19 * dp,
+                min(11 * dp, unit * .2f), alpha = if (game.pucks.any { it.color == color }) 255 else 45)
+        }
         if (active && (game.moving || rings.isNotEmpty())) postInvalidateOnAnimation()
         else if (active && game.hard && !game.complete) { removeCallbacks(wallTick); postDelayed(wallTick, WALL_FRAME_MS) }
         else {

@@ -15,16 +15,60 @@ import com.Atom2Universe.app.science.SciencePalette
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.games.bigger.BiggerSoundEngine
+import com.Atom2Universe.app.util.Landscape
 import com.Atom2Universe.app.util.enableImmersiveMode
 import com.Atom2Universe.app.util.showGameRules
 import com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder
 
 class EnamelActivity : ThemedActivity() {
-    companion object { const val PREFS = "enamel_save" }
+    companion object {
+        const val PREFS = "enamel_save"
+
+        /**
+         * Une partie debout et une partie couchée, chacune avec sa planche à la hauteur de son
+         * écran : tourner la tablette range l'une et reprend l'autre, sans rien déformer.
+         */
+        fun runKey(context: android.content.Context) =
+            if (Landscape.isLandscape(context)) "run_state_land" else "run_state"
+    }
+
+    /** La clé de la partie affichée (celle de l'orientation où elle a été commencée). */
+    private var runKey = "run_state"
     private val prefs by lazy { getSharedPreferences(PREFS, MODE_PRIVATE) }
     private val colors by lazy { SciencePalette(this) }
     private val sound = BiggerSoundEngine()
     private lateinit var board: EnamelView
+    private lateinit var bar: LinearLayout
+    private var arrangedLandscape: Boolean? = null
+
+    /** Debout : la bannière puis la planche. Couché : la planche sur tout l'écran, la bannière posée dessus. */
+    private fun arrange(): android.view.View {
+        val landscape = Landscape.isLandscape(this)
+        arrangedLandscape = landscape
+        Landscape.detach(bar); Landscape.detach(board)
+        if (landscape) return android.widget.FrameLayout(this).apply {
+            setBackgroundColor(colors.background)
+            addView(board, android.widget.FrameLayout.LayoutParams(-1, -1))
+            addView(bar, android.widget.FrameLayout.LayoutParams(-1, -2, Gravity.TOP))
+        }
+        return LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setBackgroundColor(colors.background)
+            addView(bar, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
+            addView(board, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f))
+        }
+    }
+
+    override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
+        super.onConfigurationChanged(newConfig)
+        if (!::board.isInitialized || arrangedLandscape == Landscape.isLandscape(this)) return
+        // La partie de l'orientation quittée est rangée ; celle de la nouvelle reprend (ou une neuve).
+        checkpoint()
+        runKey = runKey(this)
+        board.load(prefs.getString(runKey, null))
+        updateHud()
+        setContentView(arrange())
+    }
     private lateinit var score: TextView
     private var restartDialog: AlertDialog? = null
     private var readingRules = false
@@ -34,11 +78,7 @@ class EnamelActivity : ThemedActivity() {
         enableImmersiveMode()
         val dp = resources.displayMetrics.density
         fun px(n: Int) = (n * dp).toInt()
-        val root = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            setBackgroundColor(colors.background)
-        }
-        val bar = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL; minimumHeight = px(56) }
+        bar = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL; minimumHeight = px(56) }
         fun button(icon: Int, title: Int, action: () -> Unit) = ImageButton(this).apply {
             setImageResource(icon); setColorFilter(colors.text); background = null
             contentDescription = getString(title); setPadding(px(12), px(12), px(12), px(12))
@@ -64,17 +104,16 @@ class EnamelActivity : ThemedActivity() {
                 if (lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) resumeBoard()
             }
         }, LinearLayout.LayoutParams(px(48), px(48)))
-        root.addView(bar, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
         board = EnamelView(this).apply {
             sound = this@EnamelActivity.sound
             bestScore = prefs.getInt("best_score", 0)
             discoveredTier = prefs.getInt("discovered_tier", -1)
-            prefs.getString("run_state", null)?.let { game.restoreState(it) }
+            runKey = runKey(this@EnamelActivity)
+            prefs.getString(runKey, null)?.let { game.restoreState(it) }
             onStateChanged = { checkpoint() }
             onGameOver = { finishRun(); updateHud(); updateScreen() }
         }
-        root.addView(board, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f))
-        setContentView(root)
+        setContentView(arrange())
         updateHud()
     }
 
@@ -99,7 +138,7 @@ class EnamelActivity : ThemedActivity() {
     private fun checkpoint() {
         val state = board.game.saveState()
         prefs.edit().apply {
-            if (state == null) remove("run_state") else putString("run_state", state)
+            if (state == null) remove(runKey) else putString(runKey, state)
             putInt("best_score", maxOf(prefs.getInt("best_score", 0), board.game.score))
             putInt("discovered_tier", maxOf(prefs.getInt("discovered_tier", -1), board.discoveredTier))
         }.apply()
@@ -110,7 +149,7 @@ class EnamelActivity : ThemedActivity() {
 
     private fun finishRun() {
         // Retire la partie avant le versement : revenir après une sortie ne la repaie pas.
-        prefs.edit().remove("run_state")
+        prefs.edit().remove(runKey)
             .putInt("best_score", maxOf(prefs.getInt("best_score", 0), board.game.score))
             .putInt("discovered_tier", maxOf(prefs.getInt("discovered_tier", -1), board.discoveredTier)).commit()
         val reward = NeutrinoRewards.enamel(board.game.score)

@@ -7,15 +7,17 @@ import android.graphics.Paint
 import android.graphics.Shader
 
 /**
- * Jauge de charge posée sur la limite de la base, en unités de planche (largeur 10).
+ * Jauge de charge posée sur la limite de la base, en unités de planche (sur toute sa largeur).
  * Un rail creusé dans le bois (lèvre claire dessous, bord sombre, fond creux) reçoit un
  * remplissage vernis qui passe du jaune au rouge : la couleur de la pointe dit la force.
  */
 class PowerBarPainter {
     private val p = Paint(Paint.ANTI_ALIAS_FLAG)
     // Le dégradé couvre tout le rail : la couleur de la pointe dit la force.
-    private val fill = LinearGradient(L, 0f, R, 0f, intArrayOf(YELLOW, AMBER, ORANGE, RED),
+    private val fill = LinearGradient(0f, 0f, 1f, 0f, intArrayOf(YELLOW, AMBER, ORANGE, RED),
         floatArrayOf(0f, .35f, .7f, 1f), Shader.TileMode.CLAMP)
+    private val fillMatrix = Matrix()
+    private var shadedWidth = Float.NaN
     // Fond du rail, plus sombre en haut : une rainure creusée dans le bois.
     private val trough = LinearGradient(0f, 0f, 0f, 1f, 0xFF031012.toInt(), 0xFF1E4649.toInt(), Shader.TileMode.CLAMP)
     // Vernis bombé du remplissage : reflet clair en haut, ombre chaude en bas.
@@ -25,7 +27,8 @@ class PowerBarPainter {
     private val matrix = Matrix()
     private var shadedY = Float.NaN
 
-    fun draw(c: Canvas, y: Float, power: Float) {
+    fun draw(c: Canvas, y: Float, power: Float, width: Float = 10f) {
+        val R = width - .2f
         val k = power.coerceIn(0f, 1f)
         val top = y - HEIGHT / 2; val bottom = y + HEIGHT / 2
         if (y != shadedY) {
@@ -33,6 +36,12 @@ class PowerBarPainter {
             shadedY = y
             matrix.setScale(1f, HEIGHT); matrix.postTranslate(0f, top)
             trough.setLocalMatrix(matrix); gloss.setLocalMatrix(matrix)
+        }
+        if (width != shadedWidth) {
+            // Le dégradé de couleur couvre tout le rail, quelle que soit la largeur de la planche.
+            shadedWidth = width
+            fillMatrix.setScale(R - L, 1f); fillMatrix.postTranslate(L, 0f)
+            fill.setLocalMatrix(fillMatrix)
         }
         val tip = maxOf(L + (R - L) * k, L + HEIGHT)
         p.style = Paint.Style.FILL; p.shader = null
@@ -46,7 +55,7 @@ class PowerBarPainter {
         p.shader = null
         // Graduations claires dans le creux (le remplissage les recouvre en avançant).
         p.color = 0x40FFFFFF
-        for (i in 1..3) tick(c, i, top, bottom)
+        for (i in 1..3) tick(c, i, top, bottom, R)
         if (k <= 0f) return
 
         // Remplissage vernis.
@@ -57,7 +66,7 @@ class PowerBarPainter {
         p.shader = null
         // Graduations sombres sous le remplissage.
         p.color = 0x50300800
-        for (i in 1..3) if (L + (R - L) * i / 4f < tip - HEIGHT / 2) tick(c, i, top, bottom)
+        for (i in 1..3) if (L + (R - L) * i / 4f < tip - HEIGHT / 2) tick(c, i, top, bottom, R)
 
         // Pointe : un trait blanc net au bout du remplissage.
         p.color = WHITE; p.alpha = 240
@@ -65,7 +74,7 @@ class PowerBarPainter {
         p.alpha = 255
     }
 
-    private fun tick(c: Canvas, i: Int, top: Float, bottom: Float) {
+    private fun tick(c: Canvas, i: Int, top: Float, bottom: Float, R: Float) {
         val x = L + (R - L) * i / 4f
         c.drawRect(x - .012f, top + .05f, x + .012f, bottom - .05f, p)
     }
@@ -76,7 +85,6 @@ class PowerBarPainter {
         /** Épaisseur du bord sombre autour du remplissage. */
         const val RIM = .05f
         const val L = .2f
-        const val R = 9.8f
         val WHITE = 0xFFFFFFFF.toInt()
         val RAIL = 0xFF0C2426.toInt()
         val LIP = 0xB0FFF8E6.toInt()

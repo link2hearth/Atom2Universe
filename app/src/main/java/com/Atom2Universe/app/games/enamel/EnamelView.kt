@@ -45,7 +45,7 @@ class EnamelView(context: Context) : View(context) {
     private var pointer = -1
     private var startY = 0f
     private var startX = 0f
-    private var launchX = 5f
+    private var launchX = EnamelRules.WIDTH / 2
     private var launchY = game.launchY
     private var aimX = 0f
     private var aimY = -1f
@@ -86,25 +86,60 @@ class EnamelView(context: Context) : View(context) {
     fun pause() { active = false; cancelAim(); last = 0L }
     fun reset() {
         game.reset(); reported = false; rings.clear(); messageLife = 0f; accumulator = 0f
-        cancelAim(); launchX = 5f; launchY = game.launchY; blocked = false; last = 0L
+        // Une partie neuve prend la hauteur qui va à l'écran du moment.
+        if (width > 0 && height > 0) layoutBoard(width, height)
+        cancelAim(); launchX = game.width / 2; launchY = game.launchY; blocked = false; last = 0L
         onStateChanged?.invoke(); invalidate()
     }
 
-    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        val availableW = (w - 12 * dp).coerceAtLeast(1f)
-        val availableH = (h - 52 * dp).coerceAtLeast(1f)
-        val boardHeight = (availableH / (availableW / 10.4f) - .4f)
-            .coerceIn(EnamelRules.MIN_HEIGHT, EnamelRules.MAX_HEIGHT)
-        game.resize(boardHeight)
-        scale = min(availableW / 10.4f, availableH / (game.height + .4f)).coerceAtLeast(.1f)
-        left = (w - 10 * scale) / 2
-        top = 4 * dp + maxOf(0f, (availableH - (game.height + .4f) * scale) / 2) + .2f * scale
+    /** Couché : la bannière est posée sur le jeu et la frise passe en colonne à droite de la planche. */
+    private var landscape = false
+
+    /**
+     * Remplace la partie affichée par une partie sauvegardée, ou par une neuve ([state] null ou
+     * illisible) : chaque orientation a la sienne, et l'écran passe de l'une à l'autre en tournant.
+     */
+    fun load(state: String?) {
+        if (state == null || !game.restoreState(state)) { reset(); return }
+        reported = false; rings.clear(); messageLife = 0f; accumulator = 0f
+        if (width > 0 && height > 0) layoutBoard(width, height)
+        cancelAim(); launchX = game.width / 2; launchY = game.launchY; blocked = false; last = 0L
+        onStateChanged?.invoke(); invalidate()
+    }
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) = layoutBoard(w, h)
+
+    private fun layoutBoard(w: Int, h: Int) {
+        landscape = w > h
+        // Couché : la planche commence sous la bannière et s'étale en largeur, la frise en
+        // colonne à droite ; debout : toute la largeur, la frise en bas.
+        val topInset = if (landscape) TOP_INSET * dp else 4 * dp
+        val leftInset = if (landscape) 12 * dp else 6 * dp
+        val rightInset = if (landscape) COLUMN_WIDTH * dp else 6 * dp
+        val availableW = (w - leftInset - rightInset).coerceAtLeast(1f)
+        val availableH = (h - topInset - (if (landscape) 8 * dp else 48 * dp)).coerceAtLeast(1f)
+        // La forme de la planche se choisit avant le premier tir, puis ne bouge plus : tourner
+        // l'écran ne change que l'échelle (et chaque orientation a sa propre partie).
+        if (game.shots == 0) {
+            if (landscape) {
+                game.resize(EnamelRules.MIN_HEIGHT)
+                val s = availableH / (EnamelRules.MIN_HEIGHT + .4f)
+                game.reshape(availableW / s - .4f, EnamelRules.BASE_DEPTH * EnamelRules.LANDSCAPE_BASE)
+            } else {
+                game.reshape(EnamelRules.WIDTH, EnamelRules.BASE_DEPTH)
+                game.resize(availableH / (availableW / (EnamelRules.WIDTH + .4f)) - .4f)
+            }
+        }
+        val bwUnits = game.width + .4f
+        scale = min(availableW / bwUnits, availableH / (game.height + .4f)).coerceAtLeast(.1f)
+        left = leftInset + (availableW - game.width * scale) / 2
+        top = topInset + maxOf(0f, (availableH - (game.height + .4f) * scale) / 2) + .2f * scale
         launchY = game.launchY
-        val bw = kotlin.math.ceil(10.4f * scale).toInt().coerceAtLeast(1)
+        val bw = kotlin.math.ceil(bwUnits * scale).toInt().coerceAtLeast(1)
         val bh = kotlin.math.ceil((game.height + .4f) * scale).toInt().coerceAtLeast(1)
         board?.recycle()
         board = Bitmap.createBitmap(bw, bh, Bitmap.Config.ARGB_8888).also {
-            val c = Canvas(it); c.scale(scale, scale); c.translate(.2f, .2f); art.board(c, game.height)
+            val c = Canvas(it); c.scale(scale, scale); c.translate(.2f, .2f); art.board(c, game.height, game.width, game.baseDepth)
         }
         cancelAim()
     }
@@ -137,7 +172,7 @@ class EnamelView(context: Context) : View(context) {
         canvas.drawColor(colors.background)
         board?.let { canvas.drawBitmap(it, left - .2f * scale, top - .2f * scale, null) }
         canvas.save(); canvas.translate(left, top); canvas.scale(scale, scale)
-        canvas.save(); canvas.clipRect(0f, 0f, 10f, game.height)
+        canvas.save(); canvas.clipRect(0f, 0f, game.width, game.height)
         drawBase(canvas)
         for (puck in game.pucks) art.puck(canvas, puck.tier, puck.x, puck.y, puck.radius, puck.angle)
         for (ring in rings) {
@@ -158,13 +193,14 @@ class EnamelView(context: Context) : View(context) {
             val bob = kotlin.math.sin(now / 1_000_000_000.0 * 2 * Math.PI / FLOAT_PERIOD).toFloat() * .12f
             val cy = game.launchY - bob
             p.style = Paint.Style.FILL; p.color = EnamelPainter.INK; p.alpha = (28 - bob * 60).toInt()
-            canvas.drawOval(5f - radius * .85f, game.launchY + radius * .55f, 5f + radius * .85f, game.launchY + radius * .95f, p)
+            val mid = game.width / 2
+            canvas.drawOval(mid - radius * .85f, game.launchY + radius * .55f, mid + radius * .85f, game.launchY + radius * .95f, p)
             p.alpha = 255
-            art.puck(canvas, game.current, 5f, cy, radius, alpha = 115)
+            art.puck(canvas, game.current, mid, cy, radius, alpha = 115)
         }
         if (game.canLaunch && touching) {
             val radius = EnamelRules.RADII[game.current]
-            launchX = launchX.coerceIn(radius, 10f - radius)
+            launchX = launchX.coerceIn(radius, game.width - radius)
             launchY = launchY.coerceIn(game.baseTop + radius, game.height - radius)
             val clear = game.isLaunchClear(launchX, launchY)
             if (aiming && !blocked) drawAim(canvas)
@@ -266,19 +302,19 @@ class EnamelView(context: Context) : View(context) {
     private fun drawBase(c: Canvas) {
         if (game.danger > 0f) {
             p.color = 0xFFC0503C.toInt(); p.alpha = (game.danger * 75).toInt()
-            c.drawRect(0f, game.baseTop, 10f, game.height, p)
+            c.drawRect(0f, game.baseTop, game.width, game.height, p)
             p.alpha = 255; p.strokeWidth = .065f
-            c.drawLine(0f, game.baseTop, 10f * game.danger, game.baseTop, p)
+            c.drawLine(0f, game.baseTop, game.width * game.danger, game.baseTop, p)
         } else if (aiming) {
-            powerBar.draw(c, game.baseTop, power)
+            powerBar.draw(c, game.baseTop, power, game.width)
         }
         // L'aperçu suivant reste dans la base, libérant le bas pour toute la frise.
-        if (!aiming || launchX < 7.6f || launchY < game.height - 1.1f) {
+        if (!aiming || launchX < game.width - 2.4f || launchY < game.height - 1.1f) {
             p.color = EnamelPainter.INK; p.alpha = 155
             p.typeface = medium
             p.textAlign = Paint.Align.RIGHT
-            boardText(c, nextLabel, 8.9f, game.height - .39f, .22f)
-            art.puck(c, game.next, 9.4f, game.height - .47f, .29f)
+            boardText(c, nextLabel, game.width - 1.1f, game.height - .39f, .22f)
+            art.puck(c, game.next, game.width - .6f, game.height - .47f, .29f)
         }
         p.alpha = 255
     }
@@ -303,7 +339,7 @@ class EnamelView(context: Context) : View(context) {
         line.color = EnamelPainter.INK; line.alpha = 130
         repeat(4) {
             if (distance <= .01f) return@repeat
-            val tx = if (dx > .001f) (10 - r - x) / dx else if (dx < -.001f) (r - x) / dx else Float.POSITIVE_INFINITY
+            val tx = if (dx > .001f) (game.width - r - x) / dx else if (dx < -.001f) (r - x) / dx else Float.POSITIVE_INFINITY
             val ty = if (dy > .001f) (game.baseTop - r - y) / dy else if (dy < -.001f) (r - y) / dy else Float.POSITIVE_INFINITY
             val wall = min(tx, ty).coerceAtLeast(0f)
             val travel = min(distance, wall)
@@ -331,7 +367,26 @@ class EnamelView(context: Context) : View(context) {
         }
     }
 
+    /** Couché : la frise en colonne, à droite de la planche, du plus petit palet en bas au plus gros en haut. */
+    private fun drawColumn(c: Canvas) {
+        val topY = COLUMN_TOP * dp
+        val unit = (height - topY - 12 * dp) / 12
+        val x = (left + game.width * scale + width) / 2
+        val r = min(17 * dp, unit * .36f)
+        p.color = colors.outline; p.strokeWidth = dp
+        c.drawLine(x, height - 12 * dp - unit / 2, x, topY + unit / 2, p)
+        repeat(12) { tier ->
+            val y = height - 12 * dp - unit * (tier + .5f)
+            art.puck(c, tier, x, y, r, alpha = if (tier <= maxOf(discoveredTier, game.current)) 255 else 85)
+            if (tier == game.current) {
+                p.style = Paint.Style.STROKE; p.color = colors.accent; p.strokeWidth = dp
+                c.drawCircle(x, y, r + 3 * dp, p); p.style = Paint.Style.FILL
+            }
+        }
+    }
+
     private fun drawFooter(c: Canvas) {
+        if (landscape) { drawColumn(c); return }
         val unit = (width - 24 * dp) / 12
         val start = 12 * dp + unit / 2
         val y = height - 23 * dp
@@ -392,11 +447,11 @@ class EnamelView(context: Context) : View(context) {
         }
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
-                if (!game.canLaunch || event.x < left || event.x > left + 10f * scale ||
+                if (!game.canLaunch || event.x < left || event.x > left + game.width * scale ||
                     event.y < top + game.baseTop * scale || event.y > top + game.height * scale) return true
                 parent?.requestDisallowInterceptTouchEvent(true)
                 pointer = event.getPointerId(0); startX = event.x; startY = event.y
-                launchX = ((event.x - left) / scale).coerceIn(EnamelRules.RADII[game.current], 10f - EnamelRules.RADII[game.current])
+                launchX = ((event.x - left) / scale).coerceIn(EnamelRules.RADII[game.current], game.width - EnamelRules.RADII[game.current])
                 launchY = ((event.y - top) / scale).coerceIn(game.baseTop + EnamelRules.RADII[game.current], game.height - EnamelRules.RADII[game.current])
                 blocked = !game.isLaunchClear(launchX, launchY); aiming = true; power = 0f; aimX = 0f; aimY = -1f
             }
@@ -427,5 +482,12 @@ class EnamelView(context: Context) : View(context) {
         const val BOT_LOOK = 4
         const val FLOAT_PERIOD = 2.4
         const val FLOAT_FRAME_MS = 30L
+
+        /** Couché : la planche commence sous la bannière (dp), et la frise a sa colonne à droite (dp). */
+        const val TOP_INSET = 56f
+        const val COLUMN_WIDTH = 64f
+
+        /** Couché : la colonne de la frise commence sous les boutons de la bannière (dp). */
+        const val COLUMN_TOP = 64f
     }
 }
