@@ -10,10 +10,12 @@ import android.widget.TextView
 import androidx.core.content.edit
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.button.MaterialButton
+import com.Atom2Universe.app.AppearanceStyle
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
+import com.Atom2Universe.app.util.Landscape
 import com.Atom2Universe.app.util.enableImmersiveMode
 import com.Atom2Universe.app.util.showGameRules
 import kotlinx.coroutines.Dispatchers
@@ -45,8 +47,8 @@ class TheLineActivity : ThemedActivity() {
     private lateinit var winOverlay: View
 
     private val game = TheLineGame()
-    private val modeChips = mutableMapOf<TheLineMode, MaterialButton>()
-    private val diffChips = mutableMapOf<TheLineDifficulty, MaterialButton>()
+    private lateinit var modeButton: MaterialButton
+    private lateinit var diffButton: MaterialButton
     /** Niveau que la dernière victoire a bouclé, pour le message de fin. */
     private var solvedLevel = 0
     private var generating = false
@@ -54,6 +56,7 @@ class TheLineActivity : ThemedActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_the_line)
+        Landscape.bindSidePanel(this)
         enableImmersiveMode()
 
         board       = findViewById(R.id.the_line_board)
@@ -96,42 +99,62 @@ class TheLineActivity : ThemedActivity() {
         }
     }
 
+    /** Couché : mode et difficulté montent dans la bannière, le plateau prend la hauteur ; rien ne change. */
+    override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
+        super.onConfigurationChanged(newConfig)
+        Landscape.swapLayout(this, R.layout.activity_the_line)
+    }
+
     override fun onPause() {
         super.onPause()
         saveGame()
     }
 
     // ── Choix du mode et de la difficulté ─────────────────────────────────────────
+    /**
+     * Deux boutons qui disent le choix en cours ; un appui passe au suivant (Piste ↔ Câblage,
+     * Facile → Moyen → Difficile → Facile). Texte clair sur fond du thème, liseré d'accent.
+     */
     private fun buildChips() {
         val row = findViewById<LinearLayout>(R.id.the_line_chip_row)
         val dp = resources.displayMetrics.density
-        fun chip(label: String, onClick: () -> Unit) =
-            MaterialButton(this, null, android.R.attr.borderlessButtonStyle).apply {
-                text = label
-                textSize = 12f
+        fun cycle(onClick: () -> Unit) =
+            MaterialButton(this, null, com.google.android.material.R.attr.materialButtonOutlinedStyle).apply {
+                textSize = 14f
                 isAllCaps = false
-                setTextColor(0xFFE6F2EA.toInt())
-                layoutParams = LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
-                ).also { it.setMargins((3 * dp).toInt(), 0, (3 * dp).toInt(), 0) }
+                minWidth = 0; minimumWidth = 0
+                insetTop = 0; insetBottom = 0
+                setPadding((14 * dp).toInt(), 0, (14 * dp).toInt(), 0)
+                cornerRadius = (16 * dp).toInt()
+                setTextColor(AppearanceStyle.color(this@TheLineActivity, R.attr.a2uTextColor))
+                backgroundTintList = ColorStateList.valueOf(AppearanceStyle.color(this@TheLineActivity, R.attr.a2uRaisedColor))
+                strokeColor = ColorStateList.valueOf(AppearanceStyle.color(this@TheLineActivity, R.attr.a2uMusicAccent))
+                strokeWidth = dp.toInt().coerceAtLeast(1)
+                layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, (38 * dp).toInt())
+                    .also { it.setMargins((4 * dp).toInt(), (4 * dp).toInt(), (4 * dp).toInt(), (4 * dp).toInt()) }
                 setOnClickListener { onClick() }
                 row.addView(this)
             }
-        modeChips[TheLineMode.SINGLE] = chip(getString(R.string.the_line_mode_single)) { setMode(TheLineMode.SINGLE) }
-        modeChips[TheLineMode.MULTI] = chip(getString(R.string.the_line_mode_multi)) { setMode(TheLineMode.MULTI) }
-        row.addView(View(this).apply {
-            setBackgroundColor(0x40B9D3C4)
-            layoutParams = LinearLayout.LayoutParams((1 * dp).toInt().coerceAtLeast(1), (22 * dp).toInt())
-                .also { it.setMargins((6 * dp).toInt(), 0, (6 * dp).toInt(), 0) }
-        })
-        diffChips[TheLineDifficulty.EASY] = chip(getString(R.string.the_line_diff_easy)) { setDifficulty(TheLineDifficulty.EASY) }
-        diffChips[TheLineDifficulty.MEDIUM] = chip(getString(R.string.the_line_diff_medium)) { setDifficulty(TheLineDifficulty.MEDIUM) }
-        diffChips[TheLineDifficulty.HARD] = chip(getString(R.string.the_line_diff_hard)) { setDifficulty(TheLineDifficulty.HARD) }
+        modeButton = cycle {
+            val modes = TheLineMode.entries
+            setMode(modes[(game.mode.ordinal + 1) % modes.size])
+        }
+        diffButton = cycle {
+            val diffs = TheLineDifficulty.entries
+            setDifficulty(diffs[(game.difficulty.ordinal + 1) % diffs.size])
+        }
     }
 
     private fun updateChips() {
-        for ((m, chip) in modeChips) com.Atom2Universe.app.games.kit.GameControlStyle.choice(chip, m == game.mode)
-        for ((d, chip) in diffChips) com.Atom2Universe.app.games.kit.GameControlStyle.choice(chip, d == game.difficulty)
+        modeButton.text = getString(when (game.mode) {
+            TheLineMode.SINGLE -> R.string.the_line_mode_single
+            TheLineMode.MULTI -> R.string.the_line_mode_multi
+        })
+        diffButton.text = getString(when (game.difficulty) {
+            TheLineDifficulty.EASY -> R.string.the_line_diff_easy
+            TheLineDifficulty.MEDIUM -> R.string.the_line_diff_medium
+            TheLineDifficulty.HARD -> R.string.the_line_diff_hard
+        })
     }
 
     private fun setMode(mode: TheLineMode) {
