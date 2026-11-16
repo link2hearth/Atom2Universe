@@ -1,5 +1,7 @@
 package com.Atom2Universe.app.games.bigger
 
+import com.Atom2Universe.app.util.Landscape
+import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
@@ -41,6 +43,7 @@ class BiggerActivity : ThemedActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_bigger)
+        Landscape.bindSidePanel(this)
         enableImmersiveMode()
         // L'écran allumé, c'est la vue qui le tient, et seulement pendant une partie.
 
@@ -78,6 +81,14 @@ class BiggerActivity : ThemedActivity() {
                 if (lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) gameView.resume()
             }
         }
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        Landscape.swapLayout(this, R.layout.activity_bigger)
+        // Couché, l'astre suivant est montré en grand par le jeu, plus dans la bannière.
+        findViewById<ImageView>(R.id.bigger_iv_next).visibility =
+            if (Landscape.isLandscape(this)) View.GONE else View.VISIBLE
     }
 
     /**

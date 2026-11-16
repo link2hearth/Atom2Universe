@@ -100,6 +100,32 @@ class BiggerView @JvmOverloads constructor(
     private val stripH = 44f * dp
     private val margin = 14f * dp
 
+    /** Vrai quand l'écran est couché (bannière posée sur le jeu, frise en colonne). */
+    private var landscape = false
+
+    /** Couché : rayon de l'astre suivant montré en grand à gauche du bocal. */
+    private val nextR get() = min(56f * dp, jarLeft * 0.32f)
+
+    /** Couché : l'astre suivant, en grand, au milieu de la place libre à gauche du bocal. */
+    private fun drawNext(canvas: Canvas) {
+        val tier = game.next
+        val cx = jarLeft / 2f
+        val cy = viewH / 2f
+        val r = nextR
+        pFill.style = Paint.Style.FILL
+        pFill.color = 0x26FFFFFF
+        canvas.drawCircle(cx, cy, r * 1.35f, pFill)
+        pStroke.strokeWidth = 1.5f * dp; pStroke.color = 0x608C9CFF
+        canvas.drawCircle(cx, cy, r * 1.35f, pStroke)
+        val icon = baked.nextIcons.getOrNull(tier)
+        if (icon == null) {
+            pFill.color = AccretionPainter.TINT[tier]
+            canvas.drawCircle(cx, cy, r, pFill)
+        } else {
+            canvas.drawBitmap(icon, cx - icon.width / 2f, cy - icon.height / 2f, pBitmap)
+        }
+    }
+
     private fun sx(x: Float) = jarLeft + x * scale
     private fun sy(y: Float) = floorY - y * scale
 
@@ -118,6 +144,8 @@ class BiggerView @JvmOverloads constructor(
         val sprites = arrayOfNulls<Bitmap>(Accretion.TIER_COUNT)
         val shades = arrayOfNulls<Bitmap>(Accretion.TIER_COUNT)
         val icons = arrayOfNulls<Bitmap>(Accretion.TIER_COUNT)
+        /** Couché : l'astre suivant, en grand, dans la colonne de gauche (seuls ceux qui tombent). */
+        val nextIcons = arrayOfNulls<Bitmap>(Accretion.SPAWN_WEIGHTS.size)
         @Volatile var cancelled = false
     }
     @Volatile private var baked = Baked()
@@ -307,6 +335,12 @@ class BiggerView @JvmOverloads constructor(
         /** Une image toutes les 16,7 ms, soit soixante par seconde. */
         const val FRAME_NANOS = 1_000_000_000L / 60L
 
+        /** Couché : hauteur (dp) de l'astre tenu, dans la bannière posée sur le jeu. */
+        const val HOLD_LINE = 40f
+
+        /** Couché : la colonne de la frise commence sous la bannière (dp). */
+        const val STRIP_TOP = 64f
+
         /** Hors partie (écran de fin) : vingt images par seconde. */
         const val IDLE_FRAME_NANOS = 1_000_000_000L / 20L
     }
@@ -434,6 +468,22 @@ class BiggerView @JvmOverloads constructor(
      */
     private fun layoutJar() {
         val w = viewW.toFloat(); val h = viewH.toFloat()
+        landscape = w > h
+        if (landscape) {
+            // Couché, la bannière de l'activité est posée sur le jeu, transparente : l'astre tenu
+            // s'y promène, le bocal monte juste en dessous et descend jusqu'en bas (la frise
+            // passe en colonne sur le côté).
+            floorY = h - 8f * dp
+            val usable = floorY - HOLD_LINE * dp
+            val byWidth = (w - 2f * margin) / Accretion.WIDTH
+            if (game.drops == 0) {
+                val s = min(byWidth, usable / (Accretion.MIN_HEIGHT + Accretion.HOLD_ABOVE))
+                game.jarHeight = usable / s - Accretion.HOLD_ABOVE
+            }
+            scale = min(byWidth, usable / (game.jarHeight + Accretion.HOLD_ABOVE))
+            jarLeft = (w - Accretion.WIDTH * scale) / 2f
+            return
+        }
         floorY = h - stripH - 6f * dp
         val usable = floorY - topPad
         val byWidth = (w - 2f * margin) / Accretion.WIDTH
@@ -451,7 +501,8 @@ class BiggerView @JvmOverloads constructor(
         geometryDirty = false
         val w = viewW.toFloat(); val h = viewH.toFloat()
         layoutJar()
-        iconR = min(12f * dp, (w - 2f * margin) / Accretion.TIER_COUNT * 0.38f)
+        iconR = if (landscape) min(17f * dp, (h - STRIP_TOP * dp - margin) / Accretion.TIER_COUNT * 0.36f)
+            else min(12f * dp, (w - 2f * margin) / Accretion.TIER_COUNT * 0.38f)
 
         startBaking()
         for (t in 0 until Accretion.TIER_COUNT) {
@@ -477,7 +528,12 @@ class BiggerView @JvmOverloads constructor(
         baked = job
         val bodyScale = scale
         val iconRadius = iconR
+        val nextRadius = if (landscape) nextR else 0f
         Thread({
+            if (nextRadius > 0f) for (t in job.nextIcons.indices) {
+                if (job.cancelled) return@Thread
+                job.nextIcons[t] = art.composite(t, nextRadius)
+            }
             for (t in 0 until Accretion.TIER_COUNT) {
                 if (job.cancelled) return@Thread
                 job.icons[t] = art.composite(t, iconRadius)
@@ -577,6 +633,7 @@ class BiggerView @JvmOverloads constructor(
         canvas.restore()
 
         drawStrip(canvas)
+        if (landscape && !game.over) drawNext(canvas)
         drawBanner(canvas)
         if (game.over) drawOverlay(canvas)
     }
@@ -692,13 +749,18 @@ class BiggerView @JvmOverloads constructor(
         onHud?.invoke(Hud(shownScore, best, icon))
     }
 
-    /** La frise des douze objets : ceux jamais atteints restent des ombres. */
+    /**
+     * La frise des douze objets : ceux jamais atteints restent des ombres. Debout, en bas, de
+     * gauche à droite ; couché, en colonne à droite du bocal, du plus petit en bas au plus gros
+     * en haut.
+     */
     private fun drawStrip(canvas: Canvas) {
         val n = Accretion.TIER_COUNT
-        val slot = (viewW - 2f * margin) / n
-        val cy = viewH - stripH / 2f
+        val slot = if (landscape) (viewH - STRIP_TOP * dp - margin) / n else (viewW - 2f * margin) / n
+        val columnX = (sx(Accretion.WIDTH) + viewW) / 2f
         for (t in 0 until n) {
-            val cx = margin + slot * (t + 0.5f)
+            val cx = if (landscape) columnX else margin + slot * (t + 0.5f)
+            val cy = if (landscape) viewH - margin - slot * (t + 0.5f) else viewH - stripH / 2f
             if (t <= discoveredTier) {
                 drawIcon(canvas, t, cx, cy)
             } else {
@@ -761,4 +823,5 @@ class BiggerView @JvmOverloads constructor(
         pText.textSize = 16f * dp; pText.color = Color.WHITE
         canvas.drawText(txtPlayAgain, cx, btnRect.centerY() + 5.5f * dp, pText)
     }
+
 }
