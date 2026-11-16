@@ -2,18 +2,12 @@
 <resources>
     <string name="ab_title">Atom Blocks</string>
     <string name="ab_description">Place les blocs, complète les lignes et illumine la grille.</string>
-    <string name="ab_tagline">Un peu d’espace. Mille possibilités.</string>
-    <string name="ab_welcome">Trois formes, une grille et tout ton temps. Prépare tes coups et fais de la place pour la prochaine constellation.</string>
-    <string name="ab_free">Hors ligne · Sans pub · Sans achat · Sans vies ni chrono</string>
     <string name="ab_classic">Classique</string>
-    <string name="ab_classic_desc">Un puzzle 8 × 8 sans fin. Complète des lignes et des colonnes, enchaîne les combos et bats ton record.</string>
     <string name="ab_adventure">Aventure</string>
-    <string name="ab_adventure_desc">36 niveaux ouverts avec des objectifs de score, de lignes et de gemmes. Explore dans l’ordre de ton choix et rejoue à volonté.</string>
     <string name="ab_zen">Détente</string>
-    <string name="ab_zen_desc">Prends ton temps. Si aucune pièce ne rentre, un nouveau tirage arrive automatiquement. Tu gardes ta grille et ton score.</string>
     <string name="ab_daily">Puzzle du jour</string>
-    <string name="ab_daily_desc">Un puzzle déterminé pour chaque date. Revisite le jour de ton choix : aucune série à maintenir, rien n’expire.</string>
     <string name="ab_resume">Reprendre · %1$s</string>
+    <string name="ab_card_best">Record %1$d</string>
     <string name="ab_choose_level">Explorer les 36 niveaux</string>
     <string name="ab_level">Niveau %1$d</string>
     <string name="ab_level_complete">Niveau %1$d · Terminé</string>

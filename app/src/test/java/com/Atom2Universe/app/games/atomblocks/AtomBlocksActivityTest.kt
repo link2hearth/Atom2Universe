@@ -130,7 +130,9 @@ class AtomBlocksActivityTest {
         descendants(content(activity)).filterIsInstance<AtomBlocksBoardView>().single()
 
     private fun button(activity: AtomBlocksActivity, text: String) =
-        descendants(content(activity)).filterIsInstance<Button>().single { it.text.toString() == text }
+        // Les boutons portent leur texte ; les cartes du menu, leur titre en description.
+        descendants(content(activity)).filter { it.isClickable }
+            .single { (it is Button && it.text.toString() == text) || it.contentDescription == text }
 
     private fun clickButton(activity: AtomBlocksActivity, title: Int) = clickButton(activity, activity.getString(title))
     private fun clickButton(activity: AtomBlocksActivity, text: String) { assertTrue(button(activity, text).performClick()) }

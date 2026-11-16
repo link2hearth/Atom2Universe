@@ -101,11 +101,12 @@ class AtomBlocksActivity : ThemedActivity() {
     private fun LinearLayout.addSpaced(view: View, gap: Int = 8) {
         addView(view, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(gap) })
     }
-    private fun makeRoot(title: String): LinearLayout {
+    private fun makeRoot(title: String, extra: View? = null): LinearLayout {
         root = column().apply { background = AppearanceStyle.screen(this@AtomBlocksActivity) }
         val header = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL; setPadding(dp(4), 0, dp(4), 0) }
         header.addView(icon(R.drawable.ic_app_back, R.string.back) { if (playing) showMenu() else finish() }, LinearLayout.LayoutParams(dp(48), dp(48)))
         header.addView(label(title, 20f, bold = true), LinearLayout.LayoutParams(0, -2, 1f))
+        if (extra != null) header.addView(extra, LinearLayout.LayoutParams(-2, -2).apply { marginEnd = dp(8) })
         header.addView(icon(R.drawable.ic_info, R.string.kit_rules) { showGameRules(R.string.ab_title, R.string.ab_rules) }, LinearLayout.LayoutParams(dp(48), dp(48)))
         header.addView(icon(android.R.drawable.ic_menu_preferences, R.string.ab_settings) { showSettings() }, LinearLayout.LayoutParams(dp(48), dp(48)))
         root.addView(header)
@@ -119,30 +120,62 @@ class AtomBlocksActivity : ThemedActivity() {
         if (playing) save()
         playing = false
         audio.pause()
-        makeRoot(getString(R.string.ab_title))
-        val scroll = ScrollView(this)
-        val content = column().apply { setPadding(dp(20), dp(4), dp(20), dp(24)) }
+        // Reprendre la dernière partie : dans la bannière, à droite.
+        makeRoot(getString(R.string.ab_title),
+            if (sessionLoaded) button(getString(R.string.ab_resume, sessionTitle()), true) { showGame() } else null)
+        val columns = if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 4 else 2
+        val scroll = ScrollView(this).apply { isFillViewport = true }
+        val content = column().apply { gravity = Gravity.CENTER_VERTICAL; setPadding(dp(12), dp(8), dp(12), dp(16)) }
         scroll.addView(content)
         root.addView(scroll, LinearLayout.LayoutParams(-1, 0, 1f))
-        content.addView(View(this).apply {
-            background = AtomBlocksHubTileDrawable(this@AtomBlocksActivity)
-            importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
-        }, LinearLayout.LayoutParams(-1, dp(160)))
-        content.addSpaced(label(getString(R.string.ab_tagline), 24f, bold = true), 16)
-        content.addSpaced(label(getString(R.string.ab_welcome), secondary = true))
-        if (sessionLoaded) content.addSpaced(button(getString(R.string.ab_resume, sessionTitle()), true) { showGame() }, 14)
-        content.addSpaced(modeCard(R.string.ab_classic, R.string.ab_classic_desc) { openMode(AtomBlocksEngine.Mode.CLASSIC) }, 16)
-        content.addSpaced(modeCard(R.string.ab_adventure, R.string.ab_adventure_desc) { chooseLevel() })
-        content.addSpaced(modeCard(R.string.ab_zen, R.string.ab_zen_desc) { openMode(AtomBlocksEngine.Mode.ZEN) })
-        content.addSpaced(modeCard(R.string.ab_daily, R.string.ab_daily_desc) { openDaily() })
-        content.addSpaced(label(getString(R.string.ab_free), 12f, secondary = true).apply { gravity = Gravity.CENTER }, 16)
+        val adventureDone = (1..AtomBlocksEngine.ADVENTURE_LEVELS).count { store.completed(it) }
+        val cards = listOf(
+            modeCard(AtomBlocksEngine.Mode.CLASSIC, R.string.ab_classic,
+                store.best(AtomBlocksEngine.Mode.CLASSIC).takeIf { it > 0 }?.let { getString(R.string.ab_card_best, it) }) {
+                openMode(AtomBlocksEngine.Mode.CLASSIC)
+            },
+            modeCard(AtomBlocksEngine.Mode.ADVENTURE, R.string.ab_adventure,
+                getString(R.string.ab_card_progress, adventureDone, AtomBlocksEngine.ADVENTURE_LEVELS)) { chooseLevel() },
+            modeCard(AtomBlocksEngine.Mode.ZEN, R.string.ab_zen, null) { openMode(AtomBlocksEngine.Mode.ZEN) },
+            modeCard(AtomBlocksEngine.Mode.DAILY, R.string.ab_daily, null) { openDaily() }
+        )
+        for ((index, row) in cards.chunked(columns).withIndex()) {
+            val line = LinearLayout(this)
+            row.forEachIndexed { i, card ->
+                line.addView(card, LinearLayout.LayoutParams(0, -2, 1f).apply { if (i > 0) marginStart = dp(12) })
+            }
+            content.addView(line, LinearLayout.LayoutParams(-1, -2).apply { if (index > 0) topMargin = dp(12) })
+        }
     }
 
-    private fun modeCard(title: Int, desc: Int, action: () -> Unit): View = column().apply {
-        background = palette.shape(palette.surface)
-        setPadding(dp(16), dp(10), dp(16), dp(12))
-        addView(button(getString(title), action = action), LinearLayout.LayoutParams(-1, -2))
-        addSpaced(label(getString(desc), 13f, secondary = true), 3)
+    /** Carte carrée : l'illustration du mode, son titre en bas et, au besoin, une pastille (record, niveaux). */
+    private fun modeCard(mode: AtomBlocksEngine.Mode, title: Int, badge: String?, action: () -> Unit): View {
+        val card = object : FrameLayout(this) {
+            override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+                val side = MeasureSpec.getSize(widthMeasureSpec)
+                super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(side, MeasureSpec.EXACTLY))
+            }
+        }.apply {
+            background = AtomBlocksModeArt(mode)
+            outlineProvider = object : android.view.ViewOutlineProvider() {
+                override fun getOutline(view: View, outline: android.graphics.Outline) {
+                    outline.setRoundRect(0, 0, view.width, view.height, AppearanceStyle.corner(this@AtomBlocksActivity, 18f))
+                }
+            }
+            clipToOutline = true; isClickable = true; isFocusable = true
+            contentDescription = getString(title)
+            setOnClickListener { action() }
+        }
+        card.addView(TextView(this).apply {
+            text = getString(title); textSize = 21f; setTextColor(android.graphics.Color.WHITE)
+            typeface = Typeface.create("sans-serif", Typeface.BOLD)
+            importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
+        }, FrameLayout.LayoutParams(-2, -2, Gravity.BOTTOM or Gravity.START).apply { marginStart = dp(14); bottomMargin = dp(12) })
+        if (badge != null) card.addView(TextView(this).apply {
+            text = badge; textSize = 13f; setTextColor(android.graphics.Color.WHITE)
+            background = palette.shape(0x60334363, 12f); setPadding(dp(10), dp(4), dp(10), dp(4))
+        }, FrameLayout.LayoutParams(-2, -2, Gravity.TOP or Gravity.START).apply { marginStart = dp(10); topMargin = dp(10) })
+        return card
     }
 
     private fun openMode(mode: AtomBlocksEngine.Mode, level: Int = 1, seed: Long = System.nanoTime()) {
