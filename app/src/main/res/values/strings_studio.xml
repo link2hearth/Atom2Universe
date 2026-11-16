@@ -315,4 +315,7 @@
     <string-array name="studio_roll_rates"><item>1/16</item><item>1/8</item><item>1/4</item></string-array>
     <plurals name="studio_octaves_count"><item quantity="one">%d octave</item><item quantity="other">%d octaves</item></plurals>
     <string name="studio_dynamic_touch">Dynamic touch</string>
+    <string-array name="studio_arp_rates"><item>1/8</item><item>1/16</item><item>1/32</item></string-array>
+    <string name="studio_count">%1$d</string>
+    <string name="studio_sf2_unnamed">%1$d:%2$d</string>
 </resources>

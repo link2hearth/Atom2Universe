@@ -126,6 +126,22 @@ object StepCond {
 }
 
 /**
+ * Le tirage des pas « au hasard » (xorshift : pas d'allocation). Il part toujours de la même graine : l'export MIDI, qui
+ * tire dans le même ordre que le moteur (pas après pas, ligne après ligne), garde les mêmes coups que l'export audio.
+ */
+class StepCoin {
+    private var state = 0x6C8E9CF5
+
+    /** Un tirage de 0 à 1. */
+    fun next(): Float {
+        var x = state
+        x = x xor (x shl 13); x = x xor (x ushr 17); x = x xor (x shl 5)
+        state = x
+        return (x ushr 8) / 16_777_216f
+    }
+}
+
+/**
  * Une note d'une piste mélodique ([track]) : elle commence au pas [step], dure [length] pas, à la hauteur MIDI [pitch].
  * Plusieurs notes peuvent commencer au même pas (accord).
  */
@@ -295,6 +311,24 @@ class StudioEngine(val sampleRate: Int) : AutoCloseable {
             val retired = old[id]?.instrument as? PolySynth ?: continue
             if (retired !== next[id]?.instrument) retired.close()
         }
+    }
+
+    /**
+     * Le soundfont vient d'arriver ([sf2Factory]) : les pistes qui en dépendent, muettes jusque-là, refont leur instrument.
+     * Leur mixage est à reposer ensuite (un instrument neuf a les réglages d'origine).
+     */
+    fun rebuildSoundfontTracks() {
+        val old = table
+        val next = old.copyOf()
+        var changed = false
+        for (id in old.indices) {
+            val slot = old[id] ?: continue
+            if (slot.instrument is Sf2Instrument) {
+                next[id] = create(slot.spec)
+                changed = true
+            }
+        }
+        if (changed) table = next
     }
 
     override fun close() {
@@ -719,15 +753,8 @@ class StudioEngine(val sampleRate: Int) : AutoCloseable {
     private val offTrack = IntArray(MAX_PENDING_OFFS)
     private var offCount = 0
 
-    /** Tirage des pas « au hasard » (xorshift : pas d'allocation). */
-    private var coin = 0x6C8E9CF5
-
-    private fun nextCoin(): Float {
-        var x = coin
-        x = x xor (x shl 13); x = x xor (x ushr 17); x = x xor (x shl 5)
-        coin = x
-        return (x ushr 8) / 16_777_216f
-    }
+    /** Tirage des pas « au hasard ». */
+    private val coin = StepCoin()
 
     // Pompe : l'enveloppe de la grosse caisse, par échantillon, que les pistes à pompe soustraient de leur niveau
     private val duckBuf = FloatArray(MAX_BLOCK)
@@ -743,6 +770,26 @@ class StudioEngine(val sampleRate: Int) : AutoCloseable {
 
     /** Les notes tenues au doigt, par piste et par hauteur (combien de doigts) : le motif ne les relâche pas. */
     private val liveHeld = IntArray(MAX_TRACKS * 128)
+
+    /** Les pistes telles que le fil audio les a vues au bloc précédent. */
+    private var seenTable: Array<Slot?>? = null
+
+    /**
+     * Une piste retirée ou remplacée emporte ses notes tenues et son roulement : leur relâchement n'arrivera jamais (la piste
+     * n'est plus là pour le recevoir), et la piste suivante qui prend ce numéro ne doit pas en hériter (ses notes ne
+     * s'arrêtaient plus). À faire avant de lire les commandes : celles qui attendent parlent déjà aux nouvelles pistes.
+     */
+    private fun forgetRetiredTracks() {
+        val now = table
+        val before = seenTable
+        if (now === before) return
+        for (id in 0 until MAX_TRACKS) {
+            if (before != null && before[id]?.instrument === now[id]?.instrument) continue
+            java.util.Arrays.fill(liveHeld, id * 128, (id + 1) * 128, 0)
+            rollOn[id] = false
+        }
+        seenTable = now
+    }
 
     // Roulements : par piste, en marche ou non, le prochain coup (instant sans swing) et sa force
     private val rollOn = BooleanArray(MAX_TRACKS)
@@ -783,6 +830,7 @@ class StudioEngine(val sampleRate: Int) : AutoCloseable {
 
     private fun renderBlock(left: FloatArray, right: FloatArray, n: Int) {
         val blockStart = framesRendered
+        forgetRetiredTracks()
         drainCommands(blockStart)
         for (s in table) {
             val m = s?.melody ?: continue
@@ -1213,7 +1261,7 @@ class StudioEngine(val sampleRate: Int) : AutoCloseable {
             if (v <= 0f) continue
             val c = if (s < lane.cond.size) lane.cond[s] else StepCond.ALWAYS
             val loop = if (source < 0) sceneLoop else (local / count).toInt()
-            if (c != StepCond.ALWAYS && !StepCond.plays(c, loop, if (c == StepCond.RANDOM) nextCoin() else 0f)) continue
+            if (c != StepCond.ALWAYS && !StepCond.plays(c, loop, if (c == StepCond.RANDOM) coin.next() else 0f)) continue
             val slot = table.getOrNull(lane.instrument) ?: continue
             if (slot.melody == null) {
                 slot.instrument.hold = lane.hold.getOrElse(s) { 1f }

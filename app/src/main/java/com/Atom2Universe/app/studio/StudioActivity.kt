@@ -274,7 +274,7 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
             val countIn = if (playing) engine.countInBeats else 0
             if (countIn != shownCountIn) {
                 shownCountIn = countIn
-                if (countIn > 0) playButton.text = countIn.toString() else refreshTransport()
+                if (countIn > 0) playButton.text = getString(R.string.studio_count, countIn) else refreshTransport()
             }
             drainPadHits()
             if (::padView.isInitialized) {
@@ -333,15 +333,8 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         }
         projectId = entry.id
         projectName = entry.name
-        SampleTools.load(this)?.let { (data, rate) -> engine.setPercSample(data, rate) }
-        loadSynthSample()
         mySounds = MySounds(File(filesDir, "studio/my_sounds.json"))
         val loaded = entry.project
-        // Un projet qui a des pistes soundfont ouvre le soundfont avant que le moteur fabrique leurs instruments
-        if (loaded.tracks.any { it.kind == TrackKind.SF2 || it.sfKit >= 0 }) {
-            sf2 = Sf2Bridge.open(this)
-            engine.sf2Factory = sf2?.factory
-        }
         session = StudioSession(engine, loaded, entry.history, library.journal(projectId))
         output = StudioAudioOutput(engine)
         recorder = LiveRecorder(session, { engine.playing }, { engine.playPosition }, { selectedTrack })
@@ -352,6 +345,39 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         building = false
         refreshAll()
         refreshHistory()
+        loadSounds(loaded.tracks.any { it.kind == TrackKind.SF2 || it.sfKit >= 0 })
+    }
+
+    /**
+     * Ce qui est long à lire à l'ouverture se lit hors du fil de l'écran : les sons du micro (avec la note de celui du synthé,
+     * retrouvée par calcul) et, si le morceau a des pistes soundfont, le soundfont. Les pistes concernées se taisent jusque-là
+     * (une fraction de seconde) ; l'écran, lui, est déjà là.
+     */
+    private fun loadSounds(needsSoundfont: Boolean) {
+        Thread({
+            val perc = SampleTools.load(this)
+            val synth = SampleTools.load(this, SampleTools.SYNTH_FILE)
+                ?.let { (data, rate) -> SynthSample(data, rate, SampleTools.detectRoot(data, rate)) }
+            val bridge = if (needsSoundfont) Sf2Bridge.open(this) else null
+            runOnUiThread {
+                if (isFinishing || isDestroyed) return@runOnUiThread
+                // Un son enregistré entre-temps est plus récent que le fichier qu'on vient de lire
+                if (perc != null && !engine.hasPercSample) engine.setPercSample(perc.first, perc.second)
+                if (synth != null && engine.synthSample == null) engine.setSynthSample(synth)
+                if (bridge != null && sf2 == null) {
+                    attachSoundfont(bridge)
+                    refreshAll()
+                }
+            }
+        }, "StudioOpen").start()
+    }
+
+    /** Le soundfont est ouvert : le moteur s'en sert, et les pistes qui l'attendaient reçoivent leur instrument. */
+    private fun attachSoundfont(bridge: Sf2Bridge) {
+        sf2 = bridge
+        engine.sf2Factory = bridge.factory
+        trackSignature = ""
+        session.soundfontReady()
     }
 
     override fun onResume() {
@@ -2045,26 +2071,20 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
                     record.isEnabled = false
                     status.visibility = View.VISIBLE
                     status.setText(R.string.studio_synth_listening)
-                    Thread {
-                        val pcm = SampleTools.record()
-                        val clean = pcm?.let { SampleTools.clean(it) }
-                        val root = clean?.let { SampleTools.detectRoot(it, SampleTools.RATE) }
-                        if (clean != null) SampleTools.save(this, clean, SampleTools.SYNTH_FILE)
-                        runOnUiThread {
-                            if (isFinishing || isDestroyed) return@runOnUiThread
-                            record.isEnabled = true
-                            if (clean != null && root != null) {
-                                status.visibility = View.GONE
-                                engine.setSynthSample(SynthSample(clean, SampleTools.RATE, root))
-                                session.updateSynth(t.id) { SynthPresets.MY_VOICE }
-                                scheduleSave()
-                                refreshPick()
-                                previewTrack(t.id)
-                            } else {
-                                status.setText(if (pcm == null) R.string.studio_sample_failed else R.string.studio_sample_nothing)
-                            }
+                    // La note du son se cherche aussi hors du fil de l'écran
+                    recordSample(SampleTools.SYNTH_FILE, { SynthSample(it, SampleTools.RATE, SampleTools.detectRoot(it, SampleTools.RATE)) }) { micWorked, sample ->
+                        record.isEnabled = true
+                        if (sample != null) {
+                            status.visibility = View.GONE
+                            engine.setSynthSample(sample)
+                            session.updateSynth(t.id) { SynthPresets.MY_VOICE }
+                            scheduleSave()
+                            refreshPick()
+                            previewTrack(t.id)
+                        } else {
+                            status.setText(if (micWorked) R.string.studio_sample_nothing else R.string.studio_sample_failed)
                         }
-                    }.start()
+                    }
                 }
             }
             own.addView(record)
@@ -2320,7 +2340,7 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         val rate = MaterialButtonToggleGroup(this).apply {
             isSingleSelection = true
             isSelectionRequired = true
-            val labels = listOf("1/8", "1/16", "1/32")
+            val labels = resources.getStringArray(R.array.studio_arp_rates)
             for (i in 0 until 3) addView(outlined(null).apply { id = rateIds[i]; text = labels[i]; minWidth = dp(64) })
             check(rateIds[t.arpRate.coerceIn(0, 2)])
             addOnButtonCheckedListener { _, id, checked ->
@@ -2336,7 +2356,7 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         val oct = MaterialButtonToggleGroup(this).apply {
             isSingleSelection = true
             isSelectionRequired = true
-            for (i in 0 until 3) addView(outlined(null).apply { id = octIds[i]; text = (i + 1).toString(); minWidth = dp(64) })
+            for (i in 0 until 3) addView(outlined(null).apply { id = octIds[i]; text = getString(R.string.studio_count, i + 1); minWidth = dp(64) })
             check(octIds[t.arpOctaves.coerceIn(1, 3) - 1])
             addOnButtonCheckedListener { _, id, checked ->
                 if (checked) {
@@ -2368,9 +2388,9 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         val steps = MaterialButtonToggleGroup(this).apply {
             isSingleSelection = true
             isSelectionRequired = true
-            addView(outlined(null).apply { id = ids[0]; text = "16"; minWidth = dp(64) })
-            addView(outlined(null).apply { id = ids[1]; text = "32"; minWidth = dp(64) })
-            addView(outlined(null).apply { id = ids[2]; text = "64"; minWidth = dp(64) })
+            for ((i, count) in intArrayOf(16, 32, 64).withIndex()) {
+                addView(outlined(null).apply { id = ids[i]; text = getString(R.string.studio_count, count); minWidth = dp(64) })
+            }
             check(when (p.baseSteps) { 64 -> ids[2]; 32 -> ids[1]; else -> ids[0] })
             addOnButtonCheckedListener { _, id, checked ->
                 if (checked) {
@@ -2826,6 +2846,23 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         }
     }
 
+    /**
+     * Enregistre au micro hors du fil de l'écran, nettoie le son, le garde dans le fichier [file] et le prépare ([prepare], encore
+     * hors du fil de l'écran). [done] reçoit le résultat sur l'écran, s'il existe encore : [micWorked] dit si le micro a marché,
+     * le son est `null` quand il n'a pas marché ou que rien n'a été entendu.
+     */
+    private fun <T : Any> recordSample(file: String, prepare: (FloatArray) -> T, done: (micWorked: Boolean, sound: T?) -> Unit) {
+        Thread {
+            val pcm = SampleTools.record()
+            val clean = pcm?.let { SampleTools.clean(it) }
+            if (clean != null) SampleTools.save(this, clean, file)
+            val sound = clean?.let(prepare)
+            runOnUiThread {
+                if (!isFinishing && !isDestroyed) done(pcm != null, sound)
+            }
+        }.start()
+    }
+
     private fun showSamplePanel(anchor: View) {
         val box = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
@@ -2841,21 +2878,16 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
             withMic {
                 record.isEnabled = false
                 status.setText(R.string.studio_sample_listening)
-                Thread {
-                    val pcm = SampleTools.record()
-                    val clean = pcm?.let { SampleTools.clean(it) }
-                    if (clean != null) SampleTools.save(this, clean)
-                    runOnUiThread {
-                        record.isEnabled = true
-                        if (clean != null) {
-                            engine.setPercSample(clean, SampleTools.RATE)
-                            triggerPerc()
-                            showDefaultStatus()
-                        } else {
-                            status.setText(if (pcm == null) R.string.studio_sample_failed else R.string.studio_sample_nothing)
-                        }
+                recordSample(SampleTools.PERC_FILE, { it }) { micWorked, clean ->
+                    record.isEnabled = true
+                    if (clean != null) {
+                        engine.setPercSample(clean, SampleTools.RATE)
+                        triggerPerc()
+                        showDefaultStatus()
+                    } else {
+                        status.setText(if (micWorked) R.string.studio_sample_nothing else R.string.studio_sample_failed)
                     }
-                }.start()
+                }
             }
         }
         row.addView(record)
@@ -2877,12 +2909,6 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
     private fun exportSounds(): StudioExporter.Sounds {
         val perc = SampleTools.load(this)
         return StudioExporter.Sounds(perc?.first, perc?.second ?: SampleTools.RATE, engine.synthSample)
-    }
-
-    /** Le son du micro pour le synthé, s'il y en a un : sa note est retrouvée à l'ouverture (rapide : une fraction de seconde de calcul). */
-    private fun loadSynthSample() {
-        val (data, rate) = SampleTools.load(this, SampleTools.SYNTH_FILE) ?: return
-        engine.setSynthSample(SynthSample(data, rate, SampleTools.detectRoot(data, rate)))
     }
 
     /** Rend le fichier hors ligne (plus vite que le temps réel) avec une barre de progression, puis dit où il est. */
@@ -2915,8 +2941,10 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
                 }
             }
             runOnUiThread {
+                // Un écran détruit pendant le rendu a déjà emporté sa boîte : la fermer là ferait planter l'appli
+                if (isDestroyed) return@runOnUiThread
                 dialog.dismiss()
-                if (isFinishing || isDestroyed) return@runOnUiThread
+                if (isFinishing) return@runOnUiThread
                 when {
                     cancelled.get() -> Unit
                     saved == null -> ImmersiveMaterialAlertDialogBuilder(this).setMessage(R.string.studio_export_failed).setPositiveButton(android.R.string.ok, null).show()
@@ -3865,14 +3893,13 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
             val bridge = Sf2Bridge.open(this)
             runOnUiThread {
                 if (isFinishing || isDestroyed) return@runOnUiThread
-                if (bridge == null) {
+                // L'ouverture du morceau a pu l'ouvrir entre-temps : on garde celui-là
+                val ready = sf2 ?: bridge?.also(::attachSoundfont)
+                if (ready == null) {
                     ImmersiveMaterialAlertDialogBuilder(this).setMessage(R.string.studio_no_soundfont).setPositiveButton(android.R.string.ok, null).show()
                     return@runOnUiThread
                 }
-                sf2 = bridge
-                engine.sf2Factory = bridge.factory
-                trackSignature = ""
-                action(bridge)
+                action(ready)
             }
         }.start()
     }
@@ -3880,7 +3907,7 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
     /** La liste des instruments du soundfont, dans une fenêtre qu'on fait défiler. */
     private fun pickProgram(bridge: Sf2Bridge, onPick: (bank: Int, program: Int) -> Unit) {
         val list = bridge.programs
-        val names = list.map { it.name.trim().ifEmpty { "${it.bank}:${it.program}" } }.toTypedArray()
+        val names = list.map { it.name.trim().ifEmpty { getString(R.string.studio_sf2_unnamed, it.bank, it.program) } }.toTypedArray()
         ImmersiveMaterialAlertDialogBuilder(this)
             .setTitle(R.string.studio_sf2_pick)
             .setItems(names) { _, which -> onPick(list[which].bank, list[which].program) }

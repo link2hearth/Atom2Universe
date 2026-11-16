@@ -10,6 +10,8 @@ import com.Atom2Universe.app.studio.engine.Inst
 import com.Atom2Universe.app.studio.engine.Note
 import com.Atom2Universe.app.studio.engine.StepPattern
 import com.Atom2Universe.app.studio.engine.StudioEngine
+import com.Atom2Universe.app.studio.engine.TrackKind
+import com.Atom2Universe.app.studio.engine.TrackSpec
 import com.Atom2Universe.app.studio.music.Styles
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -390,5 +392,28 @@ class StudioLiveTest {
         assertEquals(Arp.UP_DOWN, s.project.track(Inst.SYNTH).arpMode)
         assertEquals(3, s.project.track(Inst.SYNTH).arpOctaves)
         assertFalse(s.project.styleId == "house")
+    }
+
+    @Test
+    fun aNoteHeldOnARemovedTrackDoesNotStickOnTheNextTrackWithItsNumber() {
+        val e = quiet()
+        val base = TrackSpec.defaults()
+        val extra = TrackSpec(8, TrackKind.SYNTH)
+        e.setTracks(base + extra)
+        e.trigger(8, 60)
+        render(e, 512)
+        // La piste part pendant que la note est tenue : son relâchement n'a plus personne pour le recevoir
+        e.setTracks(base)
+        render(e, 512)
+        e.release(8, 60)
+        render(e, 512)
+        // Une nouvelle piste prend le numéro : sa note s'arrête quand on la lâche
+        e.setTracks(base + extra)
+        render(e, 512)
+        e.trigger(8, 60)
+        render(e, 2048)
+        e.release(8, 60)
+        render(e, rate * 2)
+        assertEquals(0, e.synthOf(8)!!.activeVoices)
     }
 }

@@ -109,7 +109,8 @@ class StudioViewTest {
         s.setView(listOf(0, 1))
         val back = StudioProjectCodec.decode(StudioProjectCodec.encode(s.project))!!
         assertEquals(16, back.baseSteps)
-        assertEquals(16, back.stepCount)
+        // La vue revient avec le fichier (deux motifs à la suite), sans changer la longueur d'un motif
+        assertEquals(32, back.stepCount)
         assertTrue(back.patterns[0].lane(Inst.SNARE)!!.velocity[4] > 0f)
     }
 
@@ -130,5 +131,35 @@ class StudioViewTest {
         assertEquals(1.3f, kick.hold[3], 1e-6f)
         assertEquals(listOf(Triple(5, 64, 3)), parts[0].notes.map { Triple(it.step, it.pitch, it.length) })
         assertTrue(parts[1].notes.isEmpty())
+    }
+
+    @Test
+    fun theViewSurvivesSavingTheSong() {
+        val s = session()
+        s.setView(listOf(1, 2))
+        val back = StudioProjectCodec.decode(StudioProjectCodec.encode(s.project))!!
+        assertEquals(listOf(1, 2), back.view)
+        assertEquals(1, back.current)
+        assertEquals(32, back.stepCount)
+        s.selectPattern(3)
+        assertTrue(StudioProjectCodec.decode(StudioProjectCodec.encode(s.project))!!.view.isEmpty())
+    }
+
+    @Test
+    fun changingTheKeyMovesTheNotesOfEveryPattern() {
+        val s = session().apply { coalesceMs = 0 }
+        val key = s.project.keyPc
+        s.addNote(0, 60, 1)
+        s.selectPattern(1)
+        s.addNote(0, 64, 1)
+        s.selectPattern(0)
+        s.setKey(key + 2)
+        assertEquals(62, s.project.patterns[0].notes.single().pitch)
+        assertEquals(66, s.project.patterns[1].notes.single().pitch)
+        // Un seul pas en arrière rend les deux motifs
+        s.undo()
+        assertEquals(key, s.project.keyPc)
+        assertEquals(60, s.project.patterns[0].notes.single().pitch)
+        assertEquals(64, s.project.patterns[1].notes.single().pitch)
     }
 }

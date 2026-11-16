@@ -407,6 +407,8 @@ object StudioProjectCodec {
         .put("current", p.current)
         .put("chain", JSONArray(p.chain))
         .put("songMode", p.songMode)
+        // Les motifs affichés à la suite : sans eux, le morceau rouvrait sur un seul motif après une réécriture du journal
+        .also { o -> if (p.view.isNotEmpty()) o.put("view", JSONArray(p.view)) }
         .toString()
 
     private fun readAuto(a: JSONArray?, steps: Int): FloatArray? {
@@ -439,6 +441,12 @@ object StudioProjectCodec {
                     ca.getInt(k).takeIf { it in 0 until StudioProject.SLOTS }?.let { chain += it }
                 }
             }
+            val current = o.optInt("current", 0).coerceIn(0, StudioProject.SLOTS - 1)
+            // La vue : au moins deux emplacements, triés, le premier étant le motif en cours (sinon, pas de vue)
+            val view = o.optJSONArray("view")
+                ?.let { va -> List(va.length()) { va.optInt(it, -1) } }.orEmpty()
+                .filter { it in 0 until StudioProject.SLOTS }.distinct().sorted()
+                .takeIf { it.size > 1 && it.first() == current }.orEmpty()
             StudioProject(
                 heldPad = readPad(o),
                 styleId = o.getString("style"),
@@ -450,9 +458,10 @@ object StudioProjectCodec {
                 keyPc = o.getInt("key").coerceIn(0, 11),
                 scaleId = o.getString("scale"),
                 patterns = patterns,
-                current = o.optInt("current", 0).coerceIn(0, StudioProject.SLOTS - 1),
+                current = current,
                 chain = chain,
                 songMode = o.optBoolean("songMode", false) && chain.isNotEmpty(),
+                view = view,
             )
         } catch (_: JSONException) {
             null
@@ -617,6 +626,13 @@ class StudioSession(
         }
         engine.setArp(t.id, t.arpMode, ARP_DIVISIONS[t.arpRate.coerceIn(0, 2)], t.arpOctaves)
         engine.setVoice(t.id, t.kit, t.tune, t.length)
+    }
+
+    /** Le soundfont vient d'être ouvert : les pistes qui l'attendaient reçoivent leur instrument, leur mixage et leur muet. */
+    fun soundfontReady() {
+        engine.rebuildSoundfontTracks()
+        for (t in project.tracks) if (t.kind == TrackKind.SF2 || t.sfKit >= 0) pushTrack(t)
+        pushMute()
     }
 
     /** Muet = demandé par l'utilisateur ; en plus, une piste cachée se tait, et quand une piste est en solo, toutes les autres aussi. */
@@ -1402,14 +1418,20 @@ class StudioSession(
 
     /** Change de tonalité : les notes se transposent par le plus court chemin (de −5 à +6 demi-tons). */
     fun setKey(keyPc: Int) {
-        remember()
         val k = ((keyPc % 12) + 12) % 12
         var delta = k - project.keyPc
+        if (delta == 0) return
         if (delta > 6) delta -= 12
         if (delta < -5) delta += 12
-        val moved = project.pattern.notes.map { Note(it.step, (it.pitch + delta).coerceIn(0, 127), it.length, it.velocity, it.track) }
-        project = project.copy(keyPc = k)
-        withNotes(moved)
+        remember()
+        // La tonalité vaut pour tout le morceau : les quatre motifs suivent, pas seulement celui qu'on regarde
+        val moved = project.patterns.map { p ->
+            if (p.notes.isEmpty()) p
+            else p.copy(notes = p.notes.map { Note(it.step, (it.pitch + delta).coerceIn(0, 127), it.length, it.velocity, it.track) })
+        }
+        project = project.copy(keyPc = k, patterns = moved)
+        engine.pattern = project.pattern
+        pushSong()
     }
 
     fun setScale(id: String) {

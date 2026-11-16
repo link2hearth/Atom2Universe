@@ -6,6 +6,7 @@ import com.Atom2Universe.app.studio.engine.PadPosition
 import com.Atom2Universe.app.studio.data.StudioProject
 import com.Atom2Universe.app.studio.data.StudioSession
 import com.Atom2Universe.app.studio.engine.Inst
+import com.Atom2Universe.app.studio.engine.StepCond
 import com.Atom2Universe.app.studio.engine.StudioEngine
 import com.Atom2Universe.app.studio.engine.SynthBank
 import com.Atom2Universe.app.studio.export.StudioExporter
@@ -224,5 +225,16 @@ class StudioExportTest {
         assertTrue(StudioExporter.renderWav(s.project, 48_000, out))
         assertTrue(out.size() > 44)
         assertEquals(Inst.COUNT, 8)
+    }
+
+    @Test
+    fun midiPlaysTheSometimesStepsOnlyOnTheirLoops() {
+        val s = StudioSession(StudioEngine(48_000), StudioProject.blank())
+        s.setStep(Inst.KICK, 0, true) // toujours : les quatre tours
+        s.setStep(Inst.SNARE, 4, true)
+        s.editStep(Inst.SNARE, 4, cond = StepCond.EVERY_OTHER) // tours 2 et 4
+        s.setStep(Inst.CLAP, 8, true)
+        s.editStep(Inst.CLAP, 8, cond = StepCond.EVERY_FOURTH) // tour 4 seulement
+        assertEquals(4 + 2 + 1, parse(StudioExporter.midiBytes(s.project)).noteOns[9])
     }
 }

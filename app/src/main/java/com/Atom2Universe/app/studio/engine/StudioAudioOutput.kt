@@ -16,6 +16,9 @@ import android.util.Log
  * Les mesures ([stats]) servent à régler le compromis latence / craquements : un tampon de deux blocs
  * (~10 ms) est idéal pour jouer au doigt mais craque si le calcul traîne ; [setBufferBlocks] permet d'essayer
  * trois ou quatre blocs en direct.
+ *
+ * Quand la sortie meurt en route (casque branché ou débranché, enceinte Bluetooth), le fil audio en rouvre une
+ * lui-même : le son revient sans quitter l'écran.
  */
 class StudioAudioOutput(
     private val engine: StudioEngine,
@@ -39,18 +42,41 @@ class StudioAudioOutput(
 
     val stats = Stats()
 
+    /** Protège [track] : l'écran l'arrête ou règle son tampon pendant que le fil audio peut être en train de le remplacer. */
+    private val trackLock = Any()
     private var track: AudioTrack? = null
     private var thread: Thread? = null
     @Volatile private var running = false
+    @Volatile private var bufferBlocks = 2
 
     fun start(context: Context): Boolean {
         if (running) return true
-        val rate = engine.sampleRate
-        val minBytes = AudioTrack.getMinBufferSize(rate, AudioFormat.CHANNEL_OUT_STEREO, AudioFormat.ENCODING_PCM_FLOAT)
-        if (minBytes <= 0) {
+        val t = open()
+        if (t == null) {
             stats.failed = true
             return false
         }
+
+        stats.failed = false
+        stats.sampleRate = engine.sampleRate
+        stats.burstFrames = burstFrames(context)
+        stats.loadAverage = 0f
+        stats.loadMax = 0f
+        synchronized(trackLock) {
+            track = t
+            applyBuffer(t)
+        }
+
+        running = true
+        thread = Thread({ loop(t) }, "StudioAudio").also { it.start() }
+        return true
+    }
+
+    /** Fabrique une sortie prête à recevoir du son ; `null` si le système n'en donne pas. */
+    private fun open(): AudioTrack? {
+        val rate = engine.sampleRate
+        val minBytes = AudioTrack.getMinBufferSize(rate, AudioFormat.CHANNEL_OUT_STEREO, AudioFormat.ENCODING_PCM_FLOAT)
+        if (minBytes <= 0) return null
         val t = try {
             AudioTrack.Builder()
                 .setAudioAttributes(
@@ -73,33 +99,24 @@ class StudioAudioOutput(
                 .build()
         } catch (e: Exception) {
             Log.w(TAG, "AudioTrack indisponible", e)
-            stats.failed = true
-            return false
+            return null
         }
         if (t.state != AudioTrack.STATE_INITIALIZED) {
             t.release()
-            stats.failed = true
-            return false
+            return null
         }
-
-        stats.failed = false
-        stats.sampleRate = rate
         stats.lowLatency = t.performanceMode == AudioTrack.PERFORMANCE_MODE_LOW_LATENCY
-        stats.burstFrames = burstFrames(context)
-        stats.loadAverage = 0f
-        stats.loadMax = 0f
-        track = t
-        setBufferBlocks(2)
-
-        running = true
-        thread = Thread({ loop(t) }, "StudioAudio").also { it.start() }
-        return true
+        return t
     }
 
     /** Taille du tampon en nombre de blocs (2 = le plus court). Effet immédiat. */
     fun setBufferBlocks(blocks: Int) {
-        val t = track ?: return
-        val frames = (blocks.coerceIn(2, 8) * blockFrames).coerceAtLeast(stats.burstFrames)
+        bufferBlocks = blocks.coerceIn(2, 8)
+        synchronized(trackLock) { track?.let(::applyBuffer) }
+    }
+
+    private fun applyBuffer(t: AudioTrack) {
+        val frames = (bufferBlocks * blockFrames).coerceAtLeast(stats.burstFrames)
         stats.bufferFrames = t.setBufferSizeInFrames(frames)
     }
 
@@ -115,25 +132,41 @@ class StudioAudioOutput(
             th?.join(1000)
         } catch (_: InterruptedException) {
         }
-        track?.let {
-            try {
-                it.pause()
-                it.flush()
-            } catch (_: IllegalStateException) {
-            }
-            it.release()
+        synchronized(trackLock) {
+            track?.let(::close)
+            track = null
         }
-        track = null
     }
 
-    private fun loop(t: AudioTrack) {
+    private fun close(t: AudioTrack) {
+        try {
+            t.pause()
+            t.flush()
+        } catch (_: IllegalStateException) {
+        }
+        t.release()
+    }
+
+    /** La sortie [dead] ne prend plus de son : on la remplace. `null` si on arrête, ou si le système n'en donne pas d'autre. */
+    private fun reopen(dead: AudioTrack): AudioTrack? = synchronized(trackLock) {
+        if (!running || track !== dead) return null
+        close(dead)
+        val next = open()
+        track = next
+        if (next != null) applyBuffer(next)
+        next
+    }
+
+    private fun loop(first: AudioTrack) {
         Process.setThreadPriority(Process.THREAD_PRIORITY_URGENT_AUDIO)
+        var t = first
         val left = FloatArray(blockFrames)
         val right = FloatArray(blockFrames)
         val inter = FloatArray(blockFrames * 2)
         val budgetNs = blockFrames * 1_000_000_000.0 / engine.sampleRate
         var started = false
         var blocks = 0
+        var refused = 0
 
         while (running) {
             val t0 = System.nanoTime()
@@ -146,16 +179,32 @@ class StudioAudioOutput(
             }
             val written = t.write(inter, 0, blockFrames * 2, AudioTrack.WRITE_BLOCKING)
             if (written < 0) {
+                // À l'arrêt, l'écran a pu fermer la sortie pendant l'écriture : ce n'est pas une panne
+                if (!running) break
                 Log.w(TAG, "Écriture refusée : $written")
-                stats.failed = true
-                running = false
-                break
+                // La sortie a changé sous nos pieds (casque, Bluetooth) : on en rouvre une. Si la nouvelle refuse aussi
+                // plusieurs fois de suite, c'est une vraie panne et on s'arrête là.
+                val next = if (++refused <= MAX_REOPENS) reopen(t) else null
+                if (next == null) {
+                    if (running) stats.failed = true
+                    running = false
+                    break
+                }
+                t = next
+                started = false
+                blocks = 0
+                continue
             }
+            refused = 0
 
             // On ne démarre la lecture qu'une fois deux blocs en file (le tampon le plus court en tient exactement deux :
             // en attendre davantage bloquerait l'écriture d'une sortie qui ne joue pas encore).
             if (!started && ++blocks >= 2) {
-                t.play()
+                try {
+                    t.play()
+                } catch (_: IllegalStateException) {
+                    // Fermée par l'écran entre-temps : l'écriture suivante le dira
+                }
                 started = true
             }
 
@@ -168,6 +217,9 @@ class StudioAudioOutput(
 
     companion object {
         private const val TAG = "StudioAudio"
+
+        /** Nombre de sorties qu'on rouvre à la suite sans qu'aucune n'accepte un bloc, avant d'abandonner. */
+        private const val MAX_REOPENS = 3
 
         /** Fréquence native de la sortie (48 000 Hz presque partout) : la jouer telle quelle évite un ré-échantillonnage du système. */
         fun preferredSampleRate(context: Context): Int {

@@ -6,7 +6,8 @@ import com.Atom2Universe.app.studio.data.Track
 import com.Atom2Universe.app.studio.dsp.ExternalSynth
 import com.Atom2Universe.app.studio.dsp.SynthSample
 import com.Atom2Universe.app.studio.engine.GM_DRUM_NOTES
-import com.Atom2Universe.app.studio.engine.Inst
+import com.Atom2Universe.app.studio.engine.StepCoin
+import com.Atom2Universe.app.studio.engine.StepCond
 import com.Atom2Universe.app.studio.engine.StepPattern
 import com.Atom2Universe.app.studio.engine.StudioEngine
 import com.Atom2Universe.app.studio.engine.SynthBank
@@ -145,15 +146,20 @@ object StudioExporter {
         val melodies = List(melodic.size) { ArrayList<Ev>() }
         val swingTicks = (project.swing.coerceIn(0f, 0.5f) * TICKS_PER_STEP).roundToInt()
         var offset = 0
-        for (pattern in plan(project)) {
+        // Les pas « parfois » jouent comme à l'écoute : selon le tour, et avec le même tirage que le moteur pour le hasard
+        // (pas après pas, ligne après ligne, pistes muettes comprises : c'est l'ordre dans lequel le moteur tire).
+        val coin = StepCoin()
+        for ((loop, pattern) in plan(project).withIndex()) {
             fun tickOf(step: Int) = offset + step * TICKS_PER_STEP + if (step % 2 == 1) swingTicks else 0
-            for (lane in pattern.lanes) {
-                val track = project.trackOrNull(lane.instrument) ?: continue
-                if (track.melodic || !audible(project, track)) continue
-                val note = DRUM_NOTES[track.voice.coerceIn(0, DRUM_NOTES.size - 1)]
-                for (s in 0 until pattern.stepCount) {
-                    val v = lane.velocity[s]
+            for (s in 0 until pattern.stepCount) {
+                for (lane in pattern.lanes) {
+                    val v = lane.velocity.getOrElse(s) { 0f }
                     if (v <= 0f) continue
+                    val cond = lane.cond.getOrElse(s) { StepCond.ALWAYS }
+                    if (cond != StepCond.ALWAYS && !StepCond.plays(cond, loop, if (cond == StepCond.RANDOM) coin.next() else 0f)) continue
+                    val track = project.trackOrNull(lane.instrument) ?: continue
+                    if (track.melodic || !audible(project, track)) continue
+                    val note = DRUM_NOTES[track.voice.coerceIn(0, DRUM_NOTES.size - 1)]
                     val t = tickOf(s)
                     drums += Ev(t, 1, byteArrayOf((0x99).toByte(), note.toByte(), (v * 127f).roundToInt().coerceIn(1, 127).toByte()))
                     drums += Ev(t + TICKS_PER_STEP / 2, 0, byteArrayOf((0x89).toByte(), note.toByte(), 0))
