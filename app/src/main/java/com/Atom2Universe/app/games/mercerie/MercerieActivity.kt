@@ -303,13 +303,15 @@ class MercerieActivity : ThemedActivity() {
         for (chip in chips(l)) {
             val count = MercerieUi.label(context, if (live) 16f else 18f)
             count.text = chipText(chip, board)
+            // Une seule ligne : « 2 500 » ne doit jamais se couper en « 2 50 » + « 0 ».
+            count.isSingleLine = true
             if (live) chipTexts += chip to count
             addView(LinearLayout(context).apply {
                 orientation = LinearLayout.VERTICAL
                 gravity = Gravity.CENTER_HORIZONTAL
                 setPadding(dp(8f), 0, dp(8f), 0)
                 addView(ImageView(context).apply { setImageBitmap(chip.icon) }, LinearLayout.LayoutParams(dp(if (live) 40f else 48f), dp(if (live) 40f else 48f)))
-                addView(count)
+                addView(count, LinearLayout.LayoutParams(-2, -2))
             })
         }
     }
