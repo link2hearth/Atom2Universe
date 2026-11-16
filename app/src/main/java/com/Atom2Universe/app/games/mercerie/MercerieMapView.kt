@@ -143,7 +143,15 @@ class MercerieMapView(context: Context, private val progress: MercerieProgress, 
 @SuppressLint("ViewConstructor")
 class StarBarView(context: Context, private val thresholds: IntArray) : View(context) {
     var score = 0
-        set(value) { if (field != value) { field = value; invalidate() } }
+        set(value) {
+            if (field == value) return
+            field = value
+            // Une étoile atteinte saute et brille un instant.
+            val now = android.os.SystemClock.uptimeMillis()
+            for (k in 0 until 3) if (value >= thresholds[k] && popAt[k] == 0L) popAt[k] = now
+            invalidate()
+        }
+    private val popAt = LongArray(3)
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE; strokeCap = Paint.Cap.ROUND }
 
     override fun onDraw(canvas: Canvas) {
@@ -160,10 +168,15 @@ class StarBarView(context: Context, private val thresholds: IntArray) : View(con
             paint.color = Felt.GOLD
             canvas.drawLine(left, y, left + (right - left) * u, y, paint)
         }
+        val now = android.os.SystemClock.uptimeMillis()
+        var popping = false
         for (k in 0 until 3) {
             val x = left + (right - left) * thresholds[k] / top
-            Felt.star(canvas, x, y, r, score >= thresholds[k])
+            val age = now - popAt[k]
+            val pop = if (popAt[k] != 0L && age < 520) { popping = true; 1f + sin(age / 520f * Math.PI.toFloat()) * .7f } else 1f
+            Felt.star(canvas, x, y, r * pop, score >= thresholds[k])
         }
+        if (popping) postInvalidateOnAnimation()
     }
 }
 

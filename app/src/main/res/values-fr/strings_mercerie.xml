@@ -25,12 +25,81 @@
     <string name="mercerie_restart">Recommencer</string>
     <string name="mercerie_bonus">Couture finale !</string>
     <string name="mercerie_neutrinos">⚛ +%1$d</string>
-    <string-array name="mercerie_cheers">
+    <string-array name="mercerie_cheers_1">
         <item>Joli !</item>
+        <item>Bien cousu !</item>
+        <item>Chouette !</item>
+        <item>Mignon !</item>
+        <item>Tout doux !</item>
+        <item>Pile poil !</item>
+    </string-array>
+    <string-array name="mercerie_cheers_2">
         <item>Superbe !</item>
+        <item>Au poil !</item>
+        <item>Cousu main !</item>
+        <item>Trop fort !</item>
+        <item>Bravo !</item>
+        <item>Ça file !</item>
+    </string-array>
+    <string-array name="mercerie_cheers_3">
         <item>Splendide !</item>
         <item>Magnifique !</item>
+        <item>Fil d\'or !</item>
+        <item>Génial !</item>
+        <item>Brodé main !</item>
     </string-array>
+    <string-array name="mercerie_cheers_4">
+        <item>Fabuleux !</item>
+        <item>Grandiose !</item>
+        <item>Haute couture !</item>
+        <item>Époustouflant !</item>
+        <item>Chef-d\'œuvre !</item>
+        <item>Fantastique !</item>
+    </string-array>
+    <string-array name="mercerie_cheers_5">
+        <item>Légendaire !</item>
+        <item>Divin !</item>
+        <item>Prodigieux !</item>
+        <item>Tempête de laine !</item>
+        <item>Maître tailleur !</item>
+        <item>Incroyable !</item>
+    </string-array>
+    <string-array name="mercerie_combos">
+        <item>Croix cousue !</item>
+        <item>Grand ciseau !</item>
+        <item>Super pompon !</item>
+        <item>Arc-en-ciel !</item>
+        <item>Pluie de bobines !</item>
+        <item>Pluie de pompons !</item>
+        <item>Nuée de papillons !</item>
+        <item>Grand ménage !</item>
+        <item>Envolée !</item>
+        <item>Papillon ciseaux !</item>
+        <item>Papillon pompon !</item>
+    </string-array>
+    <string-array name="mercerie_win_1">
+        <item>Bravo !</item>
+        <item>Réussi !</item>
+        <item>Bien joué !</item>
+    </string-array>
+    <string-array name="mercerie_win_2">
+        <item>Superbe !</item>
+        <item>Très bien cousu !</item>
+        <item>Joli travail !</item>
+    </string-array>
+    <string-array name="mercerie_win_3">
+        <item>Parfait !</item>
+        <item>Haute couture !</item>
+        <item>Chef-d\'œuvre !</item>
+    </string-array>
+    <string name="mercerie_moves_left">Plus que 5 coups !</string>
+    <string name="mercerie_lose_timer">Le minuteur a sonné !</string>
+    <string name="mercerie_help_butterfly">Carré de 4 : un papillon qui s\'envole sur ce qui gêne le plus.</string>
+    <string name="mercerie_help_dust">Mouton de poussière : il gagne une case à chaque coup si tu n\'en chasses aucun.</string>
+    <string name="mercerie_help_timer">Minuteur : aligne la pièce avant zéro, sinon la partie est perdue.</string>
+    <string name="mercerie_help_portal">Boutonnière : les pièces y plongent et ressortent par sa jumelle.</string>
+    <string name="mercerie_challenge">Défi réussi !</string>
+    <string name="mercerie_help_par">Médaille : atteins l\'objectif en autant de coups qu\'elle indique, et les 3 étoiles sont à toi.</string>
     <string name="mercerie_sound">Son</string>
     <string name="mercerie_dark_mode">Mode sombre</string>
     <string name="mercerie_hint">Aide : montrer un coup possible</string>

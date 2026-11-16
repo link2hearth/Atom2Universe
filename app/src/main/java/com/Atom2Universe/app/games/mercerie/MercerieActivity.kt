@@ -46,9 +46,20 @@ class MercerieActivity : ThemedActivity() {
     private var mascot: MascotView? = null
     private var mood = 0
     private val chipTexts = ArrayList<Pair<Chip, TextView>>()
+    private val chipViews = HashMap<Int, View>()
+    /** Pièces en vol vers chaque compteur : le nombre affiché ne baisse qu'à leur arrivée. */
+    private val inFlight = HashMap<Int, Int>()
+    /** Pendant la couture finale, le compteur de coups descend au rythme des coups qui partent. */
+    private var shownMoves = -1
+    private var movesBox: View? = null
+    private var flights: FlightLayer? = null
+    /** La médaille du défi pendant la partie : son image et les coups du défi qui restent. */
+    private var parIcon: ImageView? = null
+    private var parText: TextView? = null
+    private var parGold = true
 
-    /** Un objectif à l'écran : une image et un nombre. */
-    private class Chip(val icon: Bitmap, val target: Int, val left: (MercerieBoard) -> Int)
+    /** Un objectif à l'écran : une image et un nombre. [key] : sa couleur, ou KEY_PATCH… du plateau. */
+    private class Chip(val icon: Bitmap, val target: Int, val key: Int, val left: (MercerieBoard) -> Int)
 
     private val landscape: Boolean get() = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
@@ -78,6 +89,9 @@ class MercerieActivity : ThemedActivity() {
         Felt.theme(dark)
         iconCache = null
         starIconCache = null
+        medalCache.clear()
+        timerIconCache = null
+        portalIconCache = null
         root.background = FabricDrawable(this)
         if (card != null) return
         when (screen) {
@@ -121,12 +135,20 @@ class MercerieActivity : ThemedActivity() {
         card = null
         root.removeAllViews()
         root.addView(content, FrameLayout.LayoutParams(-1, -1))
+        // La couche de vol passe au-dessus de tout, fiches comprises, sans jamais prendre le doigt.
+        val layer = flights ?: FlightLayer(this).also { flights = it; it.translationZ = 1000f }
+        layer.clear()
+        root.addView(layer, FrameLayout.LayoutParams(-1, -1))
     }
 
     private fun leaveGame() {
         boardView = null
         mascot = null
         chipTexts.clear()
+        chipViews.clear()
+        inFlight.clear()
+        movesBox = null
+        shownMoves = -1
     }
 
     private fun column() = LinearLayout(this).apply {
@@ -283,14 +305,63 @@ class MercerieActivity : ThemedActivity() {
         val out = ArrayList<Chip>()
         val g = l.goal
         for (c in 0 until MercerieBoard.COLORS) if (g.collect[c] > 0)
-            out += Chip(icons.of(Kind.NORMAL, c), g.collect[c]) { b -> (g.collect[c] - b.collected[c]).coerceAtLeast(0) }
-        if (g.patches) out += Chip(icons.patch[0], MercerieBoard(l, 1L).patchesLeft) { it.patchesLeft }
-        if (g.thimbles > 0) out += Chip(icons.thimble, g.thimbles) { b -> g.thimbles - b.thimblesDone }
-        if (g.onlyScore) out += Chip(starIcon, l.stars[0]) { b -> (l.stars[0] - b.score).coerceAtLeast(0) }
+            out += Chip(icons.of(Kind.NORMAL, c), g.collect[c], c) { b -> (g.collect[c] - b.collected[c]).coerceAtLeast(0) }
+        if (g.patches) out += Chip(icons.patch[0], MercerieBoard(l, 1L).patchesLeft, MercerieBoardView.KEY_PATCH) { it.patchesLeft }
+        if (g.dust) out += Chip(icons.dust, MercerieBoard(l, 1L).dustLeft, MercerieBoardView.KEY_DUST) { it.dustLeft }
+        if (g.thimbles > 0) out += Chip(icons.thimble, g.thimbles, MercerieBoardView.KEY_THIMBLE) { b -> g.thimbles - b.thimblesDone }
+        if (g.onlyScore) out += Chip(starIcon, l.stars[0], -1) { b -> (l.stars[0] - b.score).coerceAtLeast(0) }
         return out
     }
 
     private var starIconCache: Bitmap? = null
+    private val medalCache = HashMap<Boolean, Bitmap>()
+
+    /** La médaille du défi : un disque de feutrine dorée et son ruban ; grise une fois le défi manqué. */
+    private fun medal(gold: Boolean): Bitmap = medalCache.getOrPut(gold) {
+        val s = dp(44f).toFloat()
+        Bitmap.createBitmap(s.toInt(), s.toInt(), Bitmap.Config.ARGB_8888).also {
+            val c = android.graphics.Canvas(it)
+            val left = android.graphics.Path().apply { moveTo(s * .26f, 0f); lineTo(s * .44f, 0f); lineTo(s * .54f, s * .5f); lineTo(s * .38f, s * .52f); close() }
+            val right = android.graphics.Path().apply { moveTo(s * .56f, 0f); lineTo(s * .74f, 0f); lineTo(s * .62f, s * .52f); lineTo(s * .46f, s * .5f); close() }
+            Felt.shape(c, left, if (gold) Felt.PINK else Felt.GREY, s * .5f, stitch = false)
+            Felt.shape(c, right, if (gold) Felt.COLORS[1] else Felt.GREY, s * .5f, stitch = false)
+            val disc = android.graphics.Path().apply { addCircle(s * .5f, s * .63f, s * .32f, android.graphics.Path.Direction.CW) }
+            val face = if (gold) Felt.GOLD else Felt.GREY
+            Felt.shape(c, disc, face, s * .64f, threadColor = Felt.lighter(face, .6f))
+            c.save()
+            c.translate(s * .5f, s * .64f)
+            Felt.shape(c, Felt.starPath(s * .13f), Felt.lighter(face, .35f), s * .3f, stitch = false, shadow = false)
+            c.restore()
+        }
+    }
+    private var timerIconCache: Bitmap? = null
+    private var portalIconCache: Bitmap? = null
+
+    /** Une pièce à minuteur pour l'aide : le réveil posé sur un cœur. */
+    private val timerIcon: Bitmap get() = timerIconCache ?: icons.of(Kind.NORMAL, 0).copy(Bitmap.Config.ARGB_8888, true).also {
+        val c = android.graphics.Canvas(it)
+        val s = it.width * .52f
+        c.drawBitmap(icons.clock[0], null, android.graphics.RectF(it.width - s, 0f, it.width.toFloat(), s), null)
+        val p = android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG).apply {
+            typeface = MercerieUi.bold; textAlign = android.graphics.Paint.Align.CENTER; textSize = s * .42f; color = 0xFF3A2E36.toInt()
+        }
+        c.drawText("5", it.width - s / 2, s * .55f + p.textSize * .36f, p)
+        timerIconCache = it
+    }
+
+    /** Une boutonnière pour l'aide. */
+    private val portalIcon: Bitmap get() = portalIconCache ?: Bitmap.createBitmap(dp(44f), dp(44f), Bitmap.Config.ARGB_8888).also {
+        val c = android.graphics.Canvas(it)
+        val w = it.width * .36f
+        val h = it.height * .1f
+        val path = android.graphics.Path().apply {
+            addRoundRect(it.width / 2f - w - h, it.height / 2f - h * 2, it.width / 2f + w + h, it.height / 2f + h * 2, h * 2, h * 2, android.graphics.Path.Direction.CW)
+        }
+        Felt.shape(c, path, Felt.lighter(Felt.COLORS[4], .15f), it.width * .7f, stitch = false, plush = false)
+        val slit = android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG).apply { color = 0xFF2A1E24.toInt() }
+        c.drawRoundRect(it.width / 2f - w, it.height / 2f - h, it.width / 2f + w, it.height / 2f + h, h, h, slit)
+        portalIconCache = it
+    }
     private val starIcon: Bitmap get() = starIconCache ?: Bitmap.createBitmap(dp(44f), dp(44f), Bitmap.Config.ARGB_8888).also {
         Felt.star(android.graphics.Canvas(it), it.width / 2f, it.height / 2f, it.width * .36f, true)
         starIconCache = it
@@ -306,18 +377,20 @@ class MercerieActivity : ThemedActivity() {
             // Une seule ligne : « 2 500 » ne doit jamais se couper en « 2 50 » + « 0 ».
             count.isSingleLine = true
             if (live) chipTexts += chip to count
-            addView(LinearLayout(context).apply {
+            val box = LinearLayout(context).apply {
                 orientation = LinearLayout.VERTICAL
                 gravity = Gravity.CENTER_HORIZONTAL
                 setPadding(dp(8f), 0, dp(8f), 0)
                 addView(ImageView(context).apply { setImageBitmap(chip.icon) }, LinearLayout.LayoutParams(dp(if (live) 40f else 48f), dp(if (live) 40f else 48f)))
                 addView(count, LinearLayout.LayoutParams(-2, -2))
-            })
+            }
+            if (live) chipViews[chip.key] = box
+            addView(box)
         }
     }
 
     private fun chipText(chip: Chip, board: MercerieBoard?): String {
-        val left = if (board == null) chip.target else chip.left(board)
+        val left = if (board == null) chip.target else (chip.left(board) + (inFlight[chip.key] ?: 0)).coerceAtMost(chip.target)
         return if (left <= 0) getString(R.string.mercerie_sym_done) else MercerieUi.number(left)
     }
 
@@ -380,6 +453,15 @@ class MercerieActivity : ThemedActivity() {
             add(StarsView(context, progress.stars(number), animated = false), width = dp(170f), height = dp(60f), top = 6f)
             add(goalRow(l, null, live = false), top = 8f)
             add(MercerieUi.label(context, 16f).apply { text = resources.getQuantityString(R.plurals.mercerie_moves, l.moves, l.moves) }, top = 10f)
+            if (l.par > 0) add(LinearLayout(context).apply {
+                orientation = LinearLayout.HORIZONTAL
+                gravity = Gravity.CENTER_VERTICAL
+                addView(ImageView(context).apply { setImageBitmap(medal(true)) }, LinearLayout.LayoutParams(dp(36f), dp(36f)))
+                addView(MercerieUi.label(context, 16f, Felt.darker(Felt.GOLD, if (Felt.dark) 1f else .7f)).apply {
+                    text = resources.getQuantityString(R.plurals.mercerie_moves, l.par, l.par)
+                    setPadding(dp(6f), 0, 0, 0)
+                })
+            }, top = 6f)
             val best = progress.best(number)
             if (best > 0) add(MercerieUi.label(context, 15f, Felt.SOFT).apply {
                 text = getString(R.string.mercerie_best, MercerieUi.number(best))
@@ -429,12 +511,17 @@ class MercerieActivity : ThemedActivity() {
     private fun showHelp() {
         val rows = listOf(
             icons.of(Kind.LINE_H, 0) to R.string.mercerie_help_line,
+            icons.of(Kind.BUTTERFLY, 3) to R.string.mercerie_help_butterfly,
             icons.of(Kind.BOMB, 1) to R.string.mercerie_help_bomb,
             icons.rainbow to R.string.mercerie_help_rainbow,
             icons.patch[0] to R.string.mercerie_help_patch,
             icons.knot[0] to R.string.mercerie_help_knot,
+            icons.dust to R.string.mercerie_help_dust,
             icons.pin to R.string.mercerie_help_pin,
-            icons.thimble to R.string.mercerie_help_thimble
+            icons.thimble to R.string.mercerie_help_thimble,
+            timerIcon to R.string.mercerie_help_timer,
+            portalIcon to R.string.mercerie_help_portal,
+            medal(true) to R.string.mercerie_help_par
         )
         showCard(dismissable = true) {
             add(MercerieUi.label(context, 24f, Felt.PINK).apply { text = getString(R.string.mercerie_help_title) })
@@ -475,8 +562,20 @@ class MercerieActivity : ThemedActivity() {
         mood = 0
         view.listener = object : MercerieBoardView.Listener {
             override fun onChanged() = refreshHud()
-            override fun onBonus() { setMood(1); view.showCheer(getString(R.string.mercerie_bonus)) }
+            override fun onBonus() {
+                setMood(1)
+                shownMoves = view.board.movesLeft
+                if (view.board.beatsPar) view.showCheer(getString(R.string.mercerie_challenge), 5)
+                else view.showCheer(getString(R.string.mercerie_bonus), 4)
+            }
             override fun onFinished(won: Boolean) = finishLevel(won)
+            override fun onCheer(tier: Int) {
+                if (tier < 3 || mood != 0) return
+                mascot?.mood = 1
+                root.postDelayed({ if (mood == 0) mascot?.mood = 0 }, 1300L)
+            }
+            override fun onCollect(key: Int, x: Float, y: Float, size: Float) = collectFlight(view, key, x, y, size)
+            override fun onShot(x: Float, y: Float, delay: Long, flight: Long) = bonusShot(view, x, y, delay, flight)
         }
         layoutGame(view)
     }
@@ -517,6 +616,18 @@ class MercerieActivity : ThemedActivity() {
         }
         val goals = goalRow(l, board, live = true)
         val title = getString(R.string.mercerie_level, l.number)
+        parIcon = null
+        parText = null
+        val parBox = if (l.par <= 0) null else column().apply {
+            gravity = Gravity.CENTER
+            setPadding(dp(8f), 0, dp(4f), 0)
+            val icon = ImageView(context).apply { setImageBitmap(medal(true)) }
+            parGold = true
+            parIcon = icon
+            parText = MercerieUi.label(context, if (wide) 18f else 16f, Felt.darker(Felt.GOLD, if (Felt.dark) 1f else .7f)).apply { isSingleLine = true }
+            addView(icon, LinearLayout.LayoutParams(dp(if (wide) 44f else 38f), dp(if (wide) 44f else 38f)))
+            addView(parText)
+        }
 
         val content: View
         if (wide) {
@@ -534,7 +645,12 @@ class MercerieActivity : ThemedActivity() {
             side.add(spacer(), height = 0, weight = .6f)
             side.add(MercerieUi.label(this, 22f, Felt.PINK).apply { text = title })
             side.add(spacer(), height = 0, weight = .6f)
-            side.add(movesBox)
+            side.add(LinearLayout(this).apply {
+                orientation = LinearLayout.HORIZONTAL
+                gravity = Gravity.CENTER_VERTICAL
+                addView(movesBox)
+                parBox?.let { addView(it) }
+            })
             side.add(spacer(), height = 0, weight = 1f)
             side.add(goals)
             side.add(spacer(), height = 0, weight = 1f)
@@ -556,6 +672,7 @@ class MercerieActivity : ThemedActivity() {
                 background = FeltDrawable(context, Felt.PAPER, 30f, threadColor = Felt.KRAFT)
                 setPadding(dp(14f), dp(10f), dp(16f), dp(14f))
                 addView(movesBox)
+                parBox?.let { addView(it) }
                 addView(goals, LinearLayout.LayoutParams(0, -2, 1f))
                 addView(scoreBox)
             }
@@ -571,15 +688,68 @@ class MercerieActivity : ThemedActivity() {
         setScreen(Screen.GAME, content)
         boardView = view
         movesText = moves; scoreText = score; starBar = bar
+        this.movesBox = movesBox
+        inFlight.clear()
         refreshHud()
+    }
+
+    /** Une pièce utile vole du plateau jusqu'à son compteur, qui ne baisse qu'à son arrivée. */
+    private fun collectFlight(view: MercerieBoardView, key: Int, x: Float, y: Float, size: Float) {
+        val target = chipViews[key] ?: return
+        val chip = chipTexts.firstOrNull { it.first.key == key }?.first ?: return
+        val layer = flights ?: return
+        inFlight[key] = (inFlight[key] ?: 0) + 1
+        refreshHud()
+        layer.fly(chip.icon, x, y, target, size, dp(40f).toFloat(), life = 520L + (inFlight[key] ?: 0).coerceAtMost(8) * 25L,
+            trail = if (key in 0..5) Felt.COLORS[key] else Felt.GOLD) {
+            if (boardView !== view) return@fly
+            inFlight[key] = ((inFlight[key] ?: 1) - 1).coerceAtLeast(0)
+            sound.collect()
+            target.animate().cancel()
+            target.scaleX = 1.3f; target.scaleY = 1.3f
+            target.animate().scaleX(1f).scaleY(1f).setDuration(220).start()
+            refreshHud()
+        }
+    }
+
+    /** Couture finale : chaque coup restant part du compteur, en étoile, vers la pièce qu'il change en bobine. */
+    private fun bonusShot(view: MercerieBoardView, x: Float, y: Float, delay: Long, flight: Long) {
+        val layer = flights ?: return
+        root.postDelayed({
+            val box = movesBox ?: return@postDelayed
+            if (boardView !== view) return@postDelayed
+            if (shownMoves > 0) shownMoves--
+            refreshHud()
+            box.animate().cancel()
+            box.scaleX = 1.12f; box.scaleY = 1.12f
+            box.animate().scaleX(1f).scaleY(1f).setDuration(110).start()
+            val loc = IntArray(2)
+            box.getLocationInWindow(loc)
+            layer.flyTo(starIcon, loc[0] + box.width / 2f, loc[1] + box.height / 2f, x, y, dp(34f).toFloat(), dp(26f).toFloat(),
+                life = flight, trail = Felt.GOLD)
+        }, delay)
     }
 
     private fun refreshHud() {
         val board = boardView?.board ?: return
-        movesText?.text = MercerieUi.number(board.movesLeft)
+        movesText?.text = MercerieUi.number(if (board.bonus && shownMoves >= 0) shownMoves else board.movesLeft)
         scoreText?.text = MercerieUi.number(board.score)
         starBar?.score = board.score
         for ((chip, view) in chipTexts) view.text = chipText(chip, board)
+        parText?.let { label ->
+            // Coups du défi qui restent ; tenu, une coche ; manqué, la médaille grise sans nombre.
+            val left = board.level.par - board.movesUsed
+            val gold = board.beatsPar || (!board.bonus && !board.finished && left >= 0)
+            label.text = when {
+                board.beatsPar -> getString(R.string.mercerie_sym_done)
+                gold -> MercerieUi.number(left)
+                else -> ""
+            }
+            if (gold != parGold) {
+                parGold = gold
+                parIcon?.setImageBitmap(medal(gold))
+            }
+        }
     }
 
     private fun finishLevel(won: Boolean) {
@@ -591,7 +761,9 @@ class MercerieActivity : ThemedActivity() {
             root.postDelayed({
                 if (screen != Screen.GAME || boardView?.board !== board) return@postDelayed
                 showCard(dismissable = false) {
-                    add(MercerieUi.label(context, 26f, Felt.PINK).apply { text = getString(R.string.mercerie_lose) })
+                    add(MercerieUi.label(context, 26f, Felt.PINK).apply {
+                        text = getString(if (board.timedOut) R.string.mercerie_lose_timer else R.string.mercerie_lose)
+                    })
                     add(goalRow(l, board, live = false), top = 12f)
                     buttons(button(R.string.mercerie_retry) { startLevel(l.number) })
                     buttons(button(R.string.mercerie_quit, Felt.PAPER) { showHome() })
@@ -606,10 +778,29 @@ class MercerieActivity : ThemedActivity() {
         sound.win(stars)
         root.postDelayed({
             if (screen != Screen.GAME || boardView?.board !== board) return@postDelayed
+            flights?.confetti(stars)
+            val titles = resources.getStringArray(when (stars) { 3 -> R.array.mercerie_win_3; 2 -> R.array.mercerie_win_2; else -> R.array.mercerie_win_1 })
             showCard(dismissable = false) {
-                add(MercerieUi.label(context, 28f, Felt.PINK).apply { text = getString(R.string.mercerie_win) })
-                add(StarsView(context, stars), width = dp(210f), height = dp(78f), top = 6f)
-                add(MercerieUi.label(context, 30f).apply { text = MercerieUi.number(board.score) }, top = 4f)
+                add(FeltTitleView(context, titles.random(), 40f), width = dp(300f))
+                add(StarsView(context, stars), width = dp(210f), height = dp(78f), top = 2f)
+                // Le score se compte sous les yeux du joueur.
+                val total = MercerieUi.label(context, 30f).apply { text = MercerieUi.number(0) }
+                add(total, top = 4f)
+                if (board.challenge > 0) add(LinearLayout(context).apply {
+                    orientation = LinearLayout.HORIZONTAL
+                    gravity = Gravity.CENTER_VERTICAL
+                    addView(ImageView(context).apply { setImageBitmap(medal(true)) }, LinearLayout.LayoutParams(dp(40f), dp(40f)))
+                    addView(MercerieUi.label(context, 17f, Felt.darker(Felt.GOLD, if (Felt.dark) 1f else .7f)).apply {
+                        text = getString(R.string.mercerie_challenge)
+                        setPadding(dp(6f), 0, 0, 0)
+                    })
+                }, top = 4f)
+                android.animation.ValueAnimator.ofInt(0, board.score).apply {
+                    duration = 900L
+                    startDelay = 250L
+                    addUpdateListener { total.text = MercerieUi.number(it.animatedValue as Int) }
+                    start()
+                }
                 add(MercerieUi.label(context, 15f, Felt.SOFT).apply {
                     text = if (record.newBest) getString(R.string.mercerie_new_best)
                     else getString(R.string.mercerie_best, MercerieUi.number(progress.best(l.number)))

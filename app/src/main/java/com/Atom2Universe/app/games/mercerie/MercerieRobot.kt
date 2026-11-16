@@ -20,7 +20,18 @@ object MercerieRobot {
             v += 15.0 * (minOf(after.collected[c], g.collect[c]) - minOf(before.collected[c], g.collect[c]))
         if (g.thimbles > 0) v += 300.0 * (after.thimblesDone - before.thimblesDone) +
             25.0 * (after.thimbleDepth - before.thimbleDepth).coerceAtLeast(0)
+        // Moutons : en chasser rapporte, les laisser s'étendre coûte (beaucoup s'il faut tous les chasser).
+        v += (if (g.dust) 60.0 else 25.0) * (before.dustLeft - after.dustLeft)
+        // Minuteurs : plus il leur reste peu, plus il est pressé de les aligner ; à zéro, la partie est perdue.
+        v += urgency(before) - urgency(after)
+        if (after.timedOut) v -= 100_000.0
         return v
+    }
+
+    private fun urgency(b: MercerieBoard): Double {
+        var u = 0.0
+        for (p in b.piece) if (p != null && p.timer > 0) u += 90.0 / p.timer
+        return u
     }
 
     /** Joue une partie entière, bonus de fin compris. */

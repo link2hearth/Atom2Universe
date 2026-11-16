@@ -304,7 +304,7 @@ enum class Mascot(val asset: String) {
                 g.thimbles > 0 -> MOLE
                 g.patches -> MOUSE
                 g.collect.any { it > 0 } -> SQUIRREL
-                level.map.any { row -> row.any { it in "kKMqQ" } } -> CAT
+                g.dust || level.map.any { row -> row.any { it in "kKMqQde" } } -> CAT
                 else -> HEDGEHOG
             }
         }

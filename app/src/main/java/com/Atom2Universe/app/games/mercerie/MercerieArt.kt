@@ -403,6 +403,40 @@ class MercerieSprites(private val assets: AssetManager?, val cell: Int) {
     } ?: Array(2) { layers -> blank().also { drawPatch(Canvas(it), cell.toFloat(), layers + 1) } }
     val tile = Array(2) { odd -> blank().also { drawTile(Canvas(it), cell.toFloat(), odd == 1) } }
 
+    /**
+     * Les ailes du papillon, une paire par couleur : le plateau les fait battre derrière la pièce.
+     * Une image `wings.webp` en gris est teintée ; sans elle, des ailes de feutrine dessinées ici.
+     */
+    val wings: Array<Bitmap> = asset("wings").let { src ->
+        Array(MercerieBoard.COLORS) { c ->
+            // La feutrine des ailes est d'un gris moyen : un fort gain lui rend la clarté de la pièce.
+            if (src != null) fitted(src, 1f, tint(Felt.lighter(Felt.COLORS[c], .12f), 1.9f))
+            else blank().also { drawWings(Canvas(it), cell / 2f, cell / 2f, cell * .5f, c) }
+        }.also { src?.recycle() }
+    }
+    /** La pièce posée sur ses ailes, en plus petit. */
+    val bodyScale = .58f
+    private val butterfly = Array(MercerieBoard.COLORS) { c ->
+        wings[c].copy(Bitmap.Config.ARGB_8888, true).also { out ->
+            val s = cell * bodyScale
+            val m = cell / 2f
+            Canvas(out).drawBitmap(base[c], null, RectF(m - s / 2, m - s / 2 + cell * .02f, m + s / 2, m + s / 2 + cell * .02f), smooth)
+        }
+    }
+
+    /** Le mouton de poussière : une boule de peluche grise. */
+    val dust: Bitmap = asset("dust")?.let { src -> fitted(src, .9f).also { src.recycle() } }
+        ?: blank().also { drawDust(Canvas(it), cell / 2f, cell / 2f, r) }
+
+    /**
+     * Le petit réveil des minuteurs (`clock_0` bleu, `clock_1` rouge quand il ne reste que trois
+     * coups). Le centre de son cadran est un peu sous le milieu de l'image : le plateau y écrit le nombre.
+     */
+    val clock: Array<Bitmap> = Array(2) { hot ->
+        asset("clock_$hot")?.let { src -> fitted(src, .94f).also { src.recycle() } }
+            ?: blank().also { drawClock(Canvas(it), cell.toFloat(), hot == 1) }
+    }
+
     fun of(piece: Piece): Bitmap = of(piece.kind, piece.color)
 
     /** Le plateau dessine la bobine en deux temps : la pièce seule, puis ses ciseaux qui battent. */
@@ -421,6 +455,7 @@ class MercerieSprites(private val assets: AssetManager?, val cell: Int) {
         Kind.BOMB -> bomb[color.coerceIn(0, 5)]
         Kind.RAINBOW -> rainbow
         Kind.THIMBLE -> thimble
+        Kind.BUTTERFLY -> butterfly[color.coerceIn(0, 5)]
     }
 
     /** Bobine pour l'aide et les objectifs : la pièce avec sa flèche, immobile. */
@@ -726,6 +761,106 @@ class MercerieSprites(private val assets: AssetManager?, val cell: Int) {
                 val seam2 = Path().apply { addRoundRect(RectF(second, second, cell - second, cell - second), cell * .06f, cell * .06f, Path.Direction.CW) }
                 Felt.stitches(canvas, seam2, Felt.CREAM, cell, .026f)
             }
+        }
+
+        /** Deux paires d'ailes de feutrine à pois, et deux antennes. [s] : la demi-largeur de la case. */
+        fun drawWings(canvas: Canvas, cx: Float, cy: Float, s: Float, color: Int) {
+            val tint = Felt.COLORS[color]
+            val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+            canvas.save()
+            canvas.translate(cx, cy)
+            paint.style = Paint.Style.STROKE
+            paint.strokeCap = Paint.Cap.ROUND
+            paint.strokeWidth = s * .055f
+            paint.color = 0xFF4A3328.toInt()
+            for (side in intArrayOf(-1, 1)) {
+                val a = Path()
+                a.moveTo(side * .08f * s, -.42f * s)
+                a.quadTo(side * .14f * s, -.82f * s, side * .34f * s, -.9f * s)
+                canvas.drawPath(a, paint)
+            }
+            paint.style = Paint.Style.FILL
+            for (side in intArrayOf(-1, 1)) canvas.drawCircle(side * .36f * s, -.9f * s, .07f * s, paint)
+            for (side in intArrayOf(-1, 1)) {
+                canvas.save()
+                canvas.scale(side.toFloat(), 1f)
+                val upper = Path()
+                upper.moveTo(.04f * s, -.12f * s)
+                upper.cubicTo(.28f * s, -.98f * s, 1.04f * s, -.98f * s, .94f * s, -.32f * s)
+                upper.cubicTo(.86f * s, .02f * s, .36f * s, .06f * s, .04f * s, -.02f * s)
+                upper.close()
+                Felt.shape(canvas, upper, Felt.lighter(tint, .28f), s * 2)
+                val lower = Path()
+                lower.moveTo(.04f * s, .02f * s)
+                lower.cubicTo(.58f * s, .02f * s, .9f * s, .36f * s, .64f * s, .7f * s)
+                lower.cubicTo(.44f * s, .94f * s, .12f * s, .58f * s, .04f * s, .1f * s)
+                lower.close()
+                Felt.shape(canvas, lower, tint, s * 2)
+                paint.color = Felt.lighter(tint, .7f)
+                canvas.drawCircle(.66f * s, -.5f * s, .12f * s, paint)
+                canvas.drawCircle(.46f * s, .5f * s, .08f * s, paint)
+                canvas.restore()
+            }
+            canvas.restore()
+        }
+
+        /** Le mouton de poussière : une boule de peluche grise, et en clair un petit visage. */
+        fun drawDust(canvas: Canvas, cx: Float, cy: Float, r: Float) {
+            val grey = if (Felt.dark) 0xFF8C879E.toInt() else 0xFFC4BDCE.toInt()
+            val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+            canvas.save()
+            canvas.translate(cx, cy)
+            val fluff = Path().apply { addCircle(0f, .04f * r, .7f * r, Path.Direction.CW) }
+            val tufts = 13
+            for (k in 0 until tufts) {
+                val a = k * 2 * PI.toFloat() / tufts
+                val reach = if (k % 2 == 0) .72f else .66f
+                val one = Path().apply { addCircle(cos(a) * reach * r, .04f * r + sin(a) * reach * r * .92f, (if (k % 3 == 0) .27f else .22f) * r, Path.Direction.CW) }
+                fluff.op(one, Path.Op.UNION)
+            }
+            Felt.shape(canvas, fluff, grey, r * 2, stitch = false)
+            paint.style = Paint.Style.STROKE
+            paint.strokeCap = Paint.Cap.ROUND
+            paint.strokeWidth = r * .07f
+            paint.color = Felt.lighter(grey, .55f)
+            for (k in 0 until 5) {
+                val a = (-150 + k * 28) * PI.toFloat() / 180f
+                canvas.drawLine(cos(a) * .4f * r, sin(a) * .4f * r, cos(a) * .62f * r, sin(a) * .62f * r, paint)
+            }
+            paint.style = Paint.Style.FILL
+            if (!Felt.dark) {
+                paint.color = 0x70FF8FA3
+                canvas.drawCircle(-.36f * r, .2f * r, .1f * r, paint)
+                canvas.drawCircle(.36f * r, .2f * r, .1f * r, paint)
+                paint.color = 0xFF3A2E36.toInt()
+                canvas.drawCircle(-.2f * r, .02f * r, .085f * r, paint)
+                canvas.drawCircle(.2f * r, .02f * r, .085f * r, paint)
+                paint.color = 0xFFFFFFFF.toInt()
+                canvas.drawCircle(-.225f * r, -.01f * r, .03f * r, paint)
+                canvas.drawCircle(.175f * r, -.01f * r, .03f * r, paint)
+            }
+            canvas.restore()
+        }
+
+        /** Un petit réveil de feutrine : cadran crème, deux cloches. Le nombre est écrit par le plateau. */
+        fun drawClock(canvas: Canvas, cell: Float, hot: Boolean) {
+            val rim = if (hot) 0xFFE8596A.toInt() else 0xFF5AA9E6.toInt()
+            val m = cell / 2f
+            val cy = m + cell * .05f
+            val r = cell * .36f
+            for (side in intArrayOf(-1, 1)) {
+                val bell = Path().apply { addCircle(m + side * r * .72f, cy - r * .78f, r * .32f, Path.Direction.CW) }
+                Felt.shape(canvas, bell, Felt.darker(rim, .9f), cell, stitch = false, shadow = false)
+            }
+            val legs = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                style = Paint.Style.STROKE; strokeCap = Paint.Cap.ROUND; strokeWidth = cell * .06f; color = Felt.darker(rim, .7f)
+            }
+            canvas.drawLine(m - r * .5f, cy + r * .8f, m - r * .72f, cy + r * 1.08f, legs)
+            canvas.drawLine(m + r * .5f, cy + r * .8f, m + r * .72f, cy + r * 1.08f, legs)
+            val body = Path().apply { addCircle(m, cy, r, Path.Direction.CW) }
+            Felt.shape(canvas, body, rim, cell, stitch = false)
+            val face = Path().apply { addCircle(m, cy, r * .78f, Path.Direction.CW) }
+            Felt.shape(canvas, face, 0xFFFFF6E6.toInt(), cell, shadow = false, plush = false, threadColor = Felt.lighter(rim, .3f))
         }
 
         fun drawTile(canvas: Canvas, cell: Float, odd: Boolean) {

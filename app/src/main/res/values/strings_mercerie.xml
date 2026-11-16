@@ -25,12 +25,81 @@
     <string name="mercerie_restart">Restart</string>
     <string name="mercerie_bonus">Final stitch!</string>
     <string name="mercerie_neutrinos">⚛ +%1$d</string>
-    <string-array name="mercerie_cheers">
+    <string-array name="mercerie_cheers_1">
         <item>Nice!</item>
+        <item>Neat!</item>
         <item>Lovely!</item>
+        <item>Cute!</item>
+        <item>Sew good!</item>
+        <item>Snug!</item>
+    </string-array>
+    <string-array name="mercerie_cheers_2">
+        <item>Superb!</item>
+        <item>Sew cool!</item>
+        <item>Great stitch!</item>
+        <item>Handmade!</item>
+        <item>Brilliant!</item>
+        <item>Smooth!</item>
+    </string-array>
+    <string-array name="mercerie_cheers_3">
         <item>Splendid!</item>
         <item>Marvelous!</item>
+        <item>Golden thread!</item>
+        <item>Awesome!</item>
+        <item>Knit-tastic!</item>
     </string-array>
+    <string-array name="mercerie_cheers_4">
+        <item>Fabulous!</item>
+        <item>Grand!</item>
+        <item>Haute couture!</item>
+        <item>Breathtaking!</item>
+        <item>Masterpiece!</item>
+        <item>Fantastic!</item>
+    </string-array>
+    <string-array name="mercerie_cheers_5">
+        <item>Legendary!</item>
+        <item>Divine!</item>
+        <item>Prodigious!</item>
+        <item>Wool storm!</item>
+        <item>Master tailor!</item>
+        <item>Incredible!</item>
+    </string-array>
+    <string-array name="mercerie_combos">
+        <item>Stitched cross!</item>
+        <item>Giant scissors!</item>
+        <item>Super pom-pom!</item>
+        <item>Rainbow!</item>
+        <item>Bobbin shower!</item>
+        <item>Pom-pom shower!</item>
+        <item>Butterfly swarm!</item>
+        <item>Spring cleaning!</item>
+        <item>Take off!</item>
+        <item>Scissor wings!</item>
+        <item>Pom-pom wings!</item>
+    </string-array>
+    <string-array name="mercerie_win_1">
+        <item>Well done!</item>
+        <item>Done!</item>
+        <item>Nicely played!</item>
+    </string-array>
+    <string-array name="mercerie_win_2">
+        <item>Superb!</item>
+        <item>Finely sewn!</item>
+        <item>Lovely work!</item>
+    </string-array>
+    <string-array name="mercerie_win_3">
+        <item>Perfect!</item>
+        <item>Haute couture!</item>
+        <item>Masterpiece!</item>
+    </string-array>
+    <string name="mercerie_moves_left">5 moves left!</string>
+    <string name="mercerie_lose_timer">Time\'s up!</string>
+    <string name="mercerie_help_butterfly">Square of 4: a butterfly that flies to whatever is in the way.</string>
+    <string name="mercerie_help_dust">Dust bunny: it spreads one cell each move unless you clear one.</string>
+    <string name="mercerie_help_timer">Timer: match the piece before it reaches zero, or the level is lost.</string>
+    <string name="mercerie_help_portal">Buttonhole: pieces drop in and come out of its twin.</string>
+    <string name="mercerie_challenge">Challenge beaten!</string>
+    <string name="mercerie_help_par">Medal: reach the goal within its moves and all 3 stars are yours.</string>
     <string name="mercerie_sound">Sound</string>
     <string name="mercerie_dark_mode">Dark mode</string>
     <string name="mercerie_hint">Hint: show a possible move</string>

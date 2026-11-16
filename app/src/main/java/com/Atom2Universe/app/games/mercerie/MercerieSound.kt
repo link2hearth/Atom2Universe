@@ -101,6 +101,27 @@ class MercerieSound {
         note(BOX, scale(10 + (now % 5).toInt()), 70, 140)
     }
     fun basket() { for (k in 0 until 3) note(BOX, scale(10 + k * 2), 86, 260, k * 80L) }
+    /** Un mot de félicitation : une montée d'autant plus longue et brillante que le palier est haut. */
+    fun cheer(tier: Int) {
+        val n = 2 + tier
+        for (k in 0 until n) note(HARP, scale(6 + k * 2), 82 + tier * 4, 320, k * 55L)
+        if (tier >= 3) for (k in 0 until 3) note(BOX, scale(12 + k * 2 + tier), 74, 360, n * 55L + k * 70L)
+    }
+    /** « Plus que cinq coups » : deux notes qui hésitent. */
+    fun warn() { note(BOX, scale(9), 70, 200); note(BOX, scale(8), 66, 260, 160) }
+    fun combo() { for (p in intArrayOf(0, 2, 4, 7)) note(HARP, scale(5 + p), 100, 600); note(WOOD, 41, 110, 300) }
+    fun poof() = note(WOOD, scale(7), 60, 120)
+    fun flutter() {
+        val now = SystemClock.uptimeMillis()
+        if (now - lastZap < 60) return
+        lastZap = now
+        for (k in 0 until 3) note(HARP, scale(11 + k), 64, 110, k * 35L)
+    }
+    fun spread() { note(WOOD, 45, 70, 220); note(WOOD, 47, 56, 200, 90) }
+    /** Le minuteur baisse : un tic sec, plus aigu quand il presse. */
+    fun tickTock(left: Int) = note(WOOD, if (left <= 3) 84 else 76, if (left <= 3) 90 else 60, 70)
+    fun ring() { for (k in 0 until 8) note(BOX, if (k % 2 == 0) 88 else 84, 100, 90, k * 75L) }
+    fun collect() = note(BOX, scale(13 + (SystemClock.uptimeMillis() % 3).toInt()), 58, 120)
     fun win(stars: Int) { for (k in 0 until 4 + stars) note(HARP, scale(5 + k * 2), 96, 500, k * 110L) }
     fun lose() { for (k in 0 until 3) note(WOOD, scale(6 - k * 2), 70, 380, k * 220L) }
 

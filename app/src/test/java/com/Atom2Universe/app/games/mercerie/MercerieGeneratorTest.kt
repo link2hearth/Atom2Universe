@@ -15,6 +15,7 @@ class MercerieGeneratorTest {
         val collect = g.collect.any { it > 0 }
         return when {
             g.onlyScore -> "score"
+            g.dust -> "moutons"
             g.patches && (collect || g.thimbles > 0) -> "mixte"
             g.patches -> "écussons"
             g.thimbles > 0 -> "dés"
@@ -38,6 +39,8 @@ class MercerieGeneratorTest {
             assertEquals(tag, l.goal.thimbles, again.goal.thimbles)
             val b = MercerieBoard(l, 1L)
             assertEquals(tag, l.goal.patches, b.patchesLeft > 0)
+            if (l.goal.dust) assertTrue(tag, b.dustLeft > 0)
+            for (p in l.portals) assertTrue(tag, l.map[p.r1][p.c1] == '.' && l.map[p.r2][p.c2] == '.')
             assertFalse(tag, b.hasMatches())
             assertTrue(tag, b.hasMove())
             assertFalse(tag, b.goalMet)
@@ -49,10 +52,10 @@ class MercerieGeneratorTest {
     }
 
     @Test
-    fun everyFiveFloorsOfferTheFiveGoals() {
+    fun everySixFloorsOfferTheSixGoals() {
         for (block in 0 until 20) {
-            val kinds = (0 until 5).map { kind(MercerieGenerator.build(first + block * 5 + it)) }.toSet()
-            assertEquals("étages ${first + block * 5} et suivants : $kinds", 5, kinds.size)
+            val kinds = (0 until 6).map { kind(MercerieGenerator.build(first + block * 6 + it)) }.toSet()
+            assertEquals("étages ${first + block * 6} et suivants : $kinds", 6, kinds.size)
         }
         // Et jamais deux fois la même forme de plateau de suite.
         for (n in first until first + 100) {
@@ -61,30 +64,32 @@ class MercerieGeneratorTest {
         }
     }
 
-    /** Le robot règle quelques étages : coups raisonnables, étoiles croissantes, et il les regagne ensuite. */
+    /** Le robot règle quelques étages : coups à la mesure d'un humain, étoiles croissantes, et il les regagne ensuite. */
     @Test
     fun robotTunesFloors() {
         val report = StringBuilder()
         val kinds = HashMap<String, Int>()
         var total = 0
+        var lost = 0
         for (n in first until first + 30) {
             val (variant, l) = MercerieGenerator.make(n)
             kinds[kind(l)] = (kinds[kind(l)] ?: 0) + 1
-            assertTrue("étage $n : ${l.moves} coups", l.moves in 12..48)
+            assertTrue("étage $n : ${l.moves} coups", l.moves in 12..60)
             assertTrue("étage $n", l.stars[0] < l.stars[1] && l.stars[1] < l.stars[2])
             val games = (0 until 4).map { MercerieRobot.play(l, 40_000L * n + it) }
             val wins = games.count { it.won }
+            if (wins == 0) lost++
             total += wins
             report.append("étage $n : ${kind(l)}, ${l.cols}×${l.rows}, ${l.colors} couleurs, variante $variant, ${l.moves} coups, ")
                 .append("étoiles ${l.stars.toList()}, robot $wins/4, étoiles obtenues ${games.map { it.stars }}\n")
             for (row in l.map) report.append("    ").append(row.replace(' ', '·')).append('\n')
-            assertTrue("étage $n : le robot ne le gagne jamais\n$report", wins >= 1)
         }
         report.append("sortes : $kinds, robot $total/120").append('\n')
         File("build/outputs/mercerie/floors.txt").apply { parentFile?.mkdirs(); writeText(report.toString()) }
         // Le réglage ne doit pas tout ramener à des étages « au score » : chaque sorte reste présente.
-        for (k in listOf("score", "récolte", "écussons", "dés", "mixte")) assertTrue("$k : $kinds", (kinds[k] ?: 0) >= 3)
-        // Ni trop dur ni donné : le robot gagne entre six et neuf parties sur dix.
-        assertTrue("robot $total/120", total in 72..112)
+        for (k in listOf("score", "récolte", "écussons", "dés", "mixte", "moutons")) assertTrue("$k : $kinds", (kinds[k] ?: 0) >= 2)
+        // Faisable par un humain : le robot, bien plus fort, les gagne presque toujours.
+        assertTrue("robot $total/120\n$report", total >= 96)
+        assertTrue("$lost étages jamais gagnés\n$report", lost == 0)
     }
 }

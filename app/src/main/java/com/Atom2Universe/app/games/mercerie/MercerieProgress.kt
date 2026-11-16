@@ -26,6 +26,20 @@ class MercerieProgress(context: Context) {
 
     fun unlocked(level: Int) = level <= next
 
+    /**
+     * Le numéro où commencent les dix niveaux de la mise à jour : juste après le dernier niveau
+     * gagné quand le joueur la découvre, au plus tôt le 31. Fixé une fois pour toutes, pour que ses
+     * étoiles restent sur les mêmes niveaux.
+     */
+    val extraAt: Int
+        get() {
+            val stored = prefs.getInt("extra_at", 0)
+            if (stored > 0) return stored
+            val at = maxOf(MercerieLevels.HANDMADE + 1, next)
+            prefs.edit().putInt("extra_at", at).apply()
+            return at
+        }
+
     /** Réglage du « ? » : montrer un coup possible quand le joueur ne joue pas. */
     var hints: Boolean
         get() = prefs.getBoolean("hints", true)
