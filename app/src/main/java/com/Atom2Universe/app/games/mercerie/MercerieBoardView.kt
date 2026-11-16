@@ -557,6 +557,21 @@ class MercerieBoardView(context: Context, val board: MercerieBoard, private val 
                 val bh = dst.height() * beat / 2
                 beatRect.set(bx - bw, by - bh, bx + bw, by + bh)
                 canvas.drawBitmap(arrow, null, beatRect, paint)
+            } else if (s.kind == Kind.RAINBOW) {
+                // Le bouton arc-en-ciel tourne doucement sur lui-même : un tour en cinq secondes.
+                arrows = true
+                canvas.save()
+                canvas.rotate((now % RAINBOW_TURN_MS) * 360f / RAINBOW_TURN_MS, dst.centerX(), dst.centerY())
+                canvas.drawBitmap(a.rainbow, null, dst, paint)
+                canvas.restore()
+            } else if (s.kind == Kind.BOMB) {
+                // Le pompon gonfle et dégonfle à peine.
+                arrows = true
+                val puff = 1f + sin(now / 260f) * .05f
+                val bw = dst.width() * puff / 2
+                val bh = dst.height() * puff / 2
+                beatRect.set(dst.centerX() - bw, dst.centerY() - bh, dst.centerX() + bw, dst.centerY() + bh)
+                canvas.drawBitmap(a.of(s.kind, s.color), null, beatRect, paint)
             } else canvas.drawBitmap(a.of(s.kind, s.color), null, dst, paint)
             if (s.pinned) canvas.drawBitmap(a.pin, null, dst, paint)
         }
@@ -587,8 +602,8 @@ class MercerieBoardView(context: Context, val board: MercerieBoard, private val 
             outlined(canvas, word, width / 2f, originY + cell * board.rows * .46f, Felt.COLORS[(word.length) % 6], alpha.coerceIn(0, 255))
         }
         canvas.restore()
-        // Pleine cadence pendant que ça bouge ; le coup conseillé, la pièce choisie et les flèches, qui battent
-        // doucement en attendant le joueur, se contentent de 30 images par seconde.
+        // Pleine cadence pendant que ça bouge ; le coup conseillé, la pièce choisie et les bonus (ciseaux,
+        // arc-en-ciel, pompon), qui bougent doucement en attendant le joueur, se contentent de 30 images par seconde.
         if (busy && !ended || effects.isNotEmpty() || particles.isNotEmpty() || floaters.isNotEmpty() || cheer != null)
             postInvalidateOnAnimation()
         else if (selected >= 0 || hint != null || arrows)
@@ -657,6 +672,7 @@ class MercerieBoardView(context: Context, val board: MercerieBoard, private val 
         private fun linen(context: Context): Bitmap? =
             cloth[Felt.dark] ?: Felt.image(context.assets, "plateau")?.also { cloth[Felt.dark] = it }
 
+        private const val RAINBOW_TURN_MS = 5000L
         private const val SWAP_MS = 150f
         private const val WAVE_MS = 70L
         private const val POP_MS = 230f

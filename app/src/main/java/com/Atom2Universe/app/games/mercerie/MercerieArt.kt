@@ -387,7 +387,12 @@ class MercerieSprites(private val assets: AssetManager?, val cell: Int) {
     val knot: Array<Bitmap> = asset("knot")?.let { src ->
         Array(3) { layers -> fitted(src, .86f, tint(KNOT_COLORS[layers], 1.5f)) }.also { src.recycle() }
     } ?: Array(3) { layers -> blank().also { drawKnot(Canvas(it), cell / 2f, cell / 2f, r, layers + 1) } }
-    val pin: Bitmap = asset("pin")?.let { src -> outlined(fitted(src, .94f, dy = .27f, tilt = -14f)).also { src.recycle() } }
+    /** En sombre, l'épingle argentée est ternie et cernée de foncé : claire, elle crevait l'écran. */
+    val pin: Bitmap = asset("pin")?.let { src ->
+        val dull = if (Felt.dark) LightingColorFilter(0xFF8A8C9A.toInt(), 0) else null
+        val rim = if (Felt.dark) 0xFF1C1826.toInt() else Felt.INK
+        outlined(fitted(src, .94f, dull, dy = .27f, tilt = -14f), rim).also { src.recycle() }
+    }
         ?: blank().also { drawPin(Canvas(it), cell / 2f, cell / 2f, r) }
     val patch: Array<Bitmap> = asset("patch")?.let { src ->
         Array(2) { layers ->
