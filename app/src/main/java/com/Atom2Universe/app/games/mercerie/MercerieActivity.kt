@@ -57,6 +57,7 @@ class MercerieActivity : ThemedActivity() {
         enableImmersiveMode()
         updateSystemBarsVisibility()
         Felt.theme(progress.dark)
+        sound.muted = progress.muted
         root = FrameLayout(this).apply { background = FabricDrawable(this@MercerieActivity) }
         setContentView(root)
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
@@ -71,14 +72,19 @@ class MercerieActivity : ThemedActivity() {
     /** La palette est commune à tout le processus : la tuile du hub se dessine en clair. */
     override fun onDestroy() { Felt.theme(false); super.onDestroy() }
 
-    /** La bascule de l'accueil : tout le jeu change de feutrine, tout de suite. */
+    /** La bascule jour / nuit de la barre du haut : tout le jeu change de feutrine, même en pleine partie. */
     private fun setDark(dark: Boolean) {
         progress.dark = dark
         Felt.theme(dark)
         iconCache = null
         starIconCache = null
         root.background = FabricDrawable(this)
-        if (screen == Screen.HOME && card == null) showHome()
+        if (card != null) return
+        when (screen) {
+            Screen.HOME -> showHome()
+            Screen.MAP -> showMap()
+            Screen.GAME -> boardView?.let { it.restyle(); layoutGame(it) }
+        }
     }
 
     /** L'écran a tourné : même écran, même partie, même fiche, dans l'autre mise en page. */
@@ -140,13 +146,44 @@ class MercerieActivity : ThemedActivity() {
     private fun roundButton(text: Int, action: () -> Unit) =
         FeltButton(this, getString(text), Felt.PAPER, round = true).apply { setOnClickListener { sound.tick(); action() } }
 
-    /** Barre du haut : retour à gauche, aide à droite, titre au milieu ; [extra] se range à gauche de l'aide. */
-    private fun topBar(title: String?, extra: View? = null, onBack: () -> Unit): View = FrameLayout(this).apply {
+    /**
+     * Barre du haut : retour à gauche, suivi du titre ; à droite, de gauche à droite, la bascule
+     * jour / nuit, le haut-parleur et l'aide. Le titre se range à gauche pour ne jamais passer sous
+     * les boutons de droite sur un téléphone.
+     */
+    private fun topBar(title: String?, onBack: () -> Unit): View = FrameLayout(this).apply {
         setPadding(dp(12f), dp(10f), dp(12f), 0)
         addView(roundButton(R.string.mercerie_sym_back, onBack), FrameLayout.LayoutParams(-2, -2, Gravity.START or Gravity.CENTER_VERTICAL))
-        if (title != null) addView(MercerieUi.label(context, 22f).apply { text = title }, FrameLayout.LayoutParams(-2, -2, Gravity.CENTER))
-        addView(roundButton(R.string.mercerie_sym_help) { showHelp() }, FrameLayout.LayoutParams(-2, -2, Gravity.END or Gravity.CENTER_VERTICAL))
-        if (extra != null) addView(extra, FrameLayout.LayoutParams(-2, -2, Gravity.END or Gravity.CENTER_VERTICAL).apply { rightMargin = dp(66f) })
+        if (title != null) addView(MercerieUi.label(context, 22f).apply { text = title },
+            FrameLayout.LayoutParams(-2, -2, Gravity.START or Gravity.CENTER_VERTICAL).apply { leftMargin = dp(66f) })
+        addView(rightButtons(), FrameLayout.LayoutParams(-2, -2, Gravity.END or Gravity.CENTER_VERTICAL))
+    }
+
+    /** Bascule jour / nuit, haut-parleur et aide, côte à côte. */
+    private fun rightButtons(): View = LinearLayout(this).apply {
+        orientation = LinearLayout.HORIZONTAL
+        gravity = Gravity.CENTER_VERTICAL
+        addView(darkSwitch())
+        addView(speaker(), LinearLayout.LayoutParams(-2, -2).apply { leftMargin = dp(6f) })
+        addView(roundButton(R.string.mercerie_sym_help) { showHelp() }, LinearLayout.LayoutParams(-2, -2).apply { leftMargin = dp(8f) })
+    }
+
+    /** Le petit haut-parleur rond, à gauche du « ? » : il coupe ou rend les sons. */
+    private fun speaker(): View {
+        val icon = SpeakerDrawable(this, !progress.muted)
+        return FeltButton(this, "", Felt.PAPER, round = true).apply {
+            foreground = icon
+            foregroundGravity = Gravity.CENTER
+            contentDescription = getString(R.string.mercerie_sound)
+            setOnClickListener {
+                val on = progress.muted
+                progress.muted = !on
+                sound.muted = !on
+                icon.on = on
+                invalidate()
+                if (on) sound.tick()
+            }
+        }
     }
 
     private fun darkSwitch(): View = FeltSwitch(this, progress.dark) { sound.tick(); setDark(it) }.apply {
@@ -200,12 +237,12 @@ class MercerieActivity : ThemedActivity() {
             val frame = FrameLayout(this)
             frame.addView(BuntingView(this), FrameLayout.LayoutParams(-1, dp(56f), Gravity.TOP))
             frame.addView(row, FrameLayout.LayoutParams(-1, -1))
-            frame.addView(topBar(null, darkSwitch()) { finish() }, FrameLayout.LayoutParams(-1, -2, Gravity.TOP))
+            frame.addView(topBar(null) { finish() }, FrameLayout.LayoutParams(-1, -2, Gravity.TOP))
             setScreen(Screen.HOME, frame)
             return
         }
         val content = column()
-        content.add(topBar(null, darkSwitch()) { finish() }, width = -1)
+        content.add(topBar(null) { finish() }, width = -1)
         content.add(BuntingView(this), width = -1, height = dp(70f))
         content.add(spacer(), height = 0, weight = .6f)
         content.add(title, width = -1)
@@ -486,11 +523,12 @@ class MercerieActivity : ThemedActivity() {
                 background = FeltDrawable(context, Felt.PAPER, 30f, threadColor = Felt.KRAFT)
                 setPadding(dp(14f), dp(14f), dp(14f), dp(18f))
             }
+            // La colonne est étroite : retour seul en haut, les trois boutons de droite en dessous.
             val corner = FrameLayout(this).apply {
                 addView(roundButton(R.string.mercerie_sym_back) { showPause() }, FrameLayout.LayoutParams(-2, -2, Gravity.START))
-                addView(roundButton(R.string.mercerie_sym_help) { showHelp() }, FrameLayout.LayoutParams(-2, -2, Gravity.END))
             }
             side.add(corner, width = -1)
+            side.add(rightButtons(), top = 8f)
             side.add(spacer(), height = 0, weight = .6f)
             side.add(MercerieUi.label(this, 22f, Felt.PINK).apply { text = title })
             side.add(spacer(), height = 0, weight = .6f)
@@ -502,7 +540,7 @@ class MercerieActivity : ThemedActivity() {
             side.add(spacer(), height = 0, weight = .6f)
             content = LinearLayout(this).apply {
                 orientation = LinearLayout.HORIZONTAL
-                addView(side, LinearLayout.LayoutParams(dp(232f), -1).apply {
+                addView(side, LinearLayout.LayoutParams(dp(244f), -1).apply {
                     leftMargin = dp(10f); topMargin = dp(10f); bottomMargin = dp(10f)
                 })
                 addView(view, LinearLayout.LayoutParams(0, -1, 1f))

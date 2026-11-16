@@ -31,6 +31,11 @@ class MercerieProgress(context: Context) {
         get() = prefs.getBoolean("hints", true)
         set(value) { prefs.edit().putBoolean("hints", value).apply() }
 
+    /** Haut-parleur de la barre du haut : sons coupés. */
+    var muted: Boolean
+        get() = prefs.getBoolean("muted", false)
+        set(value) { prefs.edit().putBoolean("muted", value).apply() }
+
     /** Bascule de l'accueil : la feutrine de nuit. */
     var dark: Boolean
         get() = prefs.getBoolean("dark", false)

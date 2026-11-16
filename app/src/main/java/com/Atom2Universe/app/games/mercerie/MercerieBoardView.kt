@@ -98,6 +98,7 @@ class MercerieBoardView(context: Context, val board: MercerieBoard, private val 
     private val line = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE; strokeCap = Paint.Cap.ROUND }
     private val text = Paint(Paint.ANTI_ALIAS_FLAG).apply { typeface = MercerieUi.bold; textAlign = Paint.Align.CENTER }
     private val dst = RectF()
+    private val beatRect = RectF()
     private val path = Path()
 
     private val showHint = Runnable {
@@ -110,7 +111,15 @@ class MercerieBoardView(context: Context, val board: MercerieBoard, private val 
 
     // ───────────────────────────── Mise en place ─────────────────────────────
 
-    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) = prepare(w, h)
+
+    /** Le mode jour / nuit a changé en pleine partie : pièces, cases et tissu sont refaits. */
+    fun restyle() {
+        prepare(width, height)
+        invalidate()
+    }
+
+    private fun prepare(w: Int, h: Int) {
         if (w <= 0 || h <= 0) return
         val margin = MercerieUi.dp(context, 10f)
         // Une rangée de marge en haut : les pièces neuves arrivent de là.
@@ -519,6 +528,7 @@ class MercerieBoardView(context: Context, val board: MercerieBoard, private val 
             Felt.stitches(canvas, path, Felt.PINK, cell, .07f)
         }
         val h = hint
+        var arrows = false
         for (pass in 0..1) for (s in sprites.values) {
             val moving = s.scale != 1f || s.alpha != 1f
             if ((pass == 1) != moving) continue
@@ -535,7 +545,19 @@ class MercerieBoardView(context: Context, val board: MercerieBoard, private val 
             val y = cy(s.y) + cell * scale * s.squash / 2
             dst.set(x - w / 2, y - hgt / 2, x + w / 2, y + hgt / 2)
             paint.alpha = (s.alpha * 255).toInt().coerceIn(0, 255)
-            canvas.drawBitmap(a.of(s.kind, s.color), null, dst, paint)
+            val arrow = a.arrowOf(s.kind)
+            if (arrow != null) {
+                // Bobine : les ciseaux battent doucement au-dessus de la pièce.
+                arrows = true
+                canvas.drawBitmap(a.plain(s.color), null, dst, paint)
+                val beat = 1f + sin(now / 170f) * .1f
+                val bx = dst.centerX()
+                val by = dst.centerY()
+                val bw = dst.width() * beat / 2
+                val bh = dst.height() * beat / 2
+                beatRect.set(bx - bw, by - bh, bx + bw, by + bh)
+                canvas.drawBitmap(arrow, null, beatRect, paint)
+            } else canvas.drawBitmap(a.of(s.kind, s.color), null, dst, paint)
             if (s.pinned) canvas.drawBitmap(a.pin, null, dst, paint)
         }
         paint.alpha = 255
@@ -565,11 +587,11 @@ class MercerieBoardView(context: Context, val board: MercerieBoard, private val 
             outlined(canvas, word, width / 2f, originY + cell * board.rows * .46f, Felt.COLORS[(word.length) % 6], alpha.coerceIn(0, 255))
         }
         canvas.restore()
-        // Pleine cadence pendant que ça bouge ; le coup conseillé et la pièce choisie, qui battent
+        // Pleine cadence pendant que ça bouge ; le coup conseillé, la pièce choisie et les flèches, qui battent
         // doucement en attendant le joueur, se contentent de 30 images par seconde.
         if (busy && !ended || effects.isNotEmpty() || particles.isNotEmpty() || floaters.isNotEmpty() || cheer != null)
             postInvalidateOnAnimation()
-        else if (selected >= 0 || hint != null)
+        else if (selected >= 0 || hint != null || arrows)
             postInvalidateDelayed(MercerieUi.IDLE_FRAME_MS)
     }
 

@@ -422,3 +422,57 @@ class FeltSwitch(context: Context, private var on: Boolean, private val onChange
         }
     }
 }
+
+/**
+ * Le haut-parleur du bouton de son, dessiné à l'encre du thème : deux ondes quand le son est mis,
+ * une petite croix quand il est coupé.
+ */
+class SpeakerDrawable(context: Context, on: Boolean) : Drawable() {
+    var on = on
+        set(value) { field = value; invalidateSelf() }
+    private val side = MercerieUi.dp(context, 24f).toInt()
+    private val fill = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val stroke = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE; strokeCap = Paint.Cap.ROUND }
+    private val body = Path()
+    private val arc = RectF()
+
+    override fun getIntrinsicWidth() = side
+    override fun getIntrinsicHeight() = side
+
+    override fun draw(canvas: Canvas) {
+        val b = bounds
+        val s = min(b.width(), b.height()).toFloat()
+        val x = b.exactCenterX() - s / 2
+        // Le panneau de feutrine est un peu plus épais en bas : on remonte l'icône d'autant.
+        val y = b.exactCenterY() - s / 2 - s * .06f
+        fill.color = Felt.INK
+        stroke.color = Felt.INK
+        stroke.strokeWidth = s * .09f
+        body.rewind()
+        body.moveTo(x + s * .1f, y + s * .37f)
+        body.lineTo(x + s * .3f, y + s * .37f)
+        body.lineTo(x + s * .54f, y + s * .14f)
+        body.lineTo(x + s * .54f, y + s * .86f)
+        body.lineTo(x + s * .3f, y + s * .63f)
+        body.lineTo(x + s * .1f, y + s * .63f)
+        body.close()
+        canvas.drawPath(body, fill)
+        if (on) {
+            for (r in floatArrayOf(.17f, .33f)) {
+                arc.set(x + s * (.56f - r), y + s * (.5f - r), x + s * (.56f + r), y + s * (.5f + r))
+                canvas.drawArc(arc, -42f, 84f, false, stroke)
+            }
+        } else {
+            val cx = x + s * .8f
+            val cy = y + s * .5f
+            val h = s * .13f
+            canvas.drawLine(cx - h, cy - h, cx + h, cy + h, stroke)
+            canvas.drawLine(cx + h, cy - h, cx - h, cy + h, stroke)
+        }
+    }
+
+    override fun setAlpha(alpha: Int) {}
+    override fun setColorFilter(colorFilter: ColorFilter?) {}
+    @Deprecated("Deprecated in Java")
+    override fun getOpacity() = PixelFormat.TRANSLUCENT
+}

@@ -25,9 +25,16 @@ class MercerieSound {
     /** L'activité est au premier plan : les sons sont permis. */
     fun start() { active = true }
 
+    /** Le haut-parleur de la barre du haut : coupé, aucune note ne part et le synthé s'éteint. */
+    var muted = false
+        set(value) {
+            field = value
+            if (value) { handler.removeCallbacksAndMessages(null); shutDown() }
+        }
+
     /** Démarre le synthé tout de suite (un doigt se pose) : la note qui suit ne l'attendra pas. */
     fun wake() {
-        if (!active) return
+        if (!active || muted) return
         if (driver == null) boot()
         handler.removeCallbacks(sleep)
         handler.postDelayed(sleep, IDLE_MS)
@@ -65,6 +72,7 @@ class MercerieSound {
     }
 
     private fun note(ch: Int, pitch: Int, velocity: Int, ms: Long, delay: Long = 0) {
+        if (muted) return
         wake()
         if (!ready) return
         val play = Runnable {

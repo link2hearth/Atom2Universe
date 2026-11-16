@@ -344,12 +344,12 @@ class MercerieSprites(private val assets: AssetManager?, val cell: Int) {
      * Cerne une image d'un trait brun : l'épingle argentée, seule, se perdait sur les pièces
      * claires. Le cerne est la même image, teinte en brun, tamponnée tout autour.
      */
-    private fun outlined(src: Bitmap): Bitmap {
+    private fun outlined(src: Bitmap, color: Int = Felt.INK, width: Float = .02f): Bitmap {
         val out = blank()
         val c = Canvas(out)
         val ink = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
-        ink.colorFilter = PorterDuffColorFilter(Felt.INK, PorterDuff.Mode.SRC_IN)
-        val reach = cell * .02f
+        ink.colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN)
+        val reach = cell * width
         for (k in 0 until 16) {
             val a = k * 2 * PI.toFloat() / 16
             c.drawBitmap(src, cos(a) * reach, sin(a) * reach + reach * .5f, ink)
@@ -372,17 +372,20 @@ class MercerieSprites(private val assets: AssetManager?, val cell: Int) {
         asset(name)?.let { src -> fitted(src, scale).also { src.recycle() } }
             ?: blank().also { draw(Canvas(it), cell / 2f, cell / 2f) }
 
-    private val base = Array(MercerieBoard.COLORS) { color -> drawn("piece_$color", .9f) { c, cx, cy -> drawBase(c, color, cx, cy, r) } }
-    private val lineH = Array(MercerieBoard.COLORS) { striped(it, true) }
-    private val lineV = Array(MercerieBoard.COLORS) { striped(it, false) }
+    /** Les pièces laissent voir le fond de leur case tout autour. */
+    private val base = Array(MercerieBoard.COLORS) { color -> drawn("piece_$color", .78f) { c, cx, cy -> drawBase(c, color, cx, cy, r * .87f) } }
+    private val arrowH = arrow(true)
+    private val arrowV = arrow(false)
+    private val lineH = Array(MercerieBoard.COLORS) { withArrow(base[it], arrowH) }
+    private val lineV = Array(MercerieBoard.COLORS) { withArrow(base[it], arrowV) }
     private val bomb: Array<Bitmap> = asset("pompom").let { wool ->
         Array(MercerieBoard.COLORS) { pompom(it, wool) }.also { wool?.recycle() }
     }
-    val rainbow = drawn("rainbow", .94f) { c, cx, cy -> drawRainbow(c, cx, cy, r) }
-    val thimble = drawn("thimble", .9f) { c, cx, cy -> drawThimble(c, cx, cy, r) }
+    val rainbow = drawn("rainbow", .84f) { c, cx, cy -> drawRainbow(c, cx, cy, r) }
+    val thimble = drawn("thimble", .8f) { c, cx, cy -> drawThimble(c, cx, cy, r) }
     /** Le nœud de laine : la même pelote grise, plus foncée à chaque couche. */
     val knot: Array<Bitmap> = asset("knot")?.let { src ->
-        Array(3) { layers -> fitted(src, .92f, tint(KNOT_COLORS[layers], 1.5f)) }.also { src.recycle() }
+        Array(3) { layers -> fitted(src, .86f, tint(KNOT_COLORS[layers], 1.5f)) }.also { src.recycle() }
     } ?: Array(3) { layers -> blank().also { drawKnot(Canvas(it), cell / 2f, cell / 2f, r, layers + 1) } }
     val pin: Bitmap = asset("pin")?.let { src -> outlined(fitted(src, .94f, dy = .27f, tilt = -14f)).also { src.recycle() } }
         ?: blank().also { drawPin(Canvas(it), cell / 2f, cell / 2f, r) }
@@ -397,6 +400,15 @@ class MercerieSprites(private val assets: AssetManager?, val cell: Int) {
 
     fun of(piece: Piece): Bitmap = of(piece.kind, piece.color)
 
+    /** Le plateau dessine la bobine en deux temps : la pièce seule, puis ses ciseaux qui battent. */
+    fun plain(color: Int): Bitmap = base[color.coerceIn(0, 5)]
+
+    fun arrowOf(kind: Kind): Bitmap? = when (kind) {
+        Kind.LINE_H -> arrowH
+        Kind.LINE_V -> arrowV
+        else -> null
+    }
+
     fun of(kind: Kind, color: Int): Bitmap = when (kind) {
         Kind.NORMAL -> base[color.coerceIn(0, 5)]
         Kind.LINE_H -> lineH[color.coerceIn(0, 5)]
@@ -406,31 +418,48 @@ class MercerieSprites(private val assets: AssetManager?, val cell: Int) {
         Kind.THIMBLE -> thimble
     }
 
-    /** Bobine : deux rubans crème cousus en travers de la pièce, dans le sens de la ligne qu'elle vide. */
-    private fun striped(color: Int, horizontal: Boolean): Bitmap {
-        val out = base[color].copy(Bitmap.Config.ARGB_8888, true)
-        val c = Canvas(out)
-        val atop = Paint(Paint.ANTI_ALIAS_FLAG).apply { xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_ATOP) }
-        val m = cell / 2f
-        val line = Path()
-        for (side in intArrayOf(-1, 1)) {
-            // Les rubans passent au-dessus et au-dessous du visage, sans le couvrir.
-            val a = if (side < 0) m - .62f * r else m + .46f * r
-            val b = a + .2f * r
-            atop.style = Paint.Style.FILL
-            atop.color = Felt.alpha(Felt.CREAM, 240)
-            if (horizontal) c.drawRect(0f, a, cell.toFloat(), b, atop) else c.drawRect(a, 0f, b, cell.toFloat(), atop)
-            atop.style = Paint.Style.STROKE
-            atop.strokeWidth = r * .045f
-            atop.strokeCap = Paint.Cap.ROUND
-            atop.color = Felt.darker(Felt.COLORS[color], .8f)
-            atop.pathEffect = DashPathEffect(floatArrayOf(r * .13f, r * .11f), 0f)
-            line.rewind()
-            val mid = (a + b) / 2
-            if (horizontal) { line.moveTo(0f, mid); line.lineTo(cell.toFloat(), mid) } else { line.moveTo(mid, 0f); line.lineTo(mid, cell.toFloat()) }
-            c.drawPath(line, atop)
-            atop.pathEffect = null
+    /** Bobine pour l'aide et les objectifs : la pièce avec sa flèche, immobile. */
+    private fun withArrow(piece: Bitmap, arrow: Bitmap): Bitmap {
+        val out = piece.copy(Bitmap.Config.ARGB_8888, true)
+        Canvas(out).drawBitmap(arrow, 0f, 0f, smooth)
+        return out
+    }
+
+    /**
+     * Le signe des bobines : une paire de ciseaux ouverte dans le sens de la coupe (`scissors.webp`,
+     * lames vers la droite, tournée d'un quart pour une colonne), cernée comme l'épingle. Sans image,
+     * une flèche à deux pointes en feutrine crème cernée de brun.
+     */
+    private fun arrow(horizontal: Boolean): Bitmap {
+        asset("scissors")?.let { src ->
+            // Un cerne fin et toujours foncé : en clair il se fond dans la pièce, en sombre il ne fait pas de halo blanc.
+            val rim = if (Felt.dark) 0xFF1C1826.toInt() else Felt.INK
+            return outlined(fitted(src, .44f, tilt = if (horizontal) 0f else 90f), rim, .012f).also { src.recycle() }
         }
+        val out = blank()
+        val c = Canvas(out)
+        val half = cell * .34f
+        val shaft = cell * .06f
+        val head = cell * .17f
+        val wing = cell * .16f
+        val p = Path()
+        p.moveTo(-half, 0f)
+        p.lineTo(-half + head, -wing); p.lineTo(-half + head, -shaft)
+        p.lineTo(half - head, -shaft); p.lineTo(half - head, -wing)
+        p.lineTo(half, 0f)
+        p.lineTo(half - head, wing); p.lineTo(half - head, shaft)
+        p.lineTo(-half + head, shaft); p.lineTo(-half + head, wing)
+        p.close()
+        c.translate(cell / 2f, cell / 2f)
+        if (!horizontal) c.rotate(90f)
+        val rim = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            style = Paint.Style.STROKE
+            strokeJoin = Paint.Join.ROUND
+            strokeWidth = cell * .075f
+            color = 0xFF4A3328.toInt()
+        }
+        c.drawPath(p, rim)
+        Felt.shape(c, p, 0xFFFFF6E6.toInt(), cell * .5f, stitch = false)
         return out
     }
 
@@ -442,7 +471,7 @@ class MercerieSprites(private val assets: AssetManager?, val cell: Int) {
         val m = cell / 2f
         val out: Bitmap
         if (wool != null) {
-            out = fitted(wool, 1f, tint(Felt.lighter(Felt.COLORS[color], .25f), 1.1f))
+            out = fitted(wool, .9f, tint(Felt.lighter(Felt.COLORS[color], .25f), 1.1f))
         } else {
             val wool = Felt.lighter(Felt.COLORS[color], .5f)
             out = blank()
@@ -459,7 +488,7 @@ class MercerieSprites(private val assets: AssetManager?, val cell: Int) {
             whole.op(ring, ring, Path.Op.UNION)
             Felt.shape(c, whole, wool, cell.toFloat(), stitch = false)
         }
-        val s = cell * .68f
+        val s = cell * .6f
         Canvas(out).drawBitmap(base[color], null, RectF(m - s / 2, m - s / 2, m + s / 2, m + s / 2), smooth)
         return out
     }
