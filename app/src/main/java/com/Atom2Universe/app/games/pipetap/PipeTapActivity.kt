@@ -20,6 +20,7 @@ import com.Atom2Universe.app.R
 import com.Atom2Universe.app.crypto.clicker.GameStatsRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
+import com.Atom2Universe.app.util.Landscape
 import com.Atom2Universe.app.util.enableImmersiveMode
 import com.Atom2Universe.app.util.showGameRules
 import androidx.core.content.edit
@@ -63,6 +64,7 @@ class PipeTapActivity : ThemedActivity(), PipeTapView.OnTileRotatedListener {
         super.onCreate(savedInstanceState)
         enableImmersiveMode()
         setContentView(R.layout.activity_pipetap)
+        Landscape.bindSidePanel(this)
 
         prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
 
@@ -148,10 +150,15 @@ class PipeTapActivity : ThemedActivity(), PipeTapView.OnTileRotatedListener {
     }
 
     private fun updateDiffChips() {
-        val activeColor   = ColorStateList.valueOf(Color.parseColor("#37DACB"))
-        val inactiveColor = ColorStateList.valueOf(Color.parseColor("#172C35"))
+        // Un fond dessiné : le style sans bordure ignorait la teinte, et la puce choisie disparaissait.
+        val density = resources.displayMetrics.density
         for ((diff, chip) in diffChipMap) {
-            chip.backgroundTintList = if (diff == game.difficulty) activeColor else inactiveColor
+            chip.backgroundTintList = null
+            chip.background = android.graphics.drawable.GradientDrawable().apply {
+                cornerRadius = 12 * density
+                setColor(Color.parseColor(if (diff == game.difficulty) "#37DACB" else "#172C35"))
+                setStroke(density.toInt().coerceAtLeast(1), Color.parseColor("#35515A"))
+            }
             chip.setTextColor(Color.parseColor(if (diff == game.difficulty) "#09171E" else "#C1D5D7"))
         }
     }
@@ -243,6 +250,12 @@ class PipeTapActivity : ThemedActivity(), PipeTapView.OnTileRotatedListener {
     private fun loadGame(): Boolean {
         val json = prefs.getString(KEY_SAVE, null) ?: return false
         return game.deserialize(json)
+    }
+
+    /** Couché : la grille sur toute la hauteur et la bulle ; la partie ne change pas. */
+    override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
+        super.onConfigurationChanged(newConfig)
+        Landscape.swapLayout(this, R.layout.activity_pipetap)
     }
 
     override fun onDestroy() {
