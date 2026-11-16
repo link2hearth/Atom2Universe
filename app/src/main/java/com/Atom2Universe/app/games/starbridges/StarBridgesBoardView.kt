@@ -74,10 +74,12 @@ class StarBridgesBoardView @JvmOverloads constructor(
     private fun recompute() {
         val g = game ?: return
         val pad = 10f * dp
-        val board = min(width - pad * 2, height - pad * 2)
+        // Le haut de la vue passe sous la bannière : la grille se place sous elle.
+        val top = paddingTop.toFloat()
+        val board = min(width - pad * 2, height - top - pad * 2)
         cellPx = board / g.size
         startX = (width - board) / 2f
-        startY = (height - board) / 2f
+        startY = top + (height - top - board) / 2f
         coreR = cellPx * 0.17f
         ringR = coreR * 1.75f
         pDigit.textSize = coreR * 1.2f

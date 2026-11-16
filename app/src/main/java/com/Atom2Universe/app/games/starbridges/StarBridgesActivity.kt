@@ -49,7 +49,7 @@ class StarBridgesActivity : ThemedActivity(), StarBridgesBoardView.Listener {
     /** Le chrono s'arrête pendant la lecture des règles. */
     private var readingRules = false
 
-    private val sizeChips = mutableMapOf<Int, MaterialButton>()
+    private lateinit var sizeButton: MaterialButton
 
     private val timerRunnable = object : Runnable {
         override fun run() {
@@ -125,26 +125,17 @@ class StarBridgesActivity : ThemedActivity(), StarBridgesBoardView.Listener {
     private fun openAtlas() = startActivity(Intent(this, ConstellationAtlasActivity::class.java))
 
     // ── Tailles ───────────────────────────────────────────────────────────────────
+    /** Un seul bouton : il dit la taille de la grille, et un appui lance une grille de la taille suivante. */
     private fun buildSizeChips() {
-        val container = findViewById<LinearLayout>(R.id.sb_size_row)
-        val dp6 = (6 * resources.displayMetrics.density).toInt()
-        for (s in StarBridgesGame.ALLOWED_SIZES) {
-            val chip = MaterialButton(this, null, android.R.attr.borderlessButtonStyle).apply {
-                text = getString(R.string.starbridges_size, s)
-                textSize = 12f
-                setTextColor(0xFFE8E4FF.toInt())
-                layoutParams = LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
-                ).also { it.setMargins(dp6 / 2, 0, dp6 / 2, 0) }
-                setOnClickListener { startNewGame(s) }
-            }
-            container.addView(chip)
-            sizeChips[s] = chip
+        sizeButton = findViewById(R.id.sb_size_button)
+        sizeButton.setOnClickListener {
+            val sizes = StarBridgesGame.ALLOWED_SIZES
+            startNewGame(sizes[(sizes.indexOf(game.size) + 1) % sizes.size])
         }
     }
 
     private fun updateSizeChips() {
-        for ((s, chip) in sizeChips) com.Atom2Universe.app.games.kit.GameControlStyle.choice(chip, s == game.size)
+        sizeButton.text = getString(R.string.starbridges_size, game.size)
     }
 
     // ── Déroulé ───────────────────────────────────────────────────────────────────
