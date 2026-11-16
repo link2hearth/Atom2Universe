@@ -87,7 +87,78 @@ class JigsawView(context: Context, val game: JigsawGame, private val image: Bitm
     private var velocity: VelocityTracker? = null
     private val trayFling = OverScroller(context)
     private enum class Mode { NONE, TRAY, TRAY_SCROLL, TRAY_LIFT, DRAG, PAN, CAMERA }
+    /**
+     * Couché : les pièces quittent la bande du bas pour [sideTray], deux colonnes posées dans la
+     * bulle de l'écran. Cette vue dessine et touche à travers ce plateau, dans ses coordonnées.
+     */
+    var sideMode = false
+        set(value) {
+            if (field == value) return
+            cancelGesture(); field = value; trayScroll = 0f
+            trayStrip.visibility = if (!value && game.layout == JigsawLayout.TRAY) View.VISIBLE else View.GONE
+            fitBoard()
+        }
+    private val side get() = sideMode && game.layout == JigsawLayout.TRAY
+
+    /** La colonne de pièces de la bulle : elle renvoie ses touches au plateau, qui la dessine aussi. */
+    val sideTray: View = object : View(context) {
+        override fun onDraw(canvas: Canvas) = drawSideTray(canvas)
+        override fun computeScroll() = stepTrayFling()
+        @android.annotation.SuppressLint("ClickableViewAccessibility")
+        override fun onTouchEvent(event: MotionEvent): Boolean {
+            if (event.actionMasked == MotionEvent.ACTION_DOWN) parent?.requestDisallowInterceptTouchEvent(true)
+            val origin = sideOrigin()
+            val forwarded = MotionEvent.obtain(event)
+            forwarded.offsetLocation(origin.x, origin.y)
+            this@JigsawView.onTouchEvent(forwarded)
+            forwarded.recycle()
+            return true
+        }
+    }.apply { importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO }
+
+    private val sideColumn get() = sideTray.width / 2f
+    private val sideThumbnailScale get() = min(62f * density, sideColumn * .74f) / game.grid.span
+    private val location = IntArray(2)
+    private val trayLocation = IntArray(2)
+    /** Le coin haut gauche de [sideTray], dans les coordonnées de ce plateau. */
+    private fun sideOrigin(): PuzzlePoint {
+        getLocationInWindow(location); sideTray.getLocationInWindow(trayLocation)
+        return PuzzlePoint((trayLocation[0] - location[0]).toFloat(), (trayLocation[1] - location[1]).toFloat())
+    }
+    /** La hauteur que demandent toutes les pièces encore dans la colonne. */
+    fun sideTrayContentHeight(): Int =
+        (trayLabelHeight + (trayCount() + 1) / 2 * sideColumn).toInt()
+    private fun inTray(x: Float, y: Float): Boolean {
+        if (game.layout != JigsawLayout.TRAY || game.solved) return false
+        if (!side) return y >= trayTop
+        if (!sideTray.isShown) return false
+        val origin = sideOrigin()
+        return x >= origin.x && x < origin.x + sideTray.width && y >= origin.y && y < origin.y + sideTray.height
+    }
+    /** L'emplacement touché dans le plateau de pièces, ou -1 (sur l'étiquette). */
+    private fun trayIndexAt(x: Float, y: Float): Int {
+        if (!side) return if (y >= trayTop + trayLabelHeight) ((x + trayScroll) / slot).toInt() else -1
+        val origin = sideOrigin()
+        val localY = y - origin.y - trayLabelHeight
+        if (localY < 0f) return -1
+        val column = ((x - origin.x) / sideColumn).toInt().coerceIn(0, 1)
+        return ((localY + trayScroll) / sideColumn).toInt() * 2 + column
+    }
+    private fun traySlotCenter(index: Int): PuzzlePoint {
+        if (!side) return PuzzlePoint((index + .5f) * slot - trayScroll, thumbnailY(trayTop, trayHeight))
+        val origin = sideOrigin()
+        return PuzzlePoint(origin.x + (index % 2 + .5f) * sideColumn,
+            origin.y + trayLabelHeight + (index / 2 + .5f) * sideColumn - trayScroll)
+    }
+    private fun stepTrayFling() {
+        if (!trayFling.computeScrollOffset()) return
+        trayScroll = (if (side) trayFling.currY else trayFling.currX).toFloat()
+        clampTray()
+        (if (side) sideTray else trayStrip).postInvalidateOnAnimation()
+    }
+
     private fun trayHeightFor(solved: Boolean): Float {
+        if (side) return 0f
         if (isCelebrating) return victoryTrayHeight * (1f - JigsawVictoryMotion.camera(victoryProgress))
         return if (game.layout == JigsawLayout.TABLE || solved) 0f else min(126f * density, height * .28f)
     }
@@ -112,13 +183,7 @@ class JigsawView(context: Context, val game: JigsawGame, private val image: Bitm
             canvas.translate(0f, -top.toFloat())
             drawTrayStrip(canvas)
         }
-        override fun computeScroll() {
-            if (trayFling.computeScrollOffset()) {
-                trayScroll = trayFling.currX.toFloat()
-                clampTray()
-                postInvalidateOnAnimation()
-            }
-        }
+        override fun computeScroll() = stepTrayFling()
     }
 
     init {
@@ -137,8 +202,8 @@ class JigsawView(context: Context, val game: JigsawGame, private val image: Bitm
             kotlin.math.ceil(126f * density).toInt() + 2, android.view.Gravity.BOTTOM))
     }
 
-    private fun redrawScene() { scene.invalidate(); trayStrip.invalidate(); invalidate() }
-    private fun redrawTray() { trayStrip.invalidate() }
+    private fun redrawScene() { scene.invalidate(); trayStrip.invalidate(); sideTray.invalidate(); invalidate() }
+    private fun redrawTray() { trayStrip.invalidate(); sideTray.invalidate() }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         cancelGesture()
@@ -160,8 +225,9 @@ class JigsawView(context: Context, val game: JigsawGame, private val image: Bitm
         fitArea(PuzzleBounds(0f, 0f, game.grid.width, game.grid.height))
     }
 
+    /** Couché, l'image va d'un bord à l'autre de la hauteur : la bannière transparente passe dessus. */
     private fun scaleFor(area: PuzzleBounds) = min((width - 28 * density).coerceAtLeast(1f) / area.width,
-        (trayTop - 28 * density).coerceAtLeast(1f) / area.height)
+        (trayTop - (if (sideMode) 8 else 28) * density).coerceAtLeast(1f) / area.height)
     private val minScale get() = min(fitScale * .3f, scaleFor(game.tableBounds()))
 
     private fun fitArea(area: PuzzleBounds) {
@@ -257,13 +323,16 @@ class JigsawView(context: Context, val game: JigsawGame, private val image: Bitm
         if (game.layout != JigsawLayout.TABLE || !edgesOnly || group.locked || group.ids.size > 1) return true
         return isEdge(group.ids[0])
     }
-    private fun maxTrayScroll(count: Int = trayCount()) = max(0f, count * slot - width)
+    private fun maxTrayScroll(count: Int = trayCount()) =
+        if (side) max(0f, (count + 1) / 2 * sideColumn - (sideTray.height - trayLabelHeight))
+        else max(0f, count * slot - width)
     private fun clampTray(count: Int = trayCount()) { trayScroll = trayScroll.coerceIn(0f, maxTrayScroll(count)) }
     private fun revealInTray(group: PieceGroup) {
         val index = trayGroups().indexOf(group)
         if (index < 0) return
         trayFling.abortAnimation()
-        trayScroll = ((index + .5f) * slot - width / 2f).coerceIn(0f, maxTrayScroll())
+        trayScroll = (if (side) (index / 2 + .5f) * sideColumn - (sideTray.height - trayLabelHeight) / 2f
+            else (index + .5f) * slot - width / 2f).coerceIn(0f, maxTrayScroll())
     }
     private fun constrainCamera() {
         val area = game.tableBounds()
@@ -324,7 +393,55 @@ class JigsawView(context: Context, val game: JigsawGame, private val image: Bitm
 
     override fun dispatchDraw(canvas: Canvas) {
         super.dispatchDraw(canvas)
+        if (drawHeldPiece(canvas) && side) sideTray.postInvalidateOnAnimation()
+    }
+
+    /**
+     * La colonne de la bulle, dans ses propres coordonnées : le compte en haut, puis les pièces
+     * deux par deux ; la pièce tenue est redessinée par-dessus, pour rester visible sur la bulle.
+     */
+    private fun drawSideTray(canvas: Canvas) {
+        if (!side || game.solved || isCelebrating) return
+        val w = sideTray.width.toFloat(); val h = sideTray.height.toFloat()
+        val count = trayCount()
+        val key = count * 2 + if (edgesOnly) 1 else 0
+        if (key != trayLabelKey) {
+            trayLabelKey = key
+            trayLabel = resources.getQuantityString(if (edgesOnly) R.plurals.jigsaw_tray_edges else R.plurals.jigsaw_tray, count, count)
+        }
+        paint.shader = null; paint.style = Paint.Style.FILL
+        paint.color = palette.secondary; paint.textSize = 12f * density; paint.textAlign = Paint.Align.CENTER
+        canvas.drawText(trayLabel, w / 2, 18f * density, paint)
+        paint.textAlign = Paint.Align.LEFT
+        canvas.save()
+        canvas.clipRect(0f, trayLabelHeight, w, h)
+        clampTray(count)
+        val thumbnail = sideThumbnailScale
+        val column = sideColumn
+        var index = -1
+        for (i in game.groups.indices) {
+            val group = game.groups[i]
+            if (!inTrayList(group)) continue
+            index++
+            if (mode == Mode.TRAY_LIFT && group === selected) continue
+            val y = trayLabelHeight + (index / 2 + .5f) * column - trayScroll
+            if (y + column < trayLabelHeight || y - column > h) continue
+            val id = group.ids[0]
+            canvas.save()
+            canvas.translate((index % 2 + .5f) * column, y)
+            canvas.scale(thumbnail, thumbnail)
+            canvas.rotate(group.turns * 90f)
+            canvas.translate(-(id % game.grid.columns + .5f) * game.grid.cellWidth,
+                -(id / game.grid.columns + .5f) * game.grid.cellHeight)
+            drawPiece(canvas, id, thumbnail, group === selected)
+            canvas.restore()
+        }
+        canvas.restore()
+        val origin = sideOrigin()
+        canvas.save()
+        canvas.translate(-origin.x, -origin.y)
         drawHeldPiece(canvas)
+        canvas.restore()
     }
 
     override fun onInterceptTouchEvent(event: MotionEvent) = true
@@ -342,13 +459,16 @@ class JigsawView(context: Context, val game: JigsawGame, private val image: Bitm
     }
 
     /** Pieces outside the viewport are skipped one by one, so a zoomed-in large puzzle stays light. */
-    private fun drawGroup(canvas: Canvas, group: PieceGroup, viewportBottom: Float) {
+    private fun drawGroup(canvas: Canvas, group: PieceGroup, viewportBottom: Float, cull: Boolean = true) {
         if (!groupVisible(group)) return
         game.bounds(group, box)
-        if (box[2] * scale + cameraX < 0 || box[0] * scale + cameraX > width ||
-            box[3] * scale + cameraY < 0 || box[1] * scale + cameraY > viewportBottom) return
-        val viewLeft = -cameraX / scale; val viewRight = (width - cameraX) / scale
-        val viewTop = -cameraY / scale; val viewBottom = (viewportBottom - cameraY) / scale
+        if (cull && (box[2] * scale + cameraX < 0 || box[0] * scale + cameraX > width ||
+            box[3] * scale + cameraY < 0 || box[1] * scale + cameraY > viewportBottom)) return
+        // La pièce tenue peut passer sur la bulle, hors de ce plateau : elle n'est pas découpée.
+        val viewLeft = if (cull) -cameraX / scale else Float.NEGATIVE_INFINITY
+        val viewRight = if (cull) (width - cameraX) / scale else Float.POSITIVE_INFINITY
+        val viewTop = if (cull) -cameraY / scale else Float.NEGATIVE_INFINITY
+        val viewBottom = if (cull) (viewportBottom - cameraY) / scale else Float.POSITIVE_INFINITY
         val radius = game.grid.span * .85f
         val turns = (group.turns % 4 + 4) % 4
         val highlight = group === selected && !group.locked
@@ -367,11 +487,11 @@ class JigsawView(context: Context, val game: JigsawGame, private val image: Bitm
         canvas.restore()
     }
 
-    /** Draw above the tray so its edge never clips or displaces the held piece. */
-    private fun drawHeldPiece(canvas: Canvas) {
+    /** Draw above the tray so its edge never clips or displaces the held piece. True while it resizes. */
+    private fun drawHeldPiece(canvas: Canvas): Boolean {
         val group = if (mode == Mode.TRAY_LIFT) selected else dragging
-        if (group == null) return
-        val grip = grab ?: return
+        if (group == null) return false
+        val grip = grab ?: return false
         val started = resizeStarted
         val progress = if (started == null) 1f else ((SystemClock.uptimeMillis() - started) / 120f).coerceIn(0f, 1f)
         val resizing = started != null && progress < 1f
@@ -391,9 +511,10 @@ class JigsawView(context: Context, val game: JigsawGame, private val image: Bitm
             canvas.save()
             canvas.translate(cameraX, cameraY)
             canvas.scale(scale, scale)
-            drawGroup(canvas, group, height.toFloat())
+            drawGroup(canvas, group, height.toFloat(), cull = !side)
             canvas.restore()
         }
+        return resizing
     }
 
     private fun drawPiece(canvas: Canvas, id: Int, pixelScale: Float, highlight: Boolean) {
@@ -467,6 +588,11 @@ class JigsawView(context: Context, val game: JigsawGame, private val image: Bitm
         resizeStarted = SystemClock.uptimeMillis()
     }
 
+    private fun scrollTray(x: Float, y: Float) {
+        trayScroll -= if (side) y - lastY else x - lastX
+        clampTray()
+    }
+
     private fun moveFinger(x: Float, y: Float) {
         val wasMoved = moved
         if (abs(x - downX) + abs(y - downY) > slop) {
@@ -476,17 +602,21 @@ class JigsawView(context: Context, val game: JigsawGame, private val image: Bitm
         when (mode) {
             Mode.TRAY -> {
                 val group = selected
-                when (trayGesture.move(x - downX, y - downY, group != null)) {
-                    TrayIntent.SCROLL -> { mode = Mode.TRAY_SCROLL; trayScroll -= x - lastX; clampTray() }
+                // Dans la colonne de la bulle, les axes s'échangent : on la fait défiler en
+                // hauteur, et on sort une pièce d'un geste de côté, vers le plateau.
+                val intent = if (side) trayGesture.move(y - downY, -abs(x - downX), group != null)
+                    else trayGesture.move(x - downX, y - downY, group != null)
+                when (intent) {
+                    TrayIntent.SCROLL -> { mode = Mode.TRAY_SCROLL; scrollTray(x, y) }
                     TrayIntent.EXTRACT -> if (group != null) {
                         mode = Mode.TRAY_LIFT
-                        if (y < trayTop) extract(group, x, y)
+                        if (!inTray(x, y)) extract(group, x, y)
                     }
                     TrayIntent.PENDING -> Unit
                 }
             }
-            Mode.TRAY_SCROLL -> { trayScroll -= x - lastX; clampTray() }
-            Mode.TRAY_LIFT -> if (y < trayTop) selected?.let { extract(it, x, y) }
+            Mode.TRAY_SCROLL -> scrollTray(x, y)
+            Mode.TRAY_LIFT -> if (!inTray(x, y)) selected?.let { extract(it, x, y) }
             Mode.DRAG -> dragging?.let {
                 grab?.let { grip -> it.offset = grip.offsetAt(world(x, y), it.turns) }
             }
@@ -523,16 +653,15 @@ class JigsawView(context: Context, val game: JigsawGame, private val image: Bitm
                 parent?.requestDisallowInterceptTouchEvent(true)
                 downX = event.x; downY = event.y; lastX = event.x; lastY = event.y; moved = false
                 grab = null; resizeStarted = null
-                if (game.layout == JigsawLayout.TRAY && event.y >= trayTop) {
+                if (inTray(event.x, event.y)) {
                     doubleTap.reset()
                     mode = Mode.TRAY
                     trayGesture = JigsawTrayGesture(slop.toFloat())
-                    val index = ((event.x + trayScroll) / slot).toInt()
-                    selected = if (event.y >= trayTop + trayLabelHeight) trayGroups().getOrNull(index) else null
-                    liftScale = thumbnailScale(trayHeight)
+                    val index = trayIndexAt(event.x, event.y)
+                    selected = if (index >= 0) trayGroups().getOrNull(index) else null
+                    liftScale = if (side) sideThumbnailScale else thumbnailScale(trayHeight)
                     selected?.let {
-                        grab = JigsawGrab.fromThumbnail(PuzzlePoint(event.x, event.y),
-                            PuzzlePoint((index + .5f) * slot - trayScroll, thumbnailY(trayTop, trayHeight)),
+                        grab = JigsawGrab.fromThumbnail(PuzzlePoint(event.x, event.y), traySlotCenter(index),
                             liftScale, game.center(it.ids.first()), it.turns)
                     }
                 } else {
@@ -556,17 +685,20 @@ class JigsawView(context: Context, val game: JigsawGame, private val image: Bitm
                 moveFinger(event.x, event.y)
                 if (mode == Mode.TRAY_SCROLL) {
                     velocity?.computeCurrentVelocity(1000, touchConfig.scaledMaximumFlingVelocity.toFloat())
-                    val speed = -(velocity?.xVelocity ?: 0f)
+                    val speed = -((if (side) velocity?.yVelocity else velocity?.xVelocity) ?: 0f)
                     if (abs(speed) >= touchConfig.scaledMinimumFlingVelocity) {
-                        trayFling.fling(trayScroll.roundToInt(), 0, speed.roundToInt(), 0,
+                        if (side) trayFling.fling(0, trayScroll.roundToInt(), 0, speed.roundToInt(),
+                            0, 0, 0, maxTrayScroll().roundToInt())
+                        else trayFling.fling(trayScroll.roundToInt(), 0, speed.roundToInt(), 0,
                             0, maxTrayScroll().roundToInt(), 0, 0)
+                        if (side) sideTray.postInvalidateOnAnimation()
                     }
                 }
                 val group = dragging
                 if (group != null) {
                     val snapPixels = (if (game.layout == JigsawLayout.TABLE) 9f else 16f) * density
                     // A loose piece dropped back onto the carousel goes back into it.
-                    if (moved && game.layout == JigsawLayout.TRAY && event.y >= trayTop && game.returnToTray(group)) {
+                    if (moved && inTray(event.x, event.y) && game.returnToTray(group)) {
                         revealInTray(group)
                         performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
                     // A tap only selects a piece. Joining requires an actual drag and release.
@@ -604,7 +736,7 @@ class JigsawView(context: Context, val game: JigsawGame, private val image: Bitm
             (modeBefore == Mode.TRAY || modeBefore == Mode.TRAY_SCROLL)) ||
             (action == MotionEvent.ACTION_UP && modeBefore == Mode.TRAY_SCROLL)
         when {
-            heldOnly -> invalidate()
+            heldOnly -> { invalidate(); if (side) sideTray.invalidate() }
             trayOnly -> redrawTray()
             else -> redrawScene()
         }

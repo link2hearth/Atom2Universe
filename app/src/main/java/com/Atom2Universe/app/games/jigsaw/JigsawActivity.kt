@@ -32,6 +32,8 @@ import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.games.kit.KitPalette
 import com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder
+import com.Atom2Universe.app.util.Landscape
+import com.Atom2Universe.app.util.SidePanel
 import com.Atom2Universe.app.util.showGameRules
 import com.Atom2Universe.app.util.SystemBarsManager
 import com.Atom2Universe.app.util.ImmersiveBottomSheetDialog as BottomSheetDialog
@@ -54,6 +56,11 @@ class JigsawActivity : ThemedActivity() {
     private lateinit var store: JigsawStore
     private lateinit var repository: NeutrinoRepository
     private lateinit var body: FrameLayout
+    private lateinit var header: LinearLayout
+    /** Les commandes de la partie : en pastille sous le plateau debout, en tête de la bulle couché. */
+    private var tools: LinearLayout? = null
+    private var panel: SidePanel? = null
+    private var arrangedLandscape: Boolean? = null
     private lateinit var title: TextView
     private lateinit var status: TextView
     private lateinit var helpButton: ImageButton
@@ -109,10 +116,9 @@ class JigsawActivity : ThemedActivity() {
             rotationEnabled = it.getBoolean("rotation", rotationEnabled)
             layoutChoice = JigsawLayout.entries[it.getInt("layout", layoutChoice.ordinal).coerceIn(JigsawLayout.entries.indices)]
         }
-        val root = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL; setBackgroundColor(palette.background)
-        }
-        val header = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL; setPadding(dp(4), dp(2), dp(4), dp(2)) }
+        // La bannière est posée sur le corps : couché, le plateau passe dessous, sur toute la hauteur.
+        val root = FrameLayout(this).apply { setBackgroundColor(palette.background) }
+        header = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL; setPadding(dp(4), dp(2), dp(4), dp(2)) }
         header.addView(headerIcon(R.drawable.ic_app_back, R.string.jigsaw_back, palette.text) { onBackPressedDispatcher.onBackPressed() },
             LinearLayout.LayoutParams(dp(48), dp(48)))
         val heading = LinearLayout(this).apply {
@@ -140,9 +146,10 @@ class JigsawActivity : ThemedActivity() {
         guide.addView(guidePrice, FrameLayout.LayoutParams(dp(16), dp(16), Gravity.TOP or Gravity.END).apply { topMargin = dp(4); rightMargin = dp(2) })
         guideBox = guide
         header.addView(guide, LinearLayout.LayoutParams(dp(48), dp(48)))
-        root.addView(header)
         body = FrameLayout(this)
-        root.addView(body, LinearLayout.LayoutParams(-1, 0, 1f))
+        root.addView(body, FrameLayout.LayoutParams(-1, -1))
+        root.addView(header, FrameLayout.LayoutParams(-1, -2, Gravity.TOP))
+        header.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ -> placeBody() }
         ViewCompat.setOnApplyWindowInsetsListener(root) { view, insets ->
             applyInsets(view, header, insets)
             insets
@@ -226,7 +233,7 @@ class JigsawActivity : ThemedActivity() {
         ++loadGeneration; loading?.cancel(); loading = null
         guideSheet?.dismiss(); board?.cancelGesture(); stopClock(); save()
         board = null; rotateButton = null; replayButton = null
-        body.removeAllViews(); title.setText(R.string.jigsaw_title); status.visibility = View.GONE
+        body.removeAllViews(); placeBody(); title.setText(R.string.jigsaw_title); status.visibility = View.GONE
         helpButton.visibility = View.VISIBLE; guideBox.visibility = View.GONE
         if (clearImage) { pendingImage?.recycle(); pendingImage = null; pendingPath = null }
         val scroll = ScrollView(this).apply { isFillViewport = true; clipToPadding = false }
@@ -381,7 +388,7 @@ class JigsawActivity : ThemedActivity() {
         board?.cancelGesture(); stopClock(); loading?.cancel()
         board = null; rotateButton = null; replayButton = null
         val generation = ++loadGeneration
-        body.removeAllViews(); status.visibility = View.GONE; helpButton.visibility = View.GONE; guideBox.visibility = View.GONE
+        body.removeAllViews(); placeBody(); status.visibility = View.GONE; helpButton.visibility = View.GONE; guideBox.visibility = View.GONE
         body.addView(spinner(), FrameLayout.LayoutParams(dp(48), dp(48), Gravity.CENTER))
         loading = lifecycleScope.launch {
             val decoded = decodeImage(next.imagePath)
@@ -414,17 +421,13 @@ class JigsawActivity : ThemedActivity() {
     private fun showBoard(current: JigsawGame, image: Bitmap) {
         body.removeAllViews(); celebrationPlayed = false
         title.text = getString(R.string.jigsaw_piece_count, current.grid.count); status.visibility = View.VISIBLE
-        val page = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
-        body.addView(page, FrameLayout.LayoutParams(-1, -1))
         board = JigsawView(this, current, image).apply {
             onChanged = { scheduleSave(); updateStatus(); updateTools(); if (current.solved) complete(celebrate = true) }
             onSelectionChanged = { updateTools() }
             onVictoryFinished = { updateStatus() }
         }
-        page.addView(board, LinearLayout.LayoutParams(-1, 0, 1f))
-        val tools = LinearLayout(this).apply {
-            gravity = Gravity.CENTER; background = rounded(palette.raised, 22f, palette.outline); setPadding(dp(6), 0, dp(6), 0)
-        }
+        val tools = LinearLayout(this).apply { gravity = Gravity.CENTER }
+        this.tools = tools
         rotateButton = icon(R.drawable.ic_jigsaw_rotate, R.string.jigsaw_rotate) { board?.rotateSelected(); updateTools() }
         tools.addView(rotateButton, LinearLayout.LayoutParams(dp(52), dp(48)))
         replayButton = icon(R.drawable.ic_restart, R.string.jigsaw_replay_animation) { board?.playVictory() }
@@ -433,8 +436,84 @@ class JigsawActivity : ThemedActivity() {
         val more = icon(R.drawable.ic_more_vert_24, R.string.jigsaw_more) {}
         more.setOnClickListener { showToolsMenu(more) }
         tools.addView(more, LinearLayout.LayoutParams(dp(52), dp(48)))
-        page.addView(tools, LinearLayout.LayoutParams(-2, dp(52)).apply { gravity = Gravity.CENTER; setMargins(dp(8), dp(5), dp(8), dp(8)) })
+        arrangeBoard()
         updateStatus(); updateTools()
+    }
+
+    /**
+     * Debout : la bannière, le plateau, puis les commandes en pastille et les pièces en bande en bas.
+     * Couché : le plateau sur toute la hauteur sous la bannière transparente, et une bulle qu'on
+     * déplace, avec les commandes puis les pièces en deux colonnes.
+     */
+    private fun arrangeBoard() {
+        val current = board ?: return
+        val tools = tools ?: return
+        val landscape = Landscape.isLandscape(this)
+        arrangedLandscape = landscape
+        body.removeAllViews()
+        Landscape.detach(current); Landscape.detach(tools); Landscape.detach(current.sideTray)
+        current.sideMode = landscape
+        if (landscape) {
+            val bubble = panel ?: SidePanel(this).also { panel = it }
+            bubble.content.removeAllViews()
+            tools.background = null; tools.setPadding(0, 0, 0, 0)
+            bubble.content.addView(tools, LinearLayout.LayoutParams(-1, dp(48)))
+            bubble.content.addView(current.sideTray, LinearLayout.LayoutParams(-1, dp(SIDE_TRAY_MIN)))
+            val screen = bubble.compose(current, null, null, dp(SIDE_WIDTH))
+            // La bulle reste sous la bannière, que le plateau, lui, passe dessous.
+            val holder = bubble.bubble.parent as View
+            (holder.layoutParams as LinearLayout.LayoutParams).topMargin = header.height.takeIf { it > 0 } ?: dp(52)
+            holder.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ -> sizeSideTray() }
+            body.addView(screen, FrameLayout.LayoutParams(-1, -1))
+        } else {
+            tools.background = rounded(palette.raised, 22f, palette.outline); tools.setPadding(dp(6), 0, dp(6), 0)
+            val page = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
+            page.addView(current, LinearLayout.LayoutParams(-1, 0, 1f))
+            page.addView(tools, LinearLayout.LayoutParams(-2, dp(52)).apply { gravity = Gravity.CENTER; setMargins(dp(8), dp(5), dp(8), dp(8)) })
+            body.addView(page, FrameLayout.LayoutParams(-1, -1))
+        }
+        placeBody()
+    }
+
+    /** Le corps commence sous la bannière, sauf la partie couchée, qui passe dessous. */
+    private fun placeBody() {
+        val params = body.layoutParams as? FrameLayout.LayoutParams ?: return
+        val top = if (board != null && Landscape.isLandscape(this)) 0 else header.height
+        if (params.topMargin != top) { params.topMargin = top; body.layoutParams = params }
+    }
+
+    /**
+     * La colonne de pièces prend la hauteur qu'il lui faut, sans faire sortir la bulle de l'écran :
+     * elle raccourcit à mesure que les pièces partent sur le plateau.
+     */
+    private fun sizeSideTray() {
+        val current = board ?: return
+        val tray = current.sideTray
+        val holder = panel?.bubble?.parent as? View ?: return
+        if (tray.parent == null || holder.height == 0) return
+        val hidden = game?.let { it.solved || it.layout != JigsawLayout.TRAY } ?: true
+        val visibility = if (hidden) View.GONE else View.VISIBLE
+        // grip, marges de la bulle, rembourrage et rangée de commandes
+        val room = holder.height - dp(26 + 24 + 10 + 48)
+        val wanted = current.sideTrayContentHeight().coerceIn(dp(SIDE_TRAY_MIN), room.coerceAtLeast(dp(SIDE_TRAY_MIN)))
+        val params = tray.layoutParams
+        if (tray.visibility != visibility || params.height != wanted) tray.post {
+            tray.visibility = visibility
+            if (params.height != wanted) { params.height = wanted; tray.layoutParams = params }
+        }
+    }
+
+    override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
+        super.onConfigurationChanged(newConfig)
+        // Tourner l'écran ne fait que redisposer la partie : rien n'y change.
+        if (board != null && arrangedLandscape != Landscape.isLandscape(this)) { arrangeBoard(); updateTools() }
+        else placeBody()
+    }
+
+    private companion object {
+        /** La bulle couchée : deux colonnes de pièces de 84 dp, plus son rembourrage. */
+        const val SIDE_WIDTH = 2 * 84 + 12
+        const val SIDE_TRAY_MIN = 120
     }
     private fun updateStatus() {
         val current = game ?: return
@@ -453,6 +532,7 @@ class JigsawActivity : ThemedActivity() {
         rotateButton?.visibility = if (current.rotation && !current.solved) View.VISIBLE else View.GONE
         rotateButton?.isEnabled = board?.canRotateSelection == true
         rotateButton?.alpha = if (board?.canRotateSelection == true) 1f else .35f
+        if (arrangedLandscape == true) sizeSideTray()
         guidePrice.visibility = if (current.guideUnlocked) View.GONE else View.VISIBLE
         guideButton.apply {
             setImageResource(if (current.guideVisible) R.drawable.ic_px_eye_off else R.drawable.ic_px_eye)
