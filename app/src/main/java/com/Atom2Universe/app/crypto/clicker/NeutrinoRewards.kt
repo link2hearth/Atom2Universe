@@ -140,6 +140,10 @@ object NeutrinoRewards {
     private val MOBILE_VALUES = intArrayOf(3, 6, 12, 20)
     fun mobile(difficultyOrdinal: Int) = MOBILE_VALUES[difficultyOrdinal]
 
+    // ── Gros tas (variante d'Équilibre) : à la fin de la partie, selon les pièces posées ──
+    const val BIG_PILE_PIECES_PER_NEUTRINO = 4
+    fun bigPile(pieces: Int) = pieces / BIG_PILE_PIECES_PER_NEUTRINO
+
     // ── StarBridges : selon la taille de la grille ─────────────────────────────
     fun starBridges(size: Int) = when (size) { 6 -> 5; 7 -> 10; else -> 15 }
 
@@ -322,6 +326,7 @@ object NeutrinoRewards {
             ),
             Entry(R.string.balance_title, list(BALANCE_VALUES.toList()), R.string.neutrino_info_note_retry),
             Entry(R.string.mobile_title, list(MOBILE_VALUES.toList()), R.string.neutrino_info_note_difficulty),
+            Entry(R.string.balance_menu_pile, "1 / $BIG_PILE_PIECES_PER_NEUTRINO", R.string.neutrino_info_note_score),
             Entry(R.string.the_line_title, list(THELINE_VALUES), R.string.neutrino_info_note_level),
             Entry(R.string.sokoban_title, list(SOKOBAN_VALUES.toList()), R.string.neutrino_info_note_level),
             Entry(

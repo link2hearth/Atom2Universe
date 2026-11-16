@@ -37,6 +37,21 @@
     <string name="mobile_difficulty_expert">Expert</string>
     <string name="mobile_btn_restart">Recommencer</string>
     <string name="mobile_gain">+%1$d ✦</string>
+    <string name="balance_menu_pile">Gros tas</string>
+    <string name="balance_menu_pile_desc">Gardez en équilibre deux tas qui grandissent</string>
+    <plurals name="big_pile_pieces">
+        <item quantity="one">%1$d pièce</item>
+        <item quantity="other">%1$d pièces</item>
+    </plurals>
+    <string name="big_pile_best">record %1$d</string>
+    <string name="big_pile_score_line">%1$s · %2$s</string>
+    <string name="big_pile_over_tipped">La balance a basculé !</string>
+    <string name="big_pile_over_dropped">Trop de pièces sont tombées</string>
+    <string name="big_pile_over_full">Plus de place en haut</string>
+    <string name="big_pile_over_detail">%1$s · +%2$d ✦</string>
+    <string name="big_pile_record">Nouveau record !</string>
+    <string name="big_pile_again">Rejouer</string>
+    <string name="big_pile_rules">Les pièces arrivent sans cesse dans la réserve du haut. Glissez-en une sur la grille : elle descend avec la grille et se pose sur la balance. Pendant sa chute, vous pouvez encore la déplacer sur le côté ou vers le bas, la tourner d\'une touche, et la remonter d\'une case au plus. Deux pièces sur le même rang se posent ensemble.\n\nGardez les deux tas en équilibre : plus une pièce est grande, plus elle est lourde. Quand la réserve est pleine, la pièce suivante tombe toute seule, n\'importe où. La partie s\'arrête si la balance reste trop penchée, ou dès que trois pièces ont touché le sol. Quatre pièces posées rapportent un neutrino.</string>
     <!-- Textes peints par la vue du levier : somme d'une colonne, inclinaison, couples. -->
     <string name="balance_sum">Σ %1$d</string>
     <string name="balance_lean_deg">%1$.1f°</string>

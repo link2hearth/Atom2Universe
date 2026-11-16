@@ -37,6 +37,21 @@
     <string name="mobile_difficulty_expert">Expert</string>
     <string name="mobile_btn_restart">Start over</string>
     <string name="mobile_gain">+%1$d ✦</string>
+    <string name="balance_menu_pile">Big pile</string>
+    <string name="balance_menu_pile_desc">Keep two growing piles in balance</string>
+    <plurals name="big_pile_pieces">
+        <item quantity="one">%1$d piece</item>
+        <item quantity="other">%1$d pieces</item>
+    </plurals>
+    <string name="big_pile_best">best %1$d</string>
+    <string name="big_pile_score_line">%1$s · %2$s</string>
+    <string name="big_pile_over_tipped">The balance tipped over!</string>
+    <string name="big_pile_over_dropped">Too many pieces hit the ground</string>
+    <string name="big_pile_over_full">No room left up top</string>
+    <string name="big_pile_over_detail">%1$s · +%2$d ✦</string>
+    <string name="big_pile_record">New best!</string>
+    <string name="big_pile_again">Play again</string>
+    <string name="big_pile_rules">Pieces keep arriving in the tray at the top. Drag one onto the grid: it slides down with the grid and lands on the balance. While it falls you can still move it sideways or down, turn it with a tap, and lift it by one square at most. Two pieces on the same row land together.\n\nKeep both piles balanced: the bigger a piece, the heavier it is. When the tray is full, the next piece drops on its own, anywhere. The game ends if the balance stays tipped too long, or once three pieces have hit the ground. Every four pieces placed earn a neutrino.</string>
     <!-- Textes peints par la vue du levier : somme d'une colonne, inclinaison, couples. -->
     <string name="balance_sum">Σ %1$d</string>
     <string name="balance_lean_deg">%1$.1f°</string>

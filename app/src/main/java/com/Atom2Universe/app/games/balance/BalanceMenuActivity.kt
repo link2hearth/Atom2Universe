@@ -20,8 +20,8 @@ import com.Atom2Universe.app.science.SciencePalette
 import com.Atom2Universe.app.util.enableImmersiveMode
 
 /**
- * L'entrée de la tuile « Équilibre » : on y choisit entre les deux jeux du dossier, la planche
- * (poids posés sur un levier) et le mobile (fils à faire glisser).
+ * L'entrée de la tuile « Équilibre » : on y choisit entre les trois jeux du dossier, la planche
+ * (poids posés sur un levier), le mobile (objets à suspendre) et le gros tas (pièces qui tombent).
  */
 class BalanceMenuActivity : ThemedActivity() {
 
@@ -66,6 +66,14 @@ class BalanceMenuActivity : ThemedActivity() {
             card(
                 R.string.balance_menu_mobile, R.string.balance_menu_mobile_desc,
                 MobileHubTileDrawable(this), MobileActivity::class.java
+            ),
+            LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f)
+                .apply { setMargins(0, 0, 0, px(14)) }
+        )
+        cards.addView(
+            card(
+                R.string.balance_menu_pile, R.string.balance_menu_pile_desc,
+                BigPileHubTileDrawable(this), BigPileActivity::class.java
             ),
             LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f)
         )
