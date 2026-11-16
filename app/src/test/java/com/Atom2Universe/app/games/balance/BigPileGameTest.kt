@@ -72,7 +72,7 @@ class BigPileGameTest {
         repeat(12) {
             val x = g.colLeft(p.col) + cell / 2f
             var y = g.rowBottom(p.row) + cell / 2f
-            assertTrue(g.touchDown(x, y))
+            assertTrue(g.touchDown(x, y, -1))
             repeat(6) {
                 y += cell
                 g.touchMove(x, y)
@@ -92,7 +92,7 @@ class BigPileGameTest {
         val col0 = p.col
         val x = g.colLeft(p.col) + cell / 2f
         val y = g.rowBottom(p.row) + cell / 2f
-        assertTrue(g.touchDown(x, y))
+        assertTrue(g.touchDown(x, y, -1))
         g.touchMove(x + 0.4f * cell, y)
         assertEquals(col0 + 4, p.col)
         g.touchUp(tap = false)
@@ -107,7 +107,7 @@ class BigPileGameTest {
         // Lâchée en mordant de trois dixièmes sur la case voisine, au même rang.
         val left = g.colLeft(mono.col) + 0.7f * cell
         val bottom = g.rowBottom(mono.row)
-        assertTrue(g.touchDown(-2f, g.gridTop + 0.5f))
+        assertTrue(g.touchDown(-2f, g.gridTop + 0.5f, g.slotAt(-2f)))
         g.touchMove(left + p.w * cell / 2f, bottom - 0.8f * cell)
         g.touchUp(tap = false)
         assertEquals(BigPiece.State.FALLING, p.state)

@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:background="?attr/a2uScreenBackground">
 
-    <!-- Barre supérieure : retour, difficulté, niveau -->
+    <!-- Barre supérieure : retour, difficulté, niveau, recommencer, nouveau, règles -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="56dp"
@@ -51,6 +51,29 @@
             android:textSize="13sp" />
 
         <ImageButton
+            android:id="@+id/mobile_btn_restart"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginStart="4dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_restart"
+            app:tint="@color/audio_text_secondary"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/mobile_btn_restart"
+            android:tooltipText="@string/mobile_btn_restart" />
+
+        <ImageButton
+            android:id="@+id/mobile_btn_new"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_refresh"
+            app:tint="@color/audio_text_secondary"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/balance_btn_new"
+            android:tooltipText="@string/balance_btn_new" />
+
+        <ImageButton
             android:id="@+id/mobile_btn_info"
             android:layout_width="48dp"
             android:layout_height="48dp"
@@ -69,42 +92,5 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
-
-    <!-- Boutons -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:padding="10dp"
-        android:background="?attr/a2uPanelBackground">
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/mobile_btn_restart"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:layout_marginEnd="6dp"
-            android:text="@string/mobile_btn_restart"
-            android:textAllCaps="false"
-            android:textColor="@color/audio_text_primary"
-            android:textSize="14sp"
-            app:backgroundTint="@color/audio_surface_raised" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/mobile_btn_new"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:text="@string/balance_btn_new"
-            android:textAllCaps="false"
-            android:textColor="@color/audio_on_accent"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            app:backgroundTint="?attr/a2uMusicAccent" />
-
-    </LinearLayout>
 
 </LinearLayout>

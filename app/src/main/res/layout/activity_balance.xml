@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:background="?attr/a2uScreenBackground">
 
-    <!-- Barre supérieure : retour, difficulté, niveau -->
+    <!-- Barre supérieure : retour, difficulté, niveau, vider, nouveau, règles -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="52dp"
@@ -43,6 +43,29 @@
             android:textSize="12sp" />
 
         <ImageButton
+            android:id="@+id/balance_btn_reset"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginStart="4dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_restart"
+            app:tint="?attr/a2uSecondaryTextColor"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/balance_btn_reset"
+            android:tooltipText="@string/balance_btn_reset" />
+
+        <ImageButton
+            android:id="@+id/balance_btn_new"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_refresh"
+            app:tint="?attr/a2uSecondaryTextColor"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/balance_btn_new"
+            android:tooltipText="@string/balance_btn_new" />
+
+        <ImageButton
             android:id="@+id/balance_btn_info"
             android:layout_width="48dp"
             android:layout_height="48dp"
@@ -55,76 +78,29 @@
 
     </LinearLayout>
 
-    <!-- Scène : plateau de poids en haut, balance en bas -->
-    <com.Atom2Universe.app.games.balance.BalanceView
-        android:id="@+id/balance_view"
+    <!-- Scène : plateau de poids en haut, balance en bas ; le verdict s'affiche par-dessus. -->
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1">
 
-    <!-- Message d'état -->
-    <TextView
-        android:id="@+id/balance_status"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:minLines="2"
-        android:paddingStart="12dp"
-        android:paddingEnd="12dp"
-        android:paddingTop="6dp"
-        android:textColor="?attr/a2uSecondaryTextColor"
-        android:textSize="13sp" />
-
-    <!-- Boutons -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:padding="10dp">
+        <com.Atom2Universe.app.games.balance.BalanceView
+            android:id="@+id/balance_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
         <TextView
-            android:id="@+id/balance_btn_new"
-            android:layout_width="0dp"
-            android:layout_height="42dp"
-            android:layout_weight="1"
-            android:layout_marginEnd="6dp"
+            android:id="@+id/balance_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="24dp"
             android:gravity="center"
-            android:text="@string/balance_btn_new"
-            android:textColor="?attr/a2uSecondaryTextColor"
-            android:textSize="13sp"
-            android:background="@drawable/bg_widget_arrow"
-            android:clickable="true"
-            android:focusable="true" />
-
-        <TextView
-            android:id="@+id/balance_btn_reset"
-            android:layout_width="0dp"
-            android:layout_height="42dp"
-            android:layout_weight="1"
-            android:layout_marginEnd="6dp"
-            android:gravity="center"
-            android:text="@string/balance_btn_reset"
-            android:textColor="?attr/a2uSecondaryTextColor"
-            android:textSize="13sp"
-            android:background="@drawable/bg_widget_arrow"
-            android:clickable="true"
-            android:focusable="true" />
-
-        <TextView
-            android:id="@+id/balance_btn_test"
-            android:layout_width="0dp"
-            android:layout_height="42dp"
-            android:layout_weight="2"
-            android:gravity="center"
-            android:text="@string/balance_btn_test"
+            android:shadowColor="#CC000000"
+            android:shadowRadius="8"
             android:textColor="?attr/a2uTextColor"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:background="@drawable/bg_widget_arrow"
-            android:clickable="true"
-            android:focusable="true" />
-
-    </LinearLayout>
+            android:textSize="18sp"
+            android:visibility="gone" />
+    </FrameLayout>
 
 </LinearLayout>

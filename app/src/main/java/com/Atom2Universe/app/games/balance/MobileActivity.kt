@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.games.balance
 
+import com.Atom2Universe.app.AppearanceStyle
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
@@ -41,7 +42,7 @@ class MobileActivity : ThemedActivity(), MobileView.Listener {
 
     private lateinit var gameView: MobileView
     private lateinit var levelText: TextView
-    private lateinit var newButton: TextView
+    private lateinit var newButton: ImageButton
     private lateinit var difficultySpinner: Spinner
     private lateinit var prefs: SharedPreferences
     private lateinit var sfx: MobileSfx
@@ -68,7 +69,7 @@ class MobileActivity : ThemedActivity(), MobileView.Listener {
         findViewById<ImageButton>(R.id.mobile_btn_info).setOnClickListener {
             showGameRules(R.string.balance_menu_mobile, R.string.mobile_rules)
         }
-        findViewById<TextView>(R.id.mobile_btn_restart).setOnClickListener {
+        findViewById<ImageButton>(R.id.mobile_btn_restart).setOnClickListener {
             synchronized(gameView.game) { gameView.game.recommencer() }
             gameView.syncLevel()
             updateUi()
@@ -191,11 +192,13 @@ class MobileActivity : ThemedActivity(), MobileView.Listener {
         } else {
             getString(R.string.balance_level, game.level)
         }
-        newButton.text = if (game.gagne) {
-            getString(R.string.balance_btn_next)
-        } else {
-            getString(R.string.balance_btn_new)
-        }
+        // Tableau réussi : l'icône « nouveau » prend la couleur d'accent et mène au suivant.
+        val next = game.gagne
+        newButton.imageTintList = android.content.res.ColorStateList.valueOf(
+            if (next) AppearanceStyle.color(this, R.attr.a2uMusicAccent)
+            else getColor(R.color.audio_text_secondary))
+        newButton.contentDescription = getString(if (next) R.string.balance_btn_next else R.string.balance_btn_new)
+        newButton.tooltipText = newButton.contentDescription
         majEcran()
     }
 }

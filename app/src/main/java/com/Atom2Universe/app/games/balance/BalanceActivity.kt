@@ -39,7 +39,6 @@ class BalanceActivity : ThemedActivity(), BalanceView.Listener {
     private lateinit var gameView: BalanceView
     private lateinit var statusText: TextView
     private lateinit var levelText: TextView
-    private lateinit var testButton: TextView
     private lateinit var difficultySpinner: Spinner
     private lateinit var prefs: SharedPreferences
 
@@ -55,7 +54,6 @@ class BalanceActivity : ThemedActivity(), BalanceView.Listener {
         gameView = findViewById(R.id.balance_view)
         statusText = findViewById(R.id.balance_status)
         levelText = findViewById(R.id.balance_level)
-        testButton = findViewById(R.id.balance_btn_test)
         difficultySpinner = findViewById(R.id.balance_difficulty_spinner)
 
         gameView.listener = this
@@ -64,9 +62,8 @@ class BalanceActivity : ThemedActivity(), BalanceView.Listener {
         findViewById<ImageButton>(R.id.balance_btn_info).setOnClickListener {
             showGameRules(R.string.balance_menu_plank, R.string.balance_rules)
         }
-        findViewById<TextView>(R.id.balance_btn_new).setOnClickListener { newLevel() }
-        findViewById<TextView>(R.id.balance_btn_reset).setOnClickListener { resetPlacement() }
-        testButton.setOnClickListener { onTestButton() }
+        findViewById<View>(R.id.balance_btn_new).setOnClickListener { newLevel() }
+        findViewById<View>(R.id.balance_btn_reset).setOnClickListener { resetPlacement() }
 
         val saved = prefs.getInt(KEY_DIFFICULTY, 0)
             .coerceIn(0, BalanceGame.Difficulty.entries.size - 1)
@@ -173,14 +170,12 @@ class BalanceActivity : ThemedActivity(), BalanceView.Listener {
         updateUi()
     }
 
-    private fun onTestButton() {
+    /** Le cadenas du pied : relâcher le levier, le rebloquer pour ajuster, ou passer au niveau suivant. */
+    override fun onLockTapped() {
         val game = gameView.game
         when (game.phase) {
             BalanceGame.Phase.PLACING -> {
-                if (!game.canTest()) {
-                    statusText.text = getString(R.string.balance_status_place)
-                    return
-                }
+                if (!game.canTest()) return
                 synchronized(game) { game.startTest() }
                 gameView.syncPhase()
             }
@@ -229,31 +224,15 @@ class BalanceActivity : ThemedActivity(), BalanceView.Listener {
             getString(R.string.balance_level, game.level)
         }
 
-        testButton.text = when (game.phase) {
-            BalanceGame.Phase.WON -> getString(R.string.balance_btn_next)
-            BalanceGame.Phase.LOST, BalanceGame.Phase.TESTING ->
-                getString(R.string.balance_btn_adjust)
-            else -> getString(R.string.balance_btn_test)
-        }
-        testButton.alpha = if (game.phase == BalanceGame.Phase.PLACING && !game.allPlaced) 0.45f else 1f
         majEcran()
 
-        if (keepStatus) return
-        statusText.text = when (game.phase) {
-            BalanceGame.Phase.PLACING -> when (game.notice) {
-                BalanceGame.Notice.DEAD_ZONE -> getString(R.string.balance_notice_dead_zone)
-                else -> withReward(
-                    if (game.allPlaced) {
-                        getString(R.string.balance_status_ready)
-                    } else {
-                        getString(R.string.balance_status_place)
-                    }
-                )
-            }
-            BalanceGame.Phase.TESTING -> getString(R.string.balance_status_testing)
+        // Le message ne dit que le verdict, par-dessus le ciel : la scène garde toute la hauteur.
+        if (!keepStatus) statusText.text = when (game.phase) {
             BalanceGame.Phase.WON -> getString(R.string.balance_status_won, currentReward())
             BalanceGame.Phase.LOST -> lossMessage()
+            else -> ""
         }
+        statusText.visibility = if (statusText.text.isNullOrEmpty()) View.GONE else View.VISIBLE
     }
 
     private fun lossMessage(): String {

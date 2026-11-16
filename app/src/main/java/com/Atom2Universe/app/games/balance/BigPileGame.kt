@@ -170,7 +170,14 @@ class BigPileGame(private val rng: Random = Random.Default) {
 
     var worldHeight = 8f
         private set
-    val gridTop: Float get() = worldHeight - BigPileRules.RESERVE_HEIGHT
+
+    /**
+     * La bande gardée en haut de l'écran pour la réserve. Debout, la réserve y tient ; couché,
+     * elle passe en colonne sur le côté et la grille monte presque jusqu'en haut.
+     */
+    var reserveBand = BigPileRules.RESERVE_HEIGHT
+        private set
+    val gridTop: Float get() = worldHeight - reserveBand
 
     /** Chemin parcouru par la grille depuis le début, en mètres. */
     var shift = 0.0
@@ -248,8 +255,9 @@ class BigPileGame(private val rng: Random = Random.Default) {
         world.add(plank)
     }
 
-    fun setViewport(worldHeight: Float) {
-        this.worldHeight = worldHeight.coerceAtLeast(BigPileRules.RESERVE_HEIGHT + 3f)
+    fun setViewport(worldHeight: Float, reserveBand: Float = BigPileRules.RESERVE_HEIGHT) {
+        this.reserveBand = reserveBand
+        this.worldHeight = worldHeight.coerceAtLeast(reserveBand + 3f)
     }
 
     fun newGame() {
@@ -612,15 +620,18 @@ class BigPileGame(private val rng: Random = Random.Default) {
         ((wx + halfWidth) / (BigPileRules.WORLD_WIDTH / BigPileRules.SLOTS)).toInt()
             .coerceIn(0, BigPileRules.SLOTS - 1)
 
-    /** Prend une pièce sous le doigt : dans la réserve, ou en train de descendre. */
-    fun touchDown(wx: Float, wy: Float): Boolean {
+    /**
+     * Prend une pièce sous le doigt : dans la réserve (la vue dit quelle place, [slot], car c'est
+     * elle qui sait où les places sont dessinées ; -1 hors de la réserve), ou en train de descendre.
+     */
+    fun touchDown(wx: Float, wy: Float, slot: Int): Boolean {
         if (phase != Phase.PLAYING) return false
         fingerX = wx
         fingerY = wy
         lastFingerY = wy
         verticalAccum = 0f
-        if (wy >= gridTop) {
-            val p = reserve[slotAt(wx)] ?: return false
+        if (slot >= 0) {
+            val p = reserve[slot] ?: return false
             held = p
             heldFromReserve = true
             aimFromReserve()
@@ -691,7 +702,8 @@ class BigPileGame(private val rng: Random = Random.Default) {
         val row = ((bottom + shift) / step).roundToInt().coerceAtMost(topRow(p.h))
         heldCol = col
         heldRow = row
-        heldValid = fingerY < gridTop && nearestFit(p, col, row)
+        // Le doigt doit être au-dessus de la grille (couché, la réserve est à côté d'elle).
+        heldValid = fingerY < gridTop && abs(fingerX) <= halfWidth && nearestFit(p, col, row)
     }
 
     /**

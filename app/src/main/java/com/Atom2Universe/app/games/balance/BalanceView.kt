@@ -72,6 +72,9 @@ class BalanceView @JvmOverloads constructor(
 
         /** Une pose, un retrait ou un refus : l'activité rafraîchit ses textes. */
         fun onPlacementChanged()
+
+        /** Le cadenas du pied a été touché : relâcher le levier, le rebloquer, ou passer au suivant. */
+        fun onLockTapped()
     }
 
     val game = BalanceGame()
@@ -168,6 +171,16 @@ class BalanceView @JvmOverloads constructor(
         strokeWidth = 2f * dp
         color = "#90A4AE".toColorInt()
     }
+    // Le cadenas posé sur le pied : fermé, le levier est bloqué ; ouvert, il bascule.
+    private val pLockBody = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val pLockShackle = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        strokeCap = Paint.Cap.ROUND
+    }
+    private val pLockHole = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = "#37474F".toColorInt() }
+    private val lockRect = RectF()
+    private val lockArc = RectF()
+    private var lockPressed = false
     private val pBox = Paint(Paint.ANTI_ALIAS_FLAG)
     private val pBoxEdge = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
@@ -411,6 +424,22 @@ class BalanceView @JvmOverloads constructor(
         val wx = (event.x - cx) / scale
         val wy = (height - event.y) / scale + worldYOffset
 
+        // Le cadenas répond dans toutes les phases ; une zone large, il est petit à l'écran.
+        if (event.actionMasked == MotionEvent.ACTION_DOWN) {
+            val slop = 14f * dp
+            lockPressed = event.x in (lockRect.left - slop)..(lockRect.right + slop) &&
+                event.y in (lockRect.top - slop * 1.6f)..(lockRect.bottom + slop)
+        }
+        if (lockPressed) {
+            if (event.actionMasked == MotionEvent.ACTION_UP) {
+                lockPressed = false
+                listener?.onLockTapped()
+            } else if (event.actionMasked == MotionEvent.ACTION_CANCEL) {
+                lockPressed = false
+            }
+            return true
+        }
+
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> synchronized(game) {
                 if (game.phase != BalanceGame.Phase.PLACING) return true
@@ -483,6 +512,7 @@ class BalanceView @JvmOverloads constructor(
         drawTraySeparator(canvas, w)
         drawGauge(canvas, w)
         drawPivot(canvas)
+        drawLock(canvas)
         drawPlank(canvas)
         drawWeights(canvas)
         drawMassLabels(canvas)
@@ -514,6 +544,54 @@ class BalanceView @JvmOverloads constructor(
         tmpPath.close()
         canvas.drawPath(tmpPath, pPivot)
         canvas.drawPath(tmpPath, pPivotEdge)
+    }
+
+    /**
+     * Le cadenas, au milieu de la partie visible du pied (en paysage, le bas du pied sort de
+     * l'écran). Fermé pendant la pose (pâle tant que des poids restent à poser), ouvert dès que le
+     * levier bascule, vert quand le niveau est réussi.
+     */
+    private fun drawLock(canvas: Canvas) {
+        val apexY = sy(BalanceRules.PIVOT_HEIGHT)
+        val baseY = sy(0f).coerceAtMost(height.toFloat())
+        val halfBase = 0.46f * scale
+        val fullBase = sy(0f)
+        val centreY = apexY + (baseY - apexY) * 0.62f
+        // Largeur du triangle à cette hauteur, pour que le cadenas tienne dedans.
+        val widthHere = 2f * halfBase * (centreY - apexY) / (fullBase - apexY)
+        val bodyW = (widthHere * 0.5f).coerceIn(14f * dp, 30f * dp)
+        val bodyH = bodyW * 0.78f
+        val top = centreY - bodyH * 0.15f
+        lockRect.set(cx - bodyW / 2f, top, cx + bodyW / 2f, top + bodyH)
+
+        val phase = game.phase
+        val open = phase != BalanceGame.Phase.PLACING
+        val colour = when {
+            phase == BalanceGame.Phase.WON -> "#81C784".toColorInt()
+            open -> "#FFD54F".toColorInt()
+            else -> "#ECEFF1".toColorInt()
+        }
+        val alpha = if (phase == BalanceGame.Phase.PLACING && !game.allPlaced) 120 else 255
+
+        pLockShackle.color = colour
+        pLockShackle.alpha = alpha
+        pLockShackle.strokeWidth = bodyW * 0.16f
+        val arcW = bodyW * 0.62f
+        val lift = if (open) bodyH * 0.38f else 0f
+        val shift = if (open) bodyW * 0.32f else 0f
+        lockArc.set(cx - arcW / 2f + shift, top - arcW * 0.75f - lift, cx + arcW / 2f + shift, top + arcW * 0.25f - lift)
+        canvas.drawArc(lockArc, 180f, 180f, false, pLockShackle)
+        // Les deux montants de l'anse ; ouvert, le gauche ne rentre plus dans le corps.
+        val legTop = lockArc.centerY()
+        canvas.drawLine(lockArc.right, legTop, lockArc.right, top + bodyH * 0.1f, pLockShackle)
+        canvas.drawLine(lockArc.left, legTop, lockArc.left, if (open) legTop + bodyH * 0.12f else top + bodyH * 0.1f, pLockShackle)
+
+        pLockBody.color = colour
+        pLockBody.alpha = alpha
+        canvas.drawRoundRect(lockRect, bodyW * 0.16f, bodyW * 0.16f, pLockBody)
+        pLockHole.alpha = alpha
+        canvas.drawCircle(cx, top + bodyH * 0.45f, bodyW * 0.1f, pLockHole)
+        canvas.drawRect(cx - bodyW * 0.04f, top + bodyH * 0.45f, cx + bodyW * 0.04f, top + bodyH * 0.72f, pLockHole)
     }
 
     private fun drawPlank(canvas: Canvas) {

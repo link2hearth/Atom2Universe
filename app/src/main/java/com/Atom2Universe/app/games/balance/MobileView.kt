@@ -334,6 +334,9 @@ class MobileView @JvmOverloads constructor(
         /** Une image toutes les 16,7 ms, soit soixante par seconde. */
         const val FRAME_NANOS = 1_000_000_000L / 60L
 
+        /** L'échelle de référence : tant d'unités du monde sur le petit côté de l'écran. */
+        const val UNITES_ECRAN = 6f
+
         /** Épaisseur de la poutre du plafond, en dp. */
         const val HAUT_PLAFOND = 10f
 
@@ -375,8 +378,11 @@ class MobileView @JvmOverloads constructor(
         val pleineEtagere = largeur / game.largeurEtagere
         val bandeau = { s: Float -> 2f * game.rayonMax * min(s, pleineEtagere) + ESPACE_ETAGERE * dp }
         val haut = HAUT_PLAFOND * dp
-        scale = largeur / w
-        repeat(2) { scale = min(largeur / w, (viewH - haut - marge - bandeau(scale)) / h) }
+        // Une échelle fixe, la même d'un tableau à l'autre : les objets gardent leur taille. Seul
+        // un mobile trop grand pour l'écran la fait baisser.
+        val reference = min(viewW, viewH) / UNITES_ECRAN
+        scale = min(reference, largeur / w)
+        repeat(2) { scale = min(reference, min(largeur / w, (viewH - haut - marge - bandeau(scale)) / h)) }
         originX = viewW / 2f - (b[0] + b[1]) / 2f * scale
         // Le plafond en haut de l'écran, l'étagère en bas : la place qui reste va entre les deux,
         // là où le mobile se balance.

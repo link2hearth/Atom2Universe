@@ -15,6 +15,8 @@ import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.science.SciencePalette
+import com.Atom2Universe.app.util.Landscape
+import com.Atom2Universe.app.util.SidePanel
 import com.Atom2Universe.app.util.enableImmersiveMode
 import com.Atom2Universe.app.util.showGameRules
 
@@ -46,12 +48,7 @@ class BigPileActivity : ThemedActivity(), BigPileView.Listener {
         val dp = resources.displayMetrics.density
         fun px(v: Int) = (v * dp).toInt()
 
-        val root = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            background = AppearanceStyle.screen(this@BigPileActivity)
-        }
-
-        val bar = LinearLayout(this).apply {
+        bar = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
             setPadding(px(4), 0, px(8), 0)
@@ -78,9 +75,9 @@ class BigPileActivity : ThemedActivity(), BigPileView.Listener {
             setPadding(px(10), px(10), px(10), px(10))
             setOnClickListener { showGameRules(R.string.balance_menu_pile, R.string.big_pile_rules) }
         }, LinearLayout.LayoutParams(px(48), px(48)))
-        root.addView(bar, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, px(52)))
+        bar.minimumHeight = px(52)
 
-        val stage = FrameLayout(this)
+        stage = FrameLayout(this)
         gameView = BigPileView(this)
         gameView.listener = this
         stage.addView(gameView, FrameLayout.LayoutParams(
@@ -117,7 +114,9 @@ class BigPileActivity : ThemedActivity(), BigPileView.Listener {
             setPadding(px(26), px(12), px(26), px(12))
             setOnClickListener { newGame() }
         }
-        endPanel.addView(endTitle)
+        // Le titre peut tenir sur deux lignes : il prend la largeur du bilan, au moins 280 dp.
+        endPanel.minimumWidth = px(280)
+        endPanel.addView(endTitle, LinearLayout.LayoutParams(px(280), LinearLayout.LayoutParams.WRAP_CONTENT))
         endPanel.addView(endDetail)
         endPanel.addView(again, LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT
@@ -125,10 +124,53 @@ class BigPileActivity : ThemedActivity(), BigPileView.Listener {
         stage.addView(endPanel, FrameLayout.LayoutParams(
             FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER
         ))
-        root.addView(stage, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f))
+        reserveView = BigPileReserveView(this, gameView)
+        gameView.onReserveChanged = { reserveView.invalidate() }
 
-        setContentView(root)
+        setContentView(arrange())
         newGame()
+    }
+
+    // Les morceaux de l'écran, créés une fois : la rotation ne fait que les redisposer.
+    private lateinit var bar: LinearLayout
+    private lateinit var stage: FrameLayout
+    private lateinit var reserveView: BigPileReserveView
+    private var panel: SidePanel? = null
+    private var arrangedLandscape: Boolean? = null
+
+    /**
+     * Debout : la bannière, puis la scène (la réserve en bande en haut de la vue). Couché : la
+     * bannière en haut, la scène sur toute la hauteur, et la réserve avec les vies dans la bulle
+     * qu'on déplace à volonté, comme dans les autres jeux.
+     */
+    private fun arrange(): View {
+        val landscape = Landscape.isLandscape(this)
+        arrangedLandscape = landscape
+        gameView.externalReserve = landscape
+        Landscape.detach(bar)
+        Landscape.detach(stage)
+        Landscape.detach(reserveView)
+        if (landscape) {
+            val bubble = panel ?: SidePanel(this).also { panel = it }
+            bubble.content.removeAllViews()
+            val dp = resources.displayMetrics.density
+            bubble.content.addView(reserveView, LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply { setMargins((4 * dp).toInt(), (2 * dp).toInt(), (4 * dp).toInt(), 0) })
+            return bubble.compose(stage, AppearanceStyle.screen(this), bar, (300 * dp).toInt())
+        }
+        return LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            background = AppearanceStyle.screen(this@BigPileActivity)
+            setTag(R.id.app_effects_scene, true)
+            addView(bar, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
+            addView(stage, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f))
+        }
+    }
+
+    override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
+        super.onConfigurationChanged(newConfig)
+        if (::stage.isInitialized && arrangedLandscape != Landscape.isLandscape(this)) setContentView(arrange())
     }
 
     override fun onResume() {

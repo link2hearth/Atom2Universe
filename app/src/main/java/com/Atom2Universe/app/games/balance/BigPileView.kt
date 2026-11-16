@@ -48,11 +48,16 @@ class BigPileView @JvmOverloads constructor(
         const val FIXED_DT = 1f / 120f
         const val FRAME_NANOS = 1_000_000_000L / 60L
         const val TAP_MS = 300L
+
+        /** Couché : la hauteur du monde à l'écran, et la petite bande laissée en haut. */
+        const val LANDSCAPE_HEIGHT = 6f
+        const val LANDSCAPE_BAND = 0.25f
     }
 
     // ── Couleurs ──────────────────────────────────────────────────────────────
 
     private val couleurs = SciencePalette(ctx)
+    private val screenBackground = com.Atom2Universe.app.AppearanceStyle.screen(ctx)?.mutate()
 
     /** Une couleur par forme : la taille dit la masse, la couleur aide à suivre la pièce. */
     private val kindFill = intArrayOf(
@@ -120,11 +125,41 @@ class BigPileView @JvmOverloads constructor(
     override fun surfaceCreated(holder: SurfaceHolder) = resume()
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, w: Int, h: Int) {
-        scale = w / BigPileRules.WORLD_WIDTH
+        // Couché, la réserve et les vies sont dans la bulle de l'écran (BigPileReserveView) :
+        // l'échelle se règle aussi sur la hauteur et la grille monte presque jusqu'en haut.
+        landscape = externalReserve
+        scale = if (landscape) minOf(w / BigPileRules.WORLD_WIDTH, h / LANDSCAPE_HEIGHT) else w / BigPileRules.WORLD_WIDTH
         cx = w / 2f
-        synchronized(game) { game.setViewport(h / scale) }
+        synchronized(game) {
+            game.setViewport(h / scale, if (landscape) LANDSCAPE_BAND else BigPileRules.RESERVE_HEIGHT)
+        }
         reveiller()
     }
+
+    /** Vrai quand la réserve et les vies sont dessinées hors de la vue (dans la bulle, couché). */
+    var externalReserve = false
+    private var landscape = false
+
+    /** Appelé sur le fil de l'écran quand la réserve, la pièce tenue ou les vies changent. */
+    var onReserveChanged: (() -> Unit)? = null
+    private var reserveSignature = 0
+
+    private fun signature(): Int {
+        var sig = game.lives
+        for (p in game.reserve) sig = sig * 31 + (p?.let { it.id * 17 + it.cells.contentDeepHashCode() } ?: -1)
+        return sig * 31 + if (game.heldFromReserve) (game.held?.id ?: -1) else -1
+    }
+
+    /** La place de réserve sous le doigt, ou -1 (couché, la réserve est dans la bulle). */
+    private fun slotUnder(wx: Float, wy: Float): Int =
+        if (!landscape && wy >= game.gridTop) game.slotAt(wx) else -1
+
+    /** Position du monde d'un point de la vue (pour la bulle, qui transmet ses gestes). */
+    fun worldX(x: Float) = (x - cx) / scale
+    fun worldY(y: Float) = (height - y) / scale
+
+    /** Relance l'image après un geste venu d'ailleurs (la bulle). */
+    fun wake() = reveiller()
 
     override fun surfaceDestroyed(holder: SurfaceHolder) = pause()
 
@@ -185,6 +220,11 @@ class BigPileView @JvmOverloads constructor(
                 if (game.revision != lastRevision) {
                     lastRevision = game.revision
                     changed = true
+                }
+                val sig = signature()
+                if (sig != reserveSignature) {
+                    reserveSignature = sig
+                    post { onReserveChanged?.invoke() }
                 }
                 val auRepos = game.phase == BigPileGame.Phase.OVER &&
                     game.world.isAtRest() && game.pieces.none { it.state == BigPiece.State.FALLEN }
@@ -252,7 +292,7 @@ class BigPileView @JvmOverloads constructor(
                 downY = event.y
                 downTime = event.eventTime
                 moved = false
-                synchronized(game) { game.touchDown(wx, wy) }
+                synchronized(game) { game.touchDown(wx, wy, slotUnder(wx, wy)) }
             }
             MotionEvent.ACTION_MOVE -> {
                 if (!moved && hypot(event.x - downX, event.y - downY) > 10f * dp) moved = true
@@ -274,7 +314,14 @@ class BigPileView @JvmOverloads constructor(
         val w = width.toFloat()
         val h = height.toFloat()
         if (w <= 0f || h <= 0f) return
-        canvas.drawColor(couleurs.background)
+        // Le fond du thème de l'appli, comme les autres écrans ; une couleur unie s'il n'en a pas.
+        val fond = screenBackground
+        if (fond != null) {
+            fond.setBounds(0, 0, width, height)
+            fond.draw(canvas)
+        } else {
+            canvas.drawColor(couleurs.background)
+        }
 
         drawGrid(canvas, w)
         drawGround(canvas, w, h)
@@ -307,7 +354,7 @@ class BigPileView @JvmOverloads constructor(
         while (true) {
             val y = game.rowBottom(k * BigPileRules.SUB)
             if (y > game.gridTop) break
-            if (y >= 0f) canvas.drawLine(0f, sy(y), w, sy(y), pGrid)
+            if (y >= 0f) canvas.drawLine(sx(-BigPileRules.WORLD_WIDTH / 2f), sy(y), sx(BigPileRules.WORLD_WIDTH / 2f), sy(y), pGrid)
             k++
         }
     }
@@ -395,34 +442,41 @@ class BigPileView @JvmOverloads constructor(
         }
     }
 
-    /** La réserve : quatre places, les pièces réduites pour y tenir. */
+    /** La réserve en bande en haut de l'écran (debout) ; couché, c'est la bulle qui la dessine. */
     private fun drawReserve(canvas: Canvas, w: Float) {
-        val top = 0f
+        if (landscape) return
         val bottom = sy(game.gridTop)
-        canvas.drawRect(0f, top, w, bottom, pReserve)
+        canvas.drawRect(0f, 0f, w, bottom, pReserve)
         val slotW = w / BigPileRules.SLOTS
         val pad = 6f * dp
-        val corner = 12f * dp
         for (i in 0 until BigPileRules.SLOTS) {
-            tmpRect.set(i * slotW + pad, top + pad, (i + 1) * slotW - pad, bottom - pad)
-            canvas.drawRoundRect(tmpRect, corner, corner, pSlot)
-            val p = game.reserve[i] ?: continue
-            val held = p === game.held
-            val cellPx = BigPileRules.CELL * scale
-            val fit = minOf(
-                1f,
-                tmpRect.width() * 0.8f / (p.w * cellPx),
-                tmpRect.height() * 0.8f / (p.h * cellPx)
-            )
-            val size = cellPx * fit
-            val left = tmpRect.centerX() - p.w * size / 2f
-            val base = tmpRect.centerY() + p.h * size / 2f
-            for (c in p.cells) {
-                canvas.save()
-                canvas.translate(left + (c[0] + 0.5f) * size, base - (c[1] + 0.5f) * size)
-                drawCell(canvas, size / 2f, p.kind.ordinal, if (held) 70 else 255)
-                canvas.restore()
-            }
+            slotRect.set(i * slotW + pad, pad, (i + 1) * slotW - pad, bottom - pad)
+            drawSlot(canvas, i, slotRect)
+        }
+    }
+
+    private val slotRect = RectF()
+
+    /** Une place de réserve et sa pièce, réduite pour y tenir, dans [rect]. */
+    fun drawSlot(canvas: Canvas, i: Int, rect: RectF) {
+        val corner = 12f * dp
+        canvas.drawRoundRect(rect, corner, corner, pSlot)
+        val p = game.reserve[i] ?: return
+        val held = p === game.held
+        val cellPx = BigPileRules.CELL * scale
+        val fit = minOf(
+            1f,
+            rect.width() * 0.8f / (p.w * cellPx),
+            rect.height() * 0.8f / (p.h * cellPx)
+        )
+        val size = cellPx * fit
+        val left = rect.centerX() - p.w * size / 2f
+        val base = rect.centerY() + p.h * size / 2f
+        for (c in p.cells) {
+            canvas.save()
+            canvas.translate(left + (c[0] + 0.5f) * size, base - (c[1] + 0.5f) * size)
+            drawCell(canvas, size / 2f, p.kind.ordinal, if (held) 70 else 255)
+            canvas.restore()
         }
     }
 
@@ -447,14 +501,21 @@ class BigPileView @JvmOverloads constructor(
         }
     }
 
-    /** Les chutes encore permises : trois ronds sous la réserve, à droite. */
+    /** Les chutes encore permises : trois ronds sous la réserve, à droite (debout seulement). */
     private fun drawLives(canvas: Canvas, w: Float) {
-        val r = 5f * dp
+        if (landscape) return
         val y = sy(game.gridTop) + 14f * dp
-        for (i in 0 until BigPileRules.LIVES) {
-            val x = w - 14f * dp - i * 16f * dp
-            if (i < game.lives) canvas.drawCircle(x, y, r, pLife) else canvas.drawCircle(x, y, r, pLifeLost)
-        }
+        for (i in 0 until BigPileRules.LIVES) drawLife(canvas, i, w - 14f * dp - i * 16f * dp, y)
+    }
+
+    /** Les trois ronds de vie, centrés sur ([centreX], [y]) : pour la bulle. */
+    fun drawLivesRow(canvas: Canvas, centreX: Float, y: Float) {
+        for (i in 0 until BigPileRules.LIVES) drawLife(canvas, i, centreX + (1 - i) * 22f * dp, y)
+    }
+
+    private fun drawLife(canvas: Canvas, i: Int, x: Float, y: Float) {
+        val r = if (landscape) 7f * dp else 5f * dp
+        canvas.drawCircle(x, y, r, if (i < game.lives) pLife else pLifeLost)
     }
 
     private fun darken(color: Int): Int {
