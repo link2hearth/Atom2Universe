@@ -3,12 +3,11 @@ package com.Atom2Universe.app.games.colorstack
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
+import android.graphics.drawable.GradientDrawable
 import android.widget.ImageButton
-import android.widget.Spinner
 import android.widget.TextView
+import androidx.core.content.ContextCompat
+import com.Atom2Universe.app.AppearanceStyle
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.LocaleHelper
 import com.Atom2Universe.app.R
@@ -24,6 +23,7 @@ class ColorStackActivity : ThemedActivity(), ColorStackView.OnMoveListener {
     companion object {
         private const val PREFS_NAME = "color_stack_save"
         private const val KEY_SAVE = "save_json"
+        private const val WON_COLOR = 0xFF22C55E.toInt()
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -32,12 +32,10 @@ class ColorStackActivity : ThemedActivity(), ColorStackView.OnMoveListener {
 
     private lateinit var colorStackView: ColorStackView
     private lateinit var movesText: TextView
-    private lateinit var statusText: TextView
-    private lateinit var difficultySpinner: Spinner
+    private lateinit var levelButtons: List<Pair<ColorStackGame.Difficulty, ImageButton>>
 
     private val game = ColorStackGame()
     private lateinit var prefs: SharedPreferences
-    private var ignoreSpinnerChange = false
 
     private var hardGameStartMs = 0L
     private var hardElapsedMs = 0L
@@ -67,16 +65,22 @@ class ColorStackActivity : ThemedActivity(), ColorStackView.OnMoveListener {
 
         colorStackView = findViewById(R.id.color_stack_game_view)
         movesText = findViewById(R.id.color_stack_moves)
-        statusText = findViewById(R.id.color_stack_status)
-        difficultySpinner = findViewById(R.id.color_stack_difficulty_spinner)
+        levelButtons = listOf(
+            ColorStackGame.Difficulty.EASY to findViewById(R.id.color_stack_level_easy),
+            ColorStackGame.Difficulty.MEDIUM to findViewById(R.id.color_stack_level_medium),
+            ColorStackGame.Difficulty.HARD to findViewById(R.id.color_stack_level_hard)
+        )
+        for ((diff, button) in levelButtons) {
+            button.setOnClickListener { if (diff != game.difficulty) startNewGame(diff) }
+        }
 
         findViewById<ImageButton>(R.id.color_stack_back_button).setOnClickListener { finish() }
         findViewById<ImageButton>(R.id.color_stack_info_button).setOnClickListener {
             showGameRules(R.string.color_stack_title, R.string.color_stack_rules)
         }
         findViewById<TextView>(R.id.color_stack_btn_new).setOnClickListener { startNewGame(game.difficulty) }
-        findViewById<TextView>(R.id.color_stack_btn_restart).setOnClickListener { restartGame() }
-        findViewById<TextView>(R.id.color_stack_btn_undo).setOnClickListener { undoMove() }
+        findViewById<ImageButton>(R.id.color_stack_btn_restart).setOnClickListener { restartGame() }
+        findViewById<ImageButton>(R.id.color_stack_btn_undo).setOnClickListener { undoMove() }
 
         colorStackView.game = game
         colorStackView.listener = this
@@ -88,14 +92,9 @@ class ColorStackActivity : ThemedActivity(), ColorStackView.OnMoveListener {
             timerKnown = true
         }
 
-        ignoreSpinnerChange = true
-        setupSpinner()
-        syncSpinnerToDifficulty()
-        ignoreSpinnerChange = false
-
+        syncLevelButtons()
         colorStackView.refresh()
         updateUI()
-        if (!restored) statusText.text = getString(R.string.color_stack_status_new)
     }
 
     override fun onPause() {
@@ -104,48 +103,28 @@ class ColorStackActivity : ThemedActivity(), ColorStackView.OnMoveListener {
         saveGame()
     }
 
-    private fun setupSpinner() {
-        val labels = listOf(
-            getString(R.string.color_stack_difficulty_easy),
-            getString(R.string.color_stack_difficulty_medium),
-            getString(R.string.color_stack_difficulty_hard)
-        )
-        val adapter = ArrayAdapter(this, com.Atom2Universe.app.R.layout.item_spinner_selected, labels)
-        adapter.setDropDownViewResource(com.Atom2Universe.app.R.layout.item_spinner_dropdown)
-        difficultySpinner.adapter = adapter
-
-        difficultySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                if (ignoreSpinnerChange) return
-                val diff = when (position) {
-                    0 -> ColorStackGame.Difficulty.EASY
-                    1 -> ColorStackGame.Difficulty.MEDIUM
-                    else -> ColorStackGame.Difficulty.HARD
-                }
-                if (diff != game.difficulty) startNewGame(diff)
-            }
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
+    /** Le niveau en cours est plein (barres sur l'accent), les deux autres restent discrets. */
+    private fun syncLevelButtons() {
+        val accent = AppearanceStyle.color(this, R.attr.a2uMusicAccent)
+        val onAccent = ContextCompat.getColor(this, R.color.audio_on_accent)
+        val text = ContextCompat.getColor(this, R.color.startup_text_primary)
+        val radius = 10f * resources.displayMetrics.density
+        for ((diff, button) in levelButtons) {
+            val current = diff == game.difficulty
+            button.setImageDrawable(LevelBarsDrawable(diff.ordinal + 1, if (current) onAccent else text))
+            button.background = if (current) GradientDrawable().apply {
+                cornerRadius = radius
+                setColor(accent)
+            } else null
         }
-    }
-
-    private fun syncSpinnerToDifficulty() {
-        val pos = when (game.difficulty) {
-            ColorStackGame.Difficulty.EASY -> 0
-            ColorStackGame.Difficulty.MEDIUM -> 1
-            ColorStackGame.Difficulty.HARD -> 2
-        }
-        difficultySpinner.setSelection(pos, false)
     }
 
     private fun startNewGame(diff: ColorStackGame.Difficulty) {
         game.newGame(diff)
         colorStackView.game = game
         colorStackView.refresh()
-        ignoreSpinnerChange = true
-        syncSpinnerToDifficulty()
-        ignoreSpinnerChange = false
+        syncLevelButtons()
         updateUI()
-        statusText.text = getString(R.string.color_stack_status_new)
         victoryRecorded = false
         hardElapsedMs = 0L
         timerKnown = true
@@ -158,7 +137,6 @@ class ColorStackActivity : ThemedActivity(), ColorStackView.OnMoveListener {
         game.restart()
         colorStackView.refresh()
         updateUI()
-        statusText.text = getString(R.string.color_stack_status_restarted)
         saveGame()
     }
 
@@ -181,7 +159,6 @@ class ColorStackActivity : ThemedActivity(), ColorStackView.OnMoveListener {
         colorStackView.refresh()
         updateUI()
         if (game.solved) {
-            statusText.text = getString(R.string.color_stack_status_won)
             if (!victoryRecorded) {
                 checkpointTimer()
                 victoryRecorded = true
@@ -199,8 +176,13 @@ class ColorStackActivity : ThemedActivity(), ColorStackView.OnMoveListener {
     override fun onColumnSelected(col: Int?) {}
 
     private fun updateUI() {
-        movesText.text = getString(R.string.color_stack_moves, game.moves)
-        if (game.solved) statusText.text = getString(R.string.color_stack_status_won)
+        // Victoire : le compteur de coups passe au vert, précédé de 🎉.
+        movesText.text = getString(
+            if (game.solved) R.string.color_stack_moves_won else R.string.color_stack_moves, game.moves
+        )
+        movesText.setTextColor(
+            if (game.solved) WON_COLOR else ContextCompat.getColor(this, R.color.startup_text_secondary)
+        )
     }
 
     private fun saveGame() {

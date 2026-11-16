@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Color Stack (jetons) : tout tient dans la bannière, debout comme couché. À gauche : retour et
+     coups ; à droite : les trois niveaux (barres), Nouveau, recommencer, annuler, règles. Le jeu
+     prend tout le reste et y fait tenir ses colonnes. -->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/a2uScreenBackground">
 
-    <!-- En-tête : comme le Sudoku et les éprouvettes -->
     <LinearLayout
         android:id="@+id/color_stack_header"
         android:layout_width="match_parent"
@@ -13,7 +15,8 @@
         android:background="?attr/a2uPanelBackground"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="12dp"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="6dp"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
@@ -26,147 +29,114 @@
             android:tint="@color/audio_text_primary" />
 
         <TextView
+            android:id="@+id/color_stack_moves"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
+            android:layout_marginStart="8dp"
             android:layout_weight="1"
-            android:text="@string/color_stack_menu_tokens"
-            android:textColor="@color/startup_text_primary"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/color_stack_moves"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:ellipsize="end"
             android:fontFamily="monospace"
+            android:maxLines="1"
             android:text="@string/color_stack_moves_zero"
             android:textColor="@color/startup_text_secondary"
-            android:textSize="16sp" />
+            android:textSize="18sp" />
 
-        <ImageButton
-            android:id="@+id/color_stack_info_button"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginStart="4dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/kit_rules"
-            android:padding="10dp"
-            android:src="@drawable/ic_info"
-        android:tint="?attr/a2uMusicAccent" />
-    </LinearLayout>
-
-    <!-- Barre d'options : difficulté et nouvelle partie -->
-    <LinearLayout
-        android:id="@+id/color_stack_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/sudoku_grid_background"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="8dp"
-        app:layout_constraintTop_toBottomOf="@id/color_stack_header">
-
-        <com.Atom2Universe.app.util.ImmersiveSpinner
-            android:id="@+id/color_stack_difficulty_spinner"
+        <!-- Niveaux : une, deux ou trois barres -->
+        <LinearLayout
+            android:id="@+id/color_stack_levels"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="44dp"
             android:background="?attr/a2uChipBackground"
-            android:minWidth="100dp"
-            android:padding="8dp"
-            android:popupBackground="?attr/a2uPopupBackground" />
+            android:orientation="horizontal"
+            android:padding="3dp">
+
+            <ImageButton
+                android:id="@+id/color_stack_level_easy"
+                android:layout_width="42dp"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:contentDescription="@string/color_stack_difficulty_easy"
+                android:padding="8dp"
+                android:scaleType="fitCenter" />
+
+            <ImageButton
+                android:id="@+id/color_stack_level_medium"
+                android:layout_width="42dp"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:contentDescription="@string/color_stack_difficulty_medium"
+                android:padding="8dp"
+                android:scaleType="fitCenter" />
+
+            <ImageButton
+                android:id="@+id/color_stack_level_hard"
+                android:layout_width="42dp"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:contentDescription="@string/color_stack_difficulty_hard"
+                android:padding="8dp"
+                android:scaleType="fitCenter" />
+        </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/color_stack_btn_new"
             style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="48dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="8dp"
-            android:contentDescription="@string/color_stack_btn_new"
-            android:insetLeft="0dp"
-            android:insetRight="0dp"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:layout_marginStart="10dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
             android:minWidth="0dp"
-            android:padding="0dp"
-            app:backgroundTint="?attr/a2uMusicAccent"
-            app:icon="@drawable/ic_refresh"
-            app:iconGravity="textStart"
-            app:iconPadding="0dp"
-            app:iconSize="24dp"
-            app:iconTint="@color/audio_on_accent" />
+            android:paddingHorizontal="14dp"
+            android:text="@string/color_stack_btn_new"
+            android:textAllCaps="false"
+            android:textColor="@color/audio_on_accent"
+            android:textSize="16sp"
+            app:backgroundTint="?attr/a2uMusicAccent" />
+
+        <ImageButton
+            android:id="@+id/color_stack_btn_restart"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginStart="6dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/color_stack_btn_restart"
+            android:padding="9dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_restart"
+            android:tint="@color/startup_text_primary" />
+
+        <ImageButton
+            android:id="@+id/color_stack_btn_undo"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/color_stack_btn_undo"
+            android:padding="9dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_undo"
+            android:tint="@color/startup_text_primary" />
+
+        <ImageButton
+            android:id="@+id/color_stack_info_button"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/kit_rules"
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_info"
+            android:tint="?attr/a2uMusicAccent" />
     </LinearLayout>
 
-    <!-- Vue du jeu -->
+    <!-- Vue du jeu : les colonnes s'y ajustent à la largeur comme à la hauteur -->
     <com.Atom2Universe.app.games.colorstack.ColorStackView
         android:id="@+id/color_stack_game_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@id/color_stack_status"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/color_stack_toolbar" />
-
-    <!-- Message statut -->
-    <TextView
-        android:id="@+id/color_stack_status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:text=""
-        android:textColor="#22C55E"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@id/color_stack_buttons"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <!-- Actions : des icônes, comme le pavé du Sudoku -->
-    <LinearLayout
-        android:id="@+id/color_stack_buttons"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/sudoku_grid_background"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:padding="8dp"
-        app:layout_constraintBottom_toBottomOf="parent">
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/color_stack_btn_restart"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_marginHorizontal="4dp"
-            android:layout_weight="1"
-            android:contentDescription="@string/color_stack_btn_restart"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            app:backgroundTint="@color/sudoku_pad_button_background"
-            app:icon="@drawable/ic_restart"
-            app:iconGravity="textStart"
-            app:iconPadding="0dp"
-            app:iconSize="24dp"
-            app:iconTint="@color/startup_text_primary"
-            app:strokeColor="?attr/a2uOutlineColor" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/color_stack_btn_undo"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_marginHorizontal="4dp"
-            android:layout_weight="1"
-            android:contentDescription="@string/color_stack_btn_undo"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            app:backgroundTint="@color/sudoku_pad_button_background"
-            app:icon="@drawable/ic_undo"
-            app:iconGravity="textStart"
-            app:iconPadding="0dp"
-            app:iconSize="24dp"
-            app:iconTint="@color/startup_text_primary"
-            app:strokeColor="?attr/a2uOutlineColor" />
-    </LinearLayout>
+        app:layout_constraintTop_toBottomOf="@id/color_stack_header" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

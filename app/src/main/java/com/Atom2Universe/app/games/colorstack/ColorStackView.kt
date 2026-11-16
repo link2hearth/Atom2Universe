@@ -72,6 +72,36 @@ class ColorStackView @JvmOverloads constructor(
         setMeasuredDimension(w, h)
     }
 
+    // Géométrie des colonnes, recalculée à chaque dessin : jetons carrés aussi grands que possible
+    // sans déborder ni en largeur ni en hauteur, colonnes centrées (couché, la hauteur décide).
+    private var colW = 0f
+    private var colGap = 0f
+    private var colsLeft = 0f
+    private var colTop = 0f
+    private var slotH = 0f
+    private val tokenPadH = 3f * density
+    private val tokenPadV = 1.5f * density
+
+    private fun computeGeometry(g: ColorStackGame) {
+        val cols = g.columnCount
+        val cap = g.effectiveCapacity
+        val padH = 10f * density
+        val padV = 10f * density
+        val minGap = 5f * density
+        val byWidth = (width - 2f * padH - (cols - 1) * minGap) / cols
+        val byHeight = (height - 2f * padV) / cap - 2f * tokenPadV + 2f * tokenPadH
+        colW = minOf(byWidth, byHeight).coerceAtLeast(1f)
+        // Place en trop sur les côtés : on aère un peu les colonnes, sans les disperser.
+        val spare = width - 2f * padH - cols * colW
+        colGap = if (cols > 1) (spare / (cols - 1)).coerceIn(minGap, colW * 0.35f) else 0f
+        val total = cols * colW + (cols - 1) * colGap
+        colsLeft = (width - total) / 2f
+        slotH = colW - 2f * tokenPadH + 2f * tokenPadV
+        colTop = (height - slotH * cap) / 2f
+    }
+
+    private fun colLeftOf(ci: Int) = colsLeft + ci * (colW + colGap)
+
     private val bgPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.FILL }
     private val tokenPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.FILL }
     private val strokePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -96,25 +126,13 @@ class ColorStackView @JvmOverloads constructor(
         val cols = g.columnCount
         if (cols == 0 || width == 0 || height == 0) return
 
-        val padH = 10f * density
-        8f * density
-        val colGap = 5f * density
-        val tokenPadH = 3f * density
-        val tokenPadV = 1.5f * density
-        val colCorner = 8f * density
-        val tokenCorner = 5f * density
-
-        val colW = (width - 2f * padH - (cols - 1) * colGap) / cols
-        // Jetons carrés : hauteur du slot = largeur du token + marges verticales
-        val tokenSize = colW - 2f * tokenPadH
-        val slotH = tokenSize + 2f * tokenPadV
-        val colH = slotH * g.effectiveCapacity
-        // Colonnes centrées verticalement
-        val colTop = (height - colH) / 2f
-        val colBot = colTop + colH
+        computeGeometry(g)
+        val colCorner = (colW * 0.1f).coerceIn(8f * density, 16f * density)
+        val tokenCorner = (colW * 0.08f).coerceIn(5f * density, 12f * density)
+        val colBot = colTop + slotH * g.effectiveCapacity
 
         for (ci in 0 until cols) {
-            val colLeft = padH + ci * (colW + colGap)
+            val colLeft = colLeftOf(ci)
             val colRight = colLeft + colW
 
             val isSelected = selectedColumn == ci
@@ -188,12 +206,13 @@ class ColorStackView @JvmOverloads constructor(
     private fun columnAt(x: Float): Int? {
         val g = game ?: return null
         val cols = g.columnCount
-        val padH = 10f * density
-        val colGap = 5f * density
-        val colW = (width - 2f * padH - (cols - 1) * colGap) / cols
+        if (cols == 0) return null
+        computeGeometry(g)
+        // Une touche entre deux colonnes compte pour la plus proche.
+        val half = colGap / 2f
         return (0 until cols).firstOrNull { ci ->
-            val left = padH + ci * (colW + colGap)
-            x >= left && x <= left + colW
+            val left = colLeftOf(ci)
+            x >= left - half && x <= left + colW + half
         }
     }
 

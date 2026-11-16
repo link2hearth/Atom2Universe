@@ -9,12 +9,10 @@
     <string name="color_stack_difficulty_hard">Difficile</string>
     <string name="color_stack_moves">Coups : %1$d</string>
     <string name="color_stack_moves_zero">Coups : 0</string>
+    <string name="color_stack_moves_won">🎉 %1$d coups</string>
     <string name="color_stack_btn_new">Nouveau</string>
     <string name="color_stack_btn_restart">Recommencer</string>
     <string name="color_stack_btn_undo">Annuler</string>
-    <string name="color_stack_status_new">Nouvelle partie</string>
-    <string name="color_stack_status_restarted">Partie réinitialisée</string>
-    <string name="color_stack_status_won">🎉 Félicitations !</string>
     <string name="color_stack_new_game">Nouvelle partie</string>
     <string name="color_stack_widget_cancel">✕ Annuler</string>
 </resources>
