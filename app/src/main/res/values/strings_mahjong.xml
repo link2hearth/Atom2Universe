@@ -49,40 +49,16 @@
     <string name="mj_undo">Undo</string>
     <string name="mj_hint">Hint</string>
     <string name="mj_preparing">Preparing your puzzle…</string>
-    <string name="mj_thinking">Finding a winning move…</string>
-    <string name="mj_hint_limit">No reliable hint for this position. Try undoing a move or shuffling.</string>
     <string name="mj_prepare_failed">The puzzle could not be prepared. Please try again.</string>
     <string name="mj_shuffle">Shuffle</string>
     <string name="mj_undo_done">Back one move. Try another path.</string>
-    <string name="mj_hint_done">Follow the golden outline.</string>
     <string name="mj_shuffle_done">Fresh possibilities. Your score is safe.</string>
     <string name="mj_match_good">Beautiful match!</string>
-    <string name="mj_blocked">Clear the tiles above; in Solitaire, also free one side.</string>
-    <string name="mj_tray_full">Tray full? Undo or shuffle for free to make room.</string>
-    <string name="mj_pair_miss">Try another pair.</string>
-    <string name="mj_stuck">No move found. Try Undo or Shuffle.</string>
-    <string name="mj_difficulty">Difficulty for new free-play boards</string>
-    <string name="mj_difficulty_normal">Normal</string>
+    <string name="mj_difficulty_normal">Easy</string>
     <string name="mj_difficulty_hard">Hard</string>
-    <string name="mj_difficulty_note">Current boards stay as they are. New applies your choice.</string>
     <string name="mj_new_short">New</string>
-    <string name="mj_classic_rule">Choose the copies that uncover the right tiles.</string>
-    <string name="mj_triple_rule">Plan your incomplete sets before filling the tray.</string>
-    <string name="mj_connect_rule">Choose partners that open the right passage.</string>
-    <string name="mj_cascade_rule">Predict where the next fall will leave the tiles.</string>
-    <string name="mj_slide_rule">Keep useful stoppers: matching order matters.</string>
-    <string name="mj_slide_focus_rule">Keep this tile until it matches; switching cancels its attempt.</string>
-    <string name="mj_slide_focus_hint">Select the gold tile; the previous attempt will return to its origin.</string>
-    <string name="mj_ten_rule">Make ten while opening crossing rows and columns.</string>
-    <string name="mj_tray_status">Tray %1$d / 7 · three identical tiles free up space.</string>
-    <string name="mj_cascade_status">Next fall: %1$s · at most two turns.</string>
     <string-array name="mj_gravity_directions"><item>↓ down</item><item>← left</item><item>↑ up</item><item>→ right</item></string-array>
-    <string name="mj_slide_hint">Follow the arrow: the gold tile slides all the way to its stop.</string>
-    <string name="mj_slide_blocked">That direction is blocked. The tile must slide all the way to its stop.</string>
     <string name="mj_ice_migration">Your board has been adapted to ice. Score and remaining tiles are preserved; the old undo history has been cleared.</string>
-    <string name="mj_path_miss">Use identical tiles and a clear path with at most two turns.</string>
-    <string name="mj_ten_miss">The numbers must add to 10 on a clear straight line.</string>
-    <string name="mj_slide_miss">Line up two identical tiles with no obstacle between them.</string>
     <string name="mj_score">%1$d points</string>
     <string name="mj_remaining">%1$d / %2$d tiles</string>
     <string name="mj_combo">Flow ×%1$d · bonus points!</string>
@@ -148,8 +124,6 @@
     <string name="mj_run_bonus">Star game · ×2 pearl reward</string>
     <string name="mj_reward_breakdown">Combos: +%1$d ◈ · game ×%2$d · gift +%3$d ◈</string>
     <string name="mj_reward_daily_bonus">Daily gift: +40 ◈</string>
-    <string name="mj_mode_bonus_title">%1$s · ◈ ×2</string>
-    <string name="mj_customize_action">Choose / unlock my designs ›</string>
     <string name="mj_textures">Textures</string>
     <string name="mj_porcelains">Porcelain</string>
     <string name="mj_next_texture_price">Next texture · %1$d pearls</string>
@@ -185,4 +159,6 @@
         <item>Apricot silk</item>
         <item>Sunset sandstone</item>
     </string-array>
+    <string name="mj_bonus_badge" translatable="false">◈ ×2</string>
+    <string-array name="mj_gravity_arrows" translatable="false"><item>↓</item><item>←</item><item>↑</item><item>→</item></string-array>
 </resources>

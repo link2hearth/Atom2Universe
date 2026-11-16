@@ -65,7 +65,7 @@ class MahjongActivity : ThemedActivity() {
     private lateinit var scoreLabel: TextView
     private lateinit var remainingLabel: TextView
     private lateinit var comboLabel: TextView
-    private lateinit var ruleLabel: TextView
+    private lateinit var gravityLabel: TextView
     private lateinit var undoButton: View
     private lateinit var shuffleButton: View
     private lateinit var progress: ProgressBar
@@ -78,8 +78,6 @@ class MahjongActivity : ThemedActivity() {
         R.string.mj_cascade,R.string.mj_slide,R.string.mj_ten)
     private val descriptions = intArrayOf(R.string.mj_classic_desc,R.string.mj_triple_desc,R.string.mj_connect_desc,
         R.string.mj_cascade_desc,R.string.mj_slide_desc,R.string.mj_ten_desc)
-    private val ruleSummaries = intArrayOf(R.string.mj_classic_rule,R.string.mj_triple_rule,R.string.mj_connect_rule,
-        R.string.mj_cascade_rule,R.string.mj_slide_rule,R.string.mj_ten_rule)
     private val styleNames get() = resources.getStringArray(R.array.mj_porcelain_names)
     private val textureNames get() = resources.getStringArray(R.array.mj_texture_names)
 
@@ -178,59 +176,82 @@ class MahjongActivity : ThemedActivity() {
     private fun showMenu() {
         save(); releaseBoard(); run=null; screen="menu"; dialog?.dismiss(); dialog=null
         val root=root(); setContentView(root)
-        root.full(header(getString(R.string.mj_title),{ finish() },
-            icon(MahjongIcon.SETTINGS,R.string.mj_settings) { settings() }) { gardenHelp() },0)
+        root.full(menuBanner(),0)
         val scroll=ScrollView(this).apply { isFillViewport=true; clipToPadding=false }
         val body=column().apply { setPadding(0,dp(4),0,dp(8)) }
         scroll.addView(body); root.addView(scroll,LinearLayout.LayoutParams(-1,0,1f))
-        val collection=LinearLayout(this).apply {
-            gravity=Gravity.CENTER_VERTICAL; background=panel(); setPadding(dp(8),dp(3),dp(8),dp(3))
-            contentDescription=getString(R.string.mj_collection); isClickable=true; isFocusable=true
-            setOnClickListener { openCollection() }
-        }
-        collection.addView(object:View(this) {
-            private val art=MahjongArt(this@MahjongActivity)
-            override fun onDraw(c:Canvas) {
-                val w=height*.43f; val h=w*1.24f
-                for(i in 0..2) {
-                    val x=width*.5f+(i-1)*w*.48f-w/2
-                    c.save(); c.rotate((i-1)*14f,x+w/2,height*.47f)
-                    art.tile(c,x,height*.11f,w,h,i*12,accent,style=store.style,texture=(store.texture+i)%MahjongStyles.COUNT); c.restore()
-                }
-            }
-        },LinearLayout.LayoutParams(dp(94),dp(76)))
-        val counter=column()
-        counter.addView(label(getString(R.string.mj_collection_short),16f).apply { setTypeface(typeface,Typeface.BOLD) })
-        counter.addView(label(getString(R.string.mj_customize_action),13f,accent))
-        collection.addView(counter,LinearLayout.LayoutParams(0,-2,1f))
-        collection.addView(label(getString(R.string.mj_pearl_count,store.pearls),19f,ink).apply {
-            contentDescription=getString(R.string.mj_profile,store.wins,store.pearls)
-        })
-        body.full(collection,4)
-        body.full(collectionProgress(),6)
-        body.full(MahjongGiftMeter(this,store.wins),2,dp(32))
+        // Les étoiles du prochain coffre et le bonus du jour, sur une seule ligne.
         val today=LocalDate.now().toEpochDay()
-        body.full(label(if(MahjongCollection.isWeekend(today)) getString(R.string.mj_weekend_bonus)
+        val news=LinearLayout(this).apply { gravity=Gravity.CENTER }
+        news.addView(MahjongGiftMeter(this,store.wins),LinearLayout.LayoutParams(dp(150),dp(30)))
+        news.addView(label(if(MahjongCollection.isWeekend(today)) getString(R.string.mj_weekend_bonus)
             else getString(R.string.mj_featured_bonus,getString(modeTitles[MahjongCollection.featuredMode(today).ordinal])),14f,accent).apply {
-            gravity=Gravity.CENTER; setTypeface(typeface,Typeface.BOLD)
-        },4)
-        body.full(label(getString(R.string.mj_difficulty),14f).apply { setTypeface(typeface,Typeface.BOLD) },8)
-        val difficultyChoices=LinearLayout(this)
-        listOf(R.string.mj_difficulty_normal,R.string.mj_difficulty_hard).forEachIndexed { level,title ->
-            difficultyChoices.addView(label(getString(title),14f).apply {
-                gravity=Gravity.CENTER; tag="difficulty:$level"
-                isSelected=store.difficulty==level; isClickable=true; isFocusable=true
-                background=panel(if(isSelected) MahjongArt.mix(surface,accent,.25f) else surface)
-                setOnClickListener { store.setDifficulty(level); showMenu() }
-            },LinearLayout.LayoutParams(0,dp(48),1f).apply { marginStart=dp(3); marginEnd=dp(3) })
-        }
-        body.full(difficultyChoices,3)
-        body.full(label(getString(R.string.mj_difficulty_note),12f,muted),0)
+            setTypeface(typeface,Typeface.BOLD); maxLines=1; ellipsize=android.text.TextUtils.TruncateAt.END
+        },LinearLayout.LayoutParams(-2,-2).apply { marginStart=dp(10) })
+        body.full(news,2)
         val cards=MahjongMode.entries.map { mode -> modeCard(mode.ordinal,mode.name,modeTitles[mode.ordinal]) }
             .toMutableList<View>()
         cards+=modeCard(6,"journey",R.string.mj_journey_short)
         cards+=modeCard(7,"daily",R.string.mj_daily_short)
-        addGrid(body,cards,if(resources.configuration.screenWidthDp>=700) 4 else if(resources.configuration.orientation==Configuration.ORIENTATION_LANDSCAPE) 3 else 2)
+        addGrid(body,cards,if(resources.configuration.orientation==Configuration.ORIENTATION_LANDSCAPE) { if(resources.configuration.screenWidthDp>=700) 4 else 3 } else 2)
+    }
+
+    /**
+     * Bannière du jardin : retour, titre, puis la collection (trois tuiles, perles et une fine
+     * jauge vers le prochain visuel), la difficulté en barres, réglages et règles.
+     */
+    private fun menuBanner()=LinearLayout(this).apply {
+        gravity=Gravity.CENTER_VERTICAL
+        addView(icon(MahjongIcon.BACK,R.string.mj_back) { finish() },LinearLayout.LayoutParams(dp(48),dp(48)))
+        addView(label(getString(R.string.mj_title),21f).apply {
+            setTypeface(typeface,Typeface.BOLD); maxLines=1; ellipsize=android.text.TextUtils.TruncateAt.END
+            setPadding(dp(10),0,dp(6),0)
+        },LinearLayout.LayoutParams(0,-2,1f))
+        addView(collectionChip(),LinearLayout.LayoutParams(-2,dp(48)).apply { marginEnd=dp(8) })
+        addView(difficultyChoice(),LinearLayout.LayoutParams(-2,dp(48)).apply { marginEnd=dp(8) })
+        addView(icon(MahjongIcon.SETTINGS,R.string.mj_settings) { settings() },LinearLayout.LayoutParams(dp(48),dp(48)).apply { marginEnd=dp(5) })
+        addView(icon(MahjongIcon.INFO,R.string.kit_rules) { gardenHelp() },LinearLayout.LayoutParams(dp(48),dp(48)))
+    }
+
+    private fun collectionChip():View {
+        val owned=store.unlockedTextures
+        val price=store.nextTexturePrice
+        val chip=LinearLayout(this).apply {
+            orientation=LinearLayout.VERTICAL; gravity=Gravity.CENTER; background=panel()
+            setPadding(dp(8),dp(2),dp(12),dp(4)); isClickable=true; isFocusable=true
+            contentDescription=getString(R.string.mj_collection)
+            setOnClickListener { openCollection() }
+        }
+        val line=LinearLayout(this).apply { gravity=Gravity.CENTER_VERTICAL }
+        line.addView(object:View(this) {
+            private val art=MahjongArt(this@MahjongActivity)
+            override fun onDraw(c:Canvas) {
+                val w=height*.5f; val h=w*1.24f
+                for(i in 0..2) {
+                    val x=width*.5f+(i-1)*w*.48f-w/2
+                    c.save(); c.rotate((i-1)*14f,x+w/2,height*.5f)
+                    art.tile(c,x,height*.5f-h/2,w,h,i*12,accent,style=store.style,texture=(store.texture+i)%MahjongStyles.COUNT); c.restore()
+                }
+            }
+        },LinearLayout.LayoutParams(dp(46),dp(34)))
+        line.addView(label(getString(R.string.mj_pearl_count,store.pearls),17f).apply {
+            setTypeface(typeface,Typeface.BOLD); contentDescription=getString(R.string.mj_profile,store.wins,store.pearls)
+        })
+        chip.addView(line)
+        if(owned.size<MahjongStyles.COUNT) chip.addView(ProgressBar(this,null,android.R.attr.progressBarStyleHorizontal).apply {
+            max=price; progress=store.pearls.coerceAtMost(price)
+            progressTintList=android.content.res.ColorStateList.valueOf(accent)
+            progressBackgroundTintList=android.content.res.ColorStateList.valueOf(MahjongArt.mix(surface,accent,.15f))
+            importantForAccessibility=View.IMPORTANT_FOR_ACCESSIBILITY_NO
+        },LinearLayout.LayoutParams(-1,dp(3)))
+        return chip
+    }
+
+    /** Facile ou Difficile : une touche bascule ; le choix vaut pour les prochains plateaux. */
+    private fun difficultyChoice()=label(getString(if(store.difficulty==1) R.string.mj_difficulty_hard else R.string.mj_difficulty_normal),16f).apply {
+        setTypeface(typeface,Typeface.BOLD); gravity=Gravity.CENTER; setPadding(dp(16),0,dp(16),0)
+        background=panel(); tag="difficulty"; isClickable=true; isFocusable=true
+        setOnClickListener { store.setDifficulty(1-store.difficulty); showMenu() }
     }
 
     private fun modeCard(index:Int,slot:String,title:Int):View {
@@ -355,20 +376,13 @@ class MahjongActivity : ThemedActivity() {
             }
             if(show) {
                 target.showHint(suggestion.ids,suggestion.slide)
-                ruleLabel.text=getString(if(suggestion.limited) R.string.mj_hint_limit
-                    else if(suggestion.ids.isEmpty()) R.string.mj_stuck
-                    else if(current.game.mode==MahjongMode.SLIDE && suggestion.ids.size==1)
-                        if(suggestion.slide!=null) R.string.mj_slide_hint else R.string.mj_slide_focus_hint
-                    else R.string.mj_hint_done)
+                if(suggestion.limited) { pulse(undoButton); pulse(shuffleButton) }
             }
             if(suggestion.ids.isEmpty() && !suggestion.limited) pulse(shuffleButton)
         }
         cachedHint?.takeIf { cachedHintState==state }?.let { deliver(it); return }
-        if(show) ruleLabel.setText(R.string.mj_thinking)
         val copy=copyGame(current.game)
-        hintTask=compute({ Hint(copy.hint(),copy.slideHint(),copy.hintSearchLimited,copy.solutionSteps.toList()) },::deliver,{
-            if(revision==hintRevision && board===target) ruleLabel.text=ruleText(current.game)
-        })
+        hintTask=compute({ Hint(copy.hint(),copy.slideHint(),copy.hintSearchLimited,copy.solutionSteps.toList()) },::deliver,{})
     }
 
     private fun shuffleBoard() {
@@ -379,7 +393,6 @@ class MahjongActivity : ThemedActivity() {
         val revision=++boardRevision
         val copy=copyGame(current.game,history=true)
         setBoardBusy(true)
-        ruleLabel.setText(R.string.mj_preparing)
         boardTask=compute({ copy.shuffle(); copy },{ shuffled ->
             if(revision==boardRevision && run===current && board===target) {
                 current.game.restore(shuffled.snapshot())
@@ -405,49 +418,61 @@ class MahjongActivity : ThemedActivity() {
         val current=run ?: return
         releaseBoard(); screen="board"
         val root=root(); setContentView(root)
-        val modeTitle=getString(modeTitles[current.game.mode.ordinal])
-        root.full(header(if(current.bonusMultiplier==2) getString(R.string.mj_mode_bonus_title,modeTitle) else modeTitle,{ showMenu() },
-            toolButton(MahjongIcon.COLLECTION,R.string.mj_textures) { openCollection() }.apply { contentDescription=getString(R.string.mj_collection) }) { modeHelp(current.game.mode) },0)
-        val hud=LinearLayout(this).apply { gravity=Gravity.CENTER_VERTICAL; setPadding(dp(6),dp(4),dp(6),dp(2)) }
-        scoreLabel=label("",21f).apply { setTypeface(typeface,Typeface.BOLD) }
-        comboLabel=label("",23f,0xffc27417.toInt()).apply { gravity=Gravity.CENTER; setTypeface(typeface,Typeface.BOLD) }
-        remainingLabel=label("",14f,muted).apply { gravity=Gravity.END }
-        hud.addView(scoreLabel,LinearLayout.LayoutParams(0,-2,1f))
-        hud.addView(comboLabel,LinearLayout.LayoutParams(0,-2,1f))
-        hud.addView(remainingLabel,LinearLayout.LayoutParams(0,-2,1f))
-        root.full(hud,3)
-        ruleLabel=label(getString(ruleSummaries[current.game.mode.ordinal]),12f,muted).apply {
-            gravity=Gravity.CENTER; maxLines=2
-            accessibilityLiveRegion=View.ACCESSIBILITY_LIVE_REGION_POLITE
-        }
-        if(resources.configuration.orientation==Configuration.ORIENTATION_LANDSCAPE) {
-            hud.addView(ruleLabel,LinearLayout.LayoutParams(0,-2,3f))
-        } else root.full(ruleLabel,0)
+        root.full(boardBanner(current),0)
         progress=ProgressBar(this,null,android.R.attr.progressBarStyleHorizontal).apply {
             max=current.game.tiles.size; progressTintList=android.content.res.ColorStateList.valueOf(accent)
         }
-        root.full(progress,0,dp(4))
+        root.full(progress,2,dp(4))
         board=MahjongBoardView(this,current.game,accent,store.style,effects,prefs.getBoolean("haptics",true),store.texture).apply {
             onMove={ result -> if(run===current) this@MahjongActivity.onMove(result) }
+            onTurned={ if(run===current) updateHud() }
         }
         root.addView(board,LinearLayout.LayoutParams(-1,0,1f).apply { topMargin=dp(3) })
-        val controls=LinearLayout(this).apply { gravity=Gravity.CENTER }
-        boardControls=controls
-        undoButton=toolButton(MahjongIcon.UNDO,R.string.mj_undo) {
-            cancelHint()
-            if(!boardBusy && current.game.undo()) { board?.refresh(); updateHud(); saveSoon() }
-        }
-        val hint=toolButton(MahjongIcon.HINT,R.string.mj_hint) { requestHint(show=true) }
-        shuffleButton=toolButton(MahjongIcon.SHUFFLE,R.string.mj_shuffle) { shuffleBoard() }
-        val newBoard=toolButton(MahjongIcon.PLAY,R.string.mj_new_short) { replaceBoard() }
-        for(control in listOf(undoButton,hint,shuffleButton,newBoard)) controls.addView(control,
-            LinearLayout.LayoutParams(0,dp(58),1f).apply { marginStart=dp(4); marginEnd=dp(4) })
-        root.full(controls,5)
         if(current.iceMigration) {
             current.iceMigration=false
             Toast.makeText(this,R.string.mj_ice_migration,Toast.LENGTH_LONG).show()
         }
         displayedScore=current.game.score; updateHud(); save()
+    }
+
+    /**
+     * Bannière du plateau : retour, score, multiplicateur et tuiles restantes (avec la prochaine
+     * chute en Cascade) ; puis annuler, indice, mélanger, Nouveau, visuels et règles.
+     */
+    private fun boardBanner(current:MahjongSave.Saved)=LinearLayout(this).apply {
+        gravity=Gravity.CENTER_VERTICAL
+        addView(icon(MahjongIcon.BACK,R.string.mj_back) { showMenu() },LinearLayout.LayoutParams(dp(48),dp(48)))
+        scoreLabel=label("",21f).apply { setTypeface(typeface,Typeface.BOLD); setPadding(dp(12),0,dp(4),0) }
+        comboLabel=label("",21f,0xffc27417.toInt()).apply { setTypeface(typeface,Typeface.BOLD) }
+        remainingLabel=label("",15f,muted).apply { setPadding(dp(10),0,dp(4),0) }
+        gravityLabel=label("",26f,accent).apply { setTypeface(typeface,Typeface.BOLD); setPadding(dp(8),0,dp(4),0) }
+        addView(scoreLabel); addView(comboLabel); addView(remainingLabel)
+        if(current.game.mode==MahjongMode.CASCADE) addView(gravityLabel)
+        if(current.bonusMultiplier==2) addView(label(getString(R.string.mj_bonus_badge),15f,accent).apply {
+            setTypeface(typeface,Typeface.BOLD); setPadding(dp(10),0,dp(4),0)
+        })
+        addView(Space(this@MahjongActivity),LinearLayout.LayoutParams(0,0,1f))
+        val controls=LinearLayout(this@MahjongActivity).apply { gravity=Gravity.CENTER_VERTICAL }
+        boardControls=controls
+        undoButton=icon(MahjongIcon.UNDO,R.string.mj_undo) {
+            cancelHint()
+            if(!boardBusy && current.game.undo()) { board?.refresh(); updateHud(); saveSoon() }
+        }
+        val hint=icon(MahjongIcon.HINT,R.string.mj_hint) { requestHint(show=true) }
+        shuffleButton=icon(MahjongIcon.SHUFFLE,R.string.mj_shuffle) { shuffleBoard() }
+        for(control in listOf(undoButton,hint,shuffleButton)) controls.addView(control,
+            LinearLayout.LayoutParams(dp(48),dp(48)).apply { marginEnd=dp(5) })
+        controls.addView(label(getString(R.string.mj_new_short),16f,androidx.core.content.ContextCompat.getColor(this@MahjongActivity,R.color.audio_on_accent)).apply {
+            setTypeface(typeface,Typeface.BOLD); gravity=Gravity.CENTER; setPadding(dp(16),0,dp(16),0)
+            background=GradientDrawable().apply { setColor(accent); cornerRadius=AppearanceStyle.corner(this@MahjongActivity,20f) }
+            contentDescription=getString(R.string.mj_new_short)
+            isClickable=true; isFocusable=true
+            setOnClickListener { replaceBoard() }
+        },LinearLayout.LayoutParams(-2,dp(48)).apply { marginStart=dp(4); marginEnd=dp(10) })
+        addView(controls)
+        addView(icon(MahjongIcon.COLLECTION,R.string.mj_collection) { openCollection() },
+            LinearLayout.LayoutParams(dp(48),dp(48)).apply { marginEnd=dp(5) })
+        addView(icon(MahjongIcon.INFO,R.string.kit_rules) { modeHelp(current.game.mode) },LinearLayout.LayoutParams(dp(48),dp(48)))
     }
 
     private fun onMove(result:MahjongGame.Result) {
@@ -456,17 +481,6 @@ class MahjongActivity : ThemedActivity() {
         val matched=result==MahjongGame.Result.MATCHED
         if(matched && prefs.getBoolean("sound",true)) chimes?.play(current.game.combo)
         updateHud(matched)
-        ruleLabel.text=when(result) {
-            MahjongGame.Result.TRAY_FULL -> getString(R.string.mj_tray_full)
-            MahjongGame.Result.BLOCKED -> getString(if(current.game.mode==MahjongMode.SLIDE) R.string.mj_slide_blocked else R.string.mj_blocked)
-            MahjongGame.Result.MISMATCH -> getString(when(current.game.mode) {
-                MahjongMode.CONNECT, MahjongMode.CASCADE -> R.string.mj_path_miss
-                MahjongMode.TEN -> R.string.mj_ten_miss
-                MahjongMode.SLIDE -> R.string.mj_slide_miss
-                else -> R.string.mj_pair_miss
-            })
-            else -> ruleText(current.game)
-        }
         if(current.game.complete) {
             store.finish(current)
             // finish() has just written the completed run: a pending move save is obsolete.
@@ -523,15 +537,12 @@ class MahjongActivity : ThemedActivity() {
         progress.progress=current.tiles.size-current.remaining
         undoButton.isEnabled=!boardBusy && current.history.isNotEmpty() && !current.complete
         undoButton.alpha=if(undoButton.isEnabled) 1f else .4f
-        ruleLabel.text=ruleText(current)
-    }
-
-    private fun ruleText(game:MahjongGame):String=when(game.mode) {
-        MahjongMode.TRIPLE -> if(game.tray.size>=7) getString(R.string.mj_tray_full)
-            else getString(R.string.mj_tray_status,game.tray.size)
-        MahjongMode.CASCADE -> getString(R.string.mj_cascade_status,resources.getStringArray(R.array.mj_gravity_directions)[game.gravityDirection])
-        MahjongMode.SLIDE -> getString(if(game.selected==null) R.string.mj_slide_rule else R.string.mj_slide_focus_rule)
-        else -> getString(ruleSummaries[game.mode.ordinal])
+        if(current.mode==MahjongMode.CASCADE) {
+            // La flèche suit le plateau : couché, il a tourné d'un quart de tour.
+            val shown=if(board?.turned==true) (current.gravityDirection+3)%4 else current.gravityDirection
+            gravityLabel.text=resources.getStringArray(R.array.mj_gravity_arrows)[shown]
+            gravityLabel.contentDescription=resources.getStringArray(R.array.mj_gravity_directions)[shown]
+        }
     }
 
     private fun showReward() {
@@ -647,7 +658,7 @@ class MahjongActivity : ThemedActivity() {
             card.addView(mark,FrameLayout.LayoutParams(dp(30),dp(30),Gravity.TOP or Gravity.END))
             card
         }
-        addGrid(body,cards,if(resources.configuration.screenWidthDp>=700) 6 else if(resources.configuration.orientation==Configuration.ORIENTATION_LANDSCAPE) 5 else 3)
+        addGrid(body,cards,if(resources.configuration.orientation==Configuration.ORIENTATION_LANDSCAPE) { if(resources.configuration.screenWidthDp>=700) 6 else 5 } else if(resources.configuration.screenWidthDp>=600) 4 else 3)
     }
     private fun showStylePreview(id:Int,textures:Boolean) {
         val names=if(textures) textureNames else styleNames

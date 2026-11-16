@@ -45,11 +45,7 @@ class MahjongPuzzleActivityTest {
             assertTrue(tags.contains("mode:SLIDE"))
             assertFalse(tags.contains("mode:MEMORY"))
             assertEquals(1, MahjongStore(prefs).difficulty)
-            for (level in 0..1) assertTrue(tags.contains("difficulty:$level"))
-            assertFalse(tags.contains("difficulty:2"))
-
-            tagged(activity, "difficulty:1").performClick()
-            assertEquals(1, MahjongStore(prefs).difficulty)
+            assertTrue(tags.contains("difficulty"))
             mode(activity, "CLASSIC")
             val hard = board(activity).game
             assertTrue(hard.stage >= 4)
@@ -57,7 +53,7 @@ class MahjongPuzzleActivityTest {
             val runId = MahjongStore(prefs).load("CLASSIC")!!.id
 
             activity.onBackPressedDispatcher.onBackPressed()
-            tagged(activity, "difficulty:0").performClick()
+            tagged(activity, "difficulty").performClick()
             assertEquals(0, MahjongStore(prefs).difficulty)
             mode(activity, "CLASSIC")
             assertEquals(hard.stage, board(activity).game.stage)
@@ -261,7 +257,7 @@ class MahjongPuzzleActivityTest {
             val current = board(activity)
             val directions = activity.resources.getStringArray(R.array.mj_gravity_directions)
             fun hasDirection(index: Int) = descendants(content(activity)).filterIsInstance<TextView>()
-                .any { it.text.toString() == activity.getString(R.string.mj_cascade_status, directions[index]) }
+                .any { it.contentDescription == directions[index] }
             assertEquals(0, current.game.gravityDirection)
             assertTrue(hasDirection(0))
             val pair = current.game.hint()
@@ -315,8 +311,6 @@ class MahjongPuzzleActivityTest {
             assertTrue(started.await(5, TimeUnit.SECONDS))
             action(activity, R.string.mj_hint)
             current.chooseTile(0)
-            assertFalse(descendants(content(activity)).filterIsInstance<TextView>()
-                .any { it.text.toString() == activity.getString(R.string.mj_thinking) })
             val state = current.game.snapshot()
             action(activity, R.string.mj_shuffle)
             assertFalse(current.isEnabled)
@@ -346,8 +340,6 @@ class MahjongPuzzleActivityTest {
             action(activity, R.string.mj_hint)
             awaitMahjongWork(activity)
             assertEquals(state, current.game.snapshot())
-            assertFalse(descendants(content(activity)).filterIsInstance<TextView>()
-                .any { it.text.toString() == activity.getString(R.string.mj_thinking) })
             action(activity, R.string.mj_shuffle)
             awaitMahjongWork(activity)
             assertTrue(current.isEnabled)

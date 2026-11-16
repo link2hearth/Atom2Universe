@@ -85,24 +85,43 @@ class MahjongBoardView(context: Context, val game: MahjongGame, private val acce
         recycleFaces(); from.clear(); movingRects.clear(); layoutTiles()
     }
 
+    /**
+     * Couché, le plateau tourne d'un quart de tour avec l'écran pour en remplir la largeur ;
+     * les tuiles, elles, restent droites. Le jeu garde ses coordonnées : seul l'affichage
+     * (et le sens des glissés) passe par [dispX] / [dispY].
+     */
+    var turned = false
+        private set
+    var onTurned: (() -> Unit)? = null
+    private val shownColumns get() = if (turned) game.rows else game.columns
+    private val shownRows get() = if (turned) game.columns else game.rows
+    private fun dispX(x: Int, y: Int) = if (turned) y else x
+    private fun dispY(x: Int, y: Int) = if (turned) game.columns-1-x else y
+    /** Un glissé à l'écran (dx, dy) traduit dans le sens du jeu. */
+    private fun gameDirection(dx: Int, dy: Int) = if (turned) -dy to dx else dx to dy
+
     private fun layoutTiles() {
         if (width <= 0 || height <= 0) return
+        val wasTurned = turned
+        turned = width > height
+        if (wasTurned != turned) post { onTurned?.invoke() }
         val pad = resources.displayMetrics.density * 10f
         val reserve = if (game.mode == MahjongMode.TRIPLE) min(height * .18f, width * .19f) else pad
         // Connections may travel around the outside edge, so leave that route visible.
         val perimeter = game.mode == MahjongMode.CONNECT || game.mode == MahjongMode.CASCADE
-        tileW = min((width-pad*2)/(game.columns+(if(perimeter) 1.8f else .65f)),
-            (height-reserve-pad*2)/((game.rows+(if(perimeter) 1.8f else .4f))*1.24f)).coerceAtLeast(1f)
+        tileW = min((width-pad*2)/(shownColumns+(if(perimeter) 1.8f else .65f)),
+            (height-reserve-pad*2)/((shownRows+(if(perimeter) 1.8f else .4f))*1.24f)).coerceAtLeast(1f)
         tileH = tileW*1.24f
-        left = (width-game.columns*tileW)/2
-        top = (height-reserve-game.rows*tileH)/2 + pad*.3f
+        left = (width-shownColumns*tileW)/2
+        top = (height-reserve-shownRows*tileH)/2 + pad*.3f
         trayTop = height-reserve+pad*.1f
         bounds.clear()
-        drawOrder = game.board.sortedWith(compareBy<MahjongTile> { it.z }.thenBy { it.y }.thenBy { it.x })
+        drawOrder = game.board.sortedWith(compareBy<MahjongTile> { it.z }
+            .thenBy { dispY(it.x,it.y) }.thenBy { dispX(it.x,it.y) })
         free = drawOrder.filter(game::isFree).map { it.id }.toSet()
         for (tile in drawOrder) {
-            val x = left+tile.x*tileW-tile.z*tileW*.045f
-            val y = top+tile.y*tileH-tile.z*tileH*.07f
+            val x = left+dispX(tile.x,tile.y)*tileW-tile.z*tileW*.045f
+            val y = top+dispY(tile.x,tile.y)*tileH-tile.z*tileH*.07f
             bounds[tile.id] = RectF(x,y,x+tileW*.94f,y+tileH*.91f)
         }
         val slot = min(tileW*.90f, (height-trayTop)/1.36f).coerceAtLeast(1f)
@@ -112,7 +131,7 @@ class MahjongBoardView(context: Context, val game: MahjongGame, private val acce
         if (game.mode == MahjongMode.SLIDE) updateSlideGrid()
         matchPath.rewind()
         game.lastPath.forEachIndexed { index,cell ->
-            val x=left+(cell.x+.47f)*tileW; val y=top+(cell.y+.45f)*tileH
+            val x=left+(dispX(cell.x,cell.y)+.47f)*tileW; val y=top+(dispY(cell.x,cell.y)+.45f)*tileH
             if(index==0) matchPath.moveTo(x,y) else matchPath.lineTo(x,y)
         }
     }
@@ -126,11 +145,11 @@ class MahjongBoardView(context: Context, val game: MahjongGame, private val acce
         if (gridWidth!=width || gridHeight!=height || gridColumns!=game.columns || gridRows!=game.rows) {
             gridWidth=width; gridHeight=height; gridColumns=game.columns; gridRows=game.rows
             gridRects=Array(game.columns*game.rows) { index ->
-                val x=index%game.columns; val y=index/game.columns
+                val x=dispX(index%game.columns,index/game.columns); val y=dispY(index%game.columns,index/game.columns)
                 RectF(left+x*tileW,top+y*tileH,left+(x+.94f)*tileW,top+(y+.91f)*tileH)
             }
             occupiedCells=BooleanArray(gridRects.size); reachableCells=BooleanArray(gridRects.size)
-            iceBounds.set(left-tileW*.10f,top-tileH*.08f,left+game.columns*tileW,top+game.rows*tileH)
+            iceBounds.set(left-tileW*.10f,top-tileH*.08f,left+shownColumns*tileW,top+shownRows*tileH)
             iceGradient=LinearGradient(iceBounds.left,iceBounds.top,iceBounds.right,iceBounds.bottom,
                 0xb8e2f7ff.toInt(),0xb0b9dfef.toInt(),Shader.TileMode.CLAMP)
             footprintDashes=DashPathEffect(floatArrayOf(tileW*.11f,tileW*.08f),0f)
@@ -263,7 +282,8 @@ class MahjongBoardView(context: Context, val game: MahjongGame, private val acce
     private fun cellAt(x: Float,y: Float): MahjongCell? {
         if(tileW<=0f || tileH<=0f) return null
         val column=floor((x-left)/tileW).toInt(); val row=floor((y-top)/tileH).toInt()
-        return if(column in 0 until game.columns && row in 0 until game.rows) MahjongCell(column,row) else null
+        if(column !in 0 until shownColumns || row !in 0 until shownRows) return null
+        return if(turned) MahjongCell(game.columns-1-row,column) else MahjongCell(column,row)
     }
 
     private fun drawSlideGrid(c: Canvas,now: Long) {
@@ -296,7 +316,7 @@ class MahjongBoardView(context: Context, val game: MahjongGame, private val acce
             }
             if(reachable) {
                 p.color=0xff397b9b.toInt(); p.strokeWidth=max(2f,tileW*.06f)
-                if(source?.x==x) c.drawLine(rect.centerX()-tileW*.14f,rect.centerY(),
+                if((source?.x==x) != turned) c.drawLine(rect.centerX()-tileW*.14f,rect.centerY(),
                     rect.centerX()+tileW*.14f,rect.centerY(),p)
                 else c.drawLine(rect.centerX(),rect.centerY()-tileH*.12f,
                     rect.centerX(),rect.centerY()+tileH*.12f,p)
@@ -317,7 +337,7 @@ class MahjongBoardView(context: Context, val game: MahjongGame, private val acce
 
     private fun drawSlideArrow(c: Canvas,move: MahjongSlide,now: Long) {
         val start=location(move.id,now) ?: return
-        val endX=left+(move.x+.47f)*tileW; val endY=top+(move.y+.455f)*tileH
+        val endX=left+(dispX(move.x,move.y)+.47f)*tileW; val endY=top+(dispY(move.x,move.y)+.455f)*tileH
         val angle=atan2(endY-start.centerY(),endX-start.centerX())
         val size=tileW*.23f
         p.style=Paint.Style.STROKE; p.strokeWidth=max(3f,tileW*.075f)
@@ -475,7 +495,7 @@ class MahjongBoardView(context: Context, val game: MahjongGame, private val acce
     fun slideTile(id: Int,x: Int,y: Int) = applyMove { game.slide(id,x,y) }
 
     private fun swipeDirection(dx:Float,dy:Float):Pair<Int,Int> =
-        if(abs(dx)>=abs(dy)) dx.compareTo(0f) to 0 else 0 to dy.compareTo(0f)
+        if(abs(dx)>=abs(dy)) gameDirection(dx.compareTo(0f),0) else gameDirection(0,dy.compareTo(0f))
 
     private fun slideInDirection(id:Int,dx:Int,dy:Int) = applyMove { game.slideDirection(id,dx,dy) }
 
