@@ -15,6 +15,7 @@ import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.games.bigger.BiggerSoundEngine
 import kotlin.math.hypot
 import kotlin.math.min
+import kotlin.random.Random
 
 class EnamelView(context: Context) : View(context) {
     val game = EnamelGame()
@@ -59,6 +60,25 @@ class EnamelView(context: Context) : View(context) {
     private class Ring(val event: EnamelEvent, val label: String, var life: Float = .8f)
     private val rings = ArrayList<Ring>()
 
+    /**
+     * Accueil : une main joue seule. Pendant que le robot essaie des coups sur une copie de la planche,
+     * elle glisse vers la meilleure place trouvée ; puis l'index appuie (le palet apparaît dessous),
+     * tire en arrière, vise en réglant angle et puissance, et lâche. La planche ne répond pas au toucher.
+     */
+    var demo = false
+    private val floatTick = Runnable { invalidate() }
+    private val hand = HandPainter()
+    private val botRandom = Random.Default
+    private val bot = EnamelBot()
+    private var botPhase = BOT_THINK
+    private var botClock = 0f
+    private var handX = 5f
+    private var handY = Float.NaN
+    private var handPressed = false
+    private var aimSide = 1f
+    private var visualAngle = 0f
+    private var visualPower = 0f
+
     init { isFocusable = true; contentDescription = context.getString(R.string.enamel_controls) }
 
     fun resume() { active = true; last = 0L; postInvalidateOnAnimation() }
@@ -91,8 +111,8 @@ class EnamelView(context: Context) : View(context) {
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         var dt = 0f
+        val now = System.nanoTime()
         if (active) {
-            val now = System.nanoTime()
             dt = if (last == 0L) 0f else ((now - last) / 1_000_000_000f).coerceIn(0f, .05f)
             last = now
             val wasMoving = game.moving
@@ -109,6 +129,7 @@ class EnamelView(context: Context) : View(context) {
                 onStateChanged?.invoke()
             }
             if (game.over && !reported) { reported = true; sound?.onGameOver(); onGameOver?.invoke() }
+            if (demo) updateBot(dt)
         }
         rings.forEach { it.life -= dt }; rings.removeAll { it.life <= 0f }
         messageLife -= dt
@@ -129,7 +150,18 @@ class EnamelView(context: Context) : View(context) {
             p.typeface = Typeface.DEFAULT_BOLD
             boardText(canvas, ring.label, e.x, e.y - .6f - t, .36f)
         }
-        if (game.canLaunch) {
+        val touching = if (demo) handPressed else aiming
+        if (game.canLaunch && !touching) {
+            // Tant que le doigt n'a pas touché la base, le palet attend, semi-transparent, au milieu.
+            val radius = EnamelRules.RADII[game.current]
+            val bob = kotlin.math.sin(now / 1_000_000_000.0 * 2 * Math.PI / FLOAT_PERIOD).toFloat() * .12f
+            val cy = game.launchY - bob
+            p.style = Paint.Style.FILL; p.color = EnamelPainter.INK; p.alpha = (28 - bob * 60).toInt()
+            canvas.drawOval(5f - radius * .85f, game.launchY + radius * .55f, 5f + radius * .85f, game.launchY + radius * .95f, p)
+            p.alpha = 255
+            art.puck(canvas, game.current, 5f, cy, radius, alpha = 115)
+        }
+        if (game.canLaunch && touching) {
             val radius = EnamelRules.RADII[game.current]
             launchX = launchX.coerceIn(radius, 10f - radius)
             launchY = launchY.coerceIn(game.baseTop + radius, game.height - radius)
@@ -145,9 +177,89 @@ class EnamelView(context: Context) : View(context) {
         canvas.restore()
         if (messageLife > 0f) text(canvas, message, width / 2f, top + (game.baseTop + .5f) * scale, 11f, EnamelPainter.INK)
         drawFooter(canvas)
-        if (game.over) drawOver(canvas)
-        if (active && (game.moving || rings.isNotEmpty() || messageLife > 0f)) postInvalidateOnAnimation()
-        else last = 0L
+        if (demo) {
+            canvas.save(); canvas.translate(left, top); canvas.scale(scale, scale)
+            hand.draw(canvas, handX, handY, handPressed, 235, EnamelRules.RADII[game.current] + .25f)
+            canvas.restore()
+        }
+        if (game.over && !demo) drawOver(canvas)
+        if (active && (demo || game.moving || rings.isNotEmpty() || messageLife > 0f)) postInvalidateOnAnimation()
+        else {
+            last = 0L
+            // Le palet qui flotte n'a besoin que d'une trentaine d'images par seconde.
+            if (active && game.canLaunch && !aiming) { removeCallbacks(floatTick); postDelayed(floatTick, FLOAT_FRAME_MS) }
+        }
+    }
+
+    private fun updateBot(dt: Float) {
+        botClock += dt
+        if (handY.isNaN()) handY = game.launchY + .4f
+        if (game.over) {
+            // Planche pleine : une courte pause, puis on recommence.
+            handPressed = false; aiming = false
+            if (botClock > 1.5f) { reset(); restartBot() }
+            return
+        }
+        when (botPhase) {
+            BOT_THINK -> {
+                if (!game.canLaunch) { botClock = 0f; return }
+                // Les essais se calculent sans se montrer, quelques millisecondes par image.
+                if (bot.think(game, 12_000_000L)) { botPhase = BOT_LOOK; botClock = 0f }
+            }
+            BOT_LOOK -> {
+                // La main va droit à la place choisie.
+                val stop = bot.best ?: return restartBot()
+                glide(stop.x, stop.y + .15f, dt, 4f)
+                if (hypot(handX - stop.x, handY - stop.y - .15f) < .06f) {
+                    handX = stop.x; handY = stop.y
+                    launchX = stop.x; launchY = stop.y
+                    handPressed = true; botPhase = BOT_PRESS; botClock = 0f
+                }
+            }
+            BOT_PRESS -> if (botClock >= .4f) {
+                aiming = true; blocked = false; visualPower = 0f
+                aimSide = if (botRandom.nextBoolean()) 1f else -1f
+                visualAngle = .38f * aimSide
+                botPhase = BOT_AIM; botClock = 0f
+            }
+            BOT_AIM -> {
+                val plan = bot.best ?: return restartBot()
+                // Tirer d'abord à peu près, puis corriger l'angle et doser la puissance jusqu'à la cible.
+                val (angle, share) = when {
+                    botClock < 1.4f -> .38f * aimSide to .55f
+                    botClock < 2.7f -> -.1f * aimSide to .93f
+                    else -> 0f to 1f
+                }
+                val blend = 1 - kotlin.math.exp(-3f * dt)
+                visualAngle += (angle - visualAngle) * blend
+                visualPower += ((plan.power * share).coerceIn(0f, 1f) - visualPower) * blend
+                val length = hypot(plan.dx, plan.dy)
+                val cos = kotlin.math.cos(visualAngle); val sin = kotlin.math.sin(visualAngle)
+                val ux = (plan.dx * cos - plan.dy * sin) / length
+                val uy = (plan.dx * sin + plan.dy * cos) / length
+                aimX = ux; aimY = uy; power = visualPower
+                // Le doigt recule à l'opposé du tir, de la même longueur que pour un vrai joueur.
+                val pull = min(min(110 * dp, scale * 2.8f), height - (top + plan.y * scale) - 8 * dp).coerceAtLeast(18 * dp) / scale
+                handX = plan.x - ux * visualPower * pull; handY = plan.y - uy * visualPower * pull
+                val settled = kotlin.math.abs(visualAngle) < .01f && kotlin.math.abs(visualPower - plan.power) < .01f
+                if (botClock >= 3.6f && settled || botClock >= 5f) {
+                    game.launch(plan.x, plan.y, plan.dx, plan.dy, plan.power)
+                    aiming = false; power = 0f; handPressed = false
+                    botPhase = BOT_WAIT; botClock = 0f
+                }
+            }
+            else -> if (game.moving) botClock = 0f else if (botClock > .8f) restartBot()
+        }
+    }
+
+    private fun restartBot() {
+        bot.clear()
+        botPhase = BOT_THINK; botClock = 0f; handPressed = false; aiming = false
+    }
+
+    private fun glide(x: Float, y: Float, dt: Float, rate: Float) {
+        val blend = 1 - kotlin.math.exp(-rate * dt)
+        handX += (x - handX) * blend; handY += (y - handY) * blend
     }
 
     private fun drawBase(c: Canvas) {
@@ -273,7 +385,7 @@ class EnamelView(context: Context) : View(context) {
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        if (!active) return false
+        if (!active || demo) return false
         if (game.over) {
             if (event.actionMasked == MotionEvent.ACTION_UP && replay.contains(event.x, event.y)) { performClick(); reset() }
             return true
@@ -306,4 +418,14 @@ class EnamelView(context: Context) : View(context) {
     }
 
     override fun performClick(): Boolean { super.performClick(); return true }
+
+    private companion object {
+        const val BOT_THINK = 0
+        const val BOT_PRESS = 1
+        const val BOT_AIM = 2
+        const val BOT_WAIT = 3
+        const val BOT_LOOK = 4
+        const val FLOAT_PERIOD = 2.4
+        const val FLOAT_FRAME_MS = 30L
+    }
 }

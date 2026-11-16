@@ -3,7 +3,9 @@
     <string name="ricochet_menu_description">Fusionne les palets colorés ou élimine les paires dans un défi par seed</string>
     <string name="ricochet_classic">Classique · Meilleur score</string>
     <string name="enamel_title">Ricochet</string>
-    <string name="enamel_description">Glisse, rebondis et fusionne les palets colorés avant que le plateau déborde</string>
+    <string name="ricochet_new_game">Nouvelle partie</string>
+    <string name="ricochet_continue">Continuer</string>
+    <string name="ricochet_challenge">Défi</string>
     <string name="enamel_hud">%1$d points · Record %2$d</string>
     <string name="enamel_controls">Place ton palet n\'importe où dans la base, tire en arrière, puis relâche</string>
     <string name="enamel_blocked">Choisis une place libre dans la base et tire en arrière</string>

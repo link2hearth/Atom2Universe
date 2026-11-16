@@ -3,7 +3,9 @@
     <string name="ricochet_menu_description">Merge colourful pucks or clear pairs in a seeded challenge</string>
     <string name="ricochet_classic">Classic · Best score</string>
     <string name="enamel_title">Ricochet</string>
-    <string name="enamel_description">Slide, bounce and merge colourful pucks before the board fills up</string>
+    <string name="ricochet_new_game">New game</string>
+    <string name="ricochet_continue">Continue</string>
+    <string name="ricochet_challenge">Challenge</string>
     <string name="enamel_hud">%1$d points · Best %2$d</string>
     <string name="enamel_controls">Place your puck anywhere in the base, pull back, then release</string>
     <string name="enamel_blocked">Choose a clear spot in the base and pull backwards</string>

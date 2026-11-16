@@ -53,12 +53,30 @@ class RicochetPuzzleView(context: Context, val game: RicochetPuzzleGame = Ricoch
     private var changePosted = false
     private val postedChange = Runnable { changePosted = false; onChanged?.invoke() }
 
+    // Démonstration du geste quand on attend : un doigt touche à gauche puis à droite (le palet suit),
+    // puis tire vers le bas et lâche. Vite pour les premiers tirs, ensuite seulement après une longue attente.
+    private val prefs = context.getSharedPreferences(RicochetPuzzleStore.PREFS, Context.MODE_PRIVATE)
+    private var taught = prefs.getInt(TAUGHT_KEY, 0)
+    private var idleSince = 0L
+    private var hintOn = false
+    private var hintX = 0f
+    private var hintY = 0f
+    private var hintPressed = false
+    private var hintAlpha = 0f
+    private var hintPuck = false
+    private var hintPuckX = 0f
+    private var hintDragX = 0f
+    private var hintDragY = 0f
+    private var hintPower = 0f
+    private var hintFlight = -1f
+    private val hand = HandPainter()
+
     init { isFocusable = true; contentDescription = context.getString(R.string.puzzle_controls) }
 
-    fun resume() { active = true; last = 0; postInvalidateOnAnimation() }
+    fun resume() { active = true; last = 0; idleSince = System.nanoTime(); postInvalidateOnAnimation() }
     fun pause() { active = false; last = 0; cancelAim() }
     fun refresh() {
-        cancelAim(); rings.clear(); accumulator = 0f; last = 0
+        cancelAim(); rings.clear(); accumulator = 0f; last = 0; idleSince = System.nanoTime()
         launchX = 5f; launchY = RicochetPuzzleRules.BASE + 1.5f
         onChanged?.invoke(); invalidate()
     }
@@ -78,8 +96,8 @@ class RicochetPuzzleView(context: Context, val game: RicochetPuzzleGame = Ricoch
     override fun onDraw(c: Canvas) {
         super.onDraw(c)
         var dt = 0f
+        val now = System.nanoTime()
         if (active) {
-            val now = System.nanoTime()
             dt = if (last == 0L) 0f else ((now - last) / 1_000_000_000f).coerceIn(0f, .05f)
             last = now
             val wasMoving = game.moving
@@ -88,6 +106,7 @@ class RicochetPuzzleView(context: Context, val game: RicochetPuzzleGame = Ricoch
             val changed = game.events.isNotEmpty()
             game.events.forEach { rings.add(Ring(it)); sound?.onMerge(it.color, 1) }
             game.events.clear()
+            if (wasMoving && !game.moving) idleSince = now
             if (wasMoving && !game.moving && game.complete) sound?.onDiscovery()
             if ((changed || wasMoving != game.moving) && !changePosted) { changePosted = true; post(postedChange) }
         }
@@ -106,25 +125,87 @@ class RicochetPuzzleView(context: Context, val game: RicochetPuzzleGame = Ricoch
             c.drawCircle(ring.event.x, ring.event.y, .55f + (1 - ring.life / .65f) * .8f, p)
         }
         p.style = Paint.Style.FILL; p.alpha = 255
+        val hintClock = hintTime(now)
+        updateHint(hintClock)
         if (game.canLaunch) {
-            if (pointer >= 0 && game.shotSpeed(launchY, aimX, aimY, power) != null) drawGuide(c)
-            projectile(c, launchX, launchY)
-            p.color = if (game.isLaunchClear(launchX, launchY)) EnamelPainter.INK else 0xFFC0503C.toInt()
-            p.style = Paint.Style.STROKE; p.strokeWidth = .025f
-            c.drawCircle(launchX, launchY, RicochetPuzzleRules.PROJECTILE_RADIUS + .13f, p)
-            p.style = Paint.Style.FILL
-            if (pointer >= 0) {
+            val hintBase = RicochetPuzzleRules.BASE + 1.5f
+            if (pointer >= 0) drawGuide(c, launchX, launchY, aimX, aimY, power)
+            else if (hintOn && hintPower > 0f) drawGuide(c, HINT_RIGHT, hintBase, -hintDragX, -hintDragY, hintPower)
+            val flying = hintOn && hintFlight >= 0f
+            val px = if (hintOn && hintPuck) hintPuckX else launchX
+            val py = if (hintOn && hintPuck) hintBase else launchY
+            if (flying) {
+                // Le palet de la démonstration part le long du guide et s'efface.
+                val length = hypot(hintDragX, hintDragY)
+                val fx = HINT_RIGHT - hintDragX / length * 3.2f * hintFlight
+                val fy = hintBase - hintDragY / length * 3.2f * hintFlight
+                c.saveLayerAlpha(fx - .6f, fy - .6f, fx + .6f, fy + .6f, ((1 - hintFlight) * 255).toInt())
+                projectile(c, fx, fy); c.restore()
+            } else {
+                projectile(c, px, py)
+                p.color = if (game.isLaunchClear(px, py)) EnamelPainter.INK else 0xFFC0503C.toInt()
+                p.style = Paint.Style.STROKE; p.strokeWidth = .025f
+                c.drawCircle(px, py, RicochetPuzzleRules.PROJECTILE_RADIUS + .13f, p)
+                p.style = Paint.Style.FILL
+            }
+            val bar = if (pointer >= 0) power else if (hintOn) hintPower else 0f
+            if (pointer >= 0 || bar > 0f) {
                 p.color = EnamelPainter.GOLD; p.strokeWidth = .065f
-                c.drawLine(0f, RicochetPuzzleRules.BASE, 10f * power, RicochetPuzzleRules.BASE, p)
+                c.drawLine(0f, RicochetPuzzleRules.BASE, 10f * bar, RicochetPuzzleRules.BASE, p)
             }
         }
         c.restore()
+        if (hintOn && game.canLaunch) {
+            c.save(); c.translate(left, top); c.scale(scale, scale)
+            hand.draw(c, hintX, hintY, hintPressed, (hintAlpha * 235).toInt(), RicochetPuzzleRules.PROJECTILE_RADIUS + .25f)
+            c.restore()
+        }
         val unit = (width - 24 * dp) / 6
         for (color in 0..5) art.puck(c, color, 12 * dp + unit * (color + .5f), height - 19 * dp,
             min(11 * dp, unit * .2f), alpha = if (game.pucks.any { it.color == color }) 255 else 45)
         if (active && (game.moving || rings.isNotEmpty())) postInvalidateOnAnimation()
         else if (active && game.hard && !game.complete) { removeCallbacks(wallTick); postDelayed(wallTick, WALL_FRAME_MS) }
-        else last = 0
+        else {
+            last = 0
+            // Sans mur à animer : on ne redessine que pendant la démonstration, sinon on attend la prochaine.
+            if (hintClock != null) {
+                val wait = when {
+                    hintClock < 0f -> (-hintClock * 1000).toLong() + 1
+                    hintClock % HINT_CYCLE < HINT_END -> WALL_FRAME_MS
+                    else -> ((HINT_CYCLE - hintClock % HINT_CYCLE) * 1000).toLong() + 1
+                }
+                removeCallbacks(wallTick); postDelayed(wallTick, wait)
+            }
+        }
+    }
+
+    /** Secondes écoulées depuis que la démonstration peut commencer (négatif : encore à attendre). */
+    private fun hintTime(now: Long): Float? {
+        if (!active || !game.canLaunch || pointer >= 0 || idleSince == 0L) return null
+        return (now - idleSince) / 1_000_000_000f - if (taught < LEARNED_SHOTS) FIRST_DELAY else REMINDER_DELAY
+    }
+
+    private fun updateHint(t: Float?) {
+        hintOn = t != null && t >= 0f && t % HINT_CYCLE < HINT_END
+        if (!hintOn || t == null) return
+        val u = t % HINT_CYCLE
+        fun phase(a: Float, b: Float) = ((u - a) / (b - a)).coerceIn(0f, 1f).let { it * it * (3 - 2 * it) }
+        val base = RicochetPuzzleRules.BASE + 1.5f
+        hintAlpha = phase(0f, .35f) * (1 - phase(3.9f, 4.4f))
+        hintX = if (u < 1.25f) 5f + (HINT_LEFT - 5f) * phase(.35f, .95f) else HINT_LEFT + (HINT_RIGHT - HINT_LEFT) * phase(1.25f, 1.95f)
+        hintY = base
+        hintPressed = u in .95f..1.25f || u in 1.95f..2.25f || u in 2.55f..3.75f
+        hintPuck = u >= .95f
+        hintPuckX = if (u < 1.95f) HINT_LEFT else HINT_RIGHT
+        hintPower = 0f; hintFlight = -1f; hintDragX = 0f; hintDragY = 0f
+        if (u >= 2.55f) {
+            // Même longueur de tirage que le vrai geste : la jauge et le guide montrent un vrai tir.
+            val k = .85f * phase(2.65f, 3.55f)
+            val pull = pullLength(top + base * scale) / scale
+            hintDragX = PULL_X * pull * k.coerceAtLeast(.05f); hintDragY = PULL_Y * pull * k.coerceAtLeast(.05f)
+            hintX = HINT_RIGHT + hintDragX; hintY = base + hintDragY
+            if (u < 3.75f) hintPower = k else hintFlight = ((u - 3.75f) / .65f).coerceIn(0f, 1f)
+        }
     }
 
     private fun projectile(c: Canvas, x: Float, y: Float) {
@@ -155,31 +236,33 @@ class RicochetPuzzleView(context: Context, val game: RicochetPuzzleGame = Ricoch
     }
 
     /** Premier impact seulement : le mur peut encore se déplacer avant l'arrivée du tir. */
-    private fun drawGuide(c: Canvas) {
-        val speed = game.shotSpeed(launchY, aimX, aimY, power) ?: return
-        val length = hypot(aimX, aimY)
-        val dx = aimX / length; val dy = aimY / length
+    private fun drawGuide(c: Canvas, fromX: Float, fromY: Float, towardX: Float, towardY: Float, strength: Float) {
+        val speed = game.shotSpeed(fromY, towardX, towardY, strength) ?: return
+        val length = hypot(towardX, towardY)
+        val dx = towardX / length; val dy = towardY / length
         val distance = speed * speed / (2 * RicochetPuzzleRules.DRAG)
         val r = RicochetPuzzleRules.PROJECTILE_RADIUS
-        var x = launchX; var y = launchY
+        var x = fromX; var y = fromY
         for (i in 1..ceil(distance / .05f).toInt()) {
-            val nx = launchX + dx * min(i * .05f, distance)
-            val ny = launchY + dy * min(i * .05f, distance)
+            val nx = fromX + dx * min(i * .05f, distance)
+            val ny = fromY + dy * min(i * .05f, distance)
             if (nx < r || nx > 10 - r || ny < r) break
             x = nx; y = ny
             if (game.touchesWall(x, y, r) || game.pucks.any { hypot(it.x - x, it.y - y) < it.radius + r }) break
         }
-        c.drawLine(launchX, launchY, x, y, guide)
+        c.drawLine(fromX, fromY, x, y, guide)
     }
 
     private fun cancelAim() { pointer = -1; power = 0f; parent?.requestDisallowInterceptTouchEvent(false) }
+
+    /** Distance de tirage (pixels) qui donne la pleine puissance depuis un appui à la hauteur [fromY]. */
+    private fun pullLength(fromY: Float) = min(min(110 * dp, scale * 2.8f), height - fromY - 8 * dp).coerceAtLeast(18 * dp)
 
     private fun aim(e: MotionEvent): Boolean {
         val i = e.findPointerIndex(pointer)
         if (i < 0) { cancelAim(); return false }
         aimX = startX - e.getX(i); aimY = startY - e.getY(i)
-        val pull = min(min(110 * dp, scale * 2.8f), height - startY - 8 * dp).coerceAtLeast(18 * dp)
-        power = (hypot(aimX, aimY) / pull).coerceIn(0f, 1f)
+        power = (hypot(aimX, aimY) / pullLength(startY)).coerceIn(0f, 1f)
         return true
     }
 
@@ -190,7 +273,7 @@ class RicochetPuzzleView(context: Context, val game: RicochetPuzzleGame = Ricoch
                 if (!game.canLaunch || e.x < left || e.x > left + 10 * scale ||
                     e.y < top + RicochetPuzzleRules.BASE * scale || e.y > top + RicochetPuzzleRules.HEIGHT * scale) return true
                 parent?.requestDisallowInterceptTouchEvent(true)
-                pointer = e.getPointerId(0); startX = e.x; startY = e.y
+                pointer = e.getPointerId(0); startX = e.x; startY = e.y; idleSince = System.nanoTime()
                 val r = RicochetPuzzleRules.PROJECTILE_RADIUS
                 launchX = ((e.x - left) / scale).coerceIn(r, 10 - r)
                 launchY = ((e.y - top) / scale).coerceIn(RicochetPuzzleRules.BASE + r, RicochetPuzzleRules.HEIGHT - r)
@@ -200,8 +283,9 @@ class RicochetPuzzleView(context: Context, val game: RicochetPuzzleGame = Ricoch
             MotionEvent.ACTION_UP -> if (pointer >= 0) {
                 if (aim(e) && game.launch(launchX, launchY, aimX, aimY, power)) {
                     sound?.onDrop(); onChanged?.invoke(); performClick()
+                    if (taught < LEARNED_SHOTS) { taught++; prefs.edit().putInt(TAUGHT_KEY, taught).apply() }
                 }
-                cancelAim()
+                cancelAim(); idleSince = System.nanoTime()
             }
             MotionEvent.ACTION_CANCEL -> cancelAim()
             MotionEvent.ACTION_POINTER_UP -> if (e.getPointerId(e.actionIndex) == pointer) cancelAim()
@@ -214,5 +298,17 @@ class RicochetPuzzleView(context: Context, val game: RicochetPuzzleGame = Ricoch
     private companion object {
         /** La prochaine image de l'écran tombe alors vers 17 ms (~60 i/s). */
         const val WALL_FRAME_MS = 12L
+        const val TAUGHT_KEY = "hint_shots"
+        /** Tirs réussis après lesquels la main n'arrive plus qu'après une longue attente. */
+        const val LEARNED_SHOTS = 5
+        const val FIRST_DELAY = 1.5f
+        const val REMINDER_DELAY = 15f
+        const val HINT_CYCLE = 6f
+        const val HINT_END = 4.4f
+        const val HINT_LEFT = 2.2f
+        const val HINT_RIGHT = 7.8f
+        // Tirage vers le bas et un peu à droite : le tir part vers le haut et la gauche.
+        const val PULL_X = .29f
+        const val PULL_Y = .957f
     }
 }
