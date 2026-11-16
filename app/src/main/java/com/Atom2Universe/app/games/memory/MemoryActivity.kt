@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.HorizontalScrollView
+import android.widget.PopupWindow
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -36,6 +37,7 @@ class MemoryActivity : ThemedActivity() {
     companion object {
         private const val PREFS_NAME = "memory_save"
         private const val KEY_SAVE = "save_json"
+        private const val KEY_POP = "pop_cards"
         private const val ASSETS_CARTES = "Assets/Cartes"
         private const val FLIP_BACK_DELAY_MS = 900L
         private const val CARD_TARGET_PX = 280
@@ -53,8 +55,9 @@ class MemoryActivity : ThemedActivity() {
     private lateinit var loadingView: View
     private lateinit var prefs: SharedPreferences
     private lateinit var boardScroll: HorizontalScrollView
+    private lateinit var sizeButton: MaterialButton
+    private lateinit var popLayer: FrameLayout
     private lateinit var zoomButton: ImageButton
-    private var boardZoomed = false
     private var isLoading = false
 
     private val game = MemoryGame()
@@ -85,8 +88,15 @@ class MemoryActivity : ThemedActivity() {
         prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
         recyclerView = findViewById(R.id.memory_recycler)
         boardScroll = findViewById(R.id.memory_board_scroll)
+        popLayer = findViewById(R.id.memory_pop_layer)
         zoomButton = findViewById(R.id.memory_zoom_button)
-        boardZoomed = savedInstanceState?.getBoolean("board_zoomed") ?: false
+        // Loupe : allume ou éteint l'agrandissement des cartes retournées (mémorisé).
+        zoomButton.setOnClickListener {
+            prefs.edit { putBoolean(KEY_POP, !prefs.getBoolean(KEY_POP, true)) }
+            updateZoomButton()
+        }
+        updateZoomButton()
+        sizeButton = findViewById(R.id.memory_size_button)
         flipsText    = findViewById(R.id.memory_flips)
         timeText     = findViewById(R.id.memory_time)
         winOverlay   = findViewById(R.id.memory_win_overlay)
@@ -100,15 +110,11 @@ class MemoryActivity : ThemedActivity() {
         findViewById<ImageButton>(R.id.memory_info_button).setOnClickListener {
             showGameRules(R.string.memory_title, R.string.memory_rules)
         }
-        zoomButton.setOnClickListener {
-            boardZoomed = !boardZoomed
-            resizeBoard()
-        }
         boardScroll.addOnLayoutChangeListener { _, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
             if (right - left != oldRight - oldLeft || bottom - top != oldBottom - oldTop) resizeBoard()
         }
 
-        buildDiffChips()
+        sizeButton.setOnClickListener { showSizeBubble() }
 
         val restored = prefs.getString(KEY_SAVE, null)?.let { game.deserialize(it) } == true
         if (restored) {
@@ -124,11 +130,6 @@ class MemoryActivity : ThemedActivity() {
         saveGame()
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putBoolean("board_zoomed", boardZoomed)
-        super.onSaveInstanceState(outState)
-    }
-
     override fun onResume() {
         super.onResume()
         if (!game.isWon && !isLoading) startTimer()
@@ -141,57 +142,55 @@ class MemoryActivity : ThemedActivity() {
         super.onDestroy()
     }
 
-    // ── Difficulty chips ──────────────────────────────────────────────────────────
-    private val diffChipMap = mutableMapOf<MemoryDifficulty, MaterialButton>()
+    // ── Taille : un seul bouton, la bulle propose les autres ─────────────────────
+    private fun cardCountLabel(diff: MemoryDifficulty) = getString(R.string.memory_card_count, diff.pairCount * 2)
 
-    private fun buildDiffChips() {
-        val container = findViewById<LinearLayout>(R.id.memory_diff_row)
-        val density = resources.displayMetrics.density
-        for (diff in MemoryDifficulty.entries) {
-            val chip = MaterialButton(
-                this, null, android.R.attr.borderlessButtonStyle
-            ).apply {
-                text = getString(R.string.game_stat_grid, diff.cols, diff.rows)
-                textSize = 12f
-                minimumWidth = 0
-                minWidth = 0
-                setPadding((10 * density).toInt(), 0, (10 * density).toInt(), 0)
-                insetTop = (4 * density).toInt()
-                insetBottom = (4 * density).toInt()
-                layoutParams = LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    (48 * density).toInt()
-                ).also { it.setMargins((2 * density).toInt(), 0, (2 * density).toInt(), 0) }
-                setOnClickListener { startNewGame(diff) }
-            }
-            container.addView(chip)
-            diffChipMap[diff] = chip
-        }
+    private fun updateSizeButton() {
+        sizeButton.text = cardCountLabel(game.difficulty)
     }
 
-    private fun updateDiffChips() {
-        val active = ColorStateList.valueOf(com.Atom2Universe.app.audio.AudioStyle.accent(this))
-        val inactive = ColorStateList.valueOf(com.Atom2Universe.app.audio.AudioStyle.surface(this))
-        for ((diff, chip) in diffChipMap) {
-            chip.isSelected = diff == game.difficulty
-            chip.backgroundTintList = if (diff == game.difficulty) active else inactive
-            chip.setTextColor(if (diff == game.difficulty) com.Atom2Universe.app.audio.AudioStyle.onAccent(this)
-                else com.Atom2Universe.app.audio.AudioStyle.primaryText(this))
-        }
-        val scroll = findViewById<HorizontalScrollView>(R.id.memory_diff_scroll)
-        diffChipMap[game.difficulty]?.let { chip ->
-            scroll.post {
-                scroll.smoothScrollTo((chip.left + chip.width / 2 - scroll.width / 2).coerceAtLeast(0), 0)
+    /** Bulle sous le bouton : chaque taille en nombre de cartes, la taille en cours surlignée. */
+    private fun showSizeBubble() {
+        if (isLoading) return
+        val density = resources.displayMetrics.density
+        fun px(v: Int) = (v * density).toInt()
+        val accent = com.Atom2Universe.app.audio.AudioStyle.accent(this)
+        val list = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(px(6), px(6), px(6), px(6))
+            background = android.graphics.drawable.GradientDrawable().apply {
+                setColor(com.Atom2Universe.app.audio.AudioStyle.surface(this@MemoryActivity))
+                cornerRadius = px(16).toFloat()
             }
         }
+        // Sans prise de focus, la bulle laisse l'écran en plein écran ; une touche ailleurs la ferme.
+        val popup = PopupWindow(list, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, false).apply {
+            isOutsideTouchable = true
+            elevation = px(10).toFloat()
+            setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+        }
+        for (diff in MemoryDifficulty.entries) {
+            val current = diff == game.difficulty
+            list.addView(TextView(this).apply {
+                text = cardCountLabel(diff); textSize = 17f
+                gravity = android.view.Gravity.CENTER_VERTICAL
+                setPadding(px(18), 0, px(28), 0)
+                setTextColor(if (current) com.Atom2Universe.app.audio.AudioStyle.onAccent(this@MemoryActivity)
+                    else com.Atom2Universe.app.audio.AudioStyle.primaryText(this@MemoryActivity))
+                if (current) background = android.graphics.drawable.GradientDrawable().apply {
+                    setColor(accent); cornerRadius = px(12).toFloat()
+                }
+                setOnClickListener { popup.dismiss(); if (!current) startNewGame(diff) }
+            }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, px(48)))
+        }
+        popup.showAsDropDown(sizeButton, 0, px(4))
     }
 
     private fun setLoading(loading: Boolean) {
         isLoading = loading
         loadingView.visibility = if (loading) View.VISIBLE else View.GONE
         recyclerView.visibility = if (loading) View.INVISIBLE else View.VISIBLE
-        zoomButton.isEnabled = !loading
-        diffChipMap.values.forEach { it.isEnabled = !loading }
+        sizeButton.isEnabled = !loading
     }
 
     // ── Game lifecycle ────────────────────────────────────────────────────────────
@@ -212,7 +211,7 @@ class MemoryActivity : ThemedActivity() {
             setLoading(false)
             setupRecyclerView()
             updateStats()
-            updateDiffChips()
+            updateSizeButton()
             saveGame()
             startTimer()
         }
@@ -227,16 +226,15 @@ class MemoryActivity : ThemedActivity() {
             setLoading(false)
             setupRecyclerView()
             updateStats()
-            updateDiffChips()
+            updateSizeButton()
             saveGame()
             if (game.isWon) showWinOverlay() else startTimer()
         }
     }
 
     private fun setupRecyclerView() {
-        val cols = game.difficulty.cols
-        recyclerView.layoutManager = object : GridLayoutManager(this, cols) {
-            override fun canScrollVertically() = boardZoomed
+        recyclerView.layoutManager = object : GridLayoutManager(this, game.difficulty.cols) {
+            override fun canScrollVertically() = false
             override fun canScrollHorizontally() = false
         }
         val newAdapter = MemoryAdapter(game.cards, bitmapCache,
@@ -253,19 +251,9 @@ class MemoryActivity : ThemedActivity() {
         val totalW = boardScroll.width
         val totalH = boardScroll.height
         if (totalW == 0 || totalH == 0) return
-        val cols = game.difficulty.cols
-        val rows = game.difficulty.rows
-        var slotW = totalW / cols
-        var slotH = slotW * 12 / 8
-        if (slotH * rows > totalH) {
-            slotH = totalH / rows
-            slotW = slotH * 8 / 12
-        }
-        if (boardZoomed) {
-            // Keep images and touch targets readable on phones; pan to the other cards.
-            slotW = maxOf(slotW, (64 * resources.displayMetrics.density).toInt())
-            slotH = slotW * 12 / 8
-        }
+        val (cols, rows) = bestArrangement(game.cards.size, totalW, totalH)
+        (recyclerView.layoutManager as? GridLayoutManager)?.spanCount = cols
+        val (slotW, slotH) = slotFor(cols, rows, totalW, totalH)
         val boardW = maxOf(totalW, slotW * cols)
         recyclerView.layoutParams = recyclerView.layoutParams.apply { width = boardW }
         val hPad = (boardW - slotW * cols) / 2
@@ -273,18 +261,39 @@ class MemoryActivity : ThemedActivity() {
         recyclerView.setPadding(hPad, vPad, hPad, vPad)
         currentAdapter.cardSize = slotH
         currentAdapter.notifyDataSetChanged()
-        if (!boardZoomed) {
-            boardScroll.scrollTo(0, 0)
-            recyclerView.scrollToPosition(0)
+        boardScroll.scrollTo(0, 0)
+        recyclerView.scrollToPosition(0)
+    }
+
+    /**
+     * Case d'une carte pour une grille donnée. La carte garde exactement le format des images
+     * (2 : 3, 600 × 900) : jamais déformée ni recadrée ; la case ajoute la marge de 3 dp autour.
+     */
+    private fun slotFor(cols: Int, rows: Int, totalW: Int, totalH: Int): Pair<Int, Int> {
+        val density = resources.displayMetrics.density
+        val margin = (8 * density).toInt()
+        val pad = (6 * density).toInt()
+        val byWidth = (totalW - 2 * margin) / cols - pad
+        val byHeight = ((totalH - 2 * margin) / rows - pad) * 2 / 3
+        val cardW = minOf(byWidth, byHeight).coerceAtLeast(1)
+        return (cardW + pad) to (cardW * 3 / 2 + pad)
+    }
+
+    /**
+     * Colonnes et rangées qui donnent les plus grandes cartes pour cet écran. La dernière rangée
+     * peut rester incomplète : les cases vides sont en bas à droite.
+     */
+    private fun bestArrangement(count: Int, totalW: Int, totalH: Int): Pair<Int, Int> {
+        var best = game.difficulty.cols to game.difficulty.rows
+        var bestArea = -1L
+        for (cols in 1..count) {
+            val rows = (count + cols - 1) / cols
+            if (cols * rows - count >= cols) continue
+            val (w, h) = slotFor(cols, rows, totalW, totalH)
+            val area = w.toLong() * h
+            if (area > bestArea) { bestArea = area; best = cols to rows }
         }
-        zoomButton.isSelected = boardZoomed
-        zoomButton.contentDescription = getString(
-            if (boardZoomed) R.string.memory_zoom_out else R.string.memory_zoom_in
-        )
-        zoomButton.imageTintList = ColorStateList.valueOf(
-            if (boardZoomed) com.Atom2Universe.app.audio.AudioStyle.accent(this)
-            else com.Atom2Universe.app.audio.AudioStyle.primaryText(this)
-        )
+        return best
     }
 
     // ── Card click logic ──────────────────────────────────────────────────────────
@@ -297,6 +306,7 @@ class MemoryActivity : ThemedActivity() {
 
         card.state = CardState.FACE_UP
         adapter?.flipCard(position)
+        popCard(position, card)
 
         if (first == null) {
             firstFlippedPos = position
@@ -328,6 +338,63 @@ class MemoryActivity : ThemedActivity() {
                 }, FLIP_BACK_DELAY_MS)
             }
         }
+    }
+
+    /**
+     * La carte qu'on vient de retourner grossit un instant au-dessus du plateau, puis revient à
+     * sa place. C'est une copie posée sur une couche qui ne prend aucune touche : la carte voisine
+     * reste cliquable pendant l'animation.
+     */
+    private fun updateZoomButton() {
+        val on = prefs.getBoolean(KEY_POP, true)
+        zoomButton.isSelected = on
+        zoomButton.imageTintList = ColorStateList.valueOf(
+            if (on) com.Atom2Universe.app.audio.AudioStyle.accent(this)
+            else com.Atom2Universe.app.audio.AudioStyle.primaryText(this)
+        )
+    }
+
+    private fun popCard(position: Int, card: MemoryCard) {
+        if (!prefs.getBoolean(KEY_POP, true)) return
+        val holder = recyclerView.findViewHolderForAdapterPosition(position) ?: return
+        val front = holder.itemView.findViewById<View>(R.id.memory_card_front)
+        val w = front.width; val h = front.height
+        if (w <= 0 || h <= 0 || popLayer.width <= 0) return
+        // Pas trop gros : au plus 2,6 fois, la moitié de la hauteur et le tiers de la largeur.
+        val scale = minOf(2.6f, popLayer.height * 0.5f / h, popLayer.width * 0.34f / w)
+        if (scale < 1.2f) return
+        val at = IntArray(2); front.getLocationInWindow(at)
+        val layerAt = IntArray(2); popLayer.getLocationInWindow(layerAt)
+        val left = (at[0] - layerAt[0]).toFloat(); val top = (at[1] - layerAt[1]).toFloat()
+        val ghost = android.widget.ImageView(this).apply {
+            scaleType = android.widget.ImageView.ScaleType.FIT_CENTER
+            val symbol = if (game.usesSymbols) game.imageFiles.getOrNull(card.imageIndex) else null
+            if (symbol != null) setImageDrawable(MemorySymbolDrawable(symbol,
+                com.Atom2Universe.app.games.kit.KitPalette.from(this@MemoryActivity)))
+            else setImageBitmap(bitmapCache[card.imageIndex] ?: return)
+            isClickable = false; isFocusable = false
+            importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
+            outlineProvider = android.view.ViewOutlineProvider.BOUNDS
+            elevation = 12 * resources.displayMetrics.density
+            x = left; y = top; pivotX = w / 2f; pivotY = h / 2f
+            alpha = 0f
+        }
+        popLayer.addView(ghost, FrameLayout.LayoutParams(w, h))
+        // Le centre se décale juste assez pour que la carte agrandie reste dans le plateau.
+        val halfW = w * scale / 2f; val halfH = h * scale / 2f
+        val cx = (left + w / 2f).coerceIn(halfW, popLayer.width - halfW)
+        val cy = (top + h / 2f).coerceIn(halfH, popLayer.height - halfH)
+        val dx = cx - (left + w / 2f); val dy = cy - (top + h / 2f)
+        ghost.animate().setStartDelay(130).setDuration(170)
+            .setInterpolator(android.view.animation.DecelerateInterpolator())
+            .alpha(1f).scaleX(scale).scaleY(scale).translationXBy(dx).translationYBy(dy)
+            .withEndAction {
+                ghost.animate().setStartDelay(420).setDuration(170)
+                    .setInterpolator(android.view.animation.AccelerateInterpolator())
+                    .scaleX(1f).scaleY(1f).translationXBy(-dx).translationYBy(-dy)
+                    .withEndAction { popLayer.removeView(ghost) }
+                    .start()
+            }.start()
     }
 
     private fun showWinOverlay() {

@@ -6,91 +6,90 @@
     android:background="?attr/a2uScreenBackground">
     <tag android:id="@id/app_effects_scene" android:value="true" />
 
-    <!-- Statistics above a separate, horizontally scrollable size selector. -->
+    <!-- Une seule bannière : retour, coups, temps, taille (bouton bulle), zoom, règles. -->
     <LinearLayout
         android:id="@+id/memory_header"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="52dp"
         android:background="?attr/a2uPanelBackground"
         android:gravity="center_vertical"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:paddingHorizontal="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <ImageButton
+            android:id="@+id/memory_back_button"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/memory_btn_back"
+            android:padding="10dp"
+            android:src="@drawable/ic_app_back"
+            android:tint="@color/audio_text_primary" />
+
+        <TextView
+            android:id="@+id/memory_flips"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="6dp"
+            android:layout_marginEnd="12dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/audio_text_secondary"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/memory_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:fontFamily="monospace"
+            android:textColor="@color/audio_text_secondary"
+            android:textSize="15sp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/memory_size_button"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:layout_marginEnd="4dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:minWidth="0dp"
+            android:paddingStart="14dp"
+            android:paddingEnd="8dp"
+            android:textAllCaps="false"
+            android:textColor="@color/audio_on_accent"
+            android:textSize="15sp"
+            app:backgroundTint="?attr/a2uMusicAccent"
+            app:icon="@drawable/ic_expand_more"
+            app:iconGravity="end"
+            app:iconPadding="2dp"
+            app:iconSize="20dp"
+            app:iconTint="@color/audio_on_accent" />
+
+        <ImageButton
+            android:id="@+id/memory_zoom_button"
+            android:layout_width="48dp"
             android:layout_height="48dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/memory_pop_cards"
+            android:padding="12dp"
+            android:src="@android:drawable/ic_menu_zoom"
+            android:tint="@color/audio_text_primary" />
 
-            <ImageButton
-                android:id="@+id/memory_back_button"
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/memory_btn_back"
-                android:padding="10dp"
-                android:src="@drawable/ic_app_back"
-                android:tint="@color/audio_text_primary" />
-
-            <TextView
-                android:id="@+id/memory_flips"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginEnd="12dp"
-                android:textColor="@color/audio_text_secondary"
-                android:textSize="13sp" />
-
-            <TextView
-                android:id="@+id/memory_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:fontFamily="monospace"
-                android:textColor="@color/audio_text_secondary"
-                android:textSize="13sp" />
-
-            <ImageButton
-                android:id="@+id/memory_zoom_button"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/memory_zoom_in"
-                android:padding="12dp"
-                android:src="@android:drawable/ic_menu_zoom"
-                android:tint="@color/audio_text_primary" />
-
-            <ImageButton
-                android:id="@+id/memory_info_button"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/kit_rules"
-                android:padding="10dp"
-                android:src="@drawable/ic_info"
-        android:tint="?attr/a2uMusicAccent" />
-
-        </LinearLayout>
-
-        <HorizontalScrollView
-            android:id="@+id/memory_diff_scroll"
-            android:layout_width="match_parent"
+        <ImageButton
+            android:id="@+id/memory_info_button"
+            android:layout_width="48dp"
             android:layout_height="48dp"
-            android:fillViewport="true"
-            android:scrollbars="horizontal">
-
-            <LinearLayout
-                android:id="@+id/memory_diff_row"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingHorizontal="2dp" />
-
-        </HorizontalScrollView>
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/kit_rules"
+            android:padding="10dp"
+            android:src="@drawable/ic_info"
+            android:tint="?attr/a2uMusicAccent" />
 
     </LinearLayout>
 
@@ -113,6 +112,19 @@
             android:scrollbars="vertical" />
 
     </HorizontalScrollView>
+
+    <!-- Couche de la carte agrandie : ne prend aucune touche, le plateau reste jouable. -->
+    <FrameLayout
+        android:id="@+id/memory_pop_layer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clickable="false"
+        android:focusable="false"
+        android:importantForAccessibility="no"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/memory_header" />
 
     <!-- Loading spinner -->
     <ProgressBar

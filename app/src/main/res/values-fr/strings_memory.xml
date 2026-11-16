@@ -7,7 +7,7 @@
     <string name="memory_win_message">Complété en %2$s avec %1$d retournements.</string>
     <string name="memory_btn_again">Nouvelle partie</string>
     <string name="memory_btn_back">Retour</string>
-    <string name="memory_zoom_in">Agrandir les cartes et faire glisser le plateau</string>
-    <string name="memory_zoom_out">Afficher le plateau entier</string>
+    <string name="memory_card_count">%1$d cartes</string>
+    <string name="memory_pop_cards">Agrandir les cartes retournées</string>
     <string name="memory_time_format">%1$02d:%2$02d</string>
 </resources>
