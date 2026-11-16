@@ -17,6 +17,7 @@ import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
+import com.Atom2Universe.app.util.Landscape
 import com.Atom2Universe.app.util.enableImmersiveMode
 import com.Atom2Universe.app.util.showGameRules
 
@@ -58,6 +59,7 @@ class MinesweeperActivity : ThemedActivity(), MinesweeperGridView.GameEventListe
         super.onCreate(savedInstanceState)
         enableImmersiveMode()
         setContentView(R.layout.activity_minesweeper)
+        Landscape.bindSidePanel(this)
 
         timerText = findViewById(R.id.tv_timer)
         sonarStatus = findViewById(R.id.tv_sonar_status)
@@ -243,6 +245,12 @@ class MinesweeperActivity : ThemedActivity(), MinesweeperGridView.GameEventListe
     }
 
     private fun formatTime(secs: Int) = getString(R.string.minesweeper_time_format, secs / 60, secs % 60)
+
+    /** Couché : la grille tournée d'un quart sur toute la place, et la bulle ; la partie ne change pas. */
+    override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
+        super.onConfigurationChanged(newConfig)
+        Landscape.swapLayout(this, R.layout.activity_minesweeper)
+    }
 
     override fun onPause() {
         super.onPause()

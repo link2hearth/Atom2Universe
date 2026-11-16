@@ -33,6 +33,15 @@ class MinesweeperGridView(context: Context) : View(context) {
     private var cellSize = 0f
     private var originX = 0f
     private var originY = 0f
+    /**
+     * Couché, la grille s'affiche tournée d'un quart : les lignes de la partie vont de gauche à
+     * droite. La partie elle-même ne change pas (mêmes cases, mêmes voisins) quand on tourne l'écran.
+     */
+    private var turned = false
+    private fun cellX(r: Int, c: Int) = originX + (if (turned) r else c) * cellSize
+    private fun cellY(r: Int, c: Int) = originY + (if (turned) c else r) * cellSize
+    private fun shownCols(g: MinesweeperGame) = if (turned) g.rows else g.cols
+    private fun shownRows(g: MinesweeperGame) = if (turned) g.cols else g.rows
     private val ink = Paint(Paint.ANTI_ALIAS_FLAG)
     private val text = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         typeface = Typeface.create("sans-serif-medium", Typeface.BOLD)
@@ -188,7 +197,8 @@ class MinesweeperGridView(context: Context) : View(context) {
     private fun buildGame() {
         // Keep enough cells for the safe first click, even in a short landscape window.
         val minRows = (pendingMines + 9 + pendingCols - 1) / pendingCols
-        val rows = (height / (width.toFloat() / pendingCols)).toInt().coerceAtLeast(minRows)
+        // Les colonnes de la difficulté vont sur le petit côté de l'écran, qu'il soit debout ou couché.
+        val rows = (maxOf(width, height) / (minOf(width, height).toFloat() / pendingCols)).toInt().coerceAtLeast(minRows)
         game = MinesweeperGame(pendingCols, rows, pendingMines)
         fitGrid()
         listener?.onFlagsChanged(0)
@@ -197,9 +207,10 @@ class MinesweeperGridView(context: Context) : View(context) {
 
     private fun fitGrid() {
         val g = game ?: return
-        cellSize = min(width.toFloat() / g.cols, height.toFloat() / g.rows)
-        originX = (width - g.cols * cellSize) / 2f
-        originY = (height - g.rows * cellSize) / 2f
+        turned = width > height
+        cellSize = min(width.toFloat() / shownCols(g), height.toFloat() / shownRows(g))
+        originX = (width - shownCols(g) * cellSize) / 2f
+        originY = (height - shownRows(g) * cellSize) / 2f
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -240,8 +251,8 @@ class MinesweeperGridView(context: Context) : View(context) {
             val isChanged = index < changed.size && changed[index]
             val progress = if (isChanged) ((effectTime - delay) / 260f).coerceIn(0f, 1f) else 1f
             val state = if (progress == 0f && index < previousStates.size) previousStates[index] else cell.state
-            val x = originX + c * cs
-            val y = originY + r * cs
+            val x = cellX(r, c)
+            val y = cellY(r, c)
             val pad = cs * .045f
             rect.set(x + pad, y + pad, x + cs - pad, y + cs - pad)
             val save = canvas.save()
@@ -301,10 +312,12 @@ class MinesweeperGridView(context: Context) : View(context) {
         val p = effectTime / 1400f
         val terminal = g.gameState == GameState.WON || g.gameState == GameState.LOST
         val source = if (g.gameState == GameState.LOST) g.detonatedCell else null
-        val cx = originX + ((source?.second ?: effectCol) + .5f) * cs
-        val cy = originY + ((source?.first ?: effectRow) + .5f) * cs
+        val cx = cellX(source?.first ?: effectRow, source?.second ?: effectCol) + cs / 2
+        val cy = cellY(source?.first ?: effectRow, source?.second ?: effectCol) + cs / 2
+        val shownW = shownCols(g) * cs
+        val shownH = shownRows(g) * cs
         val save = canvas.save()
-        canvas.clipRect(originX, originY, originX + g.cols * cs, originY + g.rows * cs)
+        canvas.clipRect(originX, originY, originX + shownW, originY + shownH)
         ink.color = if (g.gameState == GameState.LOST) red else teal
         ink.style = Paint.Style.STROKE
         ink.strokeWidth = cs * .04f
@@ -319,8 +332,8 @@ class MinesweeperGridView(context: Context) : View(context) {
             for (i in 0 until 24) {
                 val angle = i * 2.39996f
                 val distance = cs * (1f + p * (3 + i % 5))
-                val x = if (g.gameState == GameState.WON) originX + (i * .618034f % 1f) * g.cols * cs else cx + kotlin.math.cos(angle) * distance
-                val y = if (g.gameState == GameState.WON) originY + g.rows * cs * (1f - p) + sin(angle) * cs else cy + sin(angle) * distance
+                val x = if (g.gameState == GameState.WON) originX + (i * .618034f % 1f) * shownW else cx + kotlin.math.cos(angle) * distance
+                val y = if (g.gameState == GameState.WON) originY + shownH * (1f - p) + sin(angle) * cs else cy + sin(angle) * distance
                 ink.alpha = ((1f - p) * 190).toInt()
                 canvas.drawCircle(x, y, cs * .045f * (1 + i % 3), ink)
             }
@@ -333,8 +346,10 @@ class MinesweeperGridView(context: Context) : View(context) {
     private fun cellIndexAt(x: Float, y: Float): Int {
         val g = game ?: return -1
         if (cellSize <= 0f || x < originX || y < originY) return -1
-        val c = ((x - originX) / cellSize).toInt()
-        val r = ((y - originY) / cellSize).toInt()
+        val across = ((x - originX) / cellSize).toInt()
+        val down = ((y - originY) / cellSize).toInt()
+        val c = if (turned) down else across
+        val r = if (turned) across else down
         return if (r in 0 until g.rows && c in 0 until g.cols) r * g.cols + c else -1
     }
 
