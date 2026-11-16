@@ -31,6 +31,7 @@
         <item>Splendide !</item>
         <item>Magnifique !</item>
     </string-array>
+    <string name="mercerie_dark_mode">Mode sombre</string>
     <string name="mercerie_hint">Aide : montrer un coup possible</string>
     <string name="mercerie_on">Oui</string>
     <string name="mercerie_off">Non</string>

@@ -35,7 +35,9 @@ class MercerieActivity : ThemedActivity() {
     /** L'étage que l'atelier est en train de préparer pour le joueur, ou 0. */
     private var awaited = 0
     private val sound = MercerieSound()
-    private val icons by lazy { MercerieSprites(assets, dp(44f)) }
+    private var iconCache: MercerieSprites? = null
+    /** Les petites images des objectifs et de l'aide, refaites quand le mode change. */
+    private val icons: MercerieSprites get() = iconCache ?: MercerieSprites(assets, dp(44f)).also { iconCache = it }
 
     private var boardView: MercerieBoardView? = null
     private var movesText: TextView? = null
@@ -54,6 +56,7 @@ class MercerieActivity : ThemedActivity() {
         super.onCreate(savedInstanceState)
         enableImmersiveMode()
         updateSystemBarsVisibility()
+        Felt.theme(progress.dark)
         root = FrameLayout(this).apply { background = FabricDrawable(this@MercerieActivity) }
         setContentView(root)
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
@@ -64,6 +67,19 @@ class MercerieActivity : ThemedActivity() {
 
     override fun onResume() { super.onResume(); sound.start() }
     override fun onPause() { sound.stop(); super.onPause() }
+
+    /** La palette est commune à tout le processus : la tuile du hub se dessine en clair. */
+    override fun onDestroy() { Felt.theme(false); super.onDestroy() }
+
+    /** La bascule de l'accueil : tout le jeu change de feutrine, tout de suite. */
+    private fun setDark(dark: Boolean) {
+        progress.dark = dark
+        Felt.theme(dark)
+        iconCache = null
+        starIconCache = null
+        root.background = FabricDrawable(this)
+        if (screen == Screen.HOME && card == null) showHome()
+    }
 
     /** L'écran a tourné : même écran, même partie, même fiche, dans l'autre mise en page. */
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -122,21 +138,26 @@ class MercerieActivity : ThemedActivity() {
         FeltButton(this, getString(text), color, big).apply { setOnClickListener { sound.tick(); action() } }
 
     private fun roundButton(text: Int, action: () -> Unit) =
-        FeltButton(this, getString(text), Felt.CREAM, round = true).apply { setOnClickListener { sound.tick(); action() } }
+        FeltButton(this, getString(text), Felt.PAPER, round = true).apply { setOnClickListener { sound.tick(); action() } }
 
-    /** Barre du haut : retour à gauche, aide à droite, titre au milieu. */
-    private fun topBar(title: String?, onBack: () -> Unit): View = FrameLayout(this).apply {
+    /** Barre du haut : retour à gauche, aide à droite, titre au milieu ; [extra] se range à gauche de l'aide. */
+    private fun topBar(title: String?, extra: View? = null, onBack: () -> Unit): View = FrameLayout(this).apply {
         setPadding(dp(12f), dp(10f), dp(12f), 0)
         addView(roundButton(R.string.mercerie_sym_back, onBack), FrameLayout.LayoutParams(-2, -2, Gravity.START or Gravity.CENTER_VERTICAL))
         if (title != null) addView(MercerieUi.label(context, 22f).apply { text = title }, FrameLayout.LayoutParams(-2, -2, Gravity.CENTER))
         addView(roundButton(R.string.mercerie_sym_help) { showHelp() }, FrameLayout.LayoutParams(-2, -2, Gravity.END or Gravity.CENTER_VERTICAL))
+        if (extra != null) addView(extra, FrameLayout.LayoutParams(-2, -2, Gravity.END or Gravity.CENTER_VERTICAL).apply { rightMargin = dp(66f) })
+    }
+
+    private fun darkSwitch(): View = FeltSwitch(this, progress.dark) { sound.tick(); setDark(it) }.apply {
+        contentDescription = getString(R.string.mercerie_dark_mode)
     }
 
     /** Étiquette : le total des étoiles et des points. */
     private fun totals(): View = LinearLayout(this).apply {
         orientation = LinearLayout.HORIZONTAL
         gravity = Gravity.CENTER_VERTICAL
-        background = FeltDrawable(context, Felt.CREAM, 22f, threadColor = Felt.KRAFT)
+        background = FeltDrawable(context, Felt.PAPER, 22f, threadColor = Felt.KRAFT)
         setPadding(dp(20f), dp(10f), dp(20f), dp(14f))
         addView(MercerieUi.label(context, 17f, Felt.darker(Felt.GOLD, .8f)).apply {
             text = getString(R.string.mercerie_stars_total, progress.totalStars)
@@ -153,7 +174,7 @@ class MercerieActivity : ThemedActivity() {
         leaveGame()
         val next = progress.next
         workshop.warm(next)
-        val pique = MascotView(this)
+        val pique = MascotView(this, Mascot.random())
         pique.setOnClickListener { pique.mood = 1; sound.special(); pique.postDelayed({ pique.mood = 0 }, 1200L) }
         val title = FeltTitleView(this, getString(R.string.mercerie_logo))
         val play = button(R.string.mercerie_play, big = true) { startLevel(next) }
@@ -179,12 +200,12 @@ class MercerieActivity : ThemedActivity() {
             val frame = FrameLayout(this)
             frame.addView(BuntingView(this), FrameLayout.LayoutParams(-1, dp(56f), Gravity.TOP))
             frame.addView(row, FrameLayout.LayoutParams(-1, -1))
-            frame.addView(topBar(null) { finish() }, FrameLayout.LayoutParams(-1, -2, Gravity.TOP))
+            frame.addView(topBar(null, darkSwitch()) { finish() }, FrameLayout.LayoutParams(-1, -2, Gravity.TOP))
             setScreen(Screen.HOME, frame)
             return
         }
         val content = column()
-        content.add(topBar(null) { finish() }, width = -1)
+        content.add(topBar(null, darkSwitch()) { finish() }, width = -1)
         content.add(BuntingView(this), width = -1, height = dp(70f))
         content.add(spacer(), height = 0, weight = .6f)
         content.add(title, width = -1)
@@ -232,10 +253,10 @@ class MercerieActivity : ThemedActivity() {
         return out
     }
 
-    private val starIcon: Bitmap by lazy {
-        Bitmap.createBitmap(dp(44f), dp(44f), Bitmap.Config.ARGB_8888).also {
-            Felt.star(android.graphics.Canvas(it), it.width / 2f, it.height / 2f, it.width * .36f, true)
-        }
+    private var starIconCache: Bitmap? = null
+    private val starIcon: Bitmap get() = starIconCache ?: Bitmap.createBitmap(dp(44f), dp(44f), Bitmap.Config.ARGB_8888).also {
+        Felt.star(android.graphics.Canvas(it), it.width / 2f, it.height / 2f, it.width * .36f, true)
+        starIconCache = it
     }
 
     /** Une rangée d'objectifs. Avec [live], les nombres suivront la partie. */
@@ -272,13 +293,13 @@ class MercerieActivity : ThemedActivity() {
     private fun showCard(dismissable: Boolean, build: LinearLayout.() -> Unit) {
         closeCard()
         val panel = column().apply {
-            background = FeltDrawable(context, Felt.CREAM, 34f, threadColor = Felt.PINK)
+            background = FeltDrawable(context, Felt.PAPER, 34f, threadColor = Felt.PINK)
             setPadding(dp(30f), dp(26f), dp(30f), dp(30f))
             isClickable = true
             build()
         }
         val veil = FrameLayout(this).apply {
-            setBackgroundColor(0x885B4034.toInt())
+            setBackgroundColor(Felt.VEIL)
             isClickable = true
             if (dismissable) setOnClickListener { closeCard() }
             addView(panel, FrameLayout.LayoutParams(-2, -2, Gravity.CENTER).apply {
@@ -306,7 +327,7 @@ class MercerieActivity : ThemedActivity() {
         awaited = number
         showCard(dismissable = true) {
             add(MercerieUi.label(context, 26f, Felt.PINK).apply { text = getString(R.string.mercerie_level, number) })
-            add(MascotView(context).apply { mood = 1 }, width = dp(130f), height = dp(130f), top = 6f)
+            add(MascotView(context, Mascot.random()).apply { mood = 1 }, width = dp(130f), height = dp(130f), top = 6f)
         }
         val shown = card
         workshop.request(number) { level ->
@@ -321,7 +342,7 @@ class MercerieActivity : ThemedActivity() {
             add(goalRow(l, null, live = false), top = 8f)
             add(MercerieUi.label(context, 16f).apply { text = resources.getQuantityString(R.plurals.mercerie_moves, l.moves, l.moves) }, top = 10f)
             val best = progress.best(number)
-            if (best > 0) add(MercerieUi.label(context, 15f, Felt.darker(Felt.KRAFT, .7f)).apply {
+            if (best > 0) add(MercerieUi.label(context, 15f, Felt.SOFT).apply {
                 text = getString(R.string.mercerie_best, MercerieUi.number(best))
             }, top = 6f)
             buttons(button(R.string.mercerie_play, big = true) { play(l) })
@@ -462,7 +483,7 @@ class MercerieActivity : ThemedActivity() {
         if (wide) {
             val side = column().apply {
                 gravity = Gravity.CENTER_HORIZONTAL
-                background = FeltDrawable(context, Felt.CREAM, 30f, threadColor = Felt.KRAFT)
+                background = FeltDrawable(context, Felt.PAPER, 30f, threadColor = Felt.KRAFT)
                 setPadding(dp(14f), dp(14f), dp(14f), dp(18f))
             }
             val corner = FrameLayout(this).apply {
@@ -492,7 +513,7 @@ class MercerieActivity : ThemedActivity() {
             val hud = LinearLayout(this).apply {
                 orientation = LinearLayout.HORIZONTAL
                 gravity = Gravity.CENTER_VERTICAL
-                background = FeltDrawable(context, Felt.CREAM, 30f, threadColor = Felt.KRAFT)
+                background = FeltDrawable(context, Felt.PAPER, 30f, threadColor = Felt.KRAFT)
                 setPadding(dp(14f), dp(10f), dp(16f), dp(14f))
                 addView(movesBox)
                 addView(goals, LinearLayout.LayoutParams(0, -2, 1f))
@@ -500,7 +521,7 @@ class MercerieActivity : ThemedActivity() {
             }
             column.addView(hud, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(8f); leftMargin = dp(12f); rightMargin = dp(12f) })
             column.add(view, width = -1, height = 0, weight = 1f)
-            val pique = MascotView(this)
+            val pique = MascotView(this, Mascot.of(l))
             pique.mood = mood
             column.add(pique, width = dp(92f), height = dp(92f))
             column.add(spacer(), height = dp(6f))
@@ -533,7 +554,7 @@ class MercerieActivity : ThemedActivity() {
                     add(MercerieUi.label(context, 26f, Felt.PINK).apply { text = getString(R.string.mercerie_lose) })
                     add(goalRow(l, board, live = false), top = 12f)
                     buttons(button(R.string.mercerie_retry) { startLevel(l.number) })
-                    buttons(button(R.string.mercerie_quit, Felt.CREAM) { showHome() })
+                    buttons(button(R.string.mercerie_quit, Felt.PAPER) { showHome() })
                 }
             }, 500L)
             return
@@ -549,11 +570,11 @@ class MercerieActivity : ThemedActivity() {
                 add(MercerieUi.label(context, 28f, Felt.PINK).apply { text = getString(R.string.mercerie_win) })
                 add(StarsView(context, stars), width = dp(210f), height = dp(78f), top = 6f)
                 add(MercerieUi.label(context, 30f).apply { text = MercerieUi.number(board.score) }, top = 4f)
-                add(MercerieUi.label(context, 15f, Felt.darker(Felt.KRAFT, .7f)).apply {
+                add(MercerieUi.label(context, 15f, Felt.SOFT).apply {
                     text = if (record.newBest) getString(R.string.mercerie_new_best)
                     else getString(R.string.mercerie_best, MercerieUi.number(progress.best(l.number)))
                 }, top = 4f)
-                if (neutrinos > 0) add(MercerieUi.label(context, 15f, Felt.darker(Felt.COLORS[1], .8f)).apply {
+                if (neutrinos > 0) add(MercerieUi.label(context, 15f, if (Felt.dark) Felt.lighter(Felt.COLORS[1], .45f) else Felt.darker(Felt.COLORS[1], .8f)).apply {
                     text = getString(R.string.mercerie_neutrinos, neutrinos)
                 }, top = 6f)
                 // Rejouer à gauche, la suite à droite.
@@ -561,7 +582,7 @@ class MercerieActivity : ThemedActivity() {
                     button(R.string.mercerie_retry, Felt.MINT) { startLevel(l.number) },
                     button(R.string.mercerie_next) { startLevel(l.number + 1) }
                 )
-                buttons(button(R.string.mercerie_quit, Felt.CREAM) { showHome() })
+                buttons(button(R.string.mercerie_quit, Felt.PAPER) { showHome() })
             }
         }, 600L)
     }

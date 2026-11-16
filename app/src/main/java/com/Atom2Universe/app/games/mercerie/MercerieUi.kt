@@ -86,9 +86,7 @@ class FabricDrawable(context: Context, private val top: Int = Felt.PEACH, privat
     private val paint = Paint(Paint.FILTER_BITMAP_FLAG)
     private val quilt = Path()
     private val zoom = if (context.resources.configuration.smallestScreenWidthDp >= 600) 1f else 1.4f
-    private val image: Bitmap? = try {
-        context.assets.open("mercerie/fond.webp").use { BitmapFactory.decodeStream(it) }
-    } catch (_: Exception) { null }
+    private val image: Bitmap? = Felt.image(context.assets, "fond")
 
     override fun onBoundsChange(bounds: android.graphics.Rect) {
         quilt.rewind()
@@ -130,7 +128,7 @@ class FeltButton(context: Context, text: CharSequence, color: Int = Felt.PINK, b
         this.text = text
         typeface = MercerieUi.bold
         textSize = (if (big) 30f else 18f) * MercerieUi.scale(context)
-        setTextColor(if (color == Felt.CREAM) Felt.INK else Felt.CREAM)
+        setTextColor(if (color == Felt.PAPER) Felt.INK else Felt.CREAM)
         gravity = Gravity.CENTER
         includeFontPadding = false
         background = FeltDrawable(context, color, if (big) 40f else 28f)
@@ -241,16 +239,49 @@ class BuntingView(context: Context) : View(context) {
 }
 
 /**
- * Pique, la mascotte : un petit hérisson en feutrine (`assets/mercerie/mascot.webp`).
- * [mood] : 0 tranquille (il respire), 1 ravi (il sautille), -1 dépité (il s'affaisse, penché).
+ * La bande de mascottes en feutrine (`assets/mercerie/mascot*.webp`), la même dans les deux modes.
+ * Chaque niveau a la sienne, d'après son objectif ; l'accueil en tire une au hasard.
  */
-class MascotView(context: Context) : View(context) {
+enum class Mascot(val asset: String) {
+    /** Pique, le hérisson : niveaux au score. */
+    HEDGEHOG("mascot"),
+    /** La taupe coiffée d'un dé : dés à coudre à faire descendre. */
+    MOLE("mascot_mole"),
+    /** La souris aux ciseaux : écussons à découdre. */
+    MOUSE("mascot_mouse"),
+    /** L'écureuil au panier : pièces à récolter. */
+    SQUIRREL("mascot_squirrel"),
+    /** Le chaton à la pelote : nœuds de laine sur le plateau. */
+    CAT("mascot_cat");
+
+    companion object {
+        /** S'il y a plusieurs objectifs, le premier de la liste choisit. */
+        fun of(level: MercerieLevel): Mascot {
+            val g = level.goal
+            return when {
+                g.thimbles > 0 -> MOLE
+                g.patches -> MOUSE
+                g.collect.any { it > 0 } -> SQUIRREL
+                level.map.any { row -> row.any { it in "kKMqQ" } } -> CAT
+                else -> HEDGEHOG
+            }
+        }
+
+        fun random(): Mascot = entries.random()
+    }
+}
+
+/**
+ * Une mascotte qui vit : [mood] 0 tranquille (elle respire), 1 ravie (elle sautille), -1 dépitée
+ * (elle s'affaisse, penchée).
+ */
+class MascotView(context: Context, mascot: Mascot = Mascot.HEDGEHOG) : View(context) {
     var mood = 0
         set(value) { field = value; invalidate() }
     private val start = System.nanoTime()
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
     private val dst = RectF()
-    private val image: Bitmap? = cached(context)
+    private val image: Bitmap? = cached(context, mascot)
 
     override fun onDraw(canvas: Canvas) {
         val img = image ?: return
@@ -275,13 +306,76 @@ class MascotView(context: Context) : View(context) {
     }
 
     private companion object {
-        var shared: Bitmap? = null
+        val shared = HashMap<Mascot, Bitmap>()
 
-        fun cached(context: Context): Bitmap? {
-            shared?.let { return it }
+        fun cached(context: Context, mascot: Mascot): Bitmap? {
+            shared[mascot]?.let { return it }
             return try {
-                context.assets.open("mercerie/mascot.webp").use { BitmapFactory.decodeStream(it) }.also { shared = it }
+                context.assets.open("mercerie/${mascot.asset}.webp").use { BitmapFactory.decodeStream(it) }.also { shared[mascot] = it }
             } catch (_: Exception) { null }
+        }
+    }
+}
+
+/**
+ * La bascule jour / nuit de l'accueil : un rail de feutrine, un soleil à gauche, une lune à droite.
+ * Le pion glisse, puis [onChange] reçoit le nouvel état.
+ */
+@SuppressLint("ViewConstructor")
+class FeltSwitch(context: Context, private var on: Boolean, private val onChange: (Boolean) -> Unit) : View(context) {
+    private val unit = MercerieUi.unit(context)
+    private val track = Path()
+    private val knob = Path()
+    private val bite = Path()
+    /** Position du pion, de 0 (soleil) à 1 (lune). */
+    private var pos = if (on) 1f else 0f
+
+    init {
+        isClickable = true
+        isFocusable = true
+        setOnClickListener {
+            on = !on
+            animate().cancel()
+            val from = pos
+            android.animation.ValueAnimator.ofFloat(from, if (on) 1f else 0f).apply {
+                duration = 200
+                addUpdateListener { pos = it.animatedValue as Float; invalidate() }
+                addListener(object : android.animation.AnimatorListenerAdapter() {
+                    override fun onAnimationEnd(animation: android.animation.Animator) = onChange(on)
+                })
+                start()
+            }
+        }
+    }
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        val h = MercerieUi.dp(context, 44f).toInt()
+        setMeasuredDimension((h * 1.9f).toInt(), h)
+    }
+
+    override fun onDraw(canvas: Canvas) {
+        val h = height.toFloat()
+        val w = width.toFloat()
+        val pad = h * .08f
+        val day = 0xFFBFE3F2.toInt()
+        val night = 0xFF2C3566.toInt()
+        val mixed = android.animation.ArgbEvaluator().evaluate(pos, day, night) as Int
+        track.rewind()
+        track.addRoundRect(RectF(pad, pad, w - pad, h - pad), h / 2, h / 2, Path.Direction.CW)
+        Felt.shape(canvas, track, mixed, unit * .7f, stitch = false, plush = false)
+        val r = (h - pad * 2) * .4f
+        val cx = pad + r * 1.25f + (w - 2 * pad - r * 2.5f) * pos
+        val cy = h / 2
+        knob.rewind()
+        knob.addCircle(cx, cy, r, Path.Direction.CW)
+        if (pos > .5f) {
+            // La lune : le disque mordu par un autre.
+            bite.rewind()
+            bite.addCircle(cx + r * .55f, cy - r * .35f, r * .82f, Path.Direction.CW)
+            knob.op(bite, Path.Op.DIFFERENCE)
+            Felt.shape(canvas, knob, 0xFFF3E9C8.toInt(), r * 2, stitch = false)
+        } else {
+            Felt.shape(canvas, knob, 0xFFF7C948.toInt(), r * 2, threadColor = 0xFFFFF3C4.toInt())
         }
     }
 }

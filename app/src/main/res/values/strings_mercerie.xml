@@ -31,6 +31,7 @@
         <item>Splendid!</item>
         <item>Marvelous!</item>
     </string-array>
+    <string name="mercerie_dark_mode">Dark mode</string>
     <string name="mercerie_hint">Hint: show a possible move</string>
     <string name="mercerie_on">On</string>
     <string name="mercerie_off">Off</string>

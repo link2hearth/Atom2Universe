@@ -31,6 +31,11 @@ class MercerieProgress(context: Context) {
         get() = prefs.getBoolean("hints", true)
         set(value) { prefs.edit().putBoolean("hints", value).apply() }
 
+    /** Bascule de l'accueil : la feutrine de nuit. */
+    var dark: Boolean
+        get() = prefs.getBoolean("dark", false)
+        set(value) { prefs.edit().putBoolean("dark", value).apply() }
+
     val totalScore: Int get() = (1..next).sumOf { best(it) }
     val totalStars: Int get() = (1..next).sumOf { stars(it) }
 

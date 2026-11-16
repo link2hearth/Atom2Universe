@@ -3,7 +3,6 @@ package com.Atom2Universe.app.games.mercerie
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.BitmapShader
 import android.graphics.Canvas
 import android.graphics.LightingColorFilter
@@ -137,7 +136,7 @@ class MercerieBoardView(context: Context, val board: MercerieBoard, private val 
                     val k = cell * 4f / cloth.width
                     setLocalMatrix(Matrix().apply { setScale(k, k) })
                 }
-                weave.colorFilter = LightingColorFilter(0xFFE4D0BC.toInt(), 0)
+                if (!Felt.dark) weave.colorFilter = LightingColorFilter(0xFFE4D0BC.toInt(), 0)
                 c.drawRoundRect(left, top, right, bottom, cell * .34f, cell * .34f, weave)
                 val inset = unit * .16f
                 path.rewind()
@@ -625,15 +624,11 @@ class MercerieBoardView(context: Context, val board: MercerieBoard, private val 
     }
 
     companion object {
-        private var cloth: Bitmap? = null
+        /** Le tissu du plateau (`plateau.webp`), chargé une fois par mode. */
+        private val cloth = HashMap<Boolean, Bitmap>()
 
-        /** Le tissu du plateau (`assets/mercerie/plateau.webp`), chargé une fois. */
-        private fun linen(context: Context): Bitmap? {
-            cloth?.let { return it }
-            return try {
-                context.assets.open("mercerie/plateau.webp").use { BitmapFactory.decodeStream(it) }.also { cloth = it }
-            } catch (_: Exception) { null }
-        }
+        private fun linen(context: Context): Bitmap? =
+            cloth[Felt.dark] ?: Felt.image(context.assets, "plateau")?.also { cloth[Felt.dark] = it }
 
         private const val SWAP_MS = 150f
         private const val WAVE_MS = 70L

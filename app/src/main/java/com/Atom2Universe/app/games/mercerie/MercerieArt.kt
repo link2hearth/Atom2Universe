@@ -30,21 +30,77 @@ import kotlin.math.sin
  * passe par [shape] pour avoir la même épaisseur, les mêmes fibres et le même point de couture.
  */
 object Felt {
-    /** Rouge cœur, bleu bouton, jaune étoile, vert feuille, violet pelote, orange fleur. */
-    val COLORS = intArrayOf(
+    private val LIGHT_COLORS = intArrayOf(
         0xFFE8596A.toInt(), 0xFF5AA9E6.toInt(), 0xFFF7C948.toInt(),
         0xFF6CC08B.toInt(), 0xFFA982D9.toInt(), 0xFFF5935A.toInt()
     )
-    const val INK = 0xFF5B4034.toInt()
-    const val CREAM = 0xFFFFF6E6.toInt()
-    const val LINEN = 0xFFEBD3B8.toInt()
-    const val KRAFT = 0xFFD9B48F.toInt()
-    const val PINK = 0xFFEF6F8A.toInt()
-    const val MINT = 0xFF8FD3B6.toInt()
-    const val SKY = 0xFFBFE3F2.toInt()
-    const val PEACH = 0xFFFDE3D0.toInt()
-    const val GOLD = 0xFFF7C948.toInt()
-    const val GREY = 0xFFCFC6BC.toInt()
+    /** Les mêmes, en tons profonds, d'après les images sombres. */
+    private val DARK_COLORS = intArrayOf(
+        0xFFB3202E.toInt(), 0xFF2F58C0.toInt(), 0xFFE0A81E.toInt(),
+        0xFF1F8A45.toInt(), 0xFF7B3FB0.toInt(), 0xFFC9561C.toInt()
+    )
+
+    /**
+     * Mode sombre : feutrines profondes, pièces sans visage, images prises dans `assets/mercerie/dark/`
+     * (une image absente de ce dossier vient du dossier clair). [theme] change toute la palette d'un coup.
+     */
+    var dark = false
+        private set
+
+    /** Rouge cœur, bleu bouton, jaune étoile, vert feuille, violet pelote, orange fleur. */
+    var COLORS = LIGHT_COLORS
+        private set
+    /** Texte posé sur le fond ou sur un panneau ([PAPER]). */
+    var INK = 0xFF5B4034.toInt(); private set
+    /** Fil clair : couture, texte sur un bouton de couleur, étincelles. */
+    var CREAM = 0xFFFFF6E6.toInt(); private set
+    /** Feutrine des panneaux, des fiches et des boutons ronds. */
+    var PAPER = 0xFFFFF6E6.toInt(); private set
+    /** Texte secondaire sur un panneau (meilleur score). */
+    var SOFT = 0xFF987E64.toInt(); private set
+    /** Voile posé sous une fiche. */
+    var VEIL = 0x885B4034.toInt(); private set
+    var LINEN = 0xFFEBD3B8.toInt(); private set
+    var KRAFT = 0xFFD9B48F.toInt(); private set
+    var PINK = 0xFFEF6F8A.toInt(); private set
+    var MINT = 0xFF8FD3B6.toInt(); private set
+    var SKY = 0xFFBFE3F2.toInt(); private set
+    var PEACH = 0xFFFDE3D0.toInt(); private set
+    var GOLD = 0xFFF7C948.toInt(); private set
+    var GREY = 0xFFCFC6BC.toInt(); private set
+    /** Cases du plateau, paire et impaire. */
+    var TILES = intArrayOf(0xFFFFF5E4.toInt(), 0xFFFBEBD5.toInt()); private set
+
+    fun theme(dark: Boolean) {
+        this.dark = dark
+        if (dark) {
+            COLORS = DARK_COLORS
+            INK = 0xFFF1E6D6.toInt(); CREAM = 0xFFEDE3D3.toInt(); PAPER = 0xFF2F3242.toInt()
+            SOFT = 0xFFC7B7A2.toInt(); VEIL = 0xAA0E0F16.toInt()
+            LINEN = 0xFF4A4E60.toInt(); KRAFT = 0xFF5E5568.toInt()
+            PINK = 0xFFC9506C.toInt(); MINT = 0xFF3E8B70.toInt(); SKY = 0xFF34507A.toInt()
+            PEACH = 0xFF4A3F55.toInt(); GOLD = 0xFFE9B83A.toInt(); GREY = 0xFF5C6070.toInt()
+            TILES = intArrayOf(0xFF555B6E.toInt(), 0xFF4C5163.toInt())
+        } else {
+            COLORS = LIGHT_COLORS
+            INK = 0xFF5B4034.toInt(); CREAM = 0xFFFFF6E6.toInt(); PAPER = 0xFFFFF6E6.toInt()
+            SOFT = 0xFF987E64.toInt(); VEIL = 0x885B4034.toInt()
+            LINEN = 0xFFEBD3B8.toInt(); KRAFT = 0xFFD9B48F.toInt()
+            PINK = 0xFFEF6F8A.toInt(); MINT = 0xFF8FD3B6.toInt(); SKY = 0xFFBFE3F2.toInt()
+            PEACH = 0xFFFDE3D0.toInt(); GOLD = 0xFFF7C948.toInt(); GREY = 0xFFCFC6BC.toInt()
+            TILES = intArrayOf(0xFFFFF5E4.toInt(), 0xFFFBEBD5.toInt())
+        }
+    }
+
+    /** Une image du jeu, prise d'abord dans le dossier sombre quand le mode sombre est choisi. */
+    fun image(assets: AssetManager?, name: String): Bitmap? {
+        if (assets == null) return null
+        val paths = if (dark) listOf("mercerie/dark/$name.webp", "mercerie/$name.webp") else listOf("mercerie/$name.webp")
+        for (p in paths) try {
+            return assets.open(p).use { BitmapFactory.decodeStream(it) }
+        } catch (_: Exception) {}
+        return null
+    }
 
     fun darker(color: Int, f: Float = .78f) = Color.argb(
         Color.alpha(color), (Color.red(color) * f).toInt(), (Color.green(color) * f).toInt(), (Color.blue(color) * f).toInt()
@@ -244,7 +300,7 @@ object Felt {
 /**
  * Les images des pièces, préparées une fois à la taille d'une case.
  *
- * Elles viennent de `assets/mercerie/` (`piece_0` à `piece_5`, `rainbow`, `thimble`, `pin`, `knot`,
+ * Elles viennent de `assets/mercerie/` (ou de `dark/` en mode sombre : [Felt.image]) (`piece_0` à `piece_5`, `rainbow`, `thimble`, `pin`, `knot`,
  * `patch`, `pompom`, en `.webp`) ; une image absente est remplacée par un dessin en code. Les rubans des
  * bobines et la pelote des pompons se composent ici, par-dessus l'image de la pièce.
  */
@@ -254,9 +310,7 @@ class MercerieSprites(private val assets: AssetManager?, val cell: Int) {
 
     private fun blank() = Bitmap.createBitmap(cell, cell, Bitmap.Config.ARGB_8888)
 
-    private fun asset(name: String): Bitmap? = try {
-        assets?.open("mercerie/$name.webp")?.use { BitmapFactory.decodeStream(it) }
-    } catch (_: Exception) { null }
+    private fun asset(name: String): Bitmap? = Felt.image(assets, name)
 
     /** Pose [src] dans une case : [scale] de sa largeur, décalée de [dy] cases, penchée de [tilt] degrés. */
     private fun fitted(src: Bitmap, scale: Float, filter: ColorFilter? = null, dy: Float = 0f, tilt: Float = 0f): Bitmap {
@@ -321,7 +375,9 @@ class MercerieSprites(private val assets: AssetManager?, val cell: Int) {
         ?: blank().also { drawPin(Canvas(it), cell / 2f, cell / 2f, r) }
     val patch: Array<Bitmap> = asset("patch")?.let { src ->
         Array(2) { layers ->
-            fitted(src, .9f, if (layers == 1) LightingColorFilter(0xFFE2A0B4.toInt(), 0) else null)
+            // Double écusson : plus rose en clair, plus vif en sombre.
+            val second = if (Felt.dark) LightingColorFilter(0xFFFFFFFF.toInt(), 0x00502638) else LightingColorFilter(0xFFE2A0B4.toInt(), 0)
+            fitted(src, .9f, if (layers == 1) second else null)
         }.also { src.recycle() }
     } ?: Array(2) { layers -> blank().also { drawPatch(Canvas(it), cell.toFloat(), layers + 1) } }
     val tile = Array(2) { odd -> blank().also { drawTile(Canvas(it), cell.toFloat(), odd == 1) } }
@@ -628,7 +684,7 @@ class MercerieSprites(private val assets: AssetManager?, val cell: Int) {
         fun drawTile(canvas: Canvas, cell: Float, odd: Boolean) {
             val m = cell * .035f
             val path = Path().apply { addRoundRect(RectF(m, m, cell - m, cell - m), cell * .16f, cell * .16f, Path.Direction.CW) }
-            Felt.shape(canvas, path, if (odd) 0xFFFBEBD5.toInt() else 0xFFFFF5E4.toInt(), cell, stitch = false, shadow = false, plush = false)
+            Felt.shape(canvas, path, Felt.TILES[if (odd) 1 else 0], cell, stitch = false, shadow = false, plush = false)
         }
     }
 }
