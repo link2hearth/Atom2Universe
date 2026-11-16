@@ -132,6 +132,18 @@ object Felt {
         BitmapShader(b, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT)
     }
 
+    /** Le bombé de la feutrine, dessiné une fois à l'unité puis posé par une matrice. */
+    private val bulge = RadialGradient(0f, 0f, 1f, intArrayOf(0x38FFFFFF, 0x00FFFFFF, 0x26000000), floatArrayOf(0f, .55f, 1f), Shader.TileMode.CLAMP)
+    private val bulgeMatrix = Matrix()
+
+    /** Pointillés et étoiles déjà fabriqués, par taille : la carte en redessine des dizaines à chaque image. */
+    private val dashes = object : LinkedHashMap<Float, DashPathEffect>(16, .75f, true) {
+        override fun removeEldestEntry(eldest: MutableMap.MutableEntry<Float, DashPathEffect>?) = size > 24
+    }
+    private val stars = object : LinkedHashMap<Float, Path>(16, .75f, true) {
+        override fun removeEldestEntry(eldest: MutableMap.MutableEntry<Float, Path>?) = size > 24
+    }
+
     private val fill = Paint(Paint.ANTI_ALIAS_FLAG)
     private val fibers = Paint(Paint.ANTI_ALIAS_FLAG)
     private val shade = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -165,10 +177,11 @@ object Felt {
         if (plush) {
             val cx = bounds.centerX() - bounds.width() * .12f
             val cy = bounds.centerY() - bounds.height() * .18f
-            shade.shader = RadialGradient(
-                cx, cy, maxOf(bounds.width(), bounds.height()) * .75f,
-                intArrayOf(0x38FFFFFF, 0x00FFFFFF, 0x26000000), floatArrayOf(0f, .55f, 1f), Shader.TileMode.CLAMP
-            )
+            val reach = maxOf(bounds.width(), bounds.height()) * .75f
+            bulgeMatrix.setScale(reach, reach)
+            bulgeMatrix.postTranslate(cx, cy)
+            bulge.setLocalMatrix(bulgeMatrix)
+            shade.shader = bulge
             canvas.drawPath(path, shade)
         }
         fibers.shader = fiber
@@ -190,7 +203,7 @@ object Felt {
     fun stitches(canvas: Canvas, path: Path, color: Int, size: Float, width: Float = .034f) {
         thread.color = color
         thread.strokeWidth = size * width
-        thread.pathEffect = DashPathEffect(floatArrayOf(size * .085f, size * .075f), 0f)
+        thread.pathEffect = dashes.getOrPut(size) { DashPathEffect(floatArrayOf(size * .085f, size * .075f), 0f) }
         canvas.drawPath(path, thread)
         thread.pathEffect = null
     }
@@ -266,7 +279,7 @@ object Felt {
     /** Une étoile de récompense, pleine ou vide. */
     @Synchronized
     fun star(canvas: Canvas, cx: Float, cy: Float, r: Float, on: Boolean) {
-        val p = starPath(r)
+        val p = stars.getOrPut(r) { starPath(r) }
         canvas.save()
         canvas.translate(cx, cy)
         shape(canvas, p, if (on) GOLD else GREY, r * 2, stitch = on, shadow = on, plush = on, threadColor = 0xFFFFF3C4.toInt())

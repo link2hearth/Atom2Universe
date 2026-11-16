@@ -112,7 +112,7 @@ class MercerieMapView(context: Context, private val progress: MercerieProgress, 
                 canvas.drawText(MercerieUi.number(best), x, sy + radius * .86f, text)
             }
         }
-        if (next - 1 in first..last) postInvalidateOnAnimation()
+        if (next - 1 in first..last) postInvalidateDelayed(MercerieUi.IDLE_FRAME_MS)
     }
 
     @SuppressLint("ClickableViewAccessibility")

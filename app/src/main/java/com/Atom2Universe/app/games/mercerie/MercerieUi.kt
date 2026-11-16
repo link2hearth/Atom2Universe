@@ -37,6 +37,13 @@ object MercerieUi {
 
     val bold: Typeface = Typeface.create("sans-serif-black", Typeface.BOLD)
 
+    /**
+     * Les décors qui bougent sans cesse (mascotte qui respire, titre qui se balance, niveau en cours
+     * qui bat) se redessinent 30 fois par seconde, pas à chaque image de l'écran (120 Hz) : la
+     * tablette ne chauffe pas pour un hérisson qui respire.
+     */
+    const val IDLE_FRAME_MS = 33L
+
     private val format = java.text.NumberFormat.getIntegerInstance()
 
     /**
@@ -163,6 +170,30 @@ class FeltTitleView(context: Context, text: String, private val sizeDp: Float = 
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply { typeface = MercerieUi.bold }
     private val glyph = Path()
     private val start = System.nanoTime()
+    private val smooth = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
+    /** Chaque lettre cousue une fois pour toutes dans une image ; seule l'image se balance ensuite. */
+    private var letters: List<Bitmap> = emptyList()
+    private var bakedSize = 0f
+
+    private fun bake(size: Float) {
+        letters.forEach { it.recycle() }
+        paint.textSize = size
+        var n = 0
+        val out = ArrayList<Bitmap>()
+        for (line in lines) for (ch in line) if (ch != ' ') {
+            val s = ch.toString()
+            val w = paint.measureText(s)
+            val b = Bitmap.createBitmap((w + size * .5f).toInt().coerceAtLeast(1), (size * 1.5f).toInt().coerceAtLeast(1), Bitmap.Config.ARGB_8888)
+            val c = Canvas(b)
+            c.translate(b.width / 2f, size * BASE)
+            paint.getTextPath(s, 0, 1, -w / 2, 0f, glyph)
+            Felt.letter(c, glyph, Felt.COLORS[n % Felt.COLORS.size], size)
+            out += b
+            n++
+        }
+        letters = out
+        bakedSize = size
+    }
 
     private fun fit(width: Int): Float {
         var size = MercerieUi.dp(context, sizeDp)
@@ -181,6 +212,7 @@ class FeltTitleView(context: Context, text: String, private val sizeDp: Float = 
     override fun onDraw(canvas: Canvas) {
         val size = fit(width)
         paint.textSize = size
+        if (size != bakedSize || letters.isEmpty()) bake(size)
         val t = (System.nanoTime() - start) / 1e9f
         var n = 0
         for ((row, line) in lines.withIndex()) {
@@ -195,15 +227,25 @@ class FeltTitleView(context: Context, text: String, private val sizeDp: Float = 
                     canvas.save()
                     canvas.translate(x + w / 2, baseline + bob * size * .035f)
                     canvas.rotate(bob * 3.5f + (if (n % 2 == 0) -3f else 3f))
-                    paint.getTextPath(s, 0, 1, -w / 2, 0f, glyph)
-                    Felt.letter(canvas, glyph, Felt.COLORS[n % Felt.COLORS.size], size)
+                    letters.getOrNull(n)?.let { canvas.drawBitmap(it, -it.width / 2f, -size * BASE, smooth) }
                     canvas.restore()
                     n++
                 }
                 x += w + size * .06f
             }
         }
-        postInvalidateOnAnimation()
+        postInvalidateDelayed(MercerieUi.IDLE_FRAME_MS)
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        letters.forEach { it.recycle() }
+        letters = emptyList()
+    }
+
+    private companion object {
+        /** Hauteur de la ligne de base dans l'image d'une lettre, en tailles de texte. */
+        const val BASE = 1.1f
     }
 }
 
@@ -302,7 +344,8 @@ class MascotView(context: Context, mascot: Mascot = Mascot.HEDGEHOG) : View(cont
         dst.set(cx - side / 2, bottom - side, cx + side / 2, bottom)
         canvas.drawBitmap(img, null, dst, paint)
         canvas.restore()
-        postInvalidateOnAnimation()
+        // Ravie, elle sautille vite : à pleine cadence. Sinon elle respire doucement.
+        if (mood > 0) postInvalidateOnAnimation() else postInvalidateDelayed(MercerieUi.IDLE_FRAME_MS)
     }
 
     private companion object {

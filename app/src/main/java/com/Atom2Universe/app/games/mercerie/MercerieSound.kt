@@ -15,7 +15,25 @@ class MercerieSound {
     private val handler = Handler(Looper.getMainLooper())
     private var lastZap = 0L
 
-    fun start() {
+    /**
+     * Le synthé ne démarre qu'à la première note et s'arrête après [IDLE_MS] de silence : allumé,
+     * il calcule du son (même muet) sans arrêt, ce qui garde le processeur éveillé.
+     */
+    private val sleep = Runnable { shutDown() }
+    private var active = false
+
+    /** L'activité est au premier plan : les sons sont permis. */
+    fun start() { active = true }
+
+    /** Démarre le synthé tout de suite (un doigt se pose) : la note qui suit ne l'attendra pas. */
+    fun wake() {
+        if (!active) return
+        if (driver == null) boot()
+        handler.removeCallbacks(sleep)
+        handler.postDelayed(sleep, IDLE_MS)
+    }
+
+    private fun boot() {
         val d = MidiDriver.getInstance {
             ready = true
             send(0xC0 or BOX, 10)
@@ -30,8 +48,13 @@ class MercerieSound {
     }
 
     fun stop() {
-        ready = false
+        active = false
         handler.removeCallbacksAndMessages(null)
+        shutDown()
+    }
+
+    private fun shutDown() {
+        ready = false
         driver?.stop()
         driver = null
     }
@@ -42,6 +65,7 @@ class MercerieSound {
     }
 
     private fun note(ch: Int, pitch: Int, velocity: Int, ms: Long, delay: Long = 0) {
+        wake()
         if (!ready) return
         val play = Runnable {
             if (!ready) return@Runnable
@@ -76,6 +100,8 @@ class MercerieSound {
         const val BOX = 0
         const val WOOD = 1
         const val HARP = 2
+        /** Silence au bout duquel le synthé s'éteint. */
+        const val IDLE_MS = 8000L
         val PENTA = intArrayOf(0, 2, 4, 7, 9)
     }
 }

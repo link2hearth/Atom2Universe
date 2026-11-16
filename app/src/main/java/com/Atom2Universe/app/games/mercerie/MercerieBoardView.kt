@@ -209,6 +209,7 @@ class MercerieBoardView(context: Context, val board: MercerieBoard, private val 
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
                 armHint()
+                sound?.wake()
                 downCell = cellAt(event.x, event.y)
                 downX = event.x; downY = event.y
                 dragged = false
@@ -564,8 +565,12 @@ class MercerieBoardView(context: Context, val board: MercerieBoard, private val 
             outlined(canvas, word, width / 2f, originY + cell * board.rows * .46f, Felt.COLORS[(word.length) % 6], alpha.coerceIn(0, 255))
         }
         canvas.restore()
-        if (busy && !ended || effects.isNotEmpty() || particles.isNotEmpty() || floaters.isNotEmpty() || cheer != null || selected >= 0 || hint != null)
+        // Pleine cadence pendant que ça bouge ; le coup conseillé et la pièce choisie, qui battent
+        // doucement en attendant le joueur, se contentent de 30 images par seconde.
+        if (busy && !ended || effects.isNotEmpty() || particles.isNotEmpty() || floaters.isNotEmpty() || cheer != null)
             postInvalidateOnAnimation()
+        else if (selected >= 0 || hint != null)
+            postInvalidateDelayed(MercerieUi.IDLE_FRAME_MS)
     }
 
     private fun outlined(canvas: Canvas, s: String, x: Float, y: Float, color: Int, alpha: Int) {
