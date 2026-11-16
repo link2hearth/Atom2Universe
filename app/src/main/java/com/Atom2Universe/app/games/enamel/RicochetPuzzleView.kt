@@ -70,6 +70,7 @@ class RicochetPuzzleView(context: Context, val game: RicochetPuzzleGame = Ricoch
     private var hintPower = 0f
     private var hintFlight = -1f
     private val hand = HandPainter()
+    private val powerBar = PowerBarPainter()
 
     init { isFocusable = true; contentDescription = context.getString(R.string.puzzle_controls) }
 
@@ -150,8 +151,7 @@ class RicochetPuzzleView(context: Context, val game: RicochetPuzzleGame = Ricoch
             }
             val bar = if (pointer >= 0) power else if (hintOn) hintPower else 0f
             if (pointer >= 0 || bar > 0f) {
-                p.color = EnamelPainter.GOLD; p.strokeWidth = .065f
-                c.drawLine(0f, RicochetPuzzleRules.BASE, 10f * bar, RicochetPuzzleRules.BASE, p)
+                powerBar.draw(c, RicochetPuzzleRules.BASE, bar)
             }
         }
         c.restore()

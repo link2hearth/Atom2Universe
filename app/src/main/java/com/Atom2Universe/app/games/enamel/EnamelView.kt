@@ -68,6 +68,7 @@ class EnamelView(context: Context) : View(context) {
     var demo = false
     private val floatTick = Runnable { invalidate() }
     private val hand = HandPainter()
+    private val powerBar = PowerBarPainter()
     private val botRandom = Random.Default
     private val bot = EnamelBot()
     private var botPhase = BOT_THINK
@@ -269,8 +270,7 @@ class EnamelView(context: Context) : View(context) {
             p.alpha = 255; p.strokeWidth = .065f
             c.drawLine(0f, game.baseTop, 10f * game.danger, game.baseTop, p)
         } else if (aiming) {
-            p.color = EnamelPainter.GOLD; p.strokeWidth = .065f
-            c.drawLine(0f, game.baseTop, 10f * power, game.baseTop, p)
+            powerBar.draw(c, game.baseTop, power)
         }
         // L'aperçu suivant reste dans la base, libérant le bas pour toute la frise.
         if (!aiming || launchX < 7.6f || launchY < game.height - 1.1f) {
