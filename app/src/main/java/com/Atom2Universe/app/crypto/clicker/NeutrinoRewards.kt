@@ -24,6 +24,18 @@ object NeutrinoRewards {
     fun papattes(stage: Int, firstTime: Boolean) =
         if (firstTime) PAPATTES_FIRST_BASE + stage.coerceAtLeast(0) / PAPATTES_FIRST_DIVISOR else PAPATTES_REPLAY
 
+    /**
+     * Bobine & Boutons : un niveau gagné la première fois paie 3 + niveau ÷ 5, plafonné à 12 (les
+     * étages sont sans fin), puis 1 à chaque nouvelle victoire.
+     */
+    const val MERCERIE_FIRST_BASE = 3
+    const val MERCERIE_FIRST_DIVISOR = 5
+    const val MERCERIE_FIRST_MAX = 12
+    const val MERCERIE_REPLAY = 1
+    fun mercerie(level: Int, firstTime: Boolean) =
+        if (firstTime) (MERCERIE_FIRST_BASE + level.coerceAtLeast(0) / MERCERIE_FIRST_DIVISOR).coerceAtMost(MERCERIE_FIRST_MAX)
+        else MERCERIE_REPLAY
+
     const val MOCHI_POINTS_PER_NEUTRINO = 100
     fun mochi(score: Int) = score.coerceAtLeast(0) / MOCHI_POINTS_PER_NEUTRINO
 
@@ -333,6 +345,8 @@ object NeutrinoRewards {
             Entry(R.string.glutton_title, context.getString(R.string.glutton_reward_rate), R.string.neutrino_info_note_score),
             Entry(R.string.papattes_title, context.getString(R.string.papattes_reward_rate, PAPATTES_FIRST_BASE,
                 PAPATTES_FIRST_DIVISOR, PAPATTES_REPLAY), R.string.neutrino_info_note_level),
+            Entry(R.string.mercerie_title, context.getString(R.string.mercerie_reward_rate, MERCERIE_FIRST_BASE,
+                MERCERIE_FIRST_DIVISOR, MERCERIE_REPLAY, MERCERIE_FIRST_MAX), R.string.neutrino_info_note_level),
             Entry(R.string.hex_runner_hub_title, "1 / $SECONDS_PER_NEUTRINO s", R.string.neutrino_info_note_time),
             Entry(R.string.match3_title, "1 / $SECONDS_PER_NEUTRINO s", R.string.neutrino_info_note_time),
             Entry(R.string.motocross_title, "1 / $METERS_PER_NEUTRINO m", R.string.neutrino_info_note_distance),

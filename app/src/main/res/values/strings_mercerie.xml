@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mercerie_title">Bobbin &amp; Buttons</string>
+    <string name="mercerie_logo">Bobbin\n&amp; Buttons</string>
+    <string name="mercerie_description">Match felt hearts, buttons and yarn, floor after floor.</string>
+    <string name="mercerie_play">Play</string>
+    <string name="mercerie_levels">Levels</string>
+    <string name="mercerie_level">Level %1$d</string>
+    <string name="mercerie_moves_label">moves</string>
+    <plurals name="mercerie_moves">
+        <item quantity="one">%1$d move</item>
+        <item quantity="other">%1$d moves</item>
+    </plurals>
+    <string name="mercerie_stars_total">★ %1$d</string>
+    <string name="mercerie_points">%1$s pts</string>
+    <string name="mercerie_best">Best: %1$s</string>
+    <string name="mercerie_new_best">New best!</string>
+    <string name="mercerie_win">Well done!</string>
+    <string name="mercerie_lose">Out of moves</string>
+    <string name="mercerie_next">Next</string>
+    <string name="mercerie_retry">Retry</string>
+    <string name="mercerie_quit">Quit</string>
+    <string name="mercerie_pause">Pause</string>
+    <string name="mercerie_resume">Resume</string>
+    <string name="mercerie_restart">Restart</string>
+    <string name="mercerie_bonus">Final stitch!</string>
+    <string name="mercerie_neutrinos">⚛ +%1$d</string>
+    <string-array name="mercerie_cheers">
+        <item>Nice!</item>
+        <item>Lovely!</item>
+        <item>Splendid!</item>
+        <item>Marvelous!</item>
+    </string-array>
+    <string name="mercerie_hint">Hint: show a possible move</string>
+    <string name="mercerie_on">On</string>
+    <string name="mercerie_off">Off</string>
+    <string name="mercerie_help_title">How to play</string>
+    <string name="mercerie_help_line">4 in a row: a bobbin that clears a whole line.</string>
+    <string name="mercerie_help_bomb">An L or a T: a pom-pom that bursts twice.</string>
+    <string name="mercerie_help_rainbow">5 in a row: the rainbow button takes away one colour.</string>
+    <string name="mercerie_help_patch">Patch: match on top of it to unpick it.</string>
+    <string name="mercerie_help_knot">Wool knot: match right next to it to undo it.</string>
+    <string name="mercerie_help_pin">Pin: the piece stays stuck until it is matched.</string>
+    <string name="mercerie_help_thimble">Thimble: bring it all the way down.</string>
+    <string name="mercerie_help_combo">Swap two bonus pieces together for a bigger effect.</string>
+    <string name="mercerie_reward_rate">First win: %1$d + level ÷ %2$d (%4$d at most), then %3$d</string>
+    <string name="mercerie_sym_back" translatable="false">‹</string>
+    <string name="mercerie_sym_help" translatable="false">\?</string>
+    <string name="mercerie_sym_done" translatable="false">✓</string>
+</resources>

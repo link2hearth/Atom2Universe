@@ -383,6 +383,14 @@ object GamesCatalog {
             activityClass = SokobanActivity::class.java
         ),
         HubTile(
+            id = "mercerie",
+            titleRes = R.string.mercerie_title,
+            descriptionRes = R.string.mercerie_description,
+            iconRes = android.R.drawable.btn_star_big_on,
+            defaultColorRes = R.color.game_tile_match3,
+            activityClass = com.Atom2Universe.app.games.mercerie.MercerieActivity::class.java
+        ),
+        HubTile(
             id = "match3",
             titleRes = R.string.match3_title,
             descriptionRes = R.string.match3_description,

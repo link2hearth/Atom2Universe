@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mercerie_title">Bobine &amp; Boutons</string>
+    <string name="mercerie_logo">Bobine\n&amp; Boutons</string>
+    <string name="mercerie_description">Aligne cœurs, boutons et pelotes de feutrine, étage après étage.</string>
+    <string name="mercerie_play">Jouer</string>
+    <string name="mercerie_levels">Niveaux</string>
+    <string name="mercerie_level">Niveau %1$d</string>
+    <string name="mercerie_moves_label">coups</string>
+    <plurals name="mercerie_moves">
+        <item quantity="one">%1$d coup</item>
+        <item quantity="other">%1$d coups</item>
+    </plurals>
+    <string name="mercerie_stars_total">★ %1$d</string>
+    <string name="mercerie_points">%1$s pts</string>
+    <string name="mercerie_best">Record : %1$s</string>
+    <string name="mercerie_new_best">Nouveau record !</string>
+    <string name="mercerie_win">Bravo !</string>
+    <string name="mercerie_lose">Plus de coups</string>
+    <string name="mercerie_next">Suivant</string>
+    <string name="mercerie_retry">Rejouer</string>
+    <string name="mercerie_quit">Quitter</string>
+    <string name="mercerie_pause">Pause</string>
+    <string name="mercerie_resume">Reprendre</string>
+    <string name="mercerie_restart">Recommencer</string>
+    <string name="mercerie_bonus">Couture finale !</string>
+    <string name="mercerie_neutrinos">⚛ +%1$d</string>
+    <string-array name="mercerie_cheers">
+        <item>Joli !</item>
+        <item>Superbe !</item>
+        <item>Splendide !</item>
+        <item>Magnifique !</item>
+    </string-array>
+    <string name="mercerie_hint">Aide : montrer un coup possible</string>
+    <string name="mercerie_on">Oui</string>
+    <string name="mercerie_off">Non</string>
+    <string name="mercerie_help_title">Comment jouer</string>
+    <string name="mercerie_help_line">4 alignés : une bobine qui vide toute une ligne.</string>
+    <string name="mercerie_help_bomb">Un L ou un T : un pompon qui éclate deux fois.</string>
+    <string name="mercerie_help_rainbow">5 alignés : le bouton arc-en-ciel emporte une couleur.</string>
+    <string name="mercerie_help_patch">Écusson : aligne par-dessus pour le découdre.</string>
+    <string name="mercerie_help_knot">Nœud de laine : aligne juste à côté pour le défaire.</string>
+    <string name="mercerie_help_pin">Épingle : la pièce reste coincée tant qu\'elle n\'est pas alignée.</string>
+    <string name="mercerie_help_thimble">Dé à coudre : fais-le descendre tout en bas.</string>
+    <string name="mercerie_help_combo">Échange deux bonus ensemble pour un effet plus grand.</string>
+    <string name="mercerie_reward_rate">Première victoire : %1$d + niveau ÷ %2$d (%4$d au plus), puis %3$d</string>
+</resources>

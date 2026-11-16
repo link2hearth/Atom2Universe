@@ -27,6 +27,8 @@ object HubTileArtworks {
     private val byActivity: Map<String, KClass<out Drawable>> = mapOf(
         com.Atom2Universe.app.games.glutton.GluttonActivity::class.java.name to
             com.Atom2Universe.app.games.glutton.GluttonHubTileDrawable::class,
+        com.Atom2Universe.app.games.mercerie.MercerieActivity::class.java.name to
+            com.Atom2Universe.app.games.mercerie.MercerieHubTileDrawable::class,
         com.Atom2Universe.app.games.papattes.PapattesActivity::class.java.name to
             com.Atom2Universe.app.games.papattes.PapattesHubTileDrawable::class,
         com.Atom2Universe.app.games.mochi.MochiActivity::class.java.name to
