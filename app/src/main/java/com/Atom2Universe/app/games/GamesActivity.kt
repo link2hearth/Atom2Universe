@@ -61,6 +61,7 @@ class GamesActivity : BaseHubActivity() {
             .remove("tile_panes")
             .apply()
         GamesHubMigration.separateRicochet(hubPrefs)
+        GamesHubMigration.raiseFrontRow(hubPrefs)
     }
 
     override fun onTileClicked(tile: HubTile) {

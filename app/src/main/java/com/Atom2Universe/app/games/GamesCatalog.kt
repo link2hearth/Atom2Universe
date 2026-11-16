@@ -120,6 +120,70 @@ object GamesCatalog {
             defaultColorRes = R.color.game_tile_bigger,
             activityClass = RicochetMenuActivity::class.java
         ),
+        HubTile(
+            id = "colorstack",
+            titleRes = R.string.color_stack_title,
+            descriptionRes = R.string.color_stack_description,
+            iconRes = android.R.drawable.ic_menu_slideshow,
+            defaultColorRes = R.color.game_tile_colorstack,
+            activityClass = ColorStackMenuActivity::class.java
+        ),
+        HubTile(
+            id = "mercerie",
+            titleRes = R.string.mercerie_title,
+            descriptionRes = R.string.mercerie_description,
+            iconRes = android.R.drawable.btn_star_big_on,
+            defaultColorRes = R.color.game_tile_match3,
+            activityClass = com.Atom2Universe.app.games.mercerie.MercerieActivity::class.java
+        ),
+        HubTile(
+            id = "mahjong",
+            titleRes = R.string.mj_title,
+            descriptionRes = R.string.mj_description,
+            iconRes = android.R.drawable.ic_menu_gallery,
+            defaultColorRes = R.color.game_tile_solitaire,
+            activityClass = com.Atom2Universe.app.games.mahjong.MahjongActivity::class.java
+        ),
+        HubTile(
+            id = "atomblocks",
+            titleRes = R.string.ab_title,
+            descriptionRes = R.string.ab_description,
+            iconRes = android.R.drawable.ic_menu_slideshow,
+            defaultColorRes = R.color.game_tile_match3,
+            activityClass = com.Atom2Universe.app.games.atomblocks.AtomBlocksActivity::class.java
+        ),
+        HubTile(
+            id = "memory",
+            titleRes = R.string.memory_title,
+            descriptionRes = R.string.memory_description,
+            iconRes = android.R.drawable.ic_menu_gallery,
+            defaultColorRes = R.color.game_tile_memory,
+            activityClass = MemoryActivity::class.java
+        ),
+        HubTile(
+            id = "jigsaw",
+            titleRes = R.string.jigsaw_title,
+            descriptionRes = R.string.jigsaw_description,
+            iconRes = android.R.drawable.ic_menu_gallery,
+            defaultColorRes = R.color.game_tile_memory,
+            activityClass = com.Atom2Universe.app.games.jigsaw.JigsawActivity::class.java
+        ),
+        HubTile(
+            id = "sudoku",
+            titleRes = R.string.sudoku_title,
+            descriptionRes = R.string.sudoku_description,
+            iconRes = android.R.drawable.ic_dialog_dialer,
+            defaultColorRes = R.color.game_tile_sudoku,
+            activityClass = SudokuActivity::class.java
+        ),
+        HubTile(
+            id = "link",
+            titleRes = R.string.link_title,
+            descriptionRes = R.string.link_description,
+            iconRes = android.R.drawable.ic_menu_share,
+            defaultColorRes = R.color.game_tile_link,
+            activityClass = LinkActivity::class.java
+        ),
         // Mondes et aventure
         HubTile(
             id = "caves",
@@ -302,22 +366,6 @@ object GamesCatalog {
             activityClass = SolitaireActivity::class.java
         ),
         HubTile(
-            id = "mahjong",
-            titleRes = R.string.mj_title,
-            descriptionRes = R.string.mj_description,
-            iconRes = android.R.drawable.ic_menu_gallery,
-            defaultColorRes = R.color.game_tile_solitaire,
-            activityClass = com.Atom2Universe.app.games.mahjong.MahjongActivity::class.java
-        ),
-        HubTile(
-            id = "memory",
-            titleRes = R.string.memory_title,
-            descriptionRes = R.string.memory_description,
-            iconRes = android.R.drawable.ic_menu_gallery,
-            defaultColorRes = R.color.game_tile_memory,
-            activityClass = MemoryActivity::class.java
-        ),
-        HubTile(
             id = "blackjack",
             titleRes = R.string.blackjack_title,
             descriptionRes = R.string.blackjack_description,
@@ -334,30 +382,6 @@ object GamesCatalog {
             activityClass = RouletteActivity::class.java
         ),
         // Puzzles classiques
-        HubTile(
-            id = "atomblocks",
-            titleRes = R.string.ab_title,
-            descriptionRes = R.string.ab_description,
-            iconRes = android.R.drawable.ic_menu_slideshow,
-            defaultColorRes = R.color.game_tile_match3,
-            activityClass = com.Atom2Universe.app.games.atomblocks.AtomBlocksActivity::class.java
-        ),
-        HubTile(
-            id = "jigsaw",
-            titleRes = R.string.jigsaw_title,
-            descriptionRes = R.string.jigsaw_description,
-            iconRes = android.R.drawable.ic_menu_gallery,
-            defaultColorRes = R.color.game_tile_memory,
-            activityClass = com.Atom2Universe.app.games.jigsaw.JigsawActivity::class.java
-        ),
-        HubTile(
-            id = "sudoku",
-            titleRes = R.string.sudoku_title,
-            descriptionRes = R.string.sudoku_description,
-            iconRes = android.R.drawable.ic_dialog_dialer,
-            defaultColorRes = R.color.game_tile_sudoku,
-            activityClass = SudokuActivity::class.java
-        ),
         HubTile(
             id = "game2048",
             titleRes = R.string.game2048_title,
@@ -383,28 +407,12 @@ object GamesCatalog {
             activityClass = SokobanActivity::class.java
         ),
         HubTile(
-            id = "mercerie",
-            titleRes = R.string.mercerie_title,
-            descriptionRes = R.string.mercerie_description,
-            iconRes = android.R.drawable.btn_star_big_on,
-            defaultColorRes = R.color.game_tile_match3,
-            activityClass = com.Atom2Universe.app.games.mercerie.MercerieActivity::class.java
-        ),
-        HubTile(
             id = "match3",
             titleRes = R.string.match3_title,
             descriptionRes = R.string.match3_description,
             iconRes = android.R.drawable.ic_menu_slideshow,
             defaultColorRes = R.color.game_tile_match3,
             activityClass = Match3Activity::class.java
-        ),
-        HubTile(
-            id = "colorstack",
-            titleRes = R.string.color_stack_title,
-            descriptionRes = R.string.color_stack_description,
-            iconRes = android.R.drawable.ic_menu_slideshow,
-            defaultColorRes = R.color.game_tile_colorstack,
-            activityClass = ColorStackMenuActivity::class.java
         ),
         // Puzzles de logique et de tracé
         HubTile(
@@ -414,14 +422,6 @@ object GamesCatalog {
             iconRes = android.R.drawable.ic_menu_rotate,
             defaultColorRes = R.color.game_tile_circles,
             activityClass = CirclesActivity::class.java
-        ),
-        HubTile(
-            id = "link",
-            titleRes = R.string.link_title,
-            descriptionRes = R.string.link_description,
-            iconRes = android.R.drawable.ic_menu_share,
-            defaultColorRes = R.color.game_tile_link,
-            activityClass = LinkActivity::class.java
         ),
         HubTile(
             id = "pipetap",
@@ -473,6 +473,7 @@ object GamesCatalog {
     fun orderedTiles(context: Context): List<HubTile> {
         val prefs = context.getSharedPreferences("games_hub_prefs", Context.MODE_PRIVATE)
         GamesHubMigration.separateRicochet(prefs)
+        GamesHubMigration.raiseFrontRow(prefs)
         fun order(key: String) = prefs.getString(key, "").orEmpty().split(",").filter { it.isNotBlank() }
         // Les deux files l'une après l'autre : casse-têtes, puis grands jeux.
         val ids = (order("tile_order") + order("tile_order_1")).distinct()
