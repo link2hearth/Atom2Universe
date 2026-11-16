@@ -139,7 +139,7 @@
 
         <com.Atom2Universe.app.util.ImmersiveSpinner
             android:id="@+id/game2048_size_spinner"
-            android:layout_width="72dp"
+            android:layout_width="96dp"
             android:layout_height="40dp"
             android:layout_marginEnd="12dp" />
 

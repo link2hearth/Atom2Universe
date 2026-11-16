@@ -12,6 +12,7 @@ import com.Atom2Universe.app.LocaleHelper
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
+import com.Atom2Universe.app.util.Landscape
 import com.Atom2Universe.app.util.enableImmersiveMode
 import com.Atom2Universe.app.util.showGameRules
 import org.json.JSONArray
@@ -77,6 +78,7 @@ class Game2048Activity : ThemedActivity(), Game2048View.SwipeListener {
         super.onCreate(savedInstanceState)
         enableImmersiveMode()
         setContentView(R.layout.activity_game2048)
+        Landscape.bindSidePanel(this)
 
         initViews()
         loadSave()
@@ -466,6 +468,12 @@ class Game2048Activity : ThemedActivity(), Game2048View.SwipeListener {
             }
         }
         return map
+    }
+
+    /** Couché : la grille sur toute la hauteur et la bulle des réglages ; la partie ne bouge pas. */
+    override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
+        super.onConfigurationChanged(newConfig)
+        Landscape.swapLayout(this, R.layout.activity_game2048)
     }
 
     override fun onPause() {
