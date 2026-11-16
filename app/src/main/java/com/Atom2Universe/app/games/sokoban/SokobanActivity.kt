@@ -14,6 +14,7 @@ import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
+import com.Atom2Universe.app.util.Landscape
 import com.Atom2Universe.app.util.enableImmersiveMode
 import com.Atom2Universe.app.util.showGameRules
 import kotlinx.coroutines.Dispatchers
@@ -55,6 +56,7 @@ class SokobanActivity : ThemedActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sokoban)
+        Landscape.bindSidePanel(this)
         enableImmersiveMode()
 
         board       = findViewById(R.id.sokoban_board)
@@ -97,6 +99,12 @@ class SokobanActivity : ThemedActivity() {
 
         buildDiffButtons()
         startNewPuzzle()
+    }
+
+    /** Couché : le dépôt sur toute la hauteur et la bulle des commandes ; le niveau ne change pas. */
+    override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
+        super.onConfigurationChanged(newConfig)
+        Landscape.swapLayout(this, R.layout.activity_sokoban)
     }
 
     override fun onDestroy() {
