@@ -50,6 +50,7 @@ class LabSortActivity : ThemedActivity(), LabSortView.Listener {
     private lateinit var difficultySpinner: Spinner
     private lateinit var chipMystery: MaterialButton
     private lateinit var chipFormulas: MaterialButton
+    private lateinit var chipBackdrop: MaterialButton
     private lateinit var btnUndo: MaterialButton
     private lateinit var btnPipette: MaterialButton
     private lateinit var winOverlay: View
@@ -87,6 +88,7 @@ class LabSortActivity : ThemedActivity(), LabSortView.Listener {
         difficultySpinner = findViewById(R.id.lab_sort_difficulty_spinner)
         chipMystery = findViewById(R.id.lab_sort_chip_mystery)
         chipFormulas = findViewById(R.id.lab_sort_chip_formulas)
+        chipBackdrop = findViewById(R.id.lab_sort_chip_backdrop)
         btnUndo = findViewById(R.id.lab_sort_btn_undo)
         btnPipette = findViewById(R.id.lab_sort_btn_pipette)
         winOverlay = findViewById(R.id.lab_sort_win)
@@ -118,6 +120,10 @@ class LabSortActivity : ThemedActivity(), LabSortView.Listener {
             formulasOn = !formulasOn
             prefs.edit { putBoolean(KEY_FORMULAS, formulasOn) }
             labView.showFormulas = formulasOn
+            updateUI()
+        }
+        chipBackdrop.setOnClickListener {
+            labView.backdropOn = !labView.backdropOn
             updateUI()
         }
         findViewById<View>(R.id.lab_sort_win_close).setOnClickListener { hideWin() }
@@ -174,6 +180,7 @@ class LabSortActivity : ThemedActivity(), LabSortView.Listener {
     private fun startNewGame(diff: LabSortGame.Difficulty) {
         game.newGame(diff, mysteryOn)
         victoryRecorded = false
+        labView.nextBackdrop()
         resetBoardState()
         ignoreSpinnerChange = true
         difficultySpinner.setSelection(diff.ordinal, false)
@@ -320,6 +327,7 @@ class LabSortActivity : ThemedActivity(), LabSortView.Listener {
 
         styleChip(chipMystery, mysteryOn)
         styleChip(chipFormulas, formulasOn)
+        styleChip(chipBackdrop, labView.backdropOn)
     }
 
     private fun styleChip(chip: MaterialButton, on: Boolean) {

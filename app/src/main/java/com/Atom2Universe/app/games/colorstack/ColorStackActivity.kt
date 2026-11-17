@@ -33,6 +33,7 @@ class ColorStackActivity : ThemedActivity(), ColorStackView.OnMoveListener {
     private lateinit var colorStackView: ColorStackView
     private lateinit var movesText: TextView
     private lateinit var levelButtons: List<Pair<ColorStackGame.Difficulty, ImageButton>>
+    private lateinit var backdropButton: ImageButton
 
     private val game = ColorStackGame()
     private lateinit var prefs: SharedPreferences
@@ -81,6 +82,11 @@ class ColorStackActivity : ThemedActivity(), ColorStackView.OnMoveListener {
         findViewById<TextView>(R.id.color_stack_btn_new).setOnClickListener { startNewGame(game.difficulty) }
         findViewById<ImageButton>(R.id.color_stack_btn_restart).setOnClickListener { restartGame() }
         findViewById<ImageButton>(R.id.color_stack_btn_undo).setOnClickListener { undoMove() }
+        backdropButton = findViewById(R.id.color_stack_btn_backdrop)
+        backdropButton.setOnClickListener {
+            colorStackView.backdropOn = !colorStackView.backdropOn
+            syncBackdropButton()
+        }
 
         colorStackView.game = game
         colorStackView.listener = this
@@ -93,8 +99,19 @@ class ColorStackActivity : ThemedActivity(), ColorStackView.OnMoveListener {
         }
 
         syncLevelButtons()
+        syncBackdropButton()
         colorStackView.refresh()
         updateUI()
+    }
+
+    /** Tableau affiché : icône sur l'accent ; sans tableau : icône discrète. */
+    private fun syncBackdropButton() {
+        val on = colorStackView.backdropOn
+        backdropButton.setColorFilter(
+            if (on) AppearanceStyle.color(this, R.attr.a2uMusicAccent)
+            else ContextCompat.getColor(this, R.color.startup_text_secondary)
+        )
+        backdropButton.alpha = if (on) 1f else 0.6f
     }
 
     override fun onPause() {
@@ -122,6 +139,7 @@ class ColorStackActivity : ThemedActivity(), ColorStackView.OnMoveListener {
     private fun startNewGame(diff: ColorStackGame.Difficulty) {
         game.newGame(diff)
         colorStackView.game = game
+        colorStackView.nextBackdrop()
         colorStackView.refresh()
         syncLevelButtons()
         updateUI()

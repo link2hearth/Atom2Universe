@@ -92,7 +92,8 @@ class LabSortView @JvmOverloads constructor(
     private var dstN = 0
     private var movedColor = 0
 
-    private val glassFill = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.FILL; color = 0x1AFFFFFF }
+    // Verre teinté sombre devant le tableau du fond (un tube vide reste lisible), clair sans fond.
+    private val glassFill = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.FILL }
     private val glassStroke = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE }
     private val liquid = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.FILL }
     private val divider = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.FILL; color = 0x33000000 }
@@ -172,8 +173,22 @@ class LabSortView @JvmOverloads constructor(
 
     // ── Dessin ────────────────────────────────────────────────────────────────────────────────
 
+    // Le laboratoire en fond, un autre tableau à chaque nouvelle partie.
+    private val backdrop = Backdrop.lab(context)
+
+    fun nextBackdrop() {
+        backdrop.next()
+        invalidate()
+    }
+
+    var backdropOn: Boolean
+        get() = backdrop.enabled
+        set(value) { backdrop.enabled = value; invalidate() }
+
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+        backdrop.draw(canvas, width, height)
+        glassFill.color = if (backdrop.enabled) 0x660A1018 else 0x1AFFFFFF
         val g = game ?: return
         if (layoutDirty) computeLayout()
         if (lefts.size != g.tubeCount) return

@@ -13,6 +13,7 @@
     <string name="color_stack_btn_new">New</string>
     <string name="color_stack_btn_restart">Restart</string>
     <string name="color_stack_btn_undo">Undo</string>
+    <string name="color_stack_backdrop">Backdrop</string>
     <string name="color_stack_new_game">New game</string>
     <string name="color_stack_widget_cancel">✕ Cancel</string>
 </resources>

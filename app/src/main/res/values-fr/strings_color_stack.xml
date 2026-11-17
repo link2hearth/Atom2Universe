@@ -13,6 +13,7 @@
     <string name="color_stack_btn_new">Nouveau</string>
     <string name="color_stack_btn_restart">Recommencer</string>
     <string name="color_stack_btn_undo">Annuler</string>
+    <string name="color_stack_backdrop">Fond</string>
     <string name="color_stack_new_game">Nouvelle partie</string>
     <string name="color_stack_widget_cancel">✕ Annuler</string>
 </resources>

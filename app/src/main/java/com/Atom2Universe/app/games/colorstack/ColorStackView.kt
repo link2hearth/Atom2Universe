@@ -120,8 +120,21 @@ class ColorStackView @JvmOverloads constructor(
         for ((id, hex) in ColorStackGame.COLOR_PALETTE) if (id in colors.indices) colors[id] = Color.parseColor(hex)
     }
 
+    // La tour du sorcier en fond, un autre tableau à chaque nouvelle partie.
+    private val backdrop = Backdrop.wizard(context)
+
+    fun nextBackdrop() {
+        backdrop.next()
+        invalidate()
+    }
+
+    var backdropOn: Boolean
+        get() = backdrop.enabled
+        set(value) { backdrop.enabled = value; invalidate() }
+
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+        backdrop.draw(canvas, width, height)
         val g = game ?: return
         val cols = g.columnCount
         if (cols == 0 || width == 0 || height == 0) return
@@ -145,7 +158,7 @@ class ColorStackView @JvmOverloads constructor(
             val isSolved = col.size == g.capacity &&
                 col.isNotEmpty() && col.all { it.colorId == col.first().colorId }
 
-            // Fond de colonne
+            // Fond de colonne ; avec le tableau, un peu transparent pour qu'il se devine derrière
             colRect.set(colLeft, colTop, colRight, colBot)
             bgPaint.color = when {
                 isSelected -> 0xFF1E3A5F.toInt()
@@ -153,6 +166,7 @@ class ColorStackView @JvmOverloads constructor(
                 isSolved   -> 0xFF1A3A1A.toInt()
                 else       -> 0xFF0F172A.toInt()
             }
+            if (backdrop.enabled) bgPaint.alpha = if (isSelected || isTarget || isSolved) 0xD9 else 0xC7
             canvas.drawRoundRect(colRect, colCorner, colCorner, bgPaint)
 
             // Bordure de colonne
