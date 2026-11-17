@@ -32,7 +32,29 @@ import kotlin.random.Random
  * cousues, de plus en plus grands et dorés à mesure que le coup rapporte.
  */
 @SuppressLint("ViewConstructor")
-class MercerieBoardView(context: Context, val board: MercerieBoard, private val sound: MercerieSound?) : View(context), Coverable {
+class MercerieBoardView(
+    context: Context, val board: MercerieBoard, private val sound: MercerieSound?, slow: Float = 1f
+) : View(context), Coverable {
+
+    private var realBase = SystemClock.uptimeMillis()
+    private var clockBase = realBase
+
+    /**
+     * L'horloge du plateau : celle du système, ralentie de [slow] pour le tutoriel. Elle compte
+     * depuis le dernier changement de vitesse, en Double : un grand nombre de millisecondes en
+     * Float n'a plus qu'une précision de plusieurs dizaines de millisecondes, et le ralenti
+     * avançait par à-coups.
+     */
+    private fun clock(): Long = clockBase + ((SystemClock.uptimeMillis() - realBase) / slow.toDouble()).toLong()
+
+    /** Ralenti du tutoriel : 2 = tout se déroule deux fois moins vite. Change sans à-coup. */
+    var slow: Float = slow
+        set(value) {
+            if (value == field) return
+            clockBase = clock()
+            realBase = SystemClock.uptimeMillis()
+            field = value
+        }
 
     interface Listener {
         /** Score, coups ou objectifs ont bougé. */
@@ -46,12 +68,30 @@ class MercerieBoardView(context: Context, val board: MercerieBoard, private val 
         fun onCollect(key: Int, x: Float, y: Float, size: Float) {}
         /** Couture finale : un coup restant part du compteur dans [delay] ms et se pose en ([x], [y]) [flight] ms plus tard. */
         fun onShot(x: Float, y: Float, delay: Long, flight: Long) {}
+        /** Un coup est allé jusqu'au bout : le plateau est au repos. */
+        fun onSettled() {}
+        /** Le joueur échange [a] et [b] : appelé juste avant que le coup ne se joue. */
+        fun onSwap(a: Int, b: Int) {}
     }
 
     var listener: Listener? = null
 
     /** Montrer un coup possible (deux pièces qui battent) quand le joueur ne joue pas. */
     var hints = true
+        set(value) { field = value; armHint(); invalidate() }
+
+    /** Attente avant que le coup conseillé ne batte, en millisecondes. */
+    var hintDelay = 6000L
+
+    /** Le coup à conseiller, s'il faut autre chose que le meilleur coup ([MercerieBoard.bestMove]) ; null : le meilleur. */
+    var hintPick: (() -> IntArray?)? = null
+
+    /** Tutoriel : seul le coup [guide] est permis (aucun s'il est null). */
+    var guided = false
+        set(value) { field = value; armHint(); invalidate() }
+
+    /** Tutoriel : le coup à jouer, deux cases ; ses pièces battent et une main de feutrine montre le geste. */
+    var guide: IntArray? = null
         set(value) { field = value; armHint(); invalidate() }
 
     /**
@@ -173,7 +213,7 @@ class MercerieBoardView(context: Context, val board: MercerieBoard, private val 
     }
 
     private val showHint = Runnable {
-        if (!busy) { hint = board.findMove(); invalidate() }
+        if (!busy) { hint = hintPick?.invoke() ?: board.bestMove(); invalidate() }
     }
 
     private val busy: Boolean get() = swap != null || step != null || resolving || ended
@@ -187,6 +227,23 @@ class MercerieBoardView(context: Context, val board: MercerieBoard, private val 
     /** Le mode jour / nuit a changé en pleine partie : pièces, cases et tissu sont refaits. */
     fun restyle() {
         prepare(width, height)
+        invalidate()
+    }
+
+    /**
+     * Tutoriel : les pièces de [cells] viennent d'être changées en bonus sur le plateau ; elles
+     * prennent leur nouvelle allure dans une gerbe d'étincelles.
+     */
+    fun reveal(cells: List<Int>) {
+        val now = clock()
+        for (c in cells) {
+            val p = board.piece[c] ?: continue
+            sprites[p.id]?.let { it.kind = p.kind; it.color = p.color }
+            effects += Effect(Look.BORN, c, 0, p.color, 0, now, 560L)
+            sparkles(c, 9)
+        }
+        sound?.special()
+        armHint()
         invalidate()
     }
 
@@ -273,7 +330,9 @@ class MercerieBoardView(context: Context, val board: MercerieBoard, private val 
     private fun armHint() {
         removeCallbacks(showHint)
         hint = null
-        if (!ended && hints && isAttachedToWindow) postDelayed(showHint, 6000L)
+        // Tutoriel : le coup prévu bat tout de suite, sans attendre.
+        if (guided) { if (!ended) hint = guide; return }
+        if (!ended && hints && isAttachedToWindow) postDelayed(showHint, hintDelay)
     }
 
     /** Remet chaque image sur la case de sa pièce : l'état de repos entre deux temps. */
@@ -301,7 +360,7 @@ class MercerieBoardView(context: Context, val board: MercerieBoard, private val 
         val size = min(cell * (if (tier >= 5) 1.35f else 1.2f), board.cols * cell * .94f / (word.length * .6f).coerceAtLeast(1f))
         val baked = wordCache[key]?.takeIf { abs(it.size - size) < 1f } ?: CheerWord.bake(word, tier, size).also { wordCache[key] = it }
         val life = when (tier) { 0 -> 1500L; 1, 2 -> 1200L; 3, 4 -> 1450L; else -> 1800L }
-        val now = SystemClock.uptimeMillis()
+        val now = clock()
         cheer = Cheer(baked, now, life)
         lastWord = word
         if (tier >= 2) {
@@ -392,11 +451,16 @@ class MercerieBoardView(context: Context, val board: MercerieBoard, private val 
 
     private fun trySwap(a: Int, b: Int) {
         if (b < 0 || !board.cell[b]) return
+        // Tutoriel : un autre coup que celui prévu ne fait rien.
+        if (guided) {
+            val g = guide ?: return
+            if (!((a == g[0] && b == g[1]) || (a == g[1] && b == g[0]))) return
+        }
         val pa = board.piece[a]
         val pb = board.piece[b]
         if (pa == null || pb == null || pa.pinned || pb.pinned) return
         val valid = board.canSwap(a, b)
-        swap = Swap(a, b, valid, SystemClock.uptimeMillis())
+        swap = Swap(a, b, valid, clock())
         if (valid) sound?.swap() else sound?.bad()
         hint = null
         removeCallbacks(showHint)
@@ -414,7 +478,7 @@ class MercerieBoardView(context: Context, val board: MercerieBoard, private val 
 
     private fun begin(s: Step) {
         step = s
-        stepStart = SystemClock.uptimeMillis()
+        stepStart = clock()
         waveMs = WAVE_MS
         fired.clear()
         when (s) {
@@ -459,7 +523,7 @@ class MercerieBoardView(context: Context, val board: MercerieBoard, private val 
                 else -> 3
             }
             moveTier = maxOf(strong, tier)
-            dimStart = SystemClock.uptimeMillis()
+            dimStart = clock()
             flash(Felt.CREAM, 180L)
             sound?.combo()
             showCheer(comboWords[combo.ordinal], moveTier)
@@ -494,6 +558,7 @@ class MercerieBoardView(context: Context, val board: MercerieBoard, private val 
             warned = true
             showCheer(resources.getString(R.string.mercerie_moves_left), 0)
         }
+        listener?.onSettled()
         armHint()
         invalidate()
     }
@@ -510,6 +575,7 @@ class MercerieBoardView(context: Context, val board: MercerieBoard, private val 
             pb?.let { sprites[it.id] }?.let { it.x = bx + (ax - bx) * e; it.y = by + (ay - by) * e }
             if (u >= 1f) {
                 swap = null
+                if (s.valid) listener?.onSwap(s.a, s.b)
                 if (s.valid && board.swap(s.a, s.b)) {
                     moveGone = 0; moveSpecials = 0; moveTier = 0
                     sync()
@@ -607,7 +673,7 @@ class MercerieBoardView(context: Context, val board: MercerieBoard, private val 
 
     private fun speck(x: Float, y: Float, color: Int) {
         if (particles.size > MAX_PARTICLES) return
-        val now = SystemClock.uptimeMillis()
+        val now = clock()
         particles += Particle(x, y, (rnd.nextFloat() - .5f) * cell * 3f, -cell * (1f + rnd.nextFloat() * 2f),
             cell * (.05f + rnd.nextFloat() * .05f), if (rnd.nextBoolean()) Felt.CREAM else color,
             rnd.nextFloat() * 360f, (rnd.nextFloat() - .5f) * 700f, Confetti.shapes[3], now, 420 + rnd.nextInt(200), cell * 12f)
@@ -815,7 +881,7 @@ class MercerieBoardView(context: Context, val board: MercerieBoard, private val 
 
     /** Une gerbe de confettis de feutrine en ([x], [y]). [color] -1 : toutes les couleurs. */
     private fun confetti(x: Float, y: Float, count: Int, color: Int, speed: Float, big: Boolean = false) {
-        val now = SystemClock.uptimeMillis()
+        val now = clock()
         repeat(count) {
             if (particles.size > MAX_PARTICLES) return
             val a = rnd.nextFloat() * 2 * PI.toFloat()
@@ -835,7 +901,7 @@ class MercerieBoardView(context: Context, val board: MercerieBoard, private val 
         confetti(cx(board.colOf(cellIndex).toFloat()), cy(board.rowOf(cellIndex).toFloat()), count, color, cell * 3f)
 
     private fun sparkles(cellIndex: Int, count: Int) {
-        val now = SystemClock.uptimeMillis()
+        val now = clock()
         val x = cx(board.colOf(cellIndex).toFloat())
         val y = cy(board.rowOf(cellIndex).toFloat())
         repeat(count) {
@@ -848,14 +914,14 @@ class MercerieBoardView(context: Context, val board: MercerieBoard, private val 
     }
 
     private fun shake(life: Long, amp: Float) {
-        val now = SystemClock.uptimeMillis()
+        val now = clock()
         val left = shakeStart + shakeLife - now
         if (left > 0 && shakeAmp * left / shakeLife.coerceAtLeast(1L) > amp) return
         shakeStart = now; shakeLife = life; shakeAmp = amp
     }
 
     private fun flash(color: Int, life: Long) {
-        flashStart = SystemClock.uptimeMillis(); flashLife = life; flashColor = color
+        flashStart = clock(); flashLife = life; flashColor = color
     }
 
     private fun ease(u: Float) = u * u * (3 - 2 * u)
@@ -904,7 +970,7 @@ class MercerieBoardView(context: Context, val board: MercerieBoard, private val 
 
     override fun onDraw(canvas: Canvas) {
         val a = art ?: return
-        val now = SystemClock.uptimeMillis()
+        val now = clock()
         update(now)
         canvas.save()
         val shaking = now - shakeStart < shakeLife
@@ -938,6 +1004,7 @@ class MercerieBoardView(context: Context, val board: MercerieBoard, private val 
         }
         paint.alpha = 255
         front?.let { canvas.drawBitmap(it, 0f, 0f, null) }
+        if (guided && !busy) guide?.let { drawGuide(canvas, it, now) }
         val dimAge = now - dimStart
         if (dimAge in 0 until DIM_MS) {
             val k = if (dimAge < 120) dimAge / 120f else 1f - (dimAge - 120f) / (DIM_MS - 120f)
@@ -979,6 +1046,42 @@ class MercerieBoardView(context: Context, val board: MercerieBoard, private val 
         else if (covered) return
         else if (selected >= 0 || hint != null || lively || effects.isNotEmpty()) postDelayed(idleTick, MercerieUi.idleDelay())
         else if (!ended) postDelayed(idleTick, (nextTwinkle - now).coerceAtLeast(MercerieUi.IDLE_FRAME_MS))
+    }
+
+    /**
+     * Tutoriel : un fil cousu relie les deux cases du coup, et un bout de doigt en feutrine se pose
+     * sur la première, glisse jusqu'à la seconde et s'efface, en boucle.
+     */
+    private fun drawGuide(canvas: Canvas, g: IntArray, now: Long) {
+        val ax = cx(board.colOf(g[0]).toFloat())
+        val ay = cy(board.rowOf(g[0]).toFloat())
+        val bx = cx(board.colOf(g[1]).toFloat())
+        val by = cy(board.rowOf(g[1]).toFloat())
+        path.rewind()
+        path.moveTo(ax, ay)
+        path.lineTo(bx, by)
+        Felt.stitches(canvas, path, Felt.alpha(Felt.PINK, 200), cell * .9f, .08f)
+        val u = (now % GUIDE_MS) / GUIDE_MS.toFloat()
+        val glide = ease(((u - .22f) / .5f).coerceIn(0f, 1f))
+        val alpha = when {
+            u < .14f -> u / .14f
+            u > .82f -> (1f - u) / .18f
+            else -> 1f
+        }
+        // Le doigt appuie un peu avant de glisser.
+        val press = if (u < .22f) 1f - .12f * (u / .22f) else .88f
+        val x = ax + (bx - ax) * glide + cell * .16f
+        val y = ay + (by - ay) * glide + cell * .2f
+        val r = cell * .27f * press
+        fill.color = Felt.alpha(0xFF3A2A30.toInt(), (alpha * 60).toInt())
+        canvas.drawCircle(x + cell * .03f, y + cell * .05f, r, fill)
+        fill.color = Felt.alpha(Felt.CREAM, (alpha * 235).toInt())
+        canvas.drawCircle(x, y, r, fill)
+        line.color = Felt.alpha(Felt.PINK, (alpha * 255).toInt())
+        line.strokeWidth = cell * .055f
+        canvas.drawCircle(x, y, r, line)
+        fill.color = Felt.alpha(Felt.lighter(Felt.PINK, .55f), (alpha * 235).toInt())
+        canvas.drawCircle(x, y - r * .28f, r * .42f, fill)
     }
 
     /** Dessine une pièce ; vrai si elle bouge d'elle-même au repos (bonus, minuteur pressé). */
@@ -1371,5 +1474,7 @@ class MercerieBoardView(context: Context, val board: MercerieBoard, private val 
         private const val TICK_MS = 58f
         private const val CUT_MS = 300f
         private const val DIM_MS = 700L
+        /** Un aller de la main du tutoriel, temps du plateau (donc ralenti). */
+        private const val GUIDE_MS = 1100L
     }
 }

@@ -28,7 +28,7 @@ import com.Atom2Universe.app.util.updateSystemBarsVisibility
  * par-dessus. Chaque écran a sa mise en page debout et sa mise en page couchée.
  */
 class MercerieActivity : ThemedActivity() {
-    private enum class Screen { HOME, MAP, GAME }
+    private enum class Screen { HOME, MAP, GAME, TUTORIAL }
 
     private lateinit var root: FrameLayout
     private var screen = Screen.HOME
@@ -62,6 +62,21 @@ class MercerieActivity : ThemedActivity() {
     private var parIcon: ImageView? = null
     private var parText: TextView? = null
     private var parGold = true
+
+    /** Le tutoriel : ses tableaux, celui qu'on joue, le coup attendu, et l'écran où revenir après. */
+    private var lessons: List<Lesson> = emptyList()
+    private var lessonAt = 0
+    private var lessonStep = 0
+    private var tutorView: MercerieBoardView? = null
+    private var tutorText: TextView? = null
+    private var tutorButtons: View? = null
+    private var tutorFrom = Screen.HOME
+    /** La démonstration est finie : le plateau est libre, à toi de refaire la même chose. */
+    private var practicing = false
+    /** L'exercice est réussi (ou il n'y en a pas) : jeu libre. */
+    private var practiceDone = false
+    /** Le coup en train de se jouer refait l'exercice : bravo quand il retombe. */
+    private var practiceHit = false
 
     /** Un objectif à l'écran : une image et un nombre. [key] : sa couleur, ou KEY_PATCH… du plateau. */
     private class Chip(val icon: Bitmap, val target: Int, val key: Int, val left: (MercerieBoard) -> Int)
@@ -103,6 +118,7 @@ class MercerieActivity : ThemedActivity() {
             Screen.HOME -> showHome()
             Screen.MAP -> showMap()
             Screen.GAME -> boardView?.let { it.restyle(); layoutGame(it) }
+            Screen.TUTORIAL -> tutorView?.let { it.restyle(); layoutTutorial() }
         }
     }
 
@@ -115,6 +131,7 @@ class MercerieActivity : ThemedActivity() {
             Screen.HOME -> showHome()
             Screen.MAP -> showMap()
             Screen.GAME -> boardView?.let { layoutGame(it) }
+            Screen.TUTORIAL -> layoutTutorial()
         }
         if (open != null) {
             card = open
@@ -132,6 +149,7 @@ class MercerieActivity : ThemedActivity() {
             card != null -> closeCard()
             screen == Screen.GAME -> showPause()
             screen == Screen.MAP -> showHome()
+            screen == Screen.TUTORIAL -> leaveTutorial()
             else -> finish()
         }
     }
@@ -262,7 +280,7 @@ class MercerieActivity : ThemedActivity() {
         pique.setOnClickListener { pique.mood = 1; sound.special(); pique.postDelayed({ pique.mood = 0 }, 1200L) }
         val title = FeltTitleView(this, getString(R.string.mercerie_logo))
         val play = button(R.string.mercerie_play, big = true) { startLevel(next) }
-        val level = MercerieUi.label(this, 16f).apply { text = getString(R.string.mercerie_level, next) }
+        val level = MercerieUi.label(this, 16f).apply { text = levelTitle(next, progress.easy) }
         val levels = button(R.string.mercerie_levels, Felt.MINT) { showMap() }
 
         // Sur un petit écran, la mascotte rapetisse (puis la guirlande) ; s'il manque encore de la
@@ -487,7 +505,7 @@ class MercerieActivity : ThemedActivity() {
         workshop.peek(number)?.let { awaited = 0; then(it); return }
         awaited = number
         showCard(dismissable = true) {
-            add(MercerieUi.label(context, 26f, Felt.PINK).apply { text = getString(R.string.mercerie_level, number) })
+            add(MercerieUi.label(context, 26f, Felt.PINK).apply { text = levelTitle(number, progress.easy) })
             add(MascotView(context, Mascot.random()).apply { mood = 1 }, width = dp(130f), height = dp(130f), top = 6f)
         }
         val shown = card
@@ -496,10 +514,18 @@ class MercerieActivity : ThemedActivity() {
         }
     }
 
+    /** « Niveau 36 », ou « 36 Facile » en mode facile. */
+    private fun levelTitle(number: Int, easy: Boolean) =
+        getString(if (easy) R.string.mercerie_level_easy else R.string.mercerie_level, number)
+
     private fun showLevelCard(number: Int) = withLevel(number) { l ->
         showCard(dismissable = true) {
-            add(MercerieUi.label(context, 26f, Felt.PINK).apply { text = getString(R.string.mercerie_level, number) })
-            add(StarsView(context, progress.stars(number), animated = false), width = dp(170f), height = dp(60f), top = 6f)
+            add(MercerieUi.label(context, 26f, Felt.PINK).apply { text = levelTitle(number, l.easy) })
+            // Fini seulement en facile : ses étoiles en vert menthe, et « facile » dessous.
+            val onlyEasy = progress.onlyEasy(number)
+            add(StarsView(context, if (onlyEasy) progress.easyStars(number) else progress.stars(number), animated = false, easy = onlyEasy),
+                width = dp(170f), height = dp(60f), top = 6f)
+            if (onlyEasy) add(easyLabel(15f))
             add(goalRow(l, null, live = false), top = 8f)
             add(MercerieUi.label(context, 16f).apply { text = resources.getQuantityString(R.plurals.mercerie_moves, l.moves, l.moves) }, top = 10f)
             if (l.par > 0) add(LinearLayout(context).apply {
@@ -511,7 +537,7 @@ class MercerieActivity : ThemedActivity() {
                     setPadding(dp(6f), 0, 0, 0)
                 })
             }, top = 6f)
-            val best = progress.best(number)
+            val best = progress.best(number, l.easy)
             if (best > 0) add(MercerieUi.label(context, 15f, Felt.SOFT).apply {
                 text = getString(R.string.mercerie_best, MercerieUi.number(best))
             }, top = 6f)
@@ -531,18 +557,23 @@ class MercerieActivity : ThemedActivity() {
         }
     }
 
-    /** Bascule oui / non : le coup possible qui bat doucement quand on ne joue pas. */
-    private fun hintToggle(): View {
+    /** Le mot « facile », vert menthe : sous les étoiles d'un niveau fini en mode facile. */
+    private fun easyLabel(size: Float): View =
+        MercerieUi.label(this, size, if (Felt.dark) Felt.lighter(Felt.MINT, .55f) else Felt.darker(Felt.MINT, .6f)).apply {
+            text = getString(R.string.mercerie_easy_tag)
+        }
+
+    /** Une bascule oui / non de l'aide : [label] à gauche, le bouton à droite. */
+    private fun toggleRow(label: Int, get: () -> Boolean, set: (Boolean) -> Unit): View {
         val toggle = FeltButton(this, "")
         fun paint() {
-            val on = progress.hints
+            val on = get()
             toggle.text = getString(if (on) R.string.mercerie_on else R.string.mercerie_off)
             toggle.background = FeltDrawable(this, if (on) Felt.MINT else Felt.GREY, 28f)
         }
         toggle.setOnClickListener {
             sound.tick()
-            progress.hints = !progress.hints
-            boardView?.hints = progress.hints
+            set(!get())
             paint()
         }
         paint()
@@ -550,31 +581,55 @@ class MercerieActivity : ThemedActivity() {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
             addView(MercerieUi.label(context, 16f).apply {
-                text = getString(R.string.mercerie_hint)
+                text = getString(label)
                 gravity = Gravity.START
             }, LinearLayout.LayoutParams(0, -2, 1f))
             addView(toggle, LinearLayout.LayoutParams(-2, -2).apply { leftMargin = dp(12f) })
         }
     }
 
+    /** Le coup possible qui bat doucement quand on ne joue pas. */
+    private fun hintToggle(): View = toggleRow(R.string.mercerie_hint, { progress.hints }) {
+        progress.hints = it
+        boardView?.hints = it
+    }
+
+    /**
+     * Le mode facile. En pleine partie, le niveau repart aussitôt dans le mode choisi ; ailleurs,
+     * l'aide se refait sans ce que le mode facile n'a pas (papillons, minuteurs, boutonnières, défi).
+     */
+    private fun easyToggle(): View = toggleRow(R.string.mercerie_easy, { progress.easy }) {
+        progress.easy = it
+        val playing = if (screen == Screen.GAME) boardView?.board?.level?.number else null
+        if (playing != null) startLevel(playing)
+        else {
+            // L'accueil montre le titre du niveau à jouer : il change avec le mode.
+            if (screen == Screen.HOME) showHome() else workshop.warm(progress.next)
+            showHelp()
+        }
+    }
+
     private fun showHelp() {
-        val rows = listOf(
+        val easy = progress.easy
+        val rows = listOfNotNull(
             icons.of(Kind.LINE_H, 0) to R.string.mercerie_help_line,
-            icons.of(Kind.BUTTERFLY, 3) to R.string.mercerie_help_butterfly,
+            if (easy) null else icons.of(Kind.BUTTERFLY, 3) to R.string.mercerie_help_butterfly,
             icons.of(Kind.BOMB, 1) to R.string.mercerie_help_bomb,
             icons.rainbow to R.string.mercerie_help_rainbow,
             icons.patch[0] to R.string.mercerie_help_patch,
             icons.knot[0] to R.string.mercerie_help_knot,
-            icons.dust to R.string.mercerie_help_dust,
+            icons.dust to if (easy) R.string.mercerie_help_dust_easy else R.string.mercerie_help_dust,
             icons.pin to R.string.mercerie_help_pin,
             icons.thimble to R.string.mercerie_help_thimble,
-            timerIcon to R.string.mercerie_help_timer,
-            portalIcon to R.string.mercerie_help_portal,
-            medal(true) to R.string.mercerie_help_par
+            if (easy) null else timerIcon to R.string.mercerie_help_timer,
+            if (easy) null else portalIcon to R.string.mercerie_help_portal,
+            if (easy) null else medal(true) to R.string.mercerie_help_par
         )
         showCard(dismissable = true, fits = false) {
             add(MercerieUi.label(context, 24f, Felt.PINK).apply { text = getString(R.string.mercerie_help_title) })
-            addWide(hintToggle(), top = 10f)
+            add(button(R.string.mercerie_tutorial, Felt.MINT) { startTutorial() }, top = 10f)
+            addWide(easyToggle(), top = 10f)
+            addWide(hintToggle(), top = 6f)
             val list = column().apply { gravity = Gravity.START }
             for ((icon, textRes) in rows) list.addView(LinearLayout(context).apply {
                 orientation = LinearLayout.HORIZONTAL
@@ -597,6 +652,173 @@ class MercerieActivity : ThemedActivity() {
             addWide(scroll, height = 0, top = 10f, weight = 1f)
             buttons(button(R.string.close) { closeCard() })
         }
+    }
+
+    // ───────────────────────────── Tutoriel ─────────────────────────────
+
+    /**
+     * Le tutoriel, ouvert depuis le « ? » : des tableaux préparés où le joueur glisse lui-même les
+     * pièces, mais seulement le coup prévu, montré par une main de feutrine ; tout se déroule au
+     * ralenti pour qu'on voie chaque bonus naître, partir et en déclencher d'autres. Une partie en
+     * cours attend derrière, intacte.
+     */
+    private fun startTutorial() {
+        closeCard()
+        if (screen != Screen.TUTORIAL) tutorFrom = screen
+        lessons = MercerieLessons.forMode(progress.easy)
+        openLesson(0)
+    }
+
+    private fun openLesson(k: Int) {
+        lessonAt = k
+        lessonStep = 0
+        practicing = false
+        practiceDone = false
+        practiceHit = false
+        val lesson = lessons[k]
+        val view = MercerieBoardView(this, lesson.board(progress.easy), sound, slow = TUTOR_SLOW)
+        view.hints = false
+        view.guided = true
+        view.guide = lesson.cells(0)
+        view.listener = object : MercerieBoardView.Listener {
+            override fun onChanged() {}
+            override fun onBonus() {}
+            override fun onFinished(won: Boolean) {}
+            override fun onSwap(a: Int, b: Int) {
+                if (tutorView === view && practicing && !practiceDone && lesson.practiced(view.board, a, b)) practiceHit = true
+            }
+            override fun onSettled() {
+                if (tutorView !== view) return
+                if (!practicing) nextLessonStep()
+                else if (practiceHit && !practiceDone) {
+                    practiceDone = true
+                    view.hintPick = null
+                    sound.win(3)
+                    showLessonState()
+                }
+            }
+        }
+        tutorView = view
+        layoutTutorial()
+    }
+
+    /** Le coup prévu est retombé : le suivant, ou la fin de la démonstration. */
+    private fun nextLessonStep() {
+        val view = tutorView ?: return
+        val lesson = lessons[lessonAt]
+        lessonStep++
+        if (lessonStep < lesson.moves.size) view.guide = lesson.cells(lessonStep) else startPractice(view, lesson)
+        showLessonState()
+    }
+
+    /**
+     * La démonstration est finie : le plateau devient libre, à vitesse normale. Le joueur refait la
+     * même chose seul (le bonus [Lesson.practice], ou les deux bonus [Lesson.encore] qui apparaissent) ;
+     * s'il cherche, le coup conseillé lui montre l'exercice au bout de quelques secondes.
+     */
+    private fun startPractice(view: MercerieBoardView, lesson: Lesson) {
+        practicing = true
+        practiceDone = !lesson.hasPractice
+        practiceHit = false
+        val board = view.board
+        view.guide = null
+        view.guided = false
+        view.slow = 1f
+        view.hintDelay = PRACTICE_HINT_MS
+        view.hintPick = if (lesson.hasPractice) ({ lesson.practiceMove(board) }) else null
+        view.hints = true
+        if (lesson.encore.isNotEmpty()) view.reveal(lesson.placeEncore(board))
+    }
+
+    private fun showLessonState() {
+        val lesson = lessons.getOrNull(lessonAt) ?: return
+        tutorText?.text = getString(when {
+            !practicing -> lesson.moves[lessonStep].text
+            practiceDone -> if (lesson.hasPractice) R.string.mercerie_tuto_well_done else R.string.mercerie_tuto_free
+            lesson.encore.isNotEmpty() -> R.string.mercerie_tuto_your_turn_combo
+            else -> R.string.mercerie_tuto_your_turn
+        })
+        tutorButtons?.visibility = if (practicing) View.VISIBLE else View.INVISIBLE
+    }
+
+    private fun leaveTutorial() {
+        tutorView = null
+        tutorText = null
+        tutorButtons = null
+        val game = boardView
+        when {
+            // Le jour ou la nuit a pu changer pendant le tutoriel : le plateau de la partie se refait.
+            tutorFrom == Screen.GAME && game != null -> { game.restyle(); layoutGame(game) }
+            tutorFrom == Screen.MAP -> showMap()
+            else -> showHome()
+        }
+    }
+
+    /** Debout : consigne au-dessus du plateau, boutons dessous. Couché : consigne et boutons à gauche. */
+    private fun layoutTutorial() {
+        val view = tutorView ?: return
+        (view.parent as? ViewGroup)?.removeView(view)
+        val lesson = lessons[lessonAt]
+        val wide = landscape
+        val caption = column().apply {
+            background = FeltDrawable(context, Felt.PAPER, 30f, threadColor = Felt.KRAFT)
+            setPadding(dp(18f), dp(12f), dp(18f), dp(16f))
+        }
+        caption.add(MercerieUi.label(this, 14f, Felt.SOFT).apply {
+            text = getString(R.string.mercerie_tuto_count, lessonAt + 1, lessons.size)
+        })
+        caption.add(MercerieUi.label(this, 22f, Felt.PINK).apply { text = getString(lesson.title) }, top = 2f)
+        val instruction = MercerieUi.label(this, 17f).apply { minLines = 2 }
+        caption.add(instruction, width = -1, top = 6f)
+        tutorText = instruction
+        val last = lessonAt == lessons.size - 1
+        val again = button(R.string.mercerie_retry, Felt.MINT) { openLesson(lessonAt) }
+        val next = button(if (last) R.string.mercerie_tuto_end else R.string.mercerie_next) {
+            if (last) leaveTutorial() else openLesson(lessonAt + 1)
+        }
+        // Rejouer à gauche, la suite à droite.
+        val row = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER
+            addView(again)
+            addView(next, LinearLayout.LayoutParams(-2, -2).apply { leftMargin = dp(14f) })
+        }
+        tutorButtons = row
+        val content: View
+        if (wide) {
+            val side = column()
+            val corner = LinearLayout(this).apply {
+                orientation = LinearLayout.HORIZONTAL
+                gravity = Gravity.CENTER_VERTICAL
+                addView(roundButton(R.string.mercerie_sym_back) { leaveTutorial() })
+                addView(spacer(), LinearLayout.LayoutParams(0, 0, 1f))
+                addView(rightButtons())
+            }
+            side.add(corner, width = -1)
+            side.add(MercerieUi.label(this, 20f).apply { text = getString(R.string.mercerie_tutorial) }, top = 8f)
+            side.add(caption, width = -1, top = 10f)
+            side.add(spacer(), height = 0, weight = 1f)
+            side.add(row)
+            side.add(spacer(), height = dp(8f))
+            val sideFit = FitFrame(this).apply { addView(side, ViewGroup.LayoutParams(-1, -1)) }
+            content = LinearLayout(this).apply {
+                orientation = LinearLayout.HORIZONTAL
+                addView(sideFit, LinearLayout.LayoutParams(dp(300f), -1).apply {
+                    leftMargin = dp(12f); topMargin = dp(10f); bottomMargin = dp(10f)
+                })
+                addView(view, LinearLayout.LayoutParams(0, -1, 1f))
+            }
+        } else {
+            val column = column()
+            column.add(topBar(getString(R.string.mercerie_tutorial)) { leaveTutorial() }, width = -1)
+            column.addView(caption, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(8f); leftMargin = dp(12f); rightMargin = dp(12f) })
+            column.add(view, width = -1, height = 0, weight = 1f)
+            column.add(row)
+            column.add(spacer(), height = dp(14f))
+            content = column
+        }
+        setScreen(Screen.TUTORIAL, content)
+        showLessonState()
     }
 
     // ───────────────────────────── Partie ─────────────────────────────
@@ -664,7 +886,7 @@ class MercerieActivity : ThemedActivity() {
             addView(bar, LinearLayout.LayoutParams(dp(if (wide) 150f else 118f), dp(if (wide) 36f else 30f)).apply { topMargin = dp(4f) })
         }
         val goals = goalRow(l, board, live = true)
-        val title = getString(R.string.mercerie_level, l.number)
+        val title = levelTitle(l.number, l.easy)
         parIcon = null
         parText = null
         val parBox = if (l.par <= 0) null else column().apply {
@@ -847,8 +1069,8 @@ class MercerieActivity : ThemedActivity() {
             return
         }
         val stars = board.stars
-        val record = progress.record(l.number, board.score, stars)
-        val neutrinos = NeutrinoRewards.mercerie(l.number, record.firstTime)
+        val record = progress.record(l.number, board.score, stars, l.easy)
+        val neutrinos = NeutrinoRewards.mercerie(l.number, record.firstTime, l.easy)
         if (neutrinos > 0) NeutrinoRepository(this).addBalance(neutrinos)
         sound.win(stars)
         root.postDelayed({
@@ -857,7 +1079,8 @@ class MercerieActivity : ThemedActivity() {
             val titles = resources.getStringArray(when (stars) { 3 -> R.array.mercerie_win_3; 2 -> R.array.mercerie_win_2; else -> R.array.mercerie_win_1 })
             showCard(dismissable = false) {
                 addWide(FeltTitleView(context, titles.random(), 40f))
-                add(StarsView(context, stars), width = dp(210f), height = dp(78f), top = 2f)
+                add(StarsView(context, stars, easy = l.easy), width = dp(210f), height = dp(78f), top = 2f)
+                if (l.easy) add(easyLabel(15f))
                 // Le score se compte sous les yeux du joueur.
                 val total = MercerieUi.label(context, 30f).apply { text = MercerieUi.number(0) }
                 add(total, top = 4f)
@@ -878,7 +1101,7 @@ class MercerieActivity : ThemedActivity() {
                 }
                 add(MercerieUi.label(context, 15f, Felt.SOFT).apply {
                     text = if (record.newBest) getString(R.string.mercerie_new_best)
-                    else getString(R.string.mercerie_best, MercerieUi.number(progress.best(l.number)))
+                    else getString(R.string.mercerie_best, MercerieUi.number(progress.best(l.number, l.easy)))
                 }, top = 4f)
                 if (neutrinos > 0) add(MercerieUi.label(context, 15f, if (Felt.dark) Felt.lighter(Felt.COLORS[1], .45f) else Felt.darker(Felt.COLORS[1], .8f)).apply {
                     text = getString(R.string.mercerie_neutrinos, neutrinos)
@@ -891,5 +1114,12 @@ class MercerieActivity : ThemedActivity() {
                 buttons(button(R.string.mercerie_quit, Felt.PAPER) { showHome() })
             }
         }, 600L)
+    }
+
+    private companion object {
+        /** La démonstration du tutoriel se déroule deux fois moins vite qu'une partie. */
+        const val TUTOR_SLOW = 2f
+        /** Après la démonstration, le coup à refaire bat au bout de ce temps sans jouer. */
+        const val PRACTICE_HINT_MS = 4000L
     }
 }

@@ -10,14 +10,14 @@ import kotlin.random.Random
 /** Garde-fous du moteur : les cartes sont valides, les bonus naissent et partent comme prévu. */
 class MercerieBoardTest {
 
-    private fun level(vararg map: String, goal: Goal = Goal(), moves: Int = 30, portals: List<Portal> = emptyList(), timer: Int = 0) =
-        MercerieLevel(1, moves, 6, map.toList(), goal, intArrayOf(100, 200, 300), portals = portals, timer = timer, timers = if (timer > 0) 1 else 0)
+    private fun level(vararg map: String, goal: Goal = Goal(), moves: Int = 30, portals: List<Portal> = emptyList(), timer: Int = 0, easy: Boolean = false) =
+        MercerieLevel(1, moves, 6, map.toList(), goal, intArrayOf(100, 200, 300), portals = portals, timer = timer, timers = if (timer > 0) 1 else 0, easy = easy)
 
     /** Plateau 6 × 6 sans aucun alignement possible, fait des couleurs 1 à 5 : la couleur 0 sert aux essais. */
     private fun quiet(
-        vararg map: String = Array(6) { "......" }, goal: Goal = Goal(), portals: List<Portal> = emptyList(), timer: Int = 0
+        vararg map: String = Array(6) { "......" }, goal: Goal = Goal(), portals: List<Portal> = emptyList(), timer: Int = 0, easy: Boolean = false
     ): MercerieBoard {
-        val b = MercerieBoard(level(*map, goal = goal, portals = portals, timer = timer), 7L)
+        val b = MercerieBoard(level(*map, goal = goal, portals = portals, timer = timer, easy = easy), 7L)
         for (r in 0 until b.rows) for (c in 0 until b.cols) b.piece[b.idx(r, c)]?.let {
             it.color = (r * 2 + c) % 5 + 1; it.kind = Kind.NORMAL; it.pinned = false
         }
@@ -60,9 +60,49 @@ class MercerieBoardTest {
         }
     }
 
+    /** En mode facile : ni minuteurs, ni téléporteurs, ni défi ; mêmes coups, étoiles et objectif. */
+    @Test
+    fun easyLevelsAreValid() {
+        for (base in MercerieLevels.handmade) {
+            val l = base.asEasy()
+            val tag = "niveau ${l.number} en facile"
+            assertTrue(tag, l.easy)
+            assertTrue(tag, l.portals.isEmpty())
+            assertEquals(tag, 0, l.timer)
+            assertEquals(tag, 0, l.timers)
+            assertEquals(tag, 0, l.par)
+            assertTrue(tag, l.map.none { 't' in it })
+            assertEquals(tag, base.moves, l.moves)
+            assertEquals(tag, base.stars.toList(), l.stars.toList())
+            assertTrue(tag, base.goal === l.goal)
+            // Les trente d'origine gardent leur carte telle quelle.
+            if (base.number <= MercerieLevels.HANDMADE) assertEquals(tag, base.map, l.map)
+            val b = MercerieBoard(l, 1L)
+            assertEquals(tag, l.goal.patches, b.patchesLeft > 0)
+            if (l.goal.dust) assertTrue(tag, b.dustLeft > 0)
+            assertFalse(tag, b.hasMatches())
+            assertTrue(tag, b.hasMove())
+            assertFalse(tag, b.goalMet)
+        }
+    }
+
+    /** En mode facile, un carré de quatre ne s'aligne pas et un mouton laissé seul reste à sa place. */
+    @Test
+    fun easyHasNoSquaresAndStillDust() {
+        val b = quiet(easy = true)
+        b.set(4, 0); b.set(4, 1); b.set(5, 0); b.set(5, 2)
+        assertFalse(b.canSwap(b.idx(5, 2), b.idx(5, 1)))
+        val d = quiet("d.....", "......", "......", "......", "......", "......", goal = Goal(dust = true), easy = true)
+        d.set(5, 3); d.set(5, 4); d.set(4, 5)
+        assertTrue(d.swap(d.idx(4, 5), d.idx(5, 5)))
+        val steps = d.settle()
+        assertFalse(steps.any { it is ClearStep && it.fx.any { f -> f.type == FxType.SPREAD } })
+        assertEquals(1, d.dustLeft)
+    }
+
     @Test
     fun randomPlayKeepsTheBoardSound() {
-        for (l in MercerieLevels.handmade) {
+        for (l in MercerieLevels.handmade + MercerieLevels.handmade.map { it.asEasy() }) {
             val rnd = Random(l.number)
             val b = MercerieBoard(l, l.number * 31L)
             var last = 0
@@ -111,12 +151,13 @@ class MercerieBoardTest {
     @Test
     fun robotCanWinEveryLevel() {
         val report = StringBuilder()
-        val stuck = ArrayList<Int>()
-        for (l in MercerieLevels.handmade) {
+        val stuck = ArrayList<String>()
+        for (l in MercerieLevels.handmade + MercerieLevels.handmade.map { it.asEasy() }) {
+            val name = if (l.easy) "${l.number} facile" else "${l.number}"
             val games = (0 until 10).map { MercerieRobot.play(l, 77L * l.number + it) }
             val wins = games.count { it.won }
-            if (wins < 2) stuck += l.number
-            report.append("niveau ${l.number} (${l.moves} coups) : gagné $wins/10")
+            if (wins < 2) stuck += name
+            report.append("niveau $name (${l.moves} coups) : gagné $wins/10")
             for (g in games) report.append("  [${if (g.won) "ok" else "raté"} ${g.used} coups, ${g.score} pts, ${g.stars}*]")
             val scores = games.filter { it.won }.map { it.score }.sorted()
             if (scores.isNotEmpty()) report.append("  médiane ${scores[scores.size / 2]}, min ${scores[0]}")

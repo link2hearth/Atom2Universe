@@ -64,6 +64,30 @@ class MercerieGeneratorTest {
         }
     }
 
+    /** Les étages faciles : jamais de téléporteurs ni de minuteurs, toujours jouables, et le robot les règle. */
+    @Test
+    fun easyFloorsHaveNoNewMechanics() {
+        for (n in first until first + 150) for (variant in 0..3) {
+            val tag = "étage facile $n variante $variant"
+            val l = MercerieGenerator.build(n, variant, easy = true)
+            assertTrue(tag, l.easy)
+            assertTrue(tag, l.portals.isEmpty())
+            assertEquals(tag, 0, l.timer)
+            assertEquals(tag, l.map, MercerieGenerator.build(n, variant, easy = true).map)
+            val b = MercerieBoard(l, 1L)
+            assertFalse(tag, b.hasMatches())
+            assertTrue(tag, b.hasMove())
+            assertFalse(tag, b.goalMet)
+        }
+        // Les étages normaux ne changent pas : ils gardent leurs téléporteurs.
+        assertTrue((first until first + 40).any { MercerieGenerator.build(it).portals.isNotEmpty() })
+        for (n in first until first + 10) {
+            val (_, l) = MercerieGenerator.make(n, easy = true)
+            assertTrue("étage facile $n", l.easy && l.par == 0 && l.moves in 12..60)
+            assertTrue("étage facile $n", l.stars[0] < l.stars[1] && l.stars[1] < l.stars[2])
+        }
+    }
+
     /** Le robot règle quelques étages : coups à la mesure d'un humain, étoiles croissantes, et il les regagne ensuite. */
     @Test
     fun robotTunesFloors() {

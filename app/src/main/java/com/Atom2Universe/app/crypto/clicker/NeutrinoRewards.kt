@@ -26,15 +26,18 @@ object NeutrinoRewards {
 
     /**
      * Bobine & Boutons : un niveau gagné la première fois paie 3 + niveau ÷ 5, plafonné à 12 (les
-     * étages sont sans fin), puis 1 à chaque nouvelle victoire.
+     * étages sont sans fin), puis 1 à chaque nouvelle victoire. En mode facile, toute victoire paie 1.
      */
     const val MERCERIE_FIRST_BASE = 3
     const val MERCERIE_FIRST_DIVISOR = 5
     const val MERCERIE_FIRST_MAX = 12
     const val MERCERIE_REPLAY = 1
-    fun mercerie(level: Int, firstTime: Boolean) =
-        if (firstTime) (MERCERIE_FIRST_BASE + level.coerceAtLeast(0) / MERCERIE_FIRST_DIVISOR).coerceAtMost(MERCERIE_FIRST_MAX)
-        else MERCERIE_REPLAY
+    const val MERCERIE_EASY = 1
+    fun mercerie(level: Int, firstTime: Boolean, easy: Boolean = false) = when {
+        easy -> MERCERIE_EASY
+        firstTime -> (MERCERIE_FIRST_BASE + level.coerceAtLeast(0) / MERCERIE_FIRST_DIVISOR).coerceAtMost(MERCERIE_FIRST_MAX)
+        else -> MERCERIE_REPLAY
+    }
 
     const val MOCHI_POINTS_PER_NEUTRINO = 100
     fun mochi(score: Int) = score.coerceAtLeast(0) / MOCHI_POINTS_PER_NEUTRINO

@@ -154,6 +154,8 @@ class MercerieBoard(val level: MercerieLevel, seed: Long = System.nanoTime()) {
     /** Un coup est en cours : à la fin, les minuteurs baissent et un mouton peut s'étendre. */
     private var moveOpen = false
     private var dustCleared = false
+    /** Les carrés de quatre s'alignent (papillons) ; pas en mode facile. */
+    private val squares = !level.easy
 
     init {
         for (r in 0 until rows) for (c in 0 until cols) {
@@ -239,7 +241,7 @@ class MercerieBoard(val level: MercerieLevel, seed: Long = System.nanoTime()) {
                 color = rnd.nextInt(level.colors)
                 val h = c >= 2 && matchColor(i - 1) == color && matchColor(i - 2) == color
                 val v = r >= 2 && matchColor(i - cols) == color && matchColor(i - 2 * cols) == color
-                val sq = r >= 1 && c >= 1 && matchColor(i - 1) == color && matchColor(i - cols) == color && matchColor(i - cols - 1) == color
+                val sq = squares && r >= 1 && c >= 1 && matchColor(i - 1) == color && matchColor(i - cols) == color && matchColor(i - cols - 1) == color
             } while (h || v || sq)
             piece[i] = Piece(nextId++, color, Kind.NORMAL)
         }
@@ -273,10 +275,13 @@ class MercerieBoard(val level: MercerieLevel, seed: Long = System.nanoTime()) {
         }
         if (special(pa) && special(pb)) return true
         piece[a] = pb; piece[b] = pa
-        val ok = inRun(a) || inRun(b) || inSquare(a) || inSquare(b)
+        val ok = lined(a) || lined(b)
         piece[a] = pa; piece[b] = pb
         return ok
     }
+
+    /** Vrai si [i] s'aligne : trois de suite, ou un carré de quatre hors du mode facile. */
+    private fun lined(i: Int) = inRun(i) || (squares && inSquare(i))
 
     private fun inRun(i: Int): Boolean {
         val color = matchColor(i)
@@ -340,6 +345,72 @@ class MercerieBoard(val level: MercerieLevel, seed: Long = System.nanoTime()) {
     }
 
     fun hasMove() = findMove() != null
+
+    /**
+     * Le coup que montre l'aide, pour apprendre les bonus par l'exemple : d'abord deux bonus
+     * échangés ensemble (l'arc-en-ciel en tête), puis un coup qui fabrique un bonus (arc-en-ciel,
+     * pompon, ciseaux, papillon), puis un coup qui déclenche un bonus déjà là, et seulement à
+     * défaut un simple alignement de trois. Null si le plateau est bloqué.
+     */
+    fun bestMove(): IntArray? {
+        var best: IntArray? = null
+        var bestValue = -1
+        for (m in allMoves()) {
+            val v = moveValue(m[0], m[1])
+            if (v > bestValue) { bestValue = v; best = m }
+        }
+        return best
+    }
+
+    /**
+     * Le bonus que fabrique l'échange de [a] et [b] : arc-en-ciel, pompon, papillon, ou LINE_H pour
+     * des ciseaux, quel que soit leur sens. Null pour un simple alignement. Ne change rien.
+     */
+    fun bonusMadeBy(a: Int, b: Int): Kind? {
+        val pa = piece[a] ?: return null
+        val pb = piece[b] ?: return null
+        piece[a] = pb; piece[b] = pa
+        var best: Kind? = null
+        var rank = 0
+        for (g in findGroups()) {
+            val (kind, r) = when {
+                g.longest >= 5 -> Kind.RAINBOW to 4
+                g.crossing >= 0 -> Kind.BOMB to 3
+                g.longest == 4 -> Kind.LINE_H to 2
+                g.square -> Kind.BUTTERFLY to 1
+                else -> null to 0
+            }
+            if (r > rank) { rank = r; best = kind }
+        }
+        piece[a] = pa; piece[b] = pb
+        return best
+    }
+
+    private fun moveValue(a: Int, b: Int): Int {
+        val pa = piece[a]!!
+        val pb = piece[b]!!
+        val rainbowA = pa.kind == Kind.RAINBOW
+        val rainbowB = pb.kind == Kind.RAINBOW
+        if (rainbowA && rainbowB) return 100
+        if (rainbowA || rainbowB) return if (special(if (rainbowA) pb else pa)) 90 else 60
+        if (special(pa) && special(pb)) return 80
+        piece[a] = pb; piece[b] = pa
+        var v = 0
+        // Au repos, le plateau n'a aucun alignement : ceux qu'on trouve viennent de cet échange.
+        for (g in findGroups()) {
+            val made = when {
+                g.longest >= 5 -> 50
+                g.crossing >= 0 -> 45
+                g.longest == 4 -> 40
+                g.square -> 35
+                else -> 0
+            }
+            val fires = if (g.cells.any { piece[it]?.let { p -> special(p) } == true }) 30 else 0
+            v = maxOf(v, made, fires, 1)
+        }
+        piece[a] = pa; piece[b] = pb
+        return v
+    }
 
     /** Tous les coups permis, pour les robots de réglage. */
     fun allMoves(): List<IntArray> {
@@ -513,7 +584,7 @@ class MercerieBoard(val level: MercerieLevel, seed: Long = System.nanoTime()) {
         // Les carrés de quatre, repérés par leur coin en haut à gauche.
         val square = BooleanArray(size)
         val inSq = BooleanArray(size)
-        for (r in 0 until rows - 1) for (c in 0 until cols - 1) {
+        if (squares) for (r in 0 until rows - 1) for (c in 0 until cols - 1) {
             val a = idx(r, c)
             val color = matchColor(a)
             if (color < 0) continue
@@ -875,7 +946,7 @@ class MercerieBoard(val level: MercerieLevel, seed: Long = System.nanoTime()) {
     /**
      * Le coup est retombé : chaque minuteur baisse d'un cran (celui qui atteint zéro fait perdre la
      * partie), puis, si aucun mouton n'a été chassé pendant ce coup, un mouton gagne une case voisine
-     * en avalant la pièce qui s'y trouvait.
+     * en avalant la pièce qui s'y trouvait. En mode facile, les moutons restent où ils sont.
      */
     private fun endOfMove(): ClearStep? {
         if (bonus || finished) return null
@@ -895,7 +966,7 @@ class MercerieBoard(val level: MercerieLevel, seed: Long = System.nanoTime()) {
                 maxWave = maxOf(maxWave, 1)
             }
         }
-        if (!dustCleared && !timedOut && spread()) any = true
+        if (!level.easy && !dustCleared && !timedOut && spread()) any = true
         dustCleared = false
         return if (any) finish(endOfMove = true) else null
     }
@@ -995,11 +1066,11 @@ class MercerieBoard(val level: MercerieLevel, seed: Long = System.nanoTime()) {
         if (spawned.isEmpty()) return
         for (i in 0 until size) {
             val p = piece[i] ?: continue
-            if (p.kind != Kind.NORMAL || p !in spawned || (!inRun(i) && !inSquare(i))) continue
+            if (p.kind != Kind.NORMAL || p !in spawned || !lined(i)) continue
             val first = rnd.nextInt(level.colors)
             for (k in 0 until level.colors) {
                 p.color = (first + k) % level.colors
-                if (!inRun(i) && !inSquare(i)) break
+                if (!lined(i)) break
             }
         }
     }

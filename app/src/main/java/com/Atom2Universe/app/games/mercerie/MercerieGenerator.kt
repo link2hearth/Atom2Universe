@@ -35,6 +35,9 @@ object MercerieGenerator {
         listOf(" ...... ", "........", "........", "...  ...", "...  ...", "........", "........", " ...... ")
     ).map { Shape(it) } + MercerieShapes.ALL
 
+    /** Les formes du mode facile : toutes, sauf les plateaux à téléporteurs. */
+    private val EASY_SHAPES: List<Shape> = SHAPES.filter { it.portals.isEmpty() }
+
     private enum class Type { SCORE, COLLECT, PATCHES, THIMBLES, MIXED, DUST }
 
     private fun typeOf(number: Int): Type {
@@ -45,12 +48,11 @@ object MercerieGenerator {
 
     /**
      * Les formes passent toutes avant de revenir, dans un ordre retiré à chaque tour. Un tour
-     * commence par une forme de la première moitié de [SHAPES] et finit par une de la seconde :
+     * commence par une forme de la première moitié de la liste et finit par une de la seconde :
      * deux étages de suite n'ont donc jamais la même forme, même d'un tour à l'autre.
      */
-    private fun shapeOf(number: Int): Int {
+    private fun shapeOf(number: Int, size: Int): Int {
         val k = (number - MercerieLevels.HANDMADE - 1).coerceAtLeast(0)
-        val size = SHAPES.size
         val order = (0 until size).shuffled(Random(k / size * 104729L + 7)).toMutableList()
         val head = order.first { it < size / 2 }
         order.remove(head)
@@ -88,10 +90,15 @@ object MercerieGenerator {
         return f
     }
 
-    /** Fabrique l'étage [number]. Chaque [variant] est plus léger que le précédent ; le troisième se joue au score. */
-    fun build(number: Int, variant: Int = 0): MercerieLevel {
+    /**
+     * Fabrique l'étage [number]. Chaque [variant] est plus léger que le précédent ; le troisième se
+     * joue au score. En mode facile ([easy]) : ni téléporteurs ni minuteurs, et les règles faciles du
+     * plateau ([MercerieLevel.easy]).
+     */
+    fun build(number: Int, variant: Int = 0, easy: Boolean = false): MercerieLevel {
         val rnd = Random(number * 1_000_003L + variant * 97L)
-        val shape = SHAPES[shapeOf(number)]
+        val shapes = if (easy) EASY_SHAPES else SHAPES
+        val shape = shapes[shapeOf(number, shapes.size)]
         val rows = shape.map.size
         val cols = shape.map[0].length
         val grid = Array(rows) { r -> CharArray(cols) { c -> shape.map[r][c] } }
@@ -203,11 +210,11 @@ object MercerieGenerator {
                 if (rnd.nextInt(10) < 4) knots(6, 1)
             }
         }
-        // Les minuteurs se glissent dans un étage sur quatre, et jamais dans une variante allégée.
+        // Les minuteurs se glissent dans un étage sur quatre, jamais dans une variante allégée ni en mode facile.
         var timer = 0
         var timers = 0
         var timersAtOnce = 1
-        if (variant == 0 && type != Type.THIMBLES && rnd.nextInt(4) == 0) {
+        if (!easy && variant == 0 && type != Type.THIMBLES && rnd.nextInt(4) == 0) {
             timer = 9 + rnd.nextInt(4)
             timers = 2 + rnd.nextInt(3)
             timersAtOnce = if (timers >= 4) 2 else 1
@@ -228,7 +235,7 @@ object MercerieGenerator {
         return MercerieLevel(
             number, 30, colors, grid.map { String(it) },
             Goal(collect, wantPatches, thimbles, wantDust), intArrayOf(1000, 2000, 3000), atOnce,
-            shape.portals, timer, timers, timersAtOnce
+            shape.portals, timer, timers, timersAtOnce, easy = easy
         )
     }
 
@@ -279,9 +286,12 @@ object MercerieGenerator {
         return draft.with(moves = real.moves, stars = intArrayOf(s1, s2, s3), par = if (draft.goal.onlyScore) 0 else used4)
     }
 
-    /** L'étage [number] prêt à jouer, et la variante retenue. Lent (le robot joue) : hors du fil d'affichage. */
-    fun make(number: Int): Pair<Int, MercerieLevel> {
-        for (variant in 0..3) tune(build(number, variant))?.let { return variant to it }
-        return 3 to build(number, 3).with(moves = 20, stars = intArrayOf(3000, 6000, 9000))
+    /**
+     * L'étage [number] prêt à jouer, et la variante retenue. Lent (le robot joue) : hors du fil
+     * d'affichage. En mode facile ([easy]), le robot le règle avec les règles faciles.
+     */
+    fun make(number: Int, easy: Boolean = false): Pair<Int, MercerieLevel> {
+        for (variant in 0..3) tune(build(number, variant, easy))?.let { return variant to it }
+        return 3 to build(number, 3, easy).with(moves = 20, stars = intArrayOf(3000, 6000, 9000))
     }
 }

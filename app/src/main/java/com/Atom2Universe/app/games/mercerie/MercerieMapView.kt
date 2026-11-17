@@ -45,6 +45,7 @@ class MercerieMapView(context: Context, private val progress: MercerieProgress, 
     private val beatTop = (radius * 1.5f).toInt()
     private val beatBottom = (radius * 2.75f).toInt()
     private val beat = Beat(context)
+    private val easyTag = context.getString(com.Atom2Universe.app.R.string.mercerie_easy_tag)
 
     /** Sous la fiche d'un niveau, le bouton en cours cesse de battre. */
     override var covered = false
@@ -130,10 +131,18 @@ class MercerieMapView(context: Context, private val progress: MercerieProgress, 
         canvas.drawText(digits, x, y + text.textSize * .35f, text)
         if (!open) { canvas.restore(); return }
         val sy = y + radius * 1.5f
-        for (s in 0 until 3) Felt.star(canvas, x + (s - 1) * radius * .62f, sy + (if (s == 1) radius * .08f else 0f), radius * .24f, s < stars)
+        // Fini seulement en mode facile : ses étoiles en vert menthe et « facile » à la place du score.
+        val easy = progress.onlyEasy(level)
+        val shown = if (easy) progress.easyStars(level) else stars
+        for (s in 0 until 3) Felt.star(canvas, x + (s - 1) * radius * .62f, sy + (if (s == 1) radius * .08f else 0f), radius * .24f, s < shown, easy)
+        text.textSize = radius * .42f
+        if (easy) {
+            text.color = if (Felt.dark) Felt.lighter(Felt.MINT, .55f) else Felt.darker(Felt.MINT, .6f)
+            canvas.drawText(easyTag, x, sy + radius * .86f, text)
+            return
+        }
         val best = progress.best(level)
         if (best > 0) {
-            text.textSize = radius * .42f
             text.color = Felt.INK
             canvas.drawText(MercerieUi.number(best), x, sy + radius * .86f, text)
         }
@@ -242,9 +251,9 @@ class StarBarView(context: Context, private val thresholds: IntArray) : View(con
     }
 }
 
-/** Les étoiles d'une fin de niveau : elles se posent l'une après l'autre. */
+/** Les étoiles d'une fin de niveau : elles se posent l'une après l'autre ; [easy] : vert menthe du mode facile. */
 @SuppressLint("ViewConstructor")
-class StarsView(context: Context, private val count: Int, private val animated: Boolean = true) : View(context) {
+class StarsView(context: Context, private val count: Int, private val animated: Boolean = true, private val easy: Boolean = false) : View(context) {
     private val start = System.nanoTime()
 
     override fun onDraw(canvas: Canvas) {
@@ -261,7 +270,7 @@ class StarsView(context: Context, private val count: Int, private val animated: 
             if (u <= 0f) continue
             val v = u - 1
             val scale = v * v * (2.9f * v + 1.9f) + 1
-            Felt.star(canvas, x, y, r * (if (k == 1) 1.15f else 1f) * scale, true)
+            Felt.star(canvas, x, y, r * (if (k == 1) 1.15f else 1f) * scale, true, easy)
         }
         if (moving) postInvalidateOnAnimation()
     }

@@ -278,11 +278,13 @@ object Felt {
 
     /** Une étoile de récompense, pleine ou vide. */
     @Synchronized
-    fun star(canvas: Canvas, cx: Float, cy: Float, r: Float, on: Boolean) {
+    /** Une étoile de feutrine ; [easy] : une étoile gagnée en mode facile, vert menthe au lieu d'or. */
+    fun star(canvas: Canvas, cx: Float, cy: Float, r: Float, on: Boolean, easy: Boolean = false) {
         val p = stars.getOrPut(r) { starPath(r) }
         canvas.save()
         canvas.translate(cx, cy)
-        shape(canvas, p, if (on) GOLD else GREY, r * 2, stitch = on, shadow = on, plush = on, threadColor = 0xFFFFF3C4.toInt())
+        val face = if (!on) GREY else if (easy) MINT else GOLD
+        shape(canvas, p, face, r * 2, stitch = on, shadow = on, plush = on, threadColor = if (easy) lighter(MINT, .6f) else 0xFFFFF3C4.toInt())
         canvas.restore()
     }
 

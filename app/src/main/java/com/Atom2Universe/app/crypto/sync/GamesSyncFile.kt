@@ -258,6 +258,8 @@ val HIGH_SCORE_KEYS = listOf(
     // Bobine & Boutons : meilleur score et étoiles de chaque niveau.
     HighScoreKey("mercerie_save",      "best_",           HighScoreType.INT,   H, isPrefix = true),
     HighScoreKey("mercerie_save",      "stars_",          HighScoreType.INT,   H, isPrefix = true),
+    HighScoreKey("mercerie_save",      "easy_best_",      HighScoreType.INT,   H, isPrefix = true),
+    HighScoreKey("mercerie_save",      "easy_stars_",     HighScoreType.INT,   H, isPrefix = true),
     HighScoreKey("roulette_stats",     "best_payout",     HighScoreType.INT),
     HighScoreKey("match3_save",        "best_score",      HighScoreType.INT),
     // Durée de survie : plus c'est long, mieux c'est.

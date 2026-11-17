@@ -44,16 +44,34 @@ class MercerieLevel(
     /** Minuteurs en tout sur la partie, ceux de la carte (`t`) compris. */
     val timers: Int = 0,
     val timersAtOnce: Int = 1,
+    par: Int = 0,
+    /**
+     * Mode facile, le jeu d'avant la mise à jour : ni minuteurs, ni téléporteurs, ni papillons (un
+     * carré de quatre ne s'aligne pas), des moutons qui ne s'étendent pas, et pas de défi.
+     */
+    val easy: Boolean = false
+) {
     /**
      * Le défi : les coups qu'il a fallu au robot (sa partie médiane). Atteindre l'objectif en autant
-     * de coups ou moins rapporte de quoi avoir les trois étoiles. 0 : pas de défi (niveau au score).
+     * de coups ou moins rapporte de quoi avoir les trois étoiles. 0 : pas de défi (niveau au score,
+     * mode facile).
      */
-    val par: Int = 0
-) {
+    val par: Int = if (easy) 0 else par
     val cols = map[0].length
     val rows = map.size
     fun with(moves: Int = this.moves, stars: IntArray = this.stars, number: Int = this.number, par: Int = this.par) =
-        MercerieLevel(number, moves, colors, map, goal, stars, thimblesAtOnce, portals, timer, timers, timersAtOnce, par)
+        MercerieLevel(number, moves, colors, map, goal, stars, thimblesAtOnce, portals, timer, timers, timersAtOnce, par, easy)
+
+    /**
+     * Ce niveau en mode facile : mêmes coups, mêmes étoiles, même objectif. Les minuteurs partent ; un
+     * plateau à téléporteurs perd ses boutonnières et ses trous deviennent des cases, pour que les
+     * pièces arrivent partout d'en haut.
+     */
+    fun asEasy(): MercerieLevel {
+        if (easy) return this
+        val plain = map.map { row -> (if (portals.isEmpty()) row else row.replace(' ', '.')).replace('t', '.') }
+        return MercerieLevel(number, moves, colors, plain, goal, stars, thimblesAtOnce, easy = true)
+    }
 }
 
 /**
