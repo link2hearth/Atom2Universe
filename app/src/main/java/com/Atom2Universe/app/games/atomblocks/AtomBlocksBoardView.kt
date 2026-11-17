@@ -105,7 +105,8 @@ class AtomBlocksBoardView @JvmOverloads constructor(
     private var hintVisible = false
     private var celebrationAt = -1L
     private var celebrationWin = false
-    private data class MoveEffect(val result: AtomBlocksEngine.MoveResult, val started: Long)
+    /** The popup texts are formatted once per move, not on every frame of the effect. */
+    private class MoveEffect(val result: AtomBlocksEngine.MoveResult, val started: Long, val title: String, val points: String)
     private var moveEffect: MoveEffect? = null
     private data class Particle(
         val x: Float, val y: Float, val vx: Float, val vy: Float,
@@ -167,7 +168,13 @@ class AtomBlocksBoardView @JvmOverloads constructor(
     fun showMove(result: AtomBlocksEngine.MoveResult) {
         clearSelection()
         val now = SystemClock.uptimeMillis()
-        moveEffect = MoveEffect(result, now)
+        val points = context.getString(R.string.ab_points_popup, result.scoreGained)
+        val title = when {
+            result.allClear -> context.getString(R.string.ab_all_clear)
+            result.combo > 1 -> context.getString(R.string.ab_combo_popup, result.combo)
+            else -> points
+        }
+        moveEffect = MoveEffect(result, now, title, points)
         if (animated()) {
             // Bounded particle count, also for an eight-by-eight all-clear.
             result.cleared.forEachIndexed { index, c ->
@@ -312,7 +319,10 @@ class AtomBlocksBoardView @JvmOverloads constructor(
     }
 
     private fun blockGradient(size: Float, width: Float, height: Float, top: Int, bottom: Int): LinearGradient {
-        val cache = gradientCaches.firstOrNull { it.size == size } ?: GradientCache(size).also {
+        // Indexed lookup: called for every block of every frame, without an iterator each time.
+        var found: GradientCache? = null
+        for (i in gradientCaches.indices) if (gradientCaches[i].size == size) { found = gradientCaches[i]; break }
+        val cache = found ?: GradientCache(size).also {
             if (gradientCaches.size >= 6) gradientCaches.clear()
             gradientCaches += it
         }
@@ -436,15 +446,10 @@ class AtomBlocksBoardView @JvmOverloads constructor(
                     }
                 }
                 if (result.lines > 0 && celebrationAt < 0L) {
-                    val title = when {
-                        result.allClear -> context.getString(R.string.ab_all_clear)
-                        result.combo > 1 -> context.getString(R.string.ab_combo_popup, result.combo)
-                        else -> context.getString(R.string.ab_points_popup, result.scoreGained)
-                    }
                     val fade = min(1f, (1f - age) * 3.5f)
                     val y = boardRect.centerY() - if (animated()) cellSize * age * .65f else 0f
-                    drawToast(canvas, title, y, fade)
-                    if (result.allClear || result.combo > 1) drawSmallLabel(canvas, context.getString(R.string.ab_points_popup, result.scoreGained), y + cellSize * .66f, fade)
+                    drawToast(canvas, effect.title, y, fade)
+                    if (result.allClear || result.combo > 1) drawSmallLabel(canvas, effect.points, y + cellSize * .66f, fade)
                 } else if (result.lines == 0 && result.placed.isNotEmpty() && celebrationAt < 0L) {
                     val centerCol = result.placed.sumOf { it.col }.toFloat() / result.placed.size + .5f
                     val centerRow = result.placed.sumOf { it.row }.toFloat() / result.placed.size + .5f
@@ -452,7 +457,7 @@ class AtomBlocksBoardView @JvmOverloads constructor(
                     label.textSize = min(dp(18f), cellSize * .45f)
                     label.color = withAlpha(textColor, min(1f, (1f - age) * 2.5f))
                     label.setShadowLayer(dp(3f), 0f, dp(1f), surface)
-                    canvas.drawText(context.getString(R.string.ab_points_popup, result.scoreGained),
+                    canvas.drawText(effect.points,
                         boardRect.left + centerCol * cellSize, boardRect.top + centerRow * cellSize - rise, label)
                     label.clearShadowLayer()
                 }
@@ -486,11 +491,14 @@ class AtomBlocksBoardView @JvmOverloads constructor(
         label.textSize = min(dp(24f), cellSize * .63f)
         label.color = withAlpha(textColor, alpha)
         val maxWidth = boardRect.width() * .87f
-        val textWidth = label.measureText(title)
-        if (textWidth > maxWidth) label.textSize *= maxWidth / textWidth
+        var textWidth = label.measureText(title)
+        if (textWidth > maxWidth) {
+            label.textSize *= maxWidth / textWidth
+            textWidth = label.measureText(title)
+        }
         val pad = cellSize * .28f
-        rect.set(boardRect.centerX() - label.measureText(title) * .5f - pad, y - label.textSize - pad * .5f,
-            boardRect.centerX() + label.measureText(title) * .5f + pad, y + pad)
+        rect.set(boardRect.centerX() - textWidth * .5f - pad, y - label.textSize - pad * .5f,
+            boardRect.centerX() + textWidth * .5f + pad, y + pad)
         fill.color = withAlpha(surface, .95f * alpha)
         canvas.drawRoundRect(rect, dp(12f) * cornerScale, dp(12f) * cornerScale, fill)
         line.color = withAlpha(accent, .55f * alpha)

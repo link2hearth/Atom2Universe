@@ -53,6 +53,19 @@ internal object MahjongAtlas {
         return decode(context, safe, 1)?.also { table = it; tableId = safe }
     }
 
+    private var bakedKey = -1L
+    private var baked: Bitmap? = null
+
+    /**
+     * Le paysage équipé déjà recadré et voilé, à la résolution de l'image (pas de l'écran) ;
+     * un seul gardé, refait quand le fond ou la taille de l'écran change. L'ancien n'est pas
+     * recyclé : une liste d'affichage peut encore le tenir, le ramasse-miettes s'en charge.
+     */
+    @Synchronized fun bakedTable(key: Long, make: () -> Bitmap): Bitmap {
+        baked?.takeIf { bakedKey == key }?.let { return it }
+        return make().also { baked = it; bakedKey = key }
+    }
+
     /** Petite version (1/4) pour les cartes de la collection. */
     @Synchronized fun tableThumb(context: Context, id: Int): Bitmap? {
         val safe = id.coerceIn(0, TABLES - 1)

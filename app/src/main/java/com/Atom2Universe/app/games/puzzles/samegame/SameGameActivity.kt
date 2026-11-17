@@ -57,13 +57,15 @@ class SameGameView(context: Context) : PuzzleView<SameGameState>(context) {
         val cell = grid.cell
         fill.color = palette.raised
         canvas.drawRoundRect(grid.left, grid.top, grid.right, grid.bottom, cell * 0.2f, cell * 0.2f, fill)
+        // Sans groupe désigné, pas de recherche dans l'ensemble (elle emballerait chaque numéro de case).
+        val anyPicked = selection.isNotEmpty()
         for (i in state.cells.indices) {
             val c = state.cells[i]
             if (c < 0) continue
             grid.rect(i % state.w, i / state.w, r, cell * 0.06f)
             val colour = palette.piece(c * 2)
-            val picked = i in selection
-            fill.color = if (selection.isNotEmpty() && !picked) palette.blend(colour, palette.raised, 0.45f) else colour
+            val picked = anyPicked && i in selection
+            fill.color = if (anyPicked && !picked) palette.blend(colour, palette.raised, 0.45f) else colour
             canvas.drawRoundRect(r, cell * 0.22f, cell * 0.22f, fill)
             if (picked) {
                 stroke.color = palette.text

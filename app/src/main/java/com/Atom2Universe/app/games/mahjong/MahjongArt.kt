@@ -40,6 +40,17 @@ class MahjongArt(private val context: Context? = null) {
     private val dragons = context?.resources?.getStringArray(R.array.mj_glyph_dragons) ?: emptyArray()
     private val wan = context?.getString(R.string.mj_glyph_wan) ?: ""
     private val serif = Typeface.create(Typeface.SERIF, Typeface.BOLD)
+    /** Étoile de rayon 1 construite une fois : chaque étoile n'est plus qu'un déplacement et une échelle. */
+    private val unitStar = Path().apply {
+        repeat(10) { i ->
+            val a = -PI/2 + i*PI/5; val radius = if (i%2==0) 1f else .45f
+            val px = cos(a).toFloat()*radius; val py = sin(a).toFloat()*radius
+            if (i==0) moveTo(px,py) else lineTo(px,py)
+        }
+        close()
+    }
+    private var shadowBlur: BlurMaskFilter? = null
+    private var shadowRadius = -1f
     init { context?.let(MahjongAtlas::load) }
 
     /** Couleur du dos (et de la tranche) selon la texture de la collection. */
@@ -57,7 +68,9 @@ class MahjongArt(private val context: Context? = null) {
         p.shader = null; p.style = Paint.Style.FILL
         if (shadow) {
             p.color = 0x50000000
-            p.maskFilter = BlurMaskFilter(max(1f, w * .05f), BlurMaskFilter.Blur.NORMAL)
+            val blur = max(1f, w * .05f)
+            if (blur != shadowRadius) { shadowRadius = blur; shadowBlur = BlurMaskFilter(blur, BlurMaskFilter.Blur.NORMAL) }
+            p.maskFilter = shadowBlur
             c.drawRoundRect(-depth * 1.55f, depth * 1.35f, w - depth * .55f, h + depth * 1.75f, r, r, p)
             p.maskFilter = null
         }
@@ -249,13 +262,9 @@ class MahjongArt(private val context: Context? = null) {
     // ---- Petits dessins de l'interface ------------------------------------------------------
 
     fun star(c: Canvas, x: Float, y: Float, r: Float, color: Int) {
-        p.style = Paint.Style.FILL; p.color = color; p.shader = null; shape.reset()
-        repeat(10) { i ->
-            val a = -PI/2 + i*PI/5; val radius = if (i%2==0) r else r*.45f
-            val px = x+cos(a).toFloat()*radius; val py = y+sin(a).toFloat()*radius
-            if (i==0) shape.moveTo(px,py) else shape.lineTo(px,py)
-        }
-        shape.close(); c.drawPath(shape,p)
+        p.style = Paint.Style.FILL; p.color = color; p.shader = null
+        val save = c.save(); c.translate(x, y); c.scale(r, r)
+        c.drawPath(unitStar, p); c.restoreToCount(save)
     }
 
     fun pearl(c: Canvas, x: Float, y: Float, r: Float) {
@@ -301,16 +310,25 @@ class MahjongArt(private val context: Context? = null) {
             val sw = w / scale; val sh = h / scale
             source.set(((landscape.width - sw) / 2).toInt(), ((landscape.height - sh) / 2).toInt(),
                 ((landscape.width + sw) / 2).toInt(), ((landscape.height + sh) / 2).toInt())
+            if (thumbnail) {
+                oval.set(0f, 0f, w, h)
+                p.color = Color.WHITE; c.drawBitmap(landscape, source, oval, p)
+                veil(c, w, h, id)
+                return
+            }
+            // Plein écran : le recadrage et ses voiles sont cuits une fois à la taille du recadrage,
+            // puis posés d'un seul trait (quatre couches plein écran à chaque trame sinon).
+            val bw = source.width().coerceAtLeast(1); val bh = source.height().coerceAtLeast(1)
+            val key = (id.toLong() shl 48) or (w.toLong() shl 24) or h.toLong()
+            val baked = MahjongAtlas.bakedTable(key) {
+                Bitmap.createBitmap(bw, bh, Bitmap.Config.ARGB_8888).also { bake ->
+                    val bc = Canvas(bake)
+                    p.color = Color.WHITE; bc.drawBitmap(landscape, source, Rect(0, 0, bw, bh), p)
+                    bc.scale(bw / w, bh / h); veil(bc, w, h, id)
+                }
+            }
             oval.set(0f, 0f, w, h)
-            p.color = Color.WHITE; c.drawBitmap(landscape, source, oval, p)
-            val dim = MahjongAtlas.tableDim(id)
-            if (dim > 0f) { p.color = Color.argb((dim * 255).toInt(), 0, 0, 0); c.drawRect(0f, 0f, w, h, p) }
-            p.shader = LinearGradient(0f, 0f, 0f, h, intArrayOf(0x70000000, 0x10000000, 0x08000000, 0x50000000),
-                floatArrayOf(0f, .18f, .72f, 1f), Shader.TileMode.CLAMP)
-            c.drawRect(0f, 0f, w, h, p)
-            p.shader = RadialGradient(w / 2, h * .5f, max(w, h) * .75f, intArrayOf(0x00000000, 0x00000000, 0x45000000),
-                floatArrayOf(0f, .62f, 1f), Shader.TileMode.CLAMP)
-            c.drawRect(0f, 0f, w, h, p); p.shader = null
+            p.color = Color.WHITE; c.drawBitmap(baked, null, oval, p)
             return
         }
         p.shader = LinearGradient(0f, 0f, 0f, h, 0xff17534a.toInt(), 0xff0b2c28.toInt(), Shader.TileMode.CLAMP)
@@ -330,6 +348,18 @@ class MahjongArt(private val context: Context? = null) {
         p.style = Paint.Style.FILL
         p.shader = RadialGradient(w / 2, h * .45f, max(w, h) * .75f, intArrayOf(0x00000000, 0x00000000, 0x66000000),
             floatArrayOf(0f, .55f, 1f), Shader.TileMode.CLAMP)
+        c.drawRect(0f, 0f, w, h, p); p.shader = null
+    }
+
+    /** Voiles du paysage : plus sombre en haut sous la bande du score, un peu en bas, et sur les bords. */
+    private fun veil(c: Canvas, w: Float, h: Float, id: Int) {
+        val dim = MahjongAtlas.tableDim(id)
+        if (dim > 0f) { p.color = Color.argb((dim * 255).toInt(), 0, 0, 0); c.drawRect(0f, 0f, w, h, p) }
+        p.shader = LinearGradient(0f, 0f, 0f, h, intArrayOf(0x70000000, 0x10000000, 0x08000000, 0x50000000),
+            floatArrayOf(0f, .18f, .72f, 1f), Shader.TileMode.CLAMP)
+        c.drawRect(0f, 0f, w, h, p)
+        p.shader = RadialGradient(w / 2, h * .5f, max(w, h) * .75f, intArrayOf(0x00000000, 0x00000000, 0x45000000),
+            floatArrayOf(0f, .62f, 1f), Shader.TileMode.CLAMP)
         c.drawRect(0f, 0f, w, h, p); p.shader = null
     }
 

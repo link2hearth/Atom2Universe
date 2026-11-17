@@ -43,18 +43,40 @@ class MagnetsActivity : PuzzleActivity<MagnetsState>() {
  * dans l'autre sens. Les comptes de + sont en haut et à gauche, ceux de − en bas et à droite.
  */
 class MagnetsView(context: Context) : PuzzleView<MagnetsState>(context) {
-    private val analysis = PuzzleStateCache<MagnetsState, Set<Int>> { it.clashes() }
+    /** Une fois par état : les charges qui se heurtent, et les + et − posés par ligne puis par colonne. */
+    private class Analysis(val clash: Set<Int>, val counts: IntArray)
+    private val analysis = PuzzleStateCache<MagnetsState, Analysis> { s ->
+        val counts = IntArray(2 * (s.h + s.w))
+        for (y in 0 until s.h) {
+            counts[2 * y] = s.count(true, y, MagnetsState.PLUS)
+            counts[2 * y + 1] = s.count(true, y, MagnetsState.MINUS)
+        }
+        for (x in 0 until s.w) {
+            counts[2 * (s.h + x)] = s.count(false, x, MagnetsState.PLUS)
+            counts[2 * (s.h + x) + 1] = s.count(false, x, MagnetsState.MINUS)
+        }
+        Analysis(s.clashes(), counts)
+    }
+    private val plusText by lazy { context.getString(R.string.magnets_plus) }
+    private val minusText by lazy { context.getString(R.string.magnets_minus) }
 
     private val grid = GridGeometry()
     private val r = RectF()
     private val path = Path()
+    /** Les traits de champ de tous les dipôles en un seul chemin, refait seulement quand l'état ou la grille change. */
+    private val fieldLines = Path()
+    private var fieldState: MagnetsState? = null
+    private var fieldLeft = Float.NaN
+    private var fieldTop = Float.NaN
+    private var fieldCell = Float.NaN
 
     override fun drawBoard(canvas: Canvas, state: MagnetsState, area: RectF) {
         grid.fit(area, state.w, state.h, 0.8f, 0.8f, 0.8f, 0.8f)
         val cell = grid.cell
-        val clash = analysis[state]
-        val plus = context.getString(R.string.magnets_plus)
-        val minus = context.getString(R.string.magnets_minus)
+        val a = analysis[state]
+        val clash = a.clash
+        val plus = plusText
+        val minus = minusText
         val warm = palette.piece(0); val cold = palette.piece(5)
         for (i in 0 until state.w * state.h) {
             val j = state.mate[i]
@@ -72,63 +94,75 @@ class MagnetsView(context: Context) : PuzzleView<MagnetsState>(context) {
             stroke.color = palette.gridBold; stroke.strokeWidth = cell * 0.04f
             canvas.drawRoundRect(r, cell * 0.16f, cell * 0.16f, stroke)
         }
-        // Un dipôle : un trait de champ courbe relie ses deux charges, sous elles.
-        for (i in 0 until state.w * state.h) {
-            val j = state.mate[i]
-            if (j < i || state.cells[i] !in listOf(MagnetsState.PLUS, MagnetsState.MINUS)) continue
-            val x1 = grid.cx(i % state.w); val y1 = grid.cy(i / state.w)
-            val x2 = grid.cx(j % state.w); val y2 = grid.cy(j / state.w)
-            stroke.color = palette.withAlpha(palette.text, 0.35f); stroke.strokeWidth = cell * 0.035f
+        // Un dipôle : un trait de champ courbe relie ses deux charges, sous elles. Les courbes ne se
+        // touchent que sous les sphères opaques des charges : un seul chemin donne la même image.
+        if (fieldState !== state || fieldLeft != grid.left || fieldTop != grid.top || fieldCell != cell) {
+            fieldState = state; fieldLeft = grid.left; fieldTop = grid.top; fieldCell = cell
+            fieldLines.reset()
             val bend = cell * 0.22f
-            for (side in listOf(-1, 1)) {
-                path.reset(); path.moveTo(x1, y1)
-                // Perpendiculaire au domino, d'un côté puis de l'autre.
-                path.quadTo((x1 + x2) / 2 + side * (y2 - y1) / cell * bend, (y1 + y2) / 2 + side * (x2 - x1) / cell * bend, x2, y2)
-                canvas.drawPath(path, stroke)
+            for (i in 0 until state.w * state.h) {
+                val j = state.mate[i]
+                val v = state.cells[i]
+                if (j < i || (v != MagnetsState.PLUS && v != MagnetsState.MINUS)) continue
+                val x1 = grid.cx(i % state.w); val y1 = grid.cy(i / state.w)
+                val x2 = grid.cx(j % state.w); val y2 = grid.cy(j / state.w)
+                for (k in 0..1) {
+                    val side = 2 * k - 1
+                    fieldLines.moveTo(x1, y1)
+                    // Perpendiculaire au domino, d'un côté puis de l'autre.
+                    fieldLines.quadTo((x1 + x2) / 2 + side * (y2 - y1) / cell * bend, (y1 + y2) / 2 + side * (x2 - x1) / cell * bend, x2, y2)
+                }
             }
         }
+        stroke.color = palette.withAlpha(palette.text, 0.35f); stroke.strokeWidth = cell * 0.035f
+        canvas.drawPath(fieldLines, stroke)
+        val onWarm = KitPalette.contrasting(warm)
+        val onCold = KitPalette.contrasting(cold)
         for (i in 0 until state.w * state.h) {
             val v = state.cells[i]
             if (v == 0) continue
             grid.rect(i % state.w, i / state.w, r)
             if (v == MagnetsState.NEUTRAL) { neutron(canvas, r.centerX(), r.centerY(), cell); continue }
-            val colour = if (v == MagnetsState.PLUS) warm else cold
-            charge(canvas, r.centerX(), r.centerY(), cell, colour, if (v == MagnetsState.PLUS) plus else minus)
+            if (v == MagnetsState.PLUS) charge(canvas, r.centerX(), r.centerY(), cell, warm, onWarm, plus)
+            else charge(canvas, r.centerX(), r.centerY(), cell, cold, onCold, minus)
         }
         // Une étincelle entre deux charges de même signe qui se touchent.
         for (i in clash) {
             val x = i % state.w; val y = i / state.w
-            for ((n, dx, dy) in listOf(Triple(i + 1, 1, 0), Triple(i + state.w, 0, 1))) {
+            for (dx in 1 downTo 0) {
+                val dy = 1 - dx
+                val n = if (dx == 1) i + 1 else i + state.w
                 if ((dx == 1 && x == state.w - 1) || (dy == 1 && y == state.h - 1) || n !in clash) continue
                 if (state.cells[n] != state.cells[i]) continue
                 spark(canvas, grid.x(x) + cell * (0.5f + dx * 0.5f), grid.y(y) + cell * (0.5f + dy * 0.5f), cell, dx == 1)
             }
         }
-        fun clue(text: String, value: Int, done: Int, x: Float, y: Float, colour: Int) {
+        val counts = a.counts
+        fun clue(value: Int, done: Int, x: Float, y: Float, colour: Int) {
             val c = when { done > value -> palette.error; done == value -> palette.tertiary; else -> colour }
-            canvas.centeredText(value.toString(), x, y, cell * 0.4f, c, bold = true)
+            canvas.centeredText(number(value), x, y, cell * 0.4f, c, bold = true)
         }
         for (y in 0 until state.h) {
-            clue(plus, state.rowPlus[y], state.count(true, y, MagnetsState.PLUS), grid.left - cell * 0.4f, grid.cy(y), warm)
-            clue(minus, state.rowMinus[y], state.count(true, y, MagnetsState.MINUS), grid.right + cell * 0.4f, grid.cy(y), cold)
+            clue(state.rowPlus[y], counts[2 * y], grid.left - cell * 0.4f, grid.cy(y), warm)
+            clue(state.rowMinus[y], counts[2 * y + 1], grid.right + cell * 0.4f, grid.cy(y), cold)
         }
         for (x in 0 until state.w) {
-            clue(plus, state.colPlus[x], state.count(false, x, MagnetsState.PLUS), grid.cx(x), grid.top - cell * 0.4f, warm)
-            clue(minus, state.colMinus[x], state.count(false, x, MagnetsState.MINUS), grid.cx(x), grid.bottom + cell * 0.4f, cold)
+            clue(state.colPlus[x], counts[2 * (state.h + x)], grid.cx(x), grid.top - cell * 0.4f, warm)
+            clue(state.colMinus[x], counts[2 * (state.h + x) + 1], grid.cx(x), grid.bottom + cell * 0.4f, cold)
         }
         canvas.centeredText(plus, grid.left - cell * 0.4f, grid.top - cell * 0.4f, cell * 0.5f, warm, bold = true)
         canvas.centeredText(minus, grid.right + cell * 0.4f, grid.bottom + cell * 0.4f, cell * 0.5f, cold, bold = true)
     }
 
     /** Une particule chargée : un halo, une sphère et son signe. */
-    private fun charge(canvas: Canvas, cx: Float, cy: Float, cell: Float, colour: Int, sign: String) {
+    private fun charge(canvas: Canvas, cx: Float, cy: Float, cell: Float, colour: Int, ink: Int, sign: String) {
         fill.color = palette.withAlpha(colour, 0.18f)
         canvas.drawCircle(cx, cy, cell * 0.42f, fill)
         fill.color = colour
         canvas.drawCircle(cx, cy, cell * 0.28f, fill)
         fill.color = palette.blend(colour, 0xFFFFFFFF.toInt(), 0.45f)
         canvas.drawCircle(cx - cell * 0.09f, cy - cell * 0.09f, cell * 0.08f, fill)
-        canvas.centeredText(sign, cx, cy, cell * 0.42f, KitPalette.contrasting(colour), bold = true)
+        canvas.centeredText(sign, cx, cy, cell * 0.42f, ink, bold = true)
     }
 
     /** Une case neutre : une petite sphère grise, sans halo ni signe. */
@@ -142,8 +176,8 @@ class MagnetsView(context: Context) : PuzzleView<MagnetsState>(context) {
     /** Un éclair en zigzag, à cheval sur le bord commun de deux cases. */
     private fun spark(canvas: Canvas, mx: Float, my: Float, cell: Float, vertical: Boolean) {
         path.reset()
-        val pts = listOf(-0.3f to 0f, -0.1f to 0.12f, 0.05f to -0.1f, 0.3f to 0.05f)
-        pts.forEachIndexed { k, (along, across) ->
+        for (k in SPARK_ALONG.indices) {
+            val along = SPARK_ALONG[k]; val across = SPARK_ACROSS[k]
             val px = if (vertical) mx + across * cell else mx + along * cell
             val py = if (vertical) my + along * cell else my + across * cell
             if (k == 0) path.moveTo(px, py) else path.lineTo(px, py)
@@ -163,6 +197,12 @@ class MagnetsView(context: Context) : PuzzleView<MagnetsState>(context) {
 
     override fun onTap(x: Float, y: Float) = act(x, y, true)
     override fun onLongPress(x: Float, y: Float) = act(x, y, false)
+
+    private companion object {
+        /** Les quatre points de l'éclair, en fraction de case le long du bord et en travers. */
+        val SPARK_ALONG = floatArrayOf(-0.3f, -0.1f, 0.05f, 0.3f)
+        val SPARK_ACROSS = floatArrayOf(0f, 0.12f, -0.1f, 0.05f)
+    }
 }
 
 class MagnetsArtwork(context: Context) : KitArtwork(context) {

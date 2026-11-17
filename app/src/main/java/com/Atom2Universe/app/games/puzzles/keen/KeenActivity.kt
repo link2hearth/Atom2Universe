@@ -50,21 +50,38 @@ class KeenView(context: Context) : LatinView<KeenState>(context) {
             if (y < n - 1 && state.cage[cell] != state.cage[cell + n]) canvas.drawLine(grid.x(x), grid.y(y + 1), grid.x(x + 1), grid.y(y + 1), stroke)
         }
         label.textAlign = Paint.Align.LEFT
+        prepareCages(state)
         for (k in state.targets.indices) {
-            val first = state.cage.indexOfFirst { it == k }
-            val text = when (state.ops[k]) {
-                KeenState.ADD -> context.getString(R.string.keen_add, state.targets[k])
-                KeenState.SUB -> context.getString(R.string.keen_sub, state.targets[k])
-                KeenState.MUL -> context.getString(R.string.keen_mul, state.targets[k])
-                KeenState.DIV -> context.getString(R.string.keen_div, state.targets[k])
-                else -> state.targets[k].toString()
-            }
+            val first = cageFirst[k]
+            val text = cageLabels[k]
             label.textSize = c * 0.22f
             label.color = palette.secondary
             label.isFakeBoldText = true
             canvas.drawText(text, grid.x(first % n) + c * 0.07f, grid.y(first / n) + c * 0.25f, label)
         }
         label.textAlign = Paint.Align.CENTER
+    }
+
+    /** Les cages ne changent pas d'un coup à l'autre : leurs étiquettes et leur première case sont préparées une fois par grille. */
+    private var cagesFor: IntArray? = null
+    private var opsFor: IntArray? = null
+    private var targetsFor: IntArray? = null
+    private var cageLabels: Array<String> = emptyArray()
+    private var cageFirst = IntArray(0)
+
+    private fun prepareCages(state: KeenState) {
+        if (cagesFor === state.cage && opsFor === state.ops && targetsFor === state.targets) return
+        cagesFor = state.cage; opsFor = state.ops; targetsFor = state.targets
+        cageFirst = IntArray(state.targets.size) { k -> state.cage.indexOfFirst { it == k } }
+        cageLabels = Array(state.targets.size) { k ->
+            when (state.ops[k]) {
+                KeenState.ADD -> context.getString(R.string.keen_add, state.targets[k])
+                KeenState.SUB -> context.getString(R.string.keen_sub, state.targets[k])
+                KeenState.MUL -> context.getString(R.string.keen_mul, state.targets[k])
+                KeenState.DIV -> context.getString(R.string.keen_div, state.targets[k])
+                else -> state.targets[k].toString()
+            }
+        }
     }
 }
 

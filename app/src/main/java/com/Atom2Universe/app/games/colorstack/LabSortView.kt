@@ -69,6 +69,7 @@ class LabSortView @JvmOverloads constructor(
 
     // ── Bandes de liquide du tube en cours de dessin ───────────────────────────────────────────
     private val bandColor = IntArray(8)
+    private val bandColorId = IntArray(8)
     private val bandUnits = FloatArray(8)
     private val bandHidden = BooleanArray(8)
     private val bandLabel = arrayOfNulls<String>(8)
@@ -169,6 +170,20 @@ class LabSortView @JvmOverloads constructor(
         innerPath.addRoundRect(rect, floatArrayOf(topR, topR, topR, topR, ir, ir, ir, ir), Path.Direction.CW)
 
         glassStroke.strokeWidth = max(1.5f * dp, tubeW * 0.045f)
+
+        // Taille des formules, mesurée une fois ici plutôt qu'à chaque bande et à chaque image.
+        val avail = ((tubeW - wall) - wall) * 0.9f
+        for (i in labelSize.indices) labelSize[i] = fitLabel(LabLiquids.ALL[i].formula, avail)
+        hiddenLabelSize = fitLabel("?", avail)
+    }
+
+    private val labelSize = FloatArray(LabLiquids.ALL.size)
+    private var hiddenLabelSize = 0f
+
+    private fun fitLabel(label: String, avail: Float): Float {
+        text.textSize = layerH * 0.42f
+        val w = text.measureText(label)
+        return if (w > avail) text.textSize * avail / w else text.textSize
     }
 
     // ── Dessin ────────────────────────────────────────────────────────────────────────────────
@@ -270,12 +285,10 @@ class LabSortView @JvmOverloads constructor(
         canvas.drawRect(l, t, r, bt, liquid)
         val label = if (bandHidden[b]) "?" else if (showFormulas) bandLabel[b] else null
         if (label != null && bt - t >= layerH * 0.9f) {
-            text.color = if (bandHidden[b]) 0xFF6B7A99.toInt()
-            else if (ColorUtils.calculateLuminance(bandColor[b]) > 0.5) 0xFF0F172A.toInt() else 0xFFFFFFFF.toInt()
-            val avail = (r - l) * 0.9f
-            text.textSize = layerH * 0.42f
-            val w = text.measureText(label)
-            if (w > avail) text.textSize = text.textSize * avail / w
+            // Une formule visible vient toujours de fillBandsStatic, qui note le liquide de la bande.
+            val id = bandColorId[b]
+            text.color = if (bandHidden[b]) 0xFF6B7A99.toInt() else TEXT_ON[id]
+            text.textSize = if (bandHidden[b]) hiddenLabelSize else labelSize[id]
             canvas.drawText(label, (l + r) / 2f, (t + bt) / 2f - (text.ascent() + text.descent()) / 2f, text)
         }
     }
@@ -290,6 +303,7 @@ class LabSortView @JvmOverloads constructor(
                 continue
             }
             bandColor[bandCount] = LabLiquids.ALL[c.colorId].hex
+            bandColorId[bandCount] = c.colorId
             bandUnits[bandCount] = 1f
             bandHidden[bandCount] = !c.revealed
             bandLabel[bandCount] = LabLiquids.ALL[c.colorId].formula
@@ -302,12 +316,14 @@ class LabSortView @JvmOverloads constructor(
         bandCount = 0
         for (i in 0 until dstN) {
             bandColor[bandCount] = LabLiquids.ALL[dstIds[i]].hex
+            bandColorId[bandCount] = dstIds[i]
             bandUnits[bandCount] = 1f
             bandHidden[bandCount] = !dstRev[i]
             bandLabel[bandCount] = null
             bandCount++
         }
         bandColor[bandCount] = LabLiquids.ALL[movedColor].hex
+        bandColorId[bandCount] = movedColor
         bandUnits[bandCount] = animCount * p
         bandHidden[bandCount] = false
         bandLabel[bandCount] = null
@@ -320,12 +336,14 @@ class LabSortView @JvmOverloads constructor(
         val keep = srcN - animCount
         for (i in 0 until keep) {
             bandColor[bandCount] = LabLiquids.ALL[srcIds[i]].hex
+            bandColorId[bandCount] = srcIds[i]
             bandUnits[bandCount] = 1f
             bandHidden[bandCount] = !srcRev[i] && !(i == keep - 1 && p > 0.5f)
             bandLabel[bandCount] = null
             bandCount++
         }
         bandColor[bandCount] = LabLiquids.ALL[movedColor].hex
+        bandColorId[bandCount] = movedColor
         bandUnits[bandCount] = animCount * (1f - p)
         bandHidden[bandCount] = false
         bandLabel[bandCount] = null
@@ -566,5 +584,9 @@ class LabSortView @JvmOverloads constructor(
         /** Quand la vague de sauts est finie et que les gouttes commencent à partir (secondes). */
         const val CELEB_HOP_WAVE = 0.15f
         const val CELEB_TOTAL = 3.4f
+        /** Couleur des formules sur chaque liquide : sombre sur les clairs, blanche sur les sombres. */
+        val TEXT_ON = IntArray(LabLiquids.ALL.size) {
+            if (ColorUtils.calculateLuminance(LabLiquids.ALL[it].hex) > 0.5) 0xFF0F172A.toInt() else 0xFFFFFFFF.toInt()
+        }
     }
 }

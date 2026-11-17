@@ -9,6 +9,7 @@ import com.Atom2Universe.app.games.kit.EdgeView
 import com.Atom2Universe.app.games.kit.KitArtwork
 import com.Atom2Universe.app.games.kit.KitPalette
 import com.Atom2Universe.app.games.kit.PuzzleActivity
+import com.Atom2Universe.app.games.kit.PuzzleStateCache
 import kotlin.math.hypot
 import kotlin.random.Random
 
@@ -38,6 +39,12 @@ class TracksActivity : PuzzleActivity<TracksState>() {
 /** La voie est dessinée en vrais rails, avec leurs traverses. */
 class TracksView(context: Context) : EdgeView<TracksState>(context) {
     override val dual = true
+    /** Les cases occupées de chaque ligne puis de chaque colonne, comptées une fois par état. */
+    private val usedCounts = PuzzleStateCache<TracksState, IntArray> { s ->
+        IntArray(s.h + s.w) { if (it < s.h) s.rowUsed(it) else s.colUsed(it - s.h) }
+    }
+    private val inText by lazy { context.getString(R.string.tracks_in) }
+    private val outText by lazy { context.getString(R.string.tracks_out) }
     override fun edgeGrid(state: TracksState) = state.grid
     override fun edgeValue(state: TracksState, e: Int) = state.edges[e]
     override fun setEdges(state: TracksState, edges: Collection<Int>, value: Int) = state.set(edges, value)
@@ -56,18 +63,19 @@ class TracksView(context: Context) : EdgeView<TracksState>(context) {
         // Le kit dessine croix et glissé en cours ; les traits posés, eux, deviennent des rails.
         drawEdges(canvas, state) { 0 }
         for (e in 0 until g.count) if (state.edges[e] == 1) rails(canvas, segment(g, e), cell, if (state.fixed[e]) palette.text else palette.accent)
+        val counts = usedCounts[state]
         for (y in 0 until state.h) {
-            val used = state.rowUsed(y)
+            val used = counts[y]
             val c = when { used > state.rowCounts[y] -> palette.error; used == state.rowCounts[y] -> palette.tertiary; else -> palette.text }
-            canvas.centeredText(state.rowCounts[y].toString(), grid.right + cell * 0.45f, grid.cy(y), cell * 0.42f, c, bold = true)
+            canvas.centeredText(number(state.rowCounts[y]), grid.right + cell * 0.45f, grid.cy(y), cell * 0.42f, c, bold = true)
         }
         for (x in 0 until state.w) {
-            val used = state.colUsed(x)
+            val used = counts[state.h + x]
             val c = when { used > state.colCounts[x] -> palette.error; used == state.colCounts[x] -> palette.tertiary; else -> palette.text }
-            canvas.centeredText(state.colCounts[x].toString(), grid.cx(x), grid.top - cell * 0.45f, cell * 0.42f, c, bold = true)
+            canvas.centeredText(number(state.colCounts[x]), grid.cx(x), grid.top - cell * 0.45f, cell * 0.42f, c, bold = true)
         }
-        canvas.centeredText(context.getString(R.string.tracks_in), grid.left - cell * 0.35f, grid.cy(state.entry) - cell * 0.35f, cell * 0.3f, palette.secondary, bold = true)
-        canvas.centeredText(context.getString(R.string.tracks_out), grid.cx(state.exit) + cell * 0.35f, grid.bottom + cell * 0.4f, cell * 0.3f, palette.secondary, bold = true)
+        canvas.centeredText(inText, grid.left - cell * 0.35f, grid.cy(state.entry) - cell * 0.35f, cell * 0.3f, palette.secondary, bold = true)
+        canvas.centeredText(outText, grid.cx(state.exit) + cell * 0.35f, grid.bottom + cell * 0.4f, cell * 0.3f, palette.secondary, bold = true)
     }
 
     private fun rails(canvas: Canvas, s: FloatArray, cell: Float, colour: Int) {

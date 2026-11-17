@@ -41,14 +41,25 @@ class SignpostActivity : PuzzleActivity<SignpostState>() {
  * encore libres prennent chacune leur couleur.
  */
 class SignpostView(context: Context) : PuzzleView<SignpostState>(context) {
-    private val numbering = PuzzleStateCache<SignpostState, Pair<IntArray, IntArray>> { s ->
+    /** Une fois par état : la chaîne de chaque case, son numéro déduit, et si elle a un lien. */
+    private class Numbering(val chain: IntArray, val num: IntArray, val linked: BooleanArray)
+    private val numbering = PuzzleStateCache<SignpostState, Numbering> { s ->
         val chain = IntArray(s.n)
-        chain to s.numbering(chain)
+        val num = s.numbering(chain)
+        val linked = BooleanArray(s.n)
+        for (i in 0 until s.n) {
+            val j = s.next[i]
+            if (j >= 0) { linked[i] = true; if (j < s.n) linked[j] = true }
+        }
+        Numbering(chain, num, linked)
     }
+    private val star by lazy { context.getString(R.string.signpost_star) }
 
     private val grid = GridGeometry()
     private val r = RectF()
+    /** La flèche autour de son centre, refaite seulement quand la taille des cases change. */
     private val arrow = Path()
+    private var arrowCell = Float.NaN
     private var dragFrom = -1
     private var dragX = 0f
     private var dragY = 0f
@@ -56,10 +67,20 @@ class SignpostView(context: Context) : PuzzleView<SignpostState>(context) {
     override fun drawBoard(canvas: Canvas, state: SignpostState, area: RectF) {
         grid.fit(area, state.w, state.h)
         val cell = grid.cell
-        val (chain, num) = numbering[state]
+        val numbered = numbering[state]
+        val chain = numbered.chain
+        val num = numbered.num
+        if (arrowCell != cell) {
+            arrowCell = cell
+            arrow.reset()
+            arrow.moveTo(cell * 0.14f, 0f)
+            arrow.lineTo(-cell * 0.08f, -cell * 0.1f)
+            arrow.lineTo(-cell * 0.08f, cell * 0.1f)
+            arrow.close()
+        }
         for (i in 0 until state.n) {
             grid.rect(i % state.w, i / state.w, r, cell * 0.05f)
-            val linked = state.next[i] >= 0 || state.prev(i) >= 0
+            val linked = numbered.linked[i]
             fill.color = when {
                 num[i] > 0 -> palette.blend(palette.cell, palette.accent, 0.12f)
                 linked -> palette.blend(palette.cell, palette.piece(chain[i] * 3), 0.3f)
@@ -74,22 +95,19 @@ class SignpostView(context: Context) : PuzzleView<SignpostState>(context) {
             val d = state.dirs[i]
             val ax = r.right - cell * 0.24f; val ay = r.bottom - cell * 0.24f
             if (d < 0) {
-                canvas.centeredText(context.getString(R.string.signpost_star), ax, ay, cell * 0.3f, palette.accent)
+                canvas.centeredText(star, ax, ay, cell * 0.3f, palette.accent)
             } else {
+                // Même flèche pour toutes les cases : on la pose et on la tourne, sans refaire le chemin.
                 canvas.save()
-                canvas.rotate(Math.toDegrees(atan2(SignpostState.DY[d].toDouble(), SignpostState.DX[d].toDouble())).toFloat(), ax, ay)
-                arrow.reset()
-                arrow.moveTo(ax + cell * 0.14f, ay)
-                arrow.lineTo(ax - cell * 0.08f, ay - cell * 0.1f)
-                arrow.lineTo(ax - cell * 0.08f, ay + cell * 0.1f)
-                arrow.close()
+                canvas.translate(ax, ay)
+                canvas.rotate(ARROW_ANGLES[d])
                 fill.color = palette.secondary
                 canvas.drawPath(arrow, fill)
                 canvas.restore()
             }
             val text = when {
-                state.givens[i] > 0 -> state.givens[i].toString()
-                num[i] > 0 -> num[i].toString()
+                state.givens[i] > 0 -> number(state.givens[i])
+                num[i] > 0 -> number(num[i])
                 else -> null
             }
             if (text != null) canvas.centeredText(text, r.centerX() - cell * 0.08f, r.centerY() - cell * 0.06f, cell * 0.38f,
@@ -132,6 +150,13 @@ class SignpostView(context: Context) : PuzzleView<SignpostState>(context) {
     }
 
     override fun onDragCancel() { dragFrom = -1; invalidate() }
+
+    private companion object {
+        /** L'angle de la flèche pour chacune des huit directions, en degrés. */
+        val ARROW_ANGLES = FloatArray(8) {
+            Math.toDegrees(atan2(SignpostState.DY[it].toDouble(), SignpostState.DX[it].toDouble())).toFloat()
+        }
+    }
 }
 
 class SignpostArtwork(context: Context) : KitArtwork(context) {

@@ -13,6 +13,7 @@ import com.Atom2Universe.app.R
 import com.Atom2Universe.app.science.SciencePalette
 import com.Atom2Universe.app.games.bigger.BiggerSoundEngine
 import kotlin.math.ceil
+import kotlin.math.floor
 import kotlin.math.hypot
 import kotlin.math.min
 
@@ -96,6 +97,7 @@ class RicochetPuzzleView(context: Context, val game: RicochetPuzzleGame = Ricoch
         board = Bitmap.createBitmap(ceil(10.4f * scale).toInt(), ceil((RicochetPuzzleRules.HEIGHT + .4f) * scale).toInt(), Bitmap.Config.ARGB_8888).also {
             val c = Canvas(it); c.scale(scale, scale); c.translate(.2f, .2f); art.board(c, RicochetPuzzleRules.HEIGHT)
         }
+        strip.clear()
         cancelAim()
     }
 
@@ -165,18 +167,7 @@ class RicochetPuzzleView(context: Context, val game: RicochetPuzzleGame = Ricoch
             hand.draw(c, hintX, hintY, hintPressed, (hintAlpha * 235).toInt(), RicochetPuzzleRules.PROJECTILE_RADIUS + .25f)
             c.restore()
         }
-        if (landscape) {
-            // Couché : les six couleurs en colonne, à droite de la planche, sous les icônes de la bannière.
-            val x = (left + 10 * scale + width) / 2
-            val topY = 72 * dp
-            val unit = (height - topY - 12 * dp) / 6
-            for (color in 0..5) art.puck(c, color, x, topY + unit * (color + .5f),
-                min(16 * dp, unit * .3f), alpha = if (game.pucks.any { it.color == color }) 255 else 45)
-        } else {
-            val unit = (width - 24 * dp) / 6
-            for (color in 0..5) art.puck(c, color, 12 * dp + unit * (color + .5f), height - 19 * dp,
-                min(11 * dp, unit * .2f), alpha = if (game.pucks.any { it.color == color }) 255 else 45)
-        }
+        drawColorStrip(c)
         if (active && (game.moving || rings.isNotEmpty())) postInvalidateOnAnimation()
         else if (active && game.hard && !game.complete) { removeCallbacks(wallTick); postDelayed(wallTick, WALL_FRAME_MS) }
         else {
@@ -222,6 +213,45 @@ class RicochetPuzzleView(context: Context, val game: RicochetPuzzleGame = Ricoch
         }
     }
 
+    /**
+     * Les six couleurs, pleines tant qu'il en reste sur la planche. La bande ne change qu'avec les
+     * couleurs restantes : elle est gardée en image au lieu de redessiner six palets à chaque image.
+     */
+    private fun drawColorStrip(c: Canvas) {
+        var present = 0
+        val pucks = game.pucks
+        for (i in pucks.indices) { val color = pucks[i].color; if (color in 0..5) present = present or (1 shl color) }
+        stripColors = present
+        if (landscape) {
+            val x = (left + 10 * scale + width) / 2
+            val unit = (height - 72 * dp - 12 * dp) / 6
+            val m = 1.25f * min(16 * dp, unit * .3f) + 4 * dp
+            strip.draw(c, present.toLong(), floor(x - m).toInt(), 0, ceil(x + m).toInt(), height, paintStrip)
+        } else {
+            val y = height - 19 * dp
+            val unit = (width - 24 * dp) / 6
+            val m = 1.25f * min(11 * dp, unit * .2f) + 4 * dp
+            strip.draw(c, present.toLong(), 0, floor(y - m).toInt().coerceAtLeast(0), width, ceil(y + m).toInt().coerceAtMost(height), paintStrip)
+        }
+    }
+
+    private val strip = StripCache()
+    private var stripColors = 0
+    private val paintStrip: (Canvas) -> Unit = { c ->
+        if (landscape) {
+            // Couché : les six couleurs en colonne, à droite de la planche, sous les icônes de la bannière.
+            val x = (left + 10 * scale + width) / 2
+            val topY = 72 * dp
+            val unit = (height - topY - 12 * dp) / 6
+            for (color in 0..5) art.puck(c, color, x, topY + unit * (color + .5f),
+                min(16 * dp, unit * .3f), alpha = if (stripColors and (1 shl color) != 0) 255 else 45)
+        } else {
+            val unit = (width - 24 * dp) / 6
+            for (color in 0..5) art.puck(c, color, 12 * dp + unit * (color + .5f), height - 19 * dp,
+                min(11 * dp, unit * .2f), alpha = if (stripColors and (1 shl color) != 0) 255 else 45)
+        }
+    }
+
     private fun projectile(c: Canvas, x: Float, y: Float) {
         val r = RicochetPuzzleRules.PROJECTILE_RADIUS
         p.style = Paint.Style.FILL; p.color = 0x50203035
@@ -262,9 +292,20 @@ class RicochetPuzzleView(context: Context, val game: RicochetPuzzleGame = Ricoch
             val ny = fromY + dy * min(i * .05f, distance)
             if (nx < r || nx > 10 - r || ny < r) break
             x = nx; y = ny
-            if (game.touchesWall(x, y, r) || game.pucks.any { hypot(it.x - x, it.y - y) < it.radius + r }) break
+            if (game.touchesWall(x, y, r) || touchesPuck(x, y, r)) break
         }
         c.drawLine(fromX, fromY, x, y, guide)
+    }
+
+    /** Appelé à chaque pas du guide, des centaines de fois par image : distances au carré, sans hypot ni itérateur. */
+    private fun touchesPuck(x: Float, y: Float, r: Float): Boolean {
+        val pucks = game.pucks
+        for (i in pucks.indices) {
+            val q = pucks[i]
+            val dx = q.x - x; val dy = q.y - y; val reach = q.radius + r
+            if (dx * dx + dy * dy < reach * reach) return true
+        }
+        return false
     }
 
     private fun cancelAim() { pointer = -1; power = 0f; parent?.requestDisallowInterceptTouchEvent(false) }

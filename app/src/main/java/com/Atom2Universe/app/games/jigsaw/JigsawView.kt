@@ -100,10 +100,27 @@ class JigsawView(context: Context, val game: JigsawGame, private val image: Bitm
         }
     private val side get() = sideMode && game.layout == JigsawLayout.TRAY
 
-    /** La colonne de pièces de la bulle : elle renvoie ses touches au plateau, qui la dessine aussi. */
-    val sideTray: View = object : View(context) {
-        override fun onDraw(canvas: Canvas) = drawSideTray(canvas)
+    /**
+     * Les pièces de la colonne, dans leur propre calque : la pièce tenue qui passe au-dessus
+     * ([sideTray]) ne redessine pas toute la colonne à chaque image.
+     */
+    private val sideThumbs = object : View(context) {
+        override fun onDraw(canvas: Canvas) = drawSideThumbs(canvas)
         override fun computeScroll() = stepTrayFling()
+    }.apply {
+        setLayerType(View.LAYER_TYPE_HARDWARE, null)
+        importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
+    }
+
+    /** La colonne de pièces de la bulle : elle renvoie ses touches au plateau, qui la dessine aussi. */
+    val sideTray: View = object : FrameLayout(context) {
+        init {
+            addView(sideThumbs, FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT))
+        }
+        override fun dispatchDraw(canvas: Canvas) {
+            super.dispatchDraw(canvas)
+            drawSideHeld(canvas)
+        }
         @android.annotation.SuppressLint("ClickableViewAccessibility")
         override fun onTouchEvent(event: MotionEvent): Boolean {
             if (event.actionMasked == MotionEvent.ACTION_DOWN) parent?.requestDisallowInterceptTouchEvent(true)
@@ -154,7 +171,7 @@ class JigsawView(context: Context, val game: JigsawGame, private val image: Bitm
         if (!trayFling.computeScrollOffset()) return
         trayScroll = (if (side) trayFling.currY else trayFling.currX).toFloat()
         clampTray()
-        (if (side) sideTray else trayStrip).postInvalidateOnAnimation()
+        (if (side) sideThumbs else trayStrip).postInvalidateOnAnimation()
     }
 
     private fun trayHeightFor(solved: Boolean): Float {
@@ -202,8 +219,25 @@ class JigsawView(context: Context, val game: JigsawGame, private val image: Bitm
             kotlin.math.ceil(126f * density).toInt() + 2, android.view.Gravity.BOTTOM))
     }
 
-    private fun redrawScene() { scene.invalidate(); trayStrip.invalidate(); sideTray.invalidate(); invalidate() }
-    private fun redrawTray() { trayStrip.invalidate(); sideTray.invalidate() }
+    /**
+     * Layers pay off while a held piece moves over content that stays still. Content repainted on
+     * every frame (the table during a pan or pinch, the carousel while it scrolls) skips its layer,
+     * which would only add a full offscreen copy per frame; [redrawScene] restores them all.
+     */
+    private fun redrawScene() {
+        layer(scene, true); layer(trayStrip, true); layer(sideThumbs, true)
+        scene.invalidate(); trayStrip.invalidate(); sideThumbs.invalidate(); sideTray.invalidate(); invalidate()
+    }
+    private fun redrawTray() {
+        layer(trayStrip, false); layer(sideThumbs, false)
+        trayStrip.invalidate(); sideThumbs.invalidate(); sideTray.invalidate()
+    }
+    /** The camera alone moved: the carousel and the side column do not depend on it. */
+    private fun redrawTable() { layer(scene, false); scene.invalidate(); invalidate() }
+    private fun layer(view: View, on: Boolean) {
+        val type = if (on) View.LAYER_TYPE_HARDWARE else View.LAYER_TYPE_NONE
+        if (view.layerType != type) view.setLayerType(type, null)
+    }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         cancelGesture()
@@ -398,9 +432,9 @@ class JigsawView(context: Context, val game: JigsawGame, private val image: Bitm
 
     /**
      * La colonne de la bulle, dans ses propres coordonnées : le compte en haut, puis les pièces
-     * deux par deux ; la pièce tenue est redessinée par-dessus, pour rester visible sur la bulle.
+     * deux par deux, dans le calque de [sideThumbs].
      */
-    private fun drawSideTray(canvas: Canvas) {
+    private fun drawSideThumbs(canvas: Canvas) {
         if (!side || game.solved || isCelebrating) return
         val w = sideTray.width.toFloat(); val h = sideTray.height.toFloat()
         val count = trayCount()
@@ -437,6 +471,11 @@ class JigsawView(context: Context, val game: JigsawGame, private val image: Bitm
             canvas.restore()
         }
         canvas.restore()
+    }
+
+    /** La pièce tenue, redessinée par-dessus la colonne pour rester visible sur la bulle. */
+    private fun drawSideHeld(canvas: Canvas) {
+        if (!side || game.solved || isCelebrating) return
         val origin = sideOrigin()
         canvas.save()
         canvas.translate(-origin.x, -origin.y)
@@ -691,7 +730,7 @@ class JigsawView(context: Context, val game: JigsawGame, private val image: Bitm
                             0, 0, 0, maxTrayScroll().roundToInt())
                         else trayFling.fling(trayScroll.roundToInt(), 0, speed.roundToInt(), 0,
                             0, maxTrayScroll().roundToInt(), 0, 0)
-                        if (side) sideTray.postInvalidateOnAnimation()
+                        if (side) sideThumbs.postInvalidateOnAnimation()
                     }
                 }
                 val group = dragging
@@ -735,7 +774,10 @@ class JigsawView(context: Context, val game: JigsawGame, private val image: Bitm
         val trayOnly = (action == MotionEvent.ACTION_MOVE && mode == Mode.TRAY_SCROLL &&
             (modeBefore == Mode.TRAY || modeBefore == Mode.TRAY_SCROLL)) ||
             (action == MotionEvent.ACTION_UP && modeBefore == Mode.TRAY_SCROLL)
+        // Panning only moves the camera (nothing is held): the table alone, and nothing while it rests.
+        val tableOnly = action == MotionEvent.ACTION_MOVE && mode == Mode.PAN && modeBefore == Mode.PAN
         when {
+            tableOnly -> if (!cameraStill) redrawTable()
             heldOnly -> { invalidate(); if (side) sideTray.invalidate() }
             trayOnly -> redrawTray()
             else -> redrawScene()
@@ -772,7 +814,7 @@ class JigsawView(context: Context, val game: JigsawGame, private val image: Bitm
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> cancelGesture()
         }
         // A finger that rests or lifts leaves the camera where it was: nothing to redraw.
-        if (cameraX != fromX || cameraY != fromY || scale != fromScale) redrawScene()
+        if (cameraX != fromX || cameraY != fromY || scale != fromScale) redrawTable()
         return true
     }
 

@@ -3,6 +3,7 @@ package com.Atom2Universe.app.games.mahjong
 import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.*
+import android.os.Build
 import android.os.SystemClock
 import android.util.SparseArray
 import android.view.HapticFeedbackConstants
@@ -87,8 +88,32 @@ class MahjongBoardView(context: Context, val game: MahjongGame, private val acce
     private data class Spark(val x: Float, val y: Float, val vx: Float, val vy: Float, val color: Int, val star: Boolean)
     private data class Ghost(val rect: RectF, val face: Int)
     private class Burst(val start: Long, val ghosts: List<Ghost>, val x: Float, val y: Float, val sparks: List<Spark>,
-                        val path: Path?, val gain: String, val combo: Int)
+                        val path: Path?, val gain: String, val combo: Int, val comboText: String)
     private val bursts = mutableListOf<Burst>()
+    /** Seul l'anneau de la chaîne se vide : une image tous les 30e de seconde lui suffit. */
+    private val chainFrame = Runnable { invalidate() }
+
+    // Couche du plateau immobile (API 29+) : repeinte seulement quand une tuile, la sélection
+    // ou le glissé change, pas à chaque image de l'anneau ou des éclats.
+    private var revision = 0
+    private var boardNode: RenderNode? = null
+    private var nodeRevision = -1
+    private var nodeSelected: Int? = null
+    private var nodeDragged: Int? = null
+    private var nodeTarget: MahjongSlide? = null
+
+    // Textes du bandeau, refaits seulement quand leur nombre change.
+    private var scoreValue = Int.MIN_VALUE
+    private var scoreSize = -1f
+    private var scoreText = ""
+    private var scoreW = 0f
+    private var multiplierValue = -1
+    private var multiplierText = ""
+    private var pairsValue = -1
+    private var pairsText = ""
+    private var starBar: LinearGradient? = null
+    private var starBarL = 0f
+    private var starBarR = 0f
 
     // Toucher.
     private var pressed: Int? = null
@@ -107,6 +132,7 @@ class MahjongBoardView(context: Context, val game: MahjongGame, private val acce
     private var slideStopSource: Int? = null
     private var slideStopsValid = false
     private val iceBounds = RectF()
+    private var iceShader: LinearGradient? = null
     private var footprintDashes: DashPathEffect? = null
 
     init {
@@ -122,6 +148,7 @@ class MahjongBoardView(context: Context, val game: MahjongGame, private val acce
 
     private fun layoutTiles() {
         if (width <= 0 || height <= 0) return
+        revision++
         val wasTurned = turned
         turned = !game.layered && width > height
         if (wasTurned != turned) post { onTurned?.invoke() }
@@ -242,15 +269,59 @@ class MahjongBoardView(context: Context, val game: MahjongGame, private val acce
         val dt = if (lastFrame == 0L) 0f else ((now - lastFrame) / 1000f).coerceIn(0f, .1f)
         lastFrame = now
         var animating = false
-        if (active && game.tick(dt)) animating = true
+        val chainTicking = active && game.tick(dt)
         // Le paysage est le fond de l'écran entier (MahjongTableDrawable) : la vue reste transparente.
+        if (now - motionAt >= MOTION_MS) from.clear()
+        val animated = animated
+        if (animated && from.isNotEmpty()) animating = true
+        val hintPulse = if (now < hintUntil) (.55f + .45f * sin((now % 900) / 900f * 2 * PI).toFloat()) else 0f
+        // Ni chute d'entrée, ni glissement, ni secousse, ni indice : le plateau est tiré de sa couche.
+        val still = hintPulse == 0f && !(animated && (from.isNotEmpty() || now - entranceAt < ENTRANCE_MS || now - shakeAt < 300))
+        if (!still || !drawCachedBoard(c, now)) { if (drawBoard(c, now, hintPulse)) animating = true }
+        if (game.mode == MahjongMode.SLIDE) {
+            val arrow = if (dragging) dragTarget else if (now < hintUntil) slideHint else null
+            arrow?.let { drawSlideArrow(c, it, now) }
+        }
+        var old = bursts.size
+        while (--old >= 0) if (now - bursts[old].start > 1300) bursts.removeAt(old)
+        if (animated) for (i in bursts.indices) { drawBurst(c, bursts[i], now); animating = true }
+        if (drawHud(c, now)) animating = true
+        if (active) {
+            if (animating) postInvalidateOnAnimation()
+            else if (chainTicking) { removeCallbacks(chainFrame); postOnAnimationDelayed(chainFrame, CHAIN_FRAME_MS) }
+        }
+    }
+
+    /** Le plateau immobile tiré de sa couche (repeinte quand il change) ; faux si elle n'est pas disponible. */
+    private fun drawCachedBoard(c: Canvas, now: Long): Boolean {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q || !c.isHardwareAccelerated) return false
+        if (width <= 0 || height <= 0) return false
+        val node = boardNode ?: RenderNode("mahjongBoard").also {
+            it.setUseCompositingLayer(true, null)
+            boardNode = it
+        }
+        val dragged = if (dragging) pressed else null
+        if (!node.hasDisplayList() || nodeRevision != revision || nodeSelected != game.selected ||
+            nodeDragged != dragged || nodeTarget != dragTarget) {
+            node.setPosition(0, 0, width, height)
+            val rc = node.beginRecording(width, height)
+            drawBoard(rc, now, 0f)
+            node.endRecording()
+            nodeRevision = revision; nodeSelected = game.selected; nodeDragged = dragged; nodeTarget = dragTarget
+        }
+        c.drawRenderNode(node)
+        return true
+    }
+
+    /** Réserve, glace, tuiles du plateau puis de la réserve ; vrai si une tuile bouge encore. */
+    private fun drawBoard(c: Canvas, now: Long, hintPulse: Float): Boolean {
+        var animating = false
         if (game.mode == MahjongMode.TRIPLE) drawTray(c)
         if (game.mode == MahjongMode.SLIDE) drawSlideGrid(c, now)
-        if (now - motionAt >= MOTION_MS) from.clear()
-        if (animated && from.isNotEmpty()) animating = true
+        val animated = animated
         val count = drawOrder.size.coerceAtLeast(1)
-        val hintPulse = if (now < hintUntil) (.55f + .45f * sin((now % 900) / 900f * 2 * PI).toFloat()) else 0f
-        for ((index, tile) in drawOrder.withIndex()) {
+        for (index in drawOrder.indices) {
+            val tile = drawOrder[index]
             val base = location(tile.id, now) ?: continue
             work.set(base)
             var alpha = 255
@@ -284,15 +355,8 @@ class MahjongBoardView(context: Context, val game: MahjongGame, private val acce
                 animating = true
             }
         }
-        for (id in game.tray) location(id, now)?.let { drawTile(c, game.tiles[id].face, it) }
-        if (game.mode == MahjongMode.SLIDE) {
-            val arrow = if (dragging) dragTarget else if (now < hintUntil) slideHint else null
-            arrow?.let { drawSlideArrow(c, it, now) }
-        }
-        bursts.removeAll { now - it.start > 1300 }
-        if (animated) for (burst in bursts) { drawBurst(c, burst, now); animating = true }
-        if (drawHud(c, now)) animating = true
-        if (active && (animating || game.chaining && game.timed)) postInvalidateOnAnimation()
+        for (k in game.tray.indices) { val id = game.tray[k]; location(id, now)?.let { drawTile(c, game.tiles[id].face, it) } }
+        return animating
     }
 
     private fun location(id: Int, now: Long): RectF? {
@@ -325,10 +389,15 @@ class MahjongBoardView(context: Context, val game: MahjongGame, private val acce
         if (abs(shownScore - target) > .5f && animated) {
             shownScore += (target - shownScore) * .22f; animating = true
         } else shownScore = target
-        label.textAlign = Paint.Align.LEFT; label.color = Color.WHITE; label.textSize = h * .4f
-        val scoreText = context.getString(R.string.mj_number, shownScore.roundToInt())
+        val scoreTextSize = h * .4f
+        label.textAlign = Paint.Align.LEFT; label.color = Color.WHITE; label.textSize = scoreTextSize
+        val shownValue = shownScore.roundToInt()
+        if (shownValue != scoreValue || scoreTextSize != scoreSize) {
+            scoreValue = shownValue; scoreSize = scoreTextSize
+            scoreText = context.getString(R.string.mj_number, shownValue)
+            scoreW = max(label.measureText(scoreText), label.measureText(context.getString(R.string.mj_number, 8888)))
+        }
         c.drawText(scoreText, pad * 2.4f, cy - (label.ascent() + label.descent()) / 2, label)
-        val scoreW = max(label.measureText(scoreText), label.measureText(context.getString(R.string.mj_number, 8888)))
         // Multiplicateur : un anneau qui se vide pendant la chaîne.
         if (game.combo != shownCombo) { if (game.combo > shownCombo) comboAt = now; shownCombo = game.combo }
         val radius = h * .33f
@@ -347,7 +416,9 @@ class MahjongBoardView(context: Context, val game: MahjongGame, private val acce
         p.style = Paint.Style.FILL; p.strokeCap = Paint.Cap.BUTT
         label.textAlign = Paint.Align.CENTER; label.textSize = radius * .82f * pop
         label.color = if (chain) Color.WHITE else 0x90ffffff.toInt()
-        c.drawText(context.getString(R.string.mj_multiplier, game.multiplierShown()), bx, cy - (label.ascent() + label.descent()) / 2, label)
+        val multiplier = game.multiplierShown()
+        if (multiplier != multiplierValue) { multiplierValue = multiplier; multiplierText = context.getString(R.string.mj_multiplier, multiplier) }
+        c.drawText(multiplierText, bx, cy - (label.ascent() + label.descent()) / 2, label)
         // Paires jouables, et sens de la prochaine chute en Cascade.
         var right = width - pad * 2.2f
         if (game.mode == MahjongMode.CASCADE) {
@@ -358,9 +429,9 @@ class MahjongBoardView(context: Context, val game: MahjongGame, private val acce
         }
         if (game.mode == MahjongMode.CLASSIC || game.grid) {
             label.textSize = h * .34f; label.color = Color.WHITE; label.textAlign = Paint.Align.RIGHT
-            val text = context.getString(R.string.mj_number, pairsAvailable)
-            c.drawText(text, right, cy - (label.ascent() + label.descent()) / 2, label)
-            right -= label.measureText(text) + h * .12f
+            if (pairsAvailable != pairsValue) { pairsValue = pairsAvailable; pairsText = context.getString(R.string.mj_number, pairsAvailable) }
+            c.drawText(pairsText, right, cy - (label.ascent() + label.descent()) / 2, label)
+            right -= label.measureText(pairsText) + h * .12f
             // Deux petites tuiles : « paires possibles ».
             val iw = h * .22f; val ih = iw * ASPECT
             for (k in 0..1) {
@@ -378,7 +449,11 @@ class MahjongBoardView(context: Context, val game: MahjongGame, private val acce
             p.color = 0x38ffffff; c.drawRoundRect(barL, cy - barH / 2, barR, cy + barH / 2, barH / 2, barH / 2, p)
             val fill = (shownScore / t3).coerceIn(0f, 1f)
             if (fill > 0f) {
-                p.shader = LinearGradient(barL, 0f, barR, 0f, 0xffffd66b.toInt(), 0xffffa53a.toInt(), Shader.TileMode.CLAMP)
+                if (starBar == null || barL != starBarL || barR != starBarR) {
+                    starBarL = barL; starBarR = barR
+                    starBar = LinearGradient(barL, 0f, barR, 0f, 0xffffd66b.toInt(), 0xffffa53a.toInt(), Shader.TileMode.CLAMP)
+                }
+                p.shader = starBar
                 c.drawRoundRect(barL, cy - barH / 2, barL + (barR - barL) * fill, cy + barH / 2, barH / 2, barH / 2, p)
                 p.shader = null
             }
@@ -465,7 +540,7 @@ class MahjongBoardView(context: Context, val game: MahjongGame, private val acce
                 label.color = Color.WHITE; label.alpha = (fade * 255).toInt(); c.drawText(b.gain, x, textY, label)
                 if (b.combo >= 2) {
                     label.textSize = size * .34f; label.color = chainColor(b.combo); label.alpha = (fade * 255).toInt()
-                    c.drawText(context.getString(R.string.mj_multiplier, b.combo), x, textY + size * .42f, label)
+                    c.drawText(b.comboText, x, textY + size * .42f, label)
                 }
                 label.alpha = 255
             }
@@ -481,6 +556,7 @@ class MahjongBoardView(context: Context, val game: MahjongGame, private val acce
         }
         occupiedCells = BooleanArray(gridRects.size); reachableCells = BooleanArray(gridRects.size)
         iceBounds.set(left - cellW * .08f, top - cellH * .06f, left + shownColumns * cellW + cellW * .08f, top + shownRows * cellH + cellH * .04f)
+        iceShader = null
         footprintDashes = DashPathEffect(floatArrayOf(cellW * .11f, cellW * .08f), 0f)
         for (tile in drawOrder) occupiedCells[tile.y * game.columns + tile.x] = true
         slideStopsValid = false
@@ -503,7 +579,8 @@ class MahjongBoardView(context: Context, val game: MahjongGame, private val acce
         val source = sourceId?.let { game.tiles.getOrNull(it) }
         ensureSlideStops(sourceId)
         p.style = Paint.Style.FILL
-        p.shader = LinearGradient(iceBounds.left, iceBounds.top, iceBounds.right, iceBounds.bottom, 0x70d9f3ff, 0x5095c8de, Shader.TileMode.CLAMP)
+        p.shader = iceShader ?: LinearGradient(iceBounds.left, iceBounds.top, iceBounds.right, iceBounds.bottom,
+            0x70d9f3ff, 0x5095c8de, Shader.TileMode.CLAMP).also { iceShader = it }
         c.drawRoundRect(iceBounds, cellW * .18f, cellW * .18f, p); p.shader = null
         p.style = Paint.Style.STROKE; p.strokeWidth = max(2f, cellW * .03f); p.color = 0x90c7ecff.toInt()
         c.drawRoundRect(iceBounds, cellW * .18f, cellW * .18f, p)
@@ -565,9 +642,15 @@ class MahjongBoardView(context: Context, val game: MahjongGame, private val acce
         invalidate()
     }
     override fun onAttachedToWindow() { super.onAttachedToWindow(); active = true; lastFrame = 0L }
-    override fun onDetachedFromWindow() { pause(); recycleSprites(); super.onDetachedFromWindow() }
+    override fun onDetachedFromWindow() {
+        pause()
+        // La couche tient les images des tuiles : elle part avant elles.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) boardNode?.discardDisplayList()
+        recycleSprites(); super.onDetachedFromWindow()
+    }
     /** En pause, les mouvements en cours se posent à leur place : rien ne reste figé en plein vol. */
     fun pause() {
+        removeCallbacks(chainFrame)
         active = false; pressed = null; dragging = false; dragTarget = null
         from.clear(); bursts.clear(); entranceAt = 0L; invalidate()
     }
@@ -662,7 +745,8 @@ class MahjongBoardView(context: Context, val game: MahjongGame, private val acce
                         Spark(cx, cy, cos(a).toFloat() * speed, sin(a).toFloat() * speed - faceW * 1.2f, colors[index % colors.size], index % 3 == 0)
                     }
                     bursts += Burst(now, ghosts, cx, cy, sparks, if (game.lastPath.size > 1) Path(matchPath) else null,
-                        context.getString(R.string.mj_gain_short, game.score - score), game.combo)
+                        context.getString(R.string.mj_gain_short, game.score - score), game.combo,
+                        if (game.combo >= 2) context.getString(R.string.mj_multiplier, game.combo) else "")
                     while (bursts.size > 5) bursts.removeAt(0)
                 }
                 if (haptics) performHapticFeedback(if (game.combo >= 4) HapticFeedbackConstants.LONG_PRESS else HapticFeedbackConstants.CLOCK_TICK)
@@ -678,5 +762,9 @@ class MahjongBoardView(context: Context, val game: MahjongGame, private val acce
         const val ASPECT = 1.33f
         const val GRID_ASPECT = 1.22f
         const val MOTION_MS = 300L
+        /** Au-delà, toutes les tuiles ont fini leur chute d'entrée (520 ms d'écart + 360 ms de chute). */
+        const val ENTRANCE_MS = 880L
+        /** L'anneau seul : la prochaine image de l'écran après 25 ms, soit 30 par seconde à 60 ou 120 Hz. */
+        const val CHAIN_FRAME_MS = 25L
     }
 }

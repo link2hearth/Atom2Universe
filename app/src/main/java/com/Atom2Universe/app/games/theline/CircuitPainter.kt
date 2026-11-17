@@ -56,6 +56,8 @@ object CircuitPainter {
     }
     private val rect = RectF()
     private val glowShaders = HashMap<Int, Shader>()
+    /** Numéros des bornes, pour ne pas en reformater à chaque image de la respiration. */
+    private val padLabels = Array(64) { it.toString() }
 
     // ── Fond ──────────────────────────────────────────────────────────────────────
     /**
@@ -277,7 +279,7 @@ object CircuitPainter {
         fill.color = if (lit) PAD_SHINE_LIT else PAD_SHINE
         canvas.drawCircle(x - r * 0.25f, y - r * 0.3f, r * 0.35f, fill)
         text.textSize = cell * (if (number >= 10) 0.28f else 0.34f)
-        canvas.drawText(number.toString(), x, y - (text.ascent() + text.descent()) / 2f, text)
+        canvas.drawText(padLabels.getOrElse(number) { number.toString() }, x, y - (text.ascent() + text.descent()) / 2f, text)
     }
 
     private fun drawPadShape(canvas: Canvas, x: Float, y: Float, r: Float, square: Boolean) {

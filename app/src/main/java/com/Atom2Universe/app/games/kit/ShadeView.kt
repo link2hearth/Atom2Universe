@@ -12,10 +12,29 @@ import android.graphics.RectF
 abstract class ShadeView<S : Any>(context: Context) : PuzzleView<S>(context) {
     protected val grid = GridGeometry()
     protected val r = RectF()
-    private val analysis = PuzzleStateCache<S, Pair<Set<Int>, BooleanArray>> { state ->
+
+    /** Ce qui ne change qu'avec l'état : les fautes, les nombres satisfaits, l'image révélée. */
+    private class Analysis(val bad: BooleanArray, val done: BooleanArray, val revealed: BooleanArray?, val colours: IntArray)
+    private fun newAnalysis() = PuzzleStateCache<S, Analysis> { state ->
         val (w, h) = size(state)
-        errors(state) to BooleanArray(w * h) { labelDone(state, it) }
+        val n = w * h
+        val bad = BooleanArray(n)
+        for (i in errors(state)) if (i in 0 until n) bad[i] = true
+        val done = BooleanArray(n) { labelDone(state, it) }
+        // Les couleurs de l'image (mode Images) sont lues une fois, pas case par case à chaque image.
+        var revealed: BooleanArray? = null
+        val colours = IntArray(n)
+        for (i in 0 until n) {
+            val c = revealColour(state, i) ?: continue
+            val mask = revealed ?: BooleanArray(n).also { revealed = it }
+            mask[i] = true
+            colours[i] = c
+        }
+        Analysis(bad, done, revealed, colours)
     }
+    private var analysis = newAnalysis()
+    /** L'image révélée dépend aussi de la palette (case vide) : l'analyse se refait quand elle change. */
+    private var analysisPalette: KitPalette? = null
 
     protected abstract fun size(state: S): Pair<Int, Int>
     /** 0 indécis, 1 noir, 2 marqué blanc. */
@@ -35,13 +54,17 @@ abstract class ShadeView<S : Any>(context: Context) : PuzzleView<S>(context) {
         val (w, h) = size(state)
         grid.fit(area, w, h)
         val cell = grid.cell
-        val (bad, done) = analysis[state]
+        if (palette !== analysisPalette) { analysisPalette = palette; analysis = newAnalysis() }
+        val a = analysis[state]
+        val bad = a.bad
+        val done = a.done
+        val revealed = a.revealed
         for (i in 0 until w * h) {
             grid.rect(i % w, i / w, r)
-            revealColour(state, i)?.let { fill.color = it; canvas.drawRect(r, fill); continue }
+            if (revealed != null && revealed[i]) { fill.color = a.colours[i]; canvas.drawRect(r, fill); continue }
             val v = cellValue(state, i)
             fill.color = when (v) {
-                1 -> if (i in bad) palette.error else palette.text
+                1 -> if (bad[i]) palette.error else palette.text
                 2 -> palette.blend(palette.cell, palette.accent, 0.12f)
                 else -> palette.cell
             }
@@ -50,7 +73,7 @@ abstract class ShadeView<S : Any>(context: Context) : PuzzleView<S>(context) {
             if (text != null) {
                 val colour = when {
                     v == 1 -> palette.withAlpha(palette.surface, 0.55f)
-                    i in bad -> palette.error
+                    bad[i] -> palette.error
                     done[i] -> palette.tertiary
                     else -> palette.text
                 }
@@ -58,7 +81,7 @@ abstract class ShadeView<S : Any>(context: Context) : PuzzleView<S>(context) {
             }
             if (v == 2) {
                 if (ringMark) {
-                    stroke.color = if (i in bad) palette.error else palette.accent
+                    stroke.color = if (bad[i]) palette.error else palette.accent
                     stroke.strokeWidth = cell * 0.05f
                     canvas.drawCircle(r.centerX(), r.centerY(), cell * 0.36f, stroke)
                 } else if (text == null) {

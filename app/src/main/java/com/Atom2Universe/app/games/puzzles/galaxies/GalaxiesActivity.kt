@@ -36,9 +36,11 @@ class GalaxiesActivity : PuzzleActivity<GalaxiesState>() {
 
 /** Chaque galaxie bien découpée prend la couleur de son point ; les points sont des étoiles. */
 class GalaxiesView(context: Context) : EdgeView<GalaxiesState>(context) {
-    private val analysis = PuzzleStateCache<GalaxiesState, Pair<IntArray, Map<Int, Int>>> {
+    /** Le point de la galaxie juste de chaque case (-1 sinon), lu une fois par état et non dans une table à chaque image. */
+    private val analysis = PuzzleStateCache<GalaxiesState, IntArray> {
         val regions = it.regions()
-        regions to it.goodRegions(regions)
+        val good = it.goodRegions(regions)
+        IntArray(regions.size) { i -> good[regions[i]] ?: -1 }
     }
 
     override fun edgeGrid(state: GalaxiesState) = state.grid
@@ -49,11 +51,11 @@ class GalaxiesView(context: Context) : EdgeView<GalaxiesState>(context) {
     override fun drawBoard(canvas: Canvas, state: GalaxiesState, area: RectF) {
         layout(state, area)
         val cell = grid.cell
-        val (id, good) = analysis[state]
+        val dotOf = analysis[state]
         for (i in 0 until state.w * state.h) {
             grid.rect(i % state.w, i / state.w, r)
-            val d = good[id[i]]
-            fill.color = if (d != null) palette.blend(palette.cell, palette.piece(d), if (palette.isLight) 0.3f else 0.35f) else palette.cell
+            val d = dotOf[i]
+            fill.color = if (d >= 0) palette.blend(palette.cell, palette.piece(d), if (palette.isLight) 0.3f else 0.35f) else palette.cell
             canvas.drawRect(r, fill)
         }
         stroke.color = palette.gridLine; stroke.strokeWidth = cell * 0.02f

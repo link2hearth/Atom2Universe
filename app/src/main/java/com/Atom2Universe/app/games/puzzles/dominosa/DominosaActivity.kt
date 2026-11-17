@@ -77,20 +77,25 @@ class DominosaView(context: Context) : PuzzleView<DominosaState>(context) {
     /** Les points d'une face de domino (0 à 9), disposés comme sur les vrais. */
     private fun pips(canvas: Canvas, v: Int, cx: Float, cy: Float, cell: Float) {
         val s = cell * 0.2f
-        val spots = when (v) {
-            0 -> emptyList()
-            1 -> listOf(0 to 0)
-            2 -> listOf(-1 to -1, 1 to 1)
-            3 -> listOf(-1 to -1, 0 to 0, 1 to 1)
-            4 -> listOf(-1 to -1, 1 to -1, -1 to 1, 1 to 1)
-            5 -> listOf(-1 to -1, 1 to -1, 0 to 0, -1 to 1, 1 to 1)
-            6 -> listOf(-1 to -1, 1 to -1, -1 to 0, 1 to 0, -1 to 1, 1 to 1)
-            7 -> listOf(-1 to -1, 1 to -1, -1 to 0, 0 to 0, 1 to 0, -1 to 1, 1 to 1)
-            8 -> listOf(-1 to -1, 0 to -1, 1 to -1, -1 to 0, 1 to 0, -1 to 1, 0 to 1, 1 to 1)
-            else -> (-1..1).flatMap { a -> (-1..1).map { b -> a to b } }
-        }
+        val spots = PIPS[if (v in 0..8) v else 9]
         fill.color = palette.text
-        for ((dx, dy) in spots) canvas.drawCircle(cx + dx * s, cy + dy * s, cell * 0.075f, fill)
+        for (k in 0 until spots.size / 2) canvas.drawCircle(cx + spots[2 * k] * s, cy + spots[2 * k + 1] * s, cell * 0.075f, fill)
+    }
+
+    private companion object {
+        /** Les points de chaque face (0 à 9), en paires dx, dy : une table fixe plutôt que des listes à chaque image. */
+        val PIPS = arrayOf(
+            intArrayOf(),
+            intArrayOf(0, 0),
+            intArrayOf(-1, -1, 1, 1),
+            intArrayOf(-1, -1, 0, 0, 1, 1),
+            intArrayOf(-1, -1, 1, -1, -1, 1, 1, 1),
+            intArrayOf(-1, -1, 1, -1, 0, 0, -1, 1, 1, 1),
+            intArrayOf(-1, -1, 1, -1, -1, 0, 1, 0, -1, 1, 1, 1),
+            intArrayOf(-1, -1, 1, -1, -1, 0, 0, 0, 1, 0, -1, 1, 1, 1),
+            intArrayOf(-1, -1, 0, -1, 1, -1, -1, 0, 1, 0, -1, 1, 0, 1, 1, 1),
+            intArrayOf(-1, -1, -1, 0, -1, 1, 0, -1, 0, 0, 0, 1, 1, -1, 1, 0, 1, 1),
+        )
     }
 
     override fun onTap(x: Float, y: Float) {

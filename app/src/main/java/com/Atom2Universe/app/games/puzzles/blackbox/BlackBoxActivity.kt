@@ -8,6 +8,8 @@ import android.graphics.RadialGradient
 import android.graphics.RectF
 import android.graphics.Shader
 import android.os.SystemClock
+import android.util.LongSparseArray
+import android.util.SparseIntArray
 import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
@@ -79,8 +81,13 @@ class BlackBoxView(context: Context) : PuzzleView<BlackBoxState>(context) {
     private val r = RectF()
     private val path = Path()
     /** Le reflet d'un nucléon, à l'échelle 1 et par couple de couleurs : placé ensuite par [shaderMatrix]. */
-    private val nucleonShaders = HashMap<Long, RadialGradient>()
+    private val nucleonShaders = LongSparseArray<RadialGradient>()
     private val shaderMatrix = Matrix()
+    /** Les encres lisibles sur un détecteur allumé : une recherche de contraste, faite une fois par palette et par couleur. */
+    private var inkPalette: KitPalette? = null
+    private var litFillColour = 0
+    private var litInkColour = 0
+    private val resultInks = SparseIntArray()
 
     /** Les détecteurs qui viennent de s'allumer, et quand. */
     private val flashes = HashMap<Int, Long>()
@@ -98,14 +105,33 @@ class BlackBoxView(context: Context) : PuzzleView<BlackBoxState>(context) {
         previous = s.results.copyOf()
     }
 
-    private fun portCell(state: BlackBoxState, port: Int): Pair<Int, Int> {
+    private fun portCell(state: BlackBoxState, port: Int): Pair<Int, Int> = portX(state, port) to portY(state, port)
+
+    /** La colonne et la ligne d'un détecteur, sans paire : le dessin les lit à chaque image. */
+    private fun portX(state: BlackBoxState, port: Int): Int {
         val w = state.w; val h = state.h
         return when {
-            port < w -> port to -1
-            port < w + h -> w to port - w
-            port < 2 * w + h -> (w - 1 - (port - w - h)) to h
-            else -> -1 to (h - 1 - (port - 2 * w - h))
+            port < w -> port
+            port < w + h -> w
+            port < 2 * w + h -> w - 1 - (port - w - h)
+            else -> -1
         }
+    }
+
+    private fun portY(state: BlackBoxState, port: Int): Int {
+        val w = state.w; val h = state.h
+        return when {
+            port < w -> -1
+            port < w + h -> port - w
+            port < 2 * w + h -> h
+            else -> h - 1 - (port - 2 * w - h)
+        }
+    }
+
+    private fun resultInk(colour: Int): Int {
+        val k = resultInks.indexOfKey(colour)
+        if (k >= 0) return resultInks.valueAt(k)
+        return KitPalette.ensureContrast(colour, litFillColour, 3.0).also { resultInks.put(colour, it) }
     }
 
     override fun drawBoard(canvas: Canvas, state: BlackBoxState, area: RectF) {
@@ -127,10 +153,16 @@ class BlackBoxView(context: Context) : PuzzleView<BlackBoxState>(context) {
 
         // Les détecteurs.
         var animating = false
-        val litFill = palette.blend(palette.raised, PHOSPHOR, if (palette.isLight) 0.22f else 0.16f)
-        val ink = KitPalette.ensureContrast(PHOSPHOR_INK, litFill, 3.0)
+        if (inkPalette !== palette) {
+            inkPalette = palette
+            litFillColour = palette.blend(palette.raised, PHOSPHOR, if (palette.isLight) 0.22f else 0.16f)
+            litInkColour = KitPalette.ensureContrast(PHOSPHOR_INK, litFillColour, 3.0)
+            resultInks.clear()
+        }
+        val litFill = litFillColour
+        val ink = litInkColour
         for (port in 0 until state.ports) {
-            val (x, y) = portCell(state, port)
+            val x = portX(state, port); val y = portY(state, port)
             val cx = grid.left + (x + 0.5f) * cell; val cy = grid.top + (y + 0.5f) * cell
             val res = state.results[port]
             r.set(cx - cell * 0.36f, cy - cell * 0.36f, cx + cell * 0.36f, cy + cell * 0.36f)
@@ -164,8 +196,7 @@ class BlackBoxView(context: Context) : PuzzleView<BlackBoxState>(context) {
                     path.lineTo(cx + cell * 0.25f, cy + cell * 0.07f)
                     canvas.drawPath(path, stroke)
                 }
-                else -> canvas.centeredText(res.toString(), cx, cy, cell * 0.4f,
-                    KitPalette.ensureContrast(palette.piece(res * 2), litFill, 3.0), bold = true)
+                else -> canvas.centeredText(number(res), cx, cy, cell * 0.4f, resultInk(palette.piece(res * 2)), bold = true)
             }
             // L'éclat de scintillation, quand le détecteur vient de recevoir la particule.
             val t = flashes[port]?.let { (now - it) / FLASH_MS.toFloat() }
@@ -213,14 +244,15 @@ class BlackBoxView(context: Context) : PuzzleView<BlackBoxState>(context) {
         val n = cell * 0.11f
         fill.color = palette.withAlpha(GOLD, 0.2f * alpha)
         canvas.drawCircle(cx, cy, cell * 0.36f, fill)
-        for ((k, pos) in NUCLEONS.withIndex()) {
-            val px = cx + pos.first * n; val py = cy + pos.second * n
+        for (k in 0 until NUCLEONS.size / 2) {
+            val px = cx + NUCLEONS[2 * k] * n; val py = cy + NUCLEONS[2 * k + 1] * n
             val base = if (k % 2 == 0) GOLD else AMBER
             val light = palette.withAlpha(palette.blend(base, 0xFFFFFFFF.toInt(), 0.55f), alpha)
             val dark = palette.withAlpha(base, alpha)
-            val shader = nucleonShaders.getOrPut((light.toLong() shl 32) or (dark.toLong() and 0xFFFFFFFFL)) {
-                RadialGradient(-0.35f, -0.35f, 1.2f, light, dark, Shader.TileMode.CLAMP)
-            }
+            // Une table à clé longue sans emballage : la clé ne crée pas d'objet à chaque nucléon.
+            val key = (light.toLong() shl 32) or (dark.toLong() and 0xFFFFFFFFL)
+            val shader = nucleonShaders.get(key)
+                ?: RadialGradient(-0.35f, -0.35f, 1.2f, light, dark, Shader.TileMode.CLAMP).also { nucleonShaders.put(key, it) }
             shaderMatrix.setScale(n, n)
             shaderMatrix.postTranslate(px, py)
             shader.setLocalMatrix(shaderMatrix)
@@ -249,8 +281,8 @@ class BlackBoxView(context: Context) : PuzzleView<BlackBoxState>(context) {
         const val AMBER = 0xFFFF8F00.toInt()
         const val PHOSPHOR = 0xFF69F0AE.toInt()
         const val PHOSPHOR_INK = 0xFF00C853.toInt()
-        /** Les sept nucléons d'une grappe, en rayons de nucléon autour du centre. */
-        val NUCLEONS = listOf(0f to 0f, -1.6f to -0.6f, 1.6f to -0.6f, 0f to -1.7f, -1f to 1.4f, 1f to 1.4f, 1.9f to 0.9f)
+        /** Les sept nucléons d'une grappe, en paires x, y en rayons de nucléon autour du centre. */
+        val NUCLEONS = floatArrayOf(0f, 0f, -1.6f, -0.6f, 1.6f, -0.6f, 0f, -1.7f, -1f, 1.4f, 1f, 1.4f, 1.9f, 0.9f)
     }
 }
 

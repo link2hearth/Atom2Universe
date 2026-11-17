@@ -79,12 +79,9 @@ class CubeView(context: Context) : PuzzleView<CubeState>(context) {
         val s = cell * 0.55f
         val ox = (grid.left + grid.right) / 2 - 2 * s
         val oy = grid.bottom + cell * 0.45f
-        val net = listOf(
-            CubeState.WEST to (0 to 1), CubeState.TOP to (1 to 1), CubeState.EAST to (2 to 1), CubeState.BOTTOM to (3 to 1),
-            CubeState.NORTH to (1 to 0), CubeState.SOUTH to (1 to 2),
-        )
-        for ((face, pos) in net) {
-            val x0 = ox + pos.first * s; val y0 = oy + pos.second * s
+        for (k in 0 until NET.size / 3) {
+            val face = NET[3 * k]
+            val x0 = ox + NET[3 * k + 1] * s; val y0 = oy + NET[3 * k + 2] * s
             fill.color = faceColour(state.faces[face])
             canvas.drawRect(x0, y0, x0 + s, y0 + s, fill)
             stroke.color = palette.outline; stroke.strokeWidth = cell * 0.03f
@@ -117,6 +114,14 @@ class CubeView(context: Context) : PuzzleView<CubeState>(context) {
     override fun wantsDrag(x: Float, y: Float) = state != null
     override fun onDragStart(x: Float, y: Float) { startX = x; startY = y }
     override fun onDragEnd(x: Float, y: Float) = rollToward(x - startX, y - startY)
+
+    private companion object {
+        /** Le patron déplié, par triplets face, colonne, ligne : une table fixe plutôt qu'une liste à chaque image. */
+        val NET = intArrayOf(
+            CubeState.WEST, 0, 1, CubeState.TOP, 1, 1, CubeState.EAST, 2, 1, CubeState.BOTTOM, 3, 1,
+            CubeState.NORTH, 1, 0, CubeState.SOUTH, 1, 2,
+        )
+    }
 }
 
 class CubeArtwork(context: Context) : KitArtwork(context) {

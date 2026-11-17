@@ -35,7 +35,7 @@ class RangeActivity : PuzzleActivity<RangeState>() {
 class RangeView(context: Context) : ShadeView<RangeState>(context) {
     override fun size(state: RangeState) = state.w to state.h
     override fun cellValue(state: RangeState, i: Int) = state.cells[i]
-    override fun label(state: RangeState, i: Int) = if (state.numbers[i] >= 0) state.numbers[i].toString() else null
+    override fun label(state: RangeState, i: Int) = if (state.numbers[i] >= 0) number(state.numbers[i]) else null
     override fun change(state: RangeState, i: Int, value: Int) = state.with(i, value)
     override fun canShade(state: RangeState, i: Int) = state.numbers[i] < 0
     override fun errors(state: RangeState): Set<Int> {

@@ -9,6 +9,8 @@ import android.graphics.Rect
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
+import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import kotlin.math.abs
 import kotlin.math.hypot
 import kotlin.math.sin
@@ -20,7 +22,7 @@ import kotlin.math.sin
  * [AHEAD] niveaux après celui à jouer. Sous chaque bouton, ses étoiles et son meilleur score.
  */
 @SuppressLint("ViewConstructor")
-class MercerieMapView(context: Context, private val progress: MercerieProgress, private val onPick: (Int) -> Unit) : View(context) {
+class MercerieMapView(context: Context, private val progress: MercerieProgress, private val onPick: (Int) -> Unit) : ViewGroup(context), Coverable {
     private val next = progress.next
     private val count = next + AHEAD
     private val radius = MercerieUi.dp(context, 30f)
@@ -38,6 +40,20 @@ class MercerieMapView(context: Context, private val progress: MercerieProgress, 
     private var downX = 0f
     private var downY = 0f
     private val start = System.nanoTime()
+    /** Le cadre du bouton qui bat, autour de son centre : le bouton gonflé, ses étoiles, son score. */
+    private val beatHalf = (radius * 1.5f).toInt()
+    private val beatTop = (radius * 1.5f).toInt()
+    private val beatBottom = (radius * 2.75f).toInt()
+    private val beat = Beat(context)
+
+    /** Sous la fiche d'un niveau, le bouton en cours cesse de battre. */
+    override var covered = false
+        set(value) { if (field != value) { field = value; beat.invalidate() } }
+
+    init {
+        setWillNotDraw(false)
+        addView(beat)
+    }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val w = MeasureSpec.getSize(widthMeasureSpec)
@@ -46,6 +62,13 @@ class MercerieMapView(context: Context, private val progress: MercerieProgress, 
         val wanted = (padTop * 2 + rows * rowHeight).toInt()
         val h = if (MeasureSpec.getMode(heightMeasureSpec) == MeasureSpec.EXACTLY) maxOf(wanted, MeasureSpec.getSize(heightMeasureSpec)) else wanted
         setMeasuredDimension(w, h)
+        beat.measure(MeasureSpec.makeMeasureSpec(beatHalf * 2, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(beatTop + beatBottom, MeasureSpec.EXACTLY))
+    }
+
+    override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
+        val x = nodeX(next - 1).toInt() - beatHalf
+        val y = nodeY(next - 1).toInt() - beatTop
+        beat.layout(x, y, x + beat.measuredWidth, y + beat.measuredHeight)
     }
 
     private fun nodeX(k: Int): Float {
@@ -80,39 +103,78 @@ class MercerieMapView(context: Context, private val progress: MercerieProgress, 
         thread.rewind()
         for (k in maxOf(first - 1, next - 1) until minOf(last + 1, count - 1)) segment(k)
         Felt.stitches(canvas, thread, Felt.alpha(Felt.INK, 60), unit, .06f)
+        // Le niveau à jouer est cousu par [beat], par-dessus : la carte, elle, ne bouge pas.
+        for (k in first..last) if (k != next - 1) node(canvas, k, 0f)
+    }
 
-        val t = (System.nanoTime() - start) / 1e9f
-        for (k in first..last) {
-            val level = k + 1
-            val stars = progress.stars(level)
-            val open = level <= next
-            val current = level == next
-            val x = nodeX(k)
-            val y = nodeY(k)
-            val r = radius * (if (current) 1.16f + sin(t * 4f) * .05f else 1f)
-            val color = if (!open) Felt.GREY else if (current) Felt.PINK else Felt.COLORS[k % Felt.COLORS.size]
-            if (!open) canvas.saveLayerAlpha(x - r * 1.3f, y - r * 1.3f, x + r * 1.3f, y + r * 1.5f, 150)
-            path.rewind()
-            path.addCircle(x, y, r, Path.Direction.CW)
-            Felt.shape(canvas, path, color, r * 2, stitch = open, shadow = open, plush = open)
-            rim.color = Felt.darker(color, .85f)
-            rim.strokeWidth = r * .07f
-            canvas.drawCircle(x, y, r * .62f, rim)
-            val digits = level.toString()
-            text.textSize = r * (if (digits.length <= 2) .8f else if (digits.length == 3) .6f else .47f)
-            text.color = if (open) Felt.CREAM else Felt.darker(Felt.GREY, .8f)
-            canvas.drawText(digits, x, y + text.textSize * .35f, text)
-            if (!open) { canvas.restore(); continue }
-            val sy = y + radius * 1.5f
-            for (s in 0 until 3) Felt.star(canvas, x + (s - 1) * radius * .62f, sy + (if (s == 1) radius * .08f else 0f), radius * .24f, s < stars)
-            val best = progress.best(level)
-            if (best > 0) {
-                text.textSize = radius * .42f
-                text.color = Felt.INK
-                canvas.drawText(MercerieUi.number(best), x, sy + radius * .86f, text)
-            }
+    /** Un bouton de la carte, ses étoiles et son meilleur score ; [t] fait battre celui du niveau à jouer. */
+    private fun node(canvas: Canvas, k: Int, t: Float) {
+        val level = k + 1
+        val stars = progress.stars(level)
+        val open = level <= next
+        val current = level == next
+        val x = nodeX(k)
+        val y = nodeY(k)
+        val r = radius * (if (current) 1.16f + sin(t * 4f) * .05f else 1f)
+        val color = if (!open) Felt.GREY else if (current) Felt.PINK else Felt.COLORS[k % Felt.COLORS.size]
+        if (!open) canvas.saveLayerAlpha(x - r * 1.3f, y - r * 1.3f, x + r * 1.3f, y + r * 1.5f, 150)
+        path.rewind()
+        path.addCircle(x, y, r, Path.Direction.CW)
+        Felt.shape(canvas, path, color, r * 2, stitch = open, shadow = open, plush = open)
+        rim.color = Felt.darker(color, .85f)
+        rim.strokeWidth = r * .07f
+        canvas.drawCircle(x, y, r * .62f, rim)
+        val digits = level.toString()
+        text.textSize = r * (if (digits.length <= 2) .8f else if (digits.length == 3) .6f else .47f)
+        text.color = if (open) Felt.CREAM else Felt.darker(Felt.GREY, .8f)
+        canvas.drawText(digits, x, y + text.textSize * .35f, text)
+        if (!open) { canvas.restore(); return }
+        val sy = y + radius * 1.5f
+        for (s in 0 until 3) Felt.star(canvas, x + (s - 1) * radius * .62f, sy + (if (s == 1) radius * .08f else 0f), radius * .24f, s < stars)
+        val best = progress.best(level)
+        if (best > 0) {
+            text.textSize = radius * .42f
+            text.color = Felt.INK
+            canvas.drawText(MercerieUi.number(best), x, sy + radius * .86f, text)
         }
-        if (next - 1 in first..last) postInvalidateDelayed(MercerieUi.IDLE_FRAME_MS)
+    }
+
+    /**
+     * Le bouton du niveau à jouer, qui bat. Il a sa propre vue, seule redessinée au rythme du
+     * battement : avec le canevas matériel, la carte entière (des centaines de boutons cousus,
+     * d'étoiles et de nombres, pas seulement ce que montre le défilement) était sinon refaite
+     * vingt-cinq fois par seconde. Défilé hors de l'écran, il ne bat plus jusqu'à son retour.
+     */
+    private inner class Beat(context: Context) : View(context) {
+        private var pending = false
+        private val tick = Runnable { pending = false; invalidate() }
+        private val seen = Rect()
+        private val onScroll = ViewTreeObserver.OnScrollChangedListener {
+            if (!pending && !covered && getLocalVisibleRect(seen)) invalidate()
+        }
+
+        override fun onAttachedToWindow() {
+            super.onAttachedToWindow()
+            viewTreeObserver.addOnScrollChangedListener(onScroll)
+        }
+
+        override fun onDetachedFromWindow() {
+            viewTreeObserver.removeOnScrollChangedListener(onScroll)
+            removeCallbacks(tick)
+            pending = false
+            super.onDetachedFromWindow()
+        }
+
+        override fun onDraw(canvas: Canvas) {
+            canvas.save()
+            canvas.translate(-left.toFloat(), -top.toFloat())
+            node(canvas, next - 1, (System.nanoTime() - start) / 1e9f)
+            canvas.restore()
+            // Un seul rappel retardé à la fois : un invalidate() extérieur ne dédouble pas la chaîne.
+            removeCallbacks(tick)
+            pending = !covered && getLocalVisibleRect(seen)
+            if (pending) postDelayed(tick, MercerieUi.idleDelay())
+        }
     }
 
     @SuppressLint("ClickableViewAccessibility")

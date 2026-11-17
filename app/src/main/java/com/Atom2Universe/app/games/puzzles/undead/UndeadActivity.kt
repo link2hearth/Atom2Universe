@@ -9,6 +9,7 @@ import com.Atom2Universe.app.games.kit.GridGeometry
 import com.Atom2Universe.app.games.kit.KitArtwork
 import com.Atom2Universe.app.games.kit.KitPalette
 import com.Atom2Universe.app.games.kit.PuzzleActivity
+import com.Atom2Universe.app.games.kit.PuzzleStateCache
 import com.Atom2Universe.app.games.kit.PuzzleView
 import kotlin.random.Random
 
@@ -44,6 +45,24 @@ class UndeadView(context: Context) : PuzzleView<UndeadState>(context) {
     private val r = RectF()
     private val path = Path()
 
+    /**
+     * Une fois par état, pas à chaque image : ce que voit chaque nombre du bord (rayon suivi dans
+     * les miroirs) et les totaux écrits au-dessus. [clueState] : 0 normal, 1 complet, 2 faux.
+     */
+    private class Analysis(val clueState: IntArray, val placed: IntArray, val totals: Array<String>)
+    private val analysis = PuzzleStateCache<UndeadState, Analysis> { s ->
+        val clueState = IntArray(s.clues.size)
+        for (port in s.clues.indices) {
+            val v = s.clues[port]
+            if (v < 0) continue
+            val seen = s.seen(port)
+            val full = s.paths[port].all { (c, _) -> s.cells[c] != 0 }
+            clueState[port] = when { seen > v || (full && seen != v) -> 2; full -> 1; else -> 0 }
+        }
+        val placed = IntArray(3) { s.placed(it + 1) }
+        Analysis(clueState, placed, Array(3) { context.getString(R.string.undead_total, placed[it], s.totals[it]) })
+    }
+
     override fun drawBoard(canvas: Canvas, state: UndeadState, area: RectF) {
         grid.fit(area, state.w, state.h, 0.7f, 1.9f, 0.7f, 0.7f)
         val cell = grid.cell
@@ -58,28 +77,28 @@ class UndeadView(context: Context) : PuzzleView<UndeadState>(context) {
             if (state.cells[i] != 0) monster(canvas, state.cells[i], r.centerX(), r.centerY(), cell * 0.8f)
         }
         // Les nombres du bord.
+        val a = analysis[state]
         for (port in state.clues.indices) {
             val v = state.clues[port]
             if (v < 0) continue
-            val (x, y) = when {
-                port < state.w -> grid.cx(port) to grid.top - cell * 0.38f
-                port < state.w + state.h -> grid.right + cell * 0.38f to grid.cy(port - state.w)
-                port < 2 * state.w + state.h -> grid.cx(state.w - 1 - (port - state.w - state.h)) to grid.bottom + cell * 0.38f
-                else -> grid.left - cell * 0.38f to grid.cy(state.h - 1 - (port - 2 * state.w - state.h))
+            val x: Float; val y: Float
+            when {
+                port < state.w -> { x = grid.cx(port); y = grid.top - cell * 0.38f }
+                port < state.w + state.h -> { x = grid.right + cell * 0.38f; y = grid.cy(port - state.w) }
+                port < 2 * state.w + state.h -> { x = grid.cx(state.w - 1 - (port - state.w - state.h)); y = grid.bottom + cell * 0.38f }
+                else -> { x = grid.left - cell * 0.38f; y = grid.cy(state.h - 1 - (port - 2 * state.w - state.h)) }
             }
-            val seen = state.seen(port)
-            val full = state.paths[port].all { (c, _) -> state.cells[c] != 0 }
-            val colour = when { seen > v || (full && seen != v) -> palette.error; full -> palette.tertiary; else -> palette.text }
-            canvas.centeredText(v.toString(), x, y, cell * 0.4f, colour, bold = true)
+            val colour = when (a.clueState[port]) { 2 -> palette.error; 1 -> palette.tertiary; else -> palette.text }
+            canvas.centeredText(number(v), x, y, cell * 0.4f, colour, bold = true)
         }
         // Les totaux, au-dessus.
         val ty = grid.top - cell * 1.35f
         for (k in 1..3) {
             val cx = grid.left + (grid.right - grid.left) * (k - 0.5f) / 3f
             monster(canvas, k, cx - cell * 0.35f, ty, cell * 0.65f)
-            val placed = state.placed(k)
+            val placed = a.placed[k - 1]
             val total = state.totals[k - 1]
-            canvas.centeredText(context.getString(R.string.undead_total, placed, total), cx + cell * 0.4f, ty, cell * 0.38f,
+            canvas.centeredText(a.totals[k - 1], cx + cell * 0.4f, ty, cell * 0.38f,
                 if (placed > total) palette.error else palette.text, bold = true)
         }
     }

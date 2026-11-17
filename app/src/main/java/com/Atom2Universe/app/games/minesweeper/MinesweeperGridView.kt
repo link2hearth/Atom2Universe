@@ -244,26 +244,32 @@ class MinesweeperGridView(context: Context) : View(context) {
         val cs = cellSize
         if (cs <= 0f) return
         text.textSize = cs * .47f
+        val edgeWidth = resources.displayMetrics.density * .7f
         for (r in 0 until g.rows) for (c in 0 until g.cols) {
             val cell = g.grid[r][c]
             val index = r * g.cols + c
-            val delay = min(420f, hypot((r - effectRow).toFloat(), (c - effectCol).toFloat()) * 32f)
             val isChanged = index < changed.size && changed[index]
-            val progress = if (isChanged) ((effectTime - delay) / 260f).coerceIn(0f, 1f) else 1f
+            // Le retard de l'onde ne sert qu'aux cases du dernier coup.
+            val progress = if (isChanged) {
+                val delay = min(420f, hypot((r - effectRow).toFloat(), (c - effectCol).toFloat()) * 32f)
+                ((effectTime - delay) / 260f).coerceIn(0f, 1f)
+            } else 1f
             val state = if (progress == 0f && index < previousStates.size) previousStates[index] else cell.state
             val x = cellX(r, c)
             val y = cellY(r, c)
             val pad = cs * .045f
             rect.set(x + pad, y + pad, x + cs - pad, y + cs - pad)
-            val save = canvas.save()
-            if (progress > 0f && progress < 1f) {
+            // Seule une case qui grandit touche à la toile : pas de save/restore pour les autres.
+            val scaling = progress > 0f && progress < 1f
+            val save = if (scaling) canvas.save() else 0
+            if (scaling) {
                 val scale = .86f + .14f * progress
                 canvas.scale(scale, scale, rect.centerX(), rect.centerY())
             }
             val hidden = state != CellState.REVEALED
             fill(canvas, if (hidden) navy else Color.rgb(7, 26, 38), cs * .12f)
             ink.style = Paint.Style.STROKE
-            ink.strokeWidth = resources.displayMetrics.density * .7f
+            ink.strokeWidth = edgeWidth
             ink.color = when {
                 state == CellState.FLAGGED -> amber
                 pressedCell == index -> teal
@@ -297,7 +303,7 @@ class MinesweeperGridView(context: Context) : View(context) {
                 canvas.drawRoundRect(rect, cs * .12f, cs * .12f, ink)
                 ink.alpha = 255
             }
-            canvas.restoreToCount(save)
+            if (scaling) canvas.restoreToCount(save)
         }
         if (effectTime < 1400f) drawSonar(canvas, g, cs)
     }

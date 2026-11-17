@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.games.enamel
 
+import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.LinearGradient
@@ -113,4 +114,32 @@ class EnamelPainter {
     private fun lighten(c: Int) = Color.rgb((Color.red(c) * .75f + 64).toInt().coerceAtMost(255),
         (Color.green(c) * .75f + 64).toInt().coerceAtMost(255), (Color.blue(c) * .75f + 64).toInt().coerceAtMost(255))
     private fun darken(c: Int) = Color.rgb((Color.red(c) * .72f).toInt(), (Color.green(c) * .72f).toInt(), (Color.blue(c) * .72f).toInt())
+}
+
+/**
+ * Une bande fixe de l'écran (la frise des palets) gardée en image : une centaine d'appels de dessin
+ * remplacés par un seul à chaque image. [paint] n'est rappelé que si la clé ou la place de la bande
+ * changent ; il dessine en coordonnées de la vue, l'image est posée au pixel près.
+ */
+internal class StripCache {
+    private var bitmap: Bitmap? = null
+    private var key = Long.MIN_VALUE
+    private var left = 0
+    private var top = 0
+
+    fun draw(canvas: Canvas, newKey: Long, l: Int, t: Int, r: Int, b: Int, paint: (Canvas) -> Unit) {
+        val w = r - l; val h = b - t
+        if (w <= 0 || h <= 0) return
+        val bmp = bitmap?.takeIf { it.width == w && it.height == h }
+            ?: Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888).also { bitmap = it; key = Long.MIN_VALUE }
+        if (newKey != key || l != left || t != top) {
+            bmp.eraseColor(Color.TRANSPARENT)
+            val c = Canvas(bmp); c.translate(-l.toFloat(), -t.toFloat()); paint(c)
+            key = newKey; left = l; top = t
+        }
+        canvas.drawBitmap(bmp, l.toFloat(), t.toFloat(), null)
+    }
+
+    /** La mise en page a changé : la bande sera redessinée à la prochaine image. */
+    fun clear() { key = Long.MIN_VALUE }
 }

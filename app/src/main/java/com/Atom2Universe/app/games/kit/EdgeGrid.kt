@@ -31,13 +31,31 @@ class EdgeGrid(val w: Int, val h: Int) {
     }
 
     /** Les deux sommets d'une arête, numérotés y × (w + 1) + x. */
-    fun ends(e: Int): IntArray = if (isHorizontal(e)) {
-        val y = e / w; val x = e % w
-        intArrayOf(y * (w + 1) + x, y * (w + 1) + x + 1)
+    fun ends(e: Int): IntArray = intArrayOf(endA(e), endB(e))
+
+    /** Le premier sommet d'une arête (haut ou gauche), sans tableau : pour le dessin. */
+    fun endA(e: Int): Int = if (isHorizontal(e)) (e / w) * (w + 1) + e % w else e - horizontalCount
+
+    /** Le second sommet d'une arête (droite ou bas). */
+    fun endB(e: Int): Int = if (isHorizontal(e)) endA(e) + 1 else endA(e) + w + 1
+
+    /** Les cases de part et d'autre d'une arête, sans tableau (-1 hors de la grille). */
+    fun cellA(e: Int): Int = if (isHorizontal(e)) {
+        val y = e / w
+        if (y > 0) (y - 1) * w + e % w else -1
     } else {
         val k = e - horizontalCount
-        val y = k / (w + 1); val x = k % (w + 1)
-        intArrayOf(y * (w + 1) + x, (y + 1) * (w + 1) + x)
+        val x = k % (w + 1)
+        if (x > 0) (k / (w + 1)) * w + x - 1 else -1
+    }
+
+    fun cellB(e: Int): Int = if (isHorizontal(e)) {
+        val y = e / w
+        if (y < h) y * w + e % w else -1
+    } else {
+        val k = e - horizontalCount
+        val x = k % (w + 1)
+        if (x < w) (k / (w + 1)) * w + x else -1
     }
 
     /** Les arêtes qui touchent un sommet. */
@@ -99,7 +117,13 @@ abstract class EdgeView<S : Any>(context: Context) : PuzzleView<S>(context) {
     protected val r = RectF()
     protected open val dual = false
     private val dragged = LinkedHashSet<Int>()
+    /** Les mêmes arêtes que [dragged], lues à chaque image sans emballer leur numéro. */
+    private var draggedMask = BooleanArray(0)
     private var dragValue = 1
+    /** Le segment rendu par [segment] : un seul tableau, relu aussitôt. */
+    private val seg = FloatArray(4)
+    /** Les arêtes traçables, vues une fois par état et non à chaque mouvement du doigt. */
+    private val usableCache = PuzzleStateCache<S, BooleanArray> { s -> BooleanArray(edgeGrid(s).count) { usable(s, it) } }
 
     protected abstract fun edgeGrid(state: S): EdgeGrid
     /** 0 rien, 1 trait, 2 croix. */
@@ -115,25 +139,37 @@ abstract class EdgeView<S : Any>(context: Context) : PuzzleView<S>(context) {
         grid.fit(area, g.w, g.h, m[0], m[1], m[2], m[3])
     }
 
-    /** Le segment d'écran d'une arête : sur le quadrillage, ou entre deux centres en dual. */
+    /**
+     * Le segment d'écran d'une arête : sur le quadrillage, ou entre deux centres en dual. Le
+     * tableau rendu est réutilisé à l'appel suivant : le lire tout de suite, sans le garder.
+     */
     protected fun segment(g: EdgeGrid, e: Int): FloatArray {
         val cell = grid.cell
-        val (a, b) = g.ends(e)
+        val a = g.endA(e); val b = g.endB(e)
         val ax = grid.left + (a % (g.w + 1)) * cell; val ay = grid.top + (a / (g.w + 1)) * cell
         val bx = grid.left + (b % (g.w + 1)) * cell; val by = grid.top + (b / (g.w + 1)) * cell
-        if (!dual) return floatArrayOf(ax, ay, bx, by)
+        val out = seg
+        if (!dual) {
+            out[0] = ax; out[1] = ay; out[2] = bx; out[3] = by
+            return out
+        }
         // En dual, l'arête du quadrillage est « traversée » : le trait relie les deux centres.
         val mx = (ax + bx) / 2; val my = (ay + by) / 2
-        return if (g.isHorizontal(e)) floatArrayOf(mx, my - cell / 2, mx, my + cell / 2)
-        else floatArrayOf(mx - cell / 2, my, mx + cell / 2, my)
+        if (g.isHorizontal(e)) {
+            out[0] = mx; out[1] = my - cell / 2; out[2] = mx; out[3] = my + cell / 2
+        } else {
+            out[0] = mx - cell / 2; out[1] = my; out[2] = mx + cell / 2; out[3] = my
+        }
+        return out
     }
 
     protected fun nearestEdge(state: S, x: Float, y: Float): Int {
         val g = edgeGrid(state)
+        val allowed = usableCache[state]
         var best = -1
         var bestD = grid.cell * 0.45f
         for (e in 0 until g.count) {
-            if (!usable(state, e)) continue
+            if (!allowed[e]) continue
             val s = segment(g, e)
             val mx = (s[0] + s[2]) / 2; val my = (s[1] + s[3]) / 2
             val horizontal = abs(s[1] - s[3]) < 1f
@@ -150,15 +186,20 @@ abstract class EdgeView<S : Any>(context: Context) : PuzzleView<S>(context) {
     protected fun drawEdges(canvas: Canvas, state: S, lineColour: (Int) -> Int) {
         val g = edgeGrid(state)
         val cell = grid.cell
+        val mask = draggedMask
         for (e in 0 until g.count) {
-            val v = if (e in dragged) dragValue else edgeValue(state, e)
+            val inDrag = e < mask.size && mask[e]
+            val v = if (inDrag) dragValue else edgeValue(state, e)
             if (v == 0) continue
-            val s = segment(g, e)
             if (v == 1) {
-                stroke.color = if (e in dragged) palette.withAlpha(palette.accent, 0.7f) else lineColour(e)
+                // La couleur d'abord : [lineColour] pourrait lui-même demander un segment.
+                val colour = if (inDrag) palette.withAlpha(palette.accent, 0.7f) else lineColour(e)
+                val s = segment(g, e)
+                stroke.color = colour
                 stroke.strokeWidth = cell * 0.11f
                 canvas.drawLine(s[0], s[1], s[2], s[3], stroke)
             } else {
+                val s = segment(g, e)
                 val mx = (s[0] + s[2]) / 2; val my = (s[1] + s[3]) / 2
                 val k = cell * 0.09f
                 stroke.color = palette.tertiary
@@ -182,26 +223,39 @@ abstract class EdgeView<S : Any>(context: Context) : PuzzleView<S>(context) {
 
     override fun wantsDrag(x: Float, y: Float) = state?.let { nearestEdge(it, x, y) >= 0 } ?: false
 
+    private fun addDragged(e: Int): Boolean {
+        if (!dragged.add(e)) return false
+        if (e < draggedMask.size) draggedMask[e] = true
+        return true
+    }
+
+    private fun clearDragged() {
+        for (e in dragged) if (e < draggedMask.size) draggedMask[e] = false
+        dragged.clear()
+    }
+
     override fun onDragStart(x: Float, y: Float) {
         val s = state ?: return
-        dragged.clear()
+        clearDragged()
+        val count = edgeGrid(s).count
+        if (draggedMask.size != count) draggedMask = BooleanArray(count)
         val e = nearestEdge(s, x, y)
         dragValue = if (e >= 0 && edgeValue(s, e) == 1) 0 else 1
-        if (e >= 0) dragged.add(e)
+        if (e >= 0) addDragged(e)
     }
 
     override fun onDragMove(x: Float, y: Float) {
         val s = state ?: return
         val e = nearestEdge(s, x, y)
-        if (e >= 0 && dragged.add(e)) invalidate()
+        if (e >= 0 && addDragged(e)) invalidate()
     }
 
     override fun onDragEnd(x: Float, y: Float) {
         val s = state
         val next = if (s != null && dragged.isNotEmpty()) setEdges(s, dragged.toList(), dragValue) else null
-        dragged.clear()
+        clearDragged()
         if (next != null) { tick(); move(next) } else invalidate()
     }
 
-    override fun onDragCancel() { dragged.clear(); invalidate() }
+    override fun onDragCancel() { clearDragged(); invalidate() }
 }

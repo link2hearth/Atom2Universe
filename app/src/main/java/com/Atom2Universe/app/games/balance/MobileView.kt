@@ -198,8 +198,10 @@ class MobileView @JvmOverloads constructor(
         if (game.gagne && game.depuisVictoire < MobileGame.POSE + MobileGame.BRISE_DUREE) return false
         if (!game.gagne && game.tenue > 0f) return false
         val cases = game.casesEtagere
-        for ((i, o) in game.casesObjets.withIndex()) {
-            if (game.etagere.none { it === o } || 2 * i + 1 >= cases.size) continue
+        val objets = game.casesObjets
+        for (i in objets.indices) {
+            val o = objets[i]
+            if (!surEtagere(o) || 2 * i + 1 >= cases.size) continue
             val p = vu[o] ?: continue
             if (kotlin.math.abs(p[0] - cases[2 * i]) >= 0.001f ||
                 kotlin.math.abs(p[1] - cases[2 * i + 1]) >= 0.001f ||
@@ -559,15 +561,19 @@ class MobileView @JvmOverloads constructor(
         c.drawLine(gauche, y, droite, y, pLine)
 
         // Les traces des cases vides d'abord, les objets ensuite : un objet qui rentre passe
-        // par-dessus les cases qu'il survole.
-        for ((i, o) in game.casesObjets.withIndex()) {
-            if (game.etagere.any { it === o } && arrive(o, cases[2 * i], cases[2 * i + 1])) continue
+        // par-dessus les cases qu'il survole. Boucles par indice : ni itérateur ni paire par
+        // objet et par image.
+        val objets = game.casesObjets
+        for (i in objets.indices) {
+            val o = objets[i]
+            if (surEtagere(o) && arrive(o, cases[2 * i], cases[2 * i + 1])) continue
             pLine.color = encre(70)
             pLine.strokeWidth = 1.5f * dp
             c.drawCircle(sx(cases[2 * i]), sy(cases[2 * i + 1]), o.rayon * red * scale, pLine)
         }
-        for ((i, o) in game.casesObjets.withIndex()) {
-            if (game.etagere.none { it === o }) continue
+        for (i in objets.indices) {
+            val o = objets[i]
+            if (!surEtagere(o)) continue
             val p = vu.getOrPut(o) { floatArrayOf(cases[2 * i], cases[2 * i + 1], red) }
             // Un objet rendu à l'étagère y retourne en glissant, il ne s'y téléporte pas.
             val k = min(1f, dernierDt * 14f)
@@ -576,6 +582,13 @@ class MobileView @JvmOverloads constructor(
             p[2] += (red - p[2]) * k
             dessinerObjet(c, o, p[0], p[1], couleur(o), 0f, p[2])
         }
+    }
+
+    /** Vrai si [o] est rangé sur l'étagère. */
+    private fun surEtagere(o: MobileObjet): Boolean {
+        val e = game.etagere
+        for (k in e.indices) if (e[k] === o) return true
+        return false
     }
 
     /** Vrai si l'objet est déjà posé dans sa case (à un millimètre près). */
@@ -753,9 +766,10 @@ class MobileView @JvmOverloads constructor(
         val rp = max(1.8f * dp, r * 0.12f)
         val cos = kotlin.math.cos(angle)
         val sin = kotlin.math.sin(angle)
-        for ((gx, gy) in POINTS[o.masse.coerceIn(1, 9)]) {
-            val lx = gx * pas
-            val ly = gy * pas
+        val grille = POINTS[o.masse.coerceIn(1, 9)]
+        for (k in 0 until grille.size / 2) {
+            val lx = grille[2 * k] * pas
+            val ly = grille[2 * k + 1] * pas
             // Les points tournent avec l'objet ; l'écran a son Y vers le bas.
             val px = cx + lx * cos - ly * sin
             val py = cy - (lx * sin + ly * cos)
@@ -764,16 +778,19 @@ class MobileView @JvmOverloads constructor(
     }
 }
 
-/** La disposition des points de 1 à 9, sur une grille de 3 × 3 (comme un dé, puis complétée). */
-private val POINTS: Array<List<Pair<Int, Int>>> = arrayOf(
-    emptyList(),
-    listOf(0 to 0),
-    listOf(-1 to 1, 1 to -1),
-    listOf(-1 to 1, 0 to 0, 1 to -1),
-    listOf(-1 to 1, 1 to 1, -1 to -1, 1 to -1),
-    listOf(-1 to 1, 1 to 1, 0 to 0, -1 to -1, 1 to -1),
-    listOf(-1 to 1, -1 to 0, -1 to -1, 1 to 1, 1 to 0, 1 to -1),
-    listOf(-1 to 1, -1 to 0, -1 to -1, 0 to 0, 1 to 1, 1 to 0, 1 to -1),
-    listOf(-1 to 1, 0 to 1, 1 to 1, -1 to 0, 1 to 0, -1 to -1, 0 to -1, 1 to -1),
-    listOf(-1 to 1, 0 to 1, 1 to 1, -1 to 0, 0 to 0, 1 to 0, -1 to -1, 0 to -1, 1 to -1)
+/**
+ * La disposition des points de 1 à 9, sur une grille de 3 × 3 (comme un dé, puis complétée) :
+ * x, y de chaque point à la suite, pour que le dessin ne parcoure ni liste ni paires.
+ */
+private val POINTS: Array<IntArray> = arrayOf(
+    intArrayOf(),
+    intArrayOf(0, 0),
+    intArrayOf(-1, 1, 1, -1),
+    intArrayOf(-1, 1, 0, 0, 1, -1),
+    intArrayOf(-1, 1, 1, 1, -1, -1, 1, -1),
+    intArrayOf(-1, 1, 1, 1, 0, 0, -1, -1, 1, -1),
+    intArrayOf(-1, 1, -1, 0, -1, -1, 1, 1, 1, 0, 1, -1),
+    intArrayOf(-1, 1, -1, 0, -1, -1, 0, 0, 1, 1, 1, 0, 1, -1),
+    intArrayOf(-1, 1, 0, 1, 1, 1, -1, 0, 1, 0, -1, -1, 0, -1, 1, -1),
+    intArrayOf(-1, 1, 0, 1, 1, 1, -1, 0, 0, 0, 1, 0, -1, -1, 0, -1, 1, -1)
 )

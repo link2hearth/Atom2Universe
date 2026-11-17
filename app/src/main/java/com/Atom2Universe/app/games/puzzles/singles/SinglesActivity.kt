@@ -34,7 +34,7 @@ class SinglesView(context: Context) : ShadeView<SinglesState>(context) {
     override val ringMark = true
     override fun size(state: SinglesState) = state.n to state.n
     override fun cellValue(state: SinglesState, i: Int) = state.cells[i]
-    override fun label(state: SinglesState, i: Int) = state.numbers[i].toString()
+    override fun label(state: SinglesState, i: Int) = number(state.numbers[i])
     override fun change(state: SinglesState, i: Int, value: Int) = state.with(i, value)
     override fun errors(state: SinglesState) = state.errors()
 }

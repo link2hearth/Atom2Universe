@@ -8,6 +8,7 @@ import com.Atom2Universe.app.games.kit.KitPalette
 import com.Atom2Universe.app.games.kit.LatinBoard
 import com.Atom2Universe.app.games.kit.LatinPuzzleActivity
 import com.Atom2Universe.app.games.kit.LatinView
+import com.Atom2Universe.app.games.kit.PuzzleStateCache
 import kotlin.random.Random
 
 class TowersActivity : LatinPuzzleActivity<TowersState>() {
@@ -49,21 +50,29 @@ class TowersView(context: Context) : LatinView<TowersState>(context) {
         }
     }
 
+    /** Les indices non respectés, vérifiés une fois par état et non à chaque image. */
+    private val brokenCache = PuzzleStateCache<TowersState, Set<Int>> { it.brokenClues() }
+
     override fun drawClues(canvas: Canvas, state: TowersState) {
         val n = state.n
-        val broken = state.brokenClues()
+        val broken = brokenCache[state]
         val c = grid.cell
         for (k in 0 until 4 * n) {
             val v = state.clues[k]
             if (v == 0) continue
             val i = k % n
-            val (x, y) = when (k / n) {
-                0 -> grid.cx(i) to grid.top - c * 0.42f
-                1 -> grid.cx(i) to grid.bottom + c * 0.42f
-                2 -> grid.left - c * 0.42f to grid.cy(i)
-                else -> grid.right + c * 0.42f to grid.cy(i)
+            val side = k / n
+            val x = when (side) {
+                0, 1 -> grid.cx(i)
+                2 -> grid.left - c * 0.42f
+                else -> grid.right + c * 0.42f
             }
-            canvas.centeredText(v.toString(), x, y, c * 0.42f, if (k in broken) palette.error else palette.secondary, bold = true)
+            val y = when (side) {
+                0 -> grid.top - c * 0.42f
+                1 -> grid.bottom + c * 0.42f
+                else -> grid.cy(i)
+            }
+            canvas.centeredText(number(v), x, y, c * 0.42f, if (k in broken) palette.error else palette.secondary, bold = true)
         }
     }
 }

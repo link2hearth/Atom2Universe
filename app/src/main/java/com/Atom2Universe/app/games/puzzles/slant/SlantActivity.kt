@@ -38,7 +38,22 @@ class SlantActivity : PuzzleActivity<SlantState>() {
 
 /** Appui : vide → \ → / ; appui long dans l'autre sens. Les boucles sont tracées en rouge. */
 class SlantView(context: Context) : PuzzleView<SlantState>(context) {
-    private val loopCache = PuzzleStateCache<SlantState, Set<Int>> { it.loopCells() }
+    /** Une fois par état : les cases en boucle, et l'état de chaque indice (comptes de diagonales). */
+    private class Analysis(val loop: BooleanArray, val clueError: BooleanArray, val clueDone: BooleanArray)
+    private val analysis = PuzzleStateCache<SlantState, Analysis> { s ->
+        val loop = BooleanArray(s.cells.size)
+        for (c in s.loopCells()) loop[c] = true
+        val error = BooleanArray(s.clues.size)
+        val done = BooleanArray(s.clues.size)
+        for (v in s.clues.indices) {
+            val clue = s.clues[v]
+            if (clue < 0) continue
+            val (on, open) = SlantState.touchingOf(s.w, s.h, s.cells, v)
+            done[v] = on == clue && open == 0
+            error[v] = on > clue || on + open < clue
+        }
+        Analysis(loop, error, done)
+    }
 
     private val grid = GridGeometry()
     private val r = RectF()
@@ -52,13 +67,14 @@ class SlantView(context: Context) : PuzzleView<SlantState>(context) {
         stroke.strokeWidth = cell * 0.02f
         for (k in 0..state.w) canvas.drawLine(grid.x(k), grid.top, grid.x(k), grid.bottom, stroke)
         for (k in 0..state.h) canvas.drawLine(grid.left, grid.y(k), grid.right, grid.y(k), stroke)
-        val loops = loopCache[state]
+        val a = analysis[state]
+        val loops = a.loop
         stroke.strokeWidth = cell * 0.09f
         for (c in state.cells.indices) {
             val v = state.cells[c]
             if (v < 0) continue
             grid.rect(c % state.w, c / state.w, r)
-            stroke.color = if (c in loops) palette.error else palette.text
+            stroke.color = if (loops[c]) palette.error else palette.text
             if (v == SlantState.BACK) canvas.drawLine(r.left, r.top, r.right, r.bottom, stroke)
             else canvas.drawLine(r.right, r.top, r.left, r.bottom, stroke)
         }
@@ -66,13 +82,12 @@ class SlantView(context: Context) : PuzzleView<SlantState>(context) {
             val clue = state.clues[v]
             if (clue < 0) continue
             val x = grid.x(v % (state.w + 1)); val y = grid.y(v / (state.w + 1))
-            val (on, open) = SlantState.touchingOf(state.w, state.h, state.cells, v)
-            val done = on == clue && open == 0
-            fill.color = if (on > clue || on + open < clue) palette.error else if (done) palette.raised else palette.surface
+            val done = a.clueDone[v]
+            fill.color = if (a.clueError[v]) palette.error else if (done) palette.raised else palette.surface
             canvas.drawCircle(x, y, cell * 0.26f, fill)
             stroke.color = palette.gridBold; stroke.strokeWidth = cell * 0.035f
             canvas.drawCircle(x, y, cell * 0.26f, stroke)
-            canvas.centeredText(clue.toString(), x, y, cell * 0.32f, if (done) palette.tertiary else palette.text, bold = true)
+            canvas.centeredText(number(clue), x, y, cell * 0.32f, if (done) palette.tertiary else palette.text, bold = true)
         }
     }
 

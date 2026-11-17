@@ -25,7 +25,10 @@ object PatternPictures {
         fun coloured(i: Int) = letter(i) != '.'
         fun colourAt(i: Int): Int {
             val l = letter(i).uppercaseChar()
-            return palette?.getOrNull(l - 'A') ?: colour(l)
+            // Sans getOrNull : il emballerait la couleur à chaque case de l'image révélée, à chaque image.
+            val p = palette
+            val k = l - 'A'
+            return if (p != null && k in p.indices) p[k] else colour(l)
         }
     }
 

@@ -36,7 +36,13 @@ class LoopyActivity : PuzzleActivity<LoopyState>() {
 }
 
 class LoopyView(context: Context) : EdgeView<LoopyState>(context) {
-    private val analysis = PuzzleStateCache<LoopyState, Set<Int>> { it.badVertices() }
+    /** Une fois par état : les sommets fautifs et les traits autour de chaque indice. */
+    private class Analysis(val badVertex: BooleanArray, val lines: IntArray)
+    private val analysis = PuzzleStateCache<LoopyState, Analysis> { s ->
+        val bad = BooleanArray((s.w + 1) * (s.h + 1))
+        for (v in s.badVertices()) bad[v] = true
+        Analysis(bad, IntArray(s.clues.size) { if (s.clues[it] < 0) 0 else s.lines(it) })
+    }
 
     override fun edgeGrid(state: LoopyState) = state.grid
     override fun edgeValue(state: LoopyState, e: Int) = state.edges[e]
@@ -45,18 +51,19 @@ class LoopyView(context: Context) : EdgeView<LoopyState>(context) {
     override fun drawBoard(canvas: Canvas, state: LoopyState, area: RectF) {
         layout(state, area)
         val cell = grid.cell
-        val bad = analysis[state]
+        val a = analysis[state]
+        val bad = a.badVertex
+        val g = state.grid
         for (i in state.clues.indices) {
             val c = state.clues[i]
             if (c < 0) continue
             grid.rect(i % state.w, i / state.w, r)
-            val n = state.lines(i)
-            canvas.centeredText(c.toString(), r.centerX(), r.centerY(), cell * 0.5f,
+            val n = a.lines[i]
+            canvas.centeredText(number(c), r.centerX(), r.centerY(), cell * 0.5f,
                 when { n > c -> palette.error; n == c -> palette.tertiary; else -> palette.text }, bold = true)
         }
         drawEdges(canvas, state) { e ->
-            val (a, b) = state.grid.ends(e)
-            if (a in bad || b in bad) palette.error else palette.accent
+            if (bad[g.endA(e)] || bad[g.endB(e)]) palette.error else palette.accent
         }
         fill.color = palette.text
         for (y in 0..state.h) for (x in 0..state.w) canvas.drawCircle(grid.x(x), grid.y(y), cell * 0.06f, fill)

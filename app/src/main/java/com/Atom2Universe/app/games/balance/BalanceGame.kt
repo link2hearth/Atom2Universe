@@ -871,11 +871,26 @@ class BalanceGame(
     /** Déséquilibre en kg·m : somme des masses multipliées par leur bras de levier. */
     val residualTorque: Float get() = weights.sumOf { it.torque.toDouble() }.toFloat()
 
+    // La jauge les lit à chaque image après le verdict : une boucle, sans liste filtrée à jeter.
     val leftTorque: Float
-        get() = weights.filter { it.placed && it.body.x < 0f }.sumOf { (-it.torque).toDouble() }.toFloat()
+        get() {
+            var sum = 0.0
+            for (i in weights.indices) {
+                val w = weights[i]
+                if (w.placed && w.body.x < 0f) sum += (-w.torque).toDouble()
+            }
+            return sum.toFloat()
+        }
 
     val rightTorque: Float
-        get() = weights.filter { it.placed && it.body.x > 0f }.sumOf { it.torque.toDouble() }.toFloat()
+        get() {
+            var sum = 0.0
+            for (i in weights.indices) {
+                val w = weights[i]
+                if (w.placed && w.body.x > 0f) sum += w.torque.toDouble()
+            }
+            return sum.toFloat()
+        }
 
     /**
      * Terme déstabilisant, en kg·m : les poids reposent *au-dessus* du pivot,

@@ -121,7 +121,7 @@ class FifteenView(context: Context) : PuzzleView<FifteenState>(context) {
             stroke.color = if (home || focused) palette.withAlpha(palette.accent, 0.7f) else palette.outline
             if (focused) stroke.strokeWidth = cell * 0.06f
             canvas.drawRoundRect(r, cell * 0.12f, cell * 0.12f, stroke)
-            canvas.centeredText(v.toString(), r.centerX(), r.centerY(), cell * 0.42f,
+            canvas.centeredText(number(v), r.centerX(), r.centerY(), cell * 0.42f,
                 if (home) palette.ink else palette.text, bold = true)
         }
     }

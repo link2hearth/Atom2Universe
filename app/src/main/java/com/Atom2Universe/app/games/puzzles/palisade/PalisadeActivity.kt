@@ -37,11 +37,13 @@ class PalisadeActivity : PuzzleActivity<PalisadeState>() {
 
 /** Une région fermée qui a la bonne taille prend une couleur. */
 class PalisadeView(context: Context) : EdgeView<PalisadeState>(context) {
-    private val analysis = PuzzleStateCache<PalisadeState, Pair<IntArray, IntArray>> {
-        val ids = it.regions()
-        val sizes = IntArray(it.w * it.h)
+    /** Une fois par état : les régions, leur taille, et les murs autour de chaque indice. */
+    private class Analysis(val id: IntArray, val sizes: IntArray, val walls: IntArray)
+    private val analysis = PuzzleStateCache<PalisadeState, Analysis> { s ->
+        val ids = s.regions()
+        val sizes = IntArray(s.w * s.h)
         for (id in ids) sizes[id]++
-        ids to sizes
+        Analysis(ids, sizes, IntArray(s.clues.size) { if (s.clues[it] < 0) 0 else s.walls(it) })
     }
 
     override fun edgeGrid(state: PalisadeState) = state.grid
@@ -52,7 +54,9 @@ class PalisadeView(context: Context) : EdgeView<PalisadeState>(context) {
     override fun drawBoard(canvas: Canvas, state: PalisadeState, area: RectF) {
         layout(state, area)
         val cell = grid.cell
-        val (id, sizes) = analysis[state]
+        val a = analysis[state]
+        val id = a.id
+        val sizes = a.sizes
         for (i in 0 until state.w * state.h) {
             grid.rect(i % state.w, i / state.w, r)
             fill.color = if (sizes[id[i]] == state.k) palette.blend(palette.cell, palette.piece(id[i] * 3), if (palette.isLight) 0.3f else 0.35f)
@@ -66,8 +70,8 @@ class PalisadeView(context: Context) : EdgeView<PalisadeState>(context) {
             val c = state.clues[i]
             if (c < 0) continue
             grid.rect(i % state.w, i / state.w, r)
-            val n = state.walls(i)
-            canvas.centeredText(c.toString(), r.centerX(), r.centerY(), cell * 0.45f,
+            val n = a.walls[i]
+            canvas.centeredText(number(c), r.centerX(), r.centerY(), cell * 0.45f,
                 when { n > c -> palette.error; n == c -> palette.tertiary; else -> palette.text }, bold = true)
         }
         drawEdges(canvas, state) { palette.text }

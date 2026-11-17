@@ -147,6 +147,10 @@ class CardTableView(context: Context, labels: Array<String>? = null) : View(cont
     private var handH = 0f
     private var lift = 0f
     private var handBandTop = 0f
+    /** Les cartes soulevées, jouables et entourées de ma main, en bits (1 shl id) : lues à chaque image sans emballer de carte. */
+    private var liftedBits = 0L
+    private var playableBits = -1L
+    private var markedBits = 0L
 
     // ── Glisser une carte de la main vers la table ───────────────────────────────────────────
     private var dragCard: PlayingCard? = null
@@ -382,7 +386,11 @@ class CardTableView(context: Context, labels: Array<String>? = null) : View(cont
 
         // ── Ma main, en bas.
         handRects.clear()
-        val hand = s.seats[0].hand ?: emptyList()
+        val me = s.seats[0]
+        liftedBits = bitsOf(me.lifted)
+        markedBits = bitsOf(me.marked)
+        playableBits = me.playable?.let { bitsOf(it) } ?: -1L
+        val hand = me.hand ?: emptyList()
         val rows = if (hand.size > 13) 2 else 1
         val handTop = padT + h - handH * (1f + 0.42f * (rows - 1)) - 6 * density
         val perRow = (hand.size + rows - 1) / rows
@@ -476,6 +484,12 @@ class CardTableView(context: Context, labels: Array<String>? = null) : View(cont
 
     private fun pillText(info: SeatInfo): String = info.caption?.let { info.name + separator + it } ?: info.name
 
+    private fun bitsOf(cards: Set<PlayingCard>): Long {
+        var bits = 0L
+        for (c in cards) bits = bits or (1L shl c.id)
+        return bits
+    }
+
     // ── Dessin ──────────────────────────────────────────────────────────────────────────────
 
     override fun onDraw(canvas: Canvas) {
@@ -512,13 +526,14 @@ class CardTableView(context: Context, labels: Array<String>? = null) : View(cont
         // Ma main : les cartes soulevées montent, les cartes injouables sont grisées.
         val me = s.seats[0]
         for ((card, r) in handRects) {
-            if (card in hiddenInHand || (dragging && card == dragCard)) continue
-            val up = card in me.lifted
+            if ((hiddenInHand.isNotEmpty() && card in hiddenInHand) || (dragging && card == dragCard)) continue
+            val bit = 1L shl card.id
+            val up = (liftedBits and bit) != 0L
             rect.set(r)
             if (up) rect.offset(0f, -lift)
             painter.drawFace(canvas, card, rect,
-                dimmed = me.playable != null && card !in me.playable,
-                outline = if (card in me.marked || up) palette.accent else null)
+                dimmed = (playableBits and bit) == 0L,
+                outline = if ((markedBits and bit) != 0L || up) palette.accent else null)
         }
         pills[0]?.let { drawPill(canvas, me, 0, it) }
 

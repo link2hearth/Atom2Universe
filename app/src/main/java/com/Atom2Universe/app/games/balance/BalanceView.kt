@@ -125,6 +125,8 @@ class BalanceView @JvmOverloads constructor(
     )
 
     private val pBg = Paint()
+    /** Hauteur pour laquelle le dégradé du fond a été fait. Fil de jeu seulement. */
+    private var bgHeight = 0f
     private val pStar = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.argb(150, 255, 255, 255) }
     private val pGround = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = "#141C30".toColorInt() }
     private val pGroundLine = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -238,6 +240,49 @@ class BalanceView @JvmOverloads constructor(
     private val sumFormat = resources.getString(R.string.balance_sum)
     private val leanFormat = resources.getString(R.string.balance_lean_deg)
     private val torqueFormat = resources.getString(R.string.balance_torque)
+    private val lockIdle = "#ECEFF1".toColorInt()
+    private val lockOpen = "#FFD54F".toColorInt()
+    private val lockWon = "#81C784".toColorInt()
+
+    // Textes de la jauge, reformatés seulement quand leur dixième change (voir [Dixieme]).
+    private val leanText = Dixieme(leanFormat)
+    private val leftTorqueText = Dixieme(torqueFormat)
+    private val rightTorqueText = Dixieme(torqueFormat)
+
+    /** Chiffres de la règle (1 à 6), écrits une fois et non à chaque image. */
+    private val rulerLabels = Array(7) { it.toString() }
+
+    /** Les masses écrites, gardées : `toString()` à chaque pièce de chaque image allouait. */
+    private var massLabels = arrayOfNulls<String>(32)
+
+    private fun massLabel(m: Int): String {
+        if (m < 0) return m.toString()
+        if (m >= massLabels.size) massLabels = massLabels.copyOf(m * 2)
+        return massLabels[m] ?: m.toString().also { massLabels[m] = it }
+    }
+
+    /**
+     * Un nombre écrit au dixième par [format] (« %.1f »), reformaté seulement quand ce dixième
+     * change : `String.format` à chaque image de l'essai montait un formateur entier.
+     */
+    private class Dixieme(private val format: String) {
+        private var cle = Long.MIN_VALUE
+        private var texte = ""
+
+        fun de(v: Float): String {
+            if (v.isNaN()) return format.format(v)
+            // Les demis s'arrondissent loin de zéro, comme le fait le format ; le signe compte
+            // même à zéro, puisque le format écrit « -0,0 » pour une valeur infime négative.
+            val dixiemes = if (v < 0f) -Math.round(-v * 10f) else Math.round(v * 10f)
+            val negatif = v.toRawBits() < 0
+            val c = dixiemes * 2L + if (negatif) 1L else 0L
+            if (c != cle) {
+                cle = c
+                texte = format.format(if (dixiemes == 0 && negatif) -0f else dixiemes / 10f)
+            }
+            return texte
+        }
+    }
 
     /** Colonnes des masses posées, refaites à chaque image sans rien allouer. */
     private val leftColumn = ArrayList<BalanceWeight>()
@@ -500,8 +545,10 @@ class BalanceView @JvmOverloads constructor(
         val h = height.toFloat()
         if (w <= 0f || h <= 0f) return
 
-        if (pBg.shader == null) {
+        // Refait aussi quand la hauteur change : l'écran tourne sans que l'activité renaisse.
+        if (pBg.shader == null || bgHeight != h) {
             pBg.shader = LinearGradient(0f, 0f, 0f, h, bgTop, bgBottom, Shader.TileMode.CLAMP)
+            bgHeight = h
         }
         canvas.drawRect(0f, 0f, w, h, pBg)
         for (i in starsX.indices) {
@@ -567,9 +614,9 @@ class BalanceView @JvmOverloads constructor(
         val phase = game.phase
         val open = phase != BalanceGame.Phase.PLACING
         val colour = when {
-            phase == BalanceGame.Phase.WON -> "#81C784".toColorInt()
-            open -> "#FFD54F".toColorInt()
-            else -> "#ECEFF1".toColorInt()
+            phase == BalanceGame.Phase.WON -> lockWon
+            open -> lockOpen
+            else -> lockIdle
         }
         val alpha = if (phase == BalanceGame.Phase.PLACING && !game.allPlaced) 120 else 255
 
@@ -620,7 +667,7 @@ class BalanceView @JvmOverloads constructor(
             canvas.drawLine(x, hh, x, hh + len, paint)
             canvas.drawLine(-x, hh, -x, hh + len, paint)
             if (major) {
-                val label = u.toInt().toString()
+                val label = rulerLabels[u.toInt()]
                 canvas.drawText(label, x, hh + 17f * dp, pTickLabel)
                 canvas.drawText(label, -x, hh + 17f * dp, pTickLabel)
             }
@@ -704,7 +751,7 @@ class BalanceView @JvmOverloads constructor(
         val trayLabelY = sy(game.trayBottom) + 34f * dp
         for (weight in game.weights) {
             if (weight.placed || weight.dragging) continue
-            canvas.drawText(weight.mass.toString(), sx(weight.body.x), trayLabelY, pBoxLabel)
+            canvas.drawText(massLabel(weight.mass), sx(weight.body.x), trayLabelY, pBoxLabel)
         }
 
         // Les poids sont rangés par index une fois pour toutes : le tri d'avant ne changeait rien.
@@ -721,7 +768,7 @@ class BalanceView @JvmOverloads constructor(
             val middle = (sy(game.trayBottom) + sy(BalanceRules.PLANK_TOP)) * 0.5f
             val start = middle - (items.size - 1) * step * 0.5f
             items.forEachIndexed { i, weight ->
-                canvas.drawText(weight.mass.toString(), x, start + i * step, pBoxLabel)
+                canvas.drawText(massLabel(weight.mass), x, start + i * step, pBoxLabel)
             }
             // Le résultat gagnant confirme visuellement l'addition des deux
             // côtés, sans réintroduire de texte dans les formes elles-mêmes.
@@ -812,17 +859,17 @@ class BalanceView @JvmOverloads constructor(
 
         pHudValue.textSize = 14f * dp
         pHudValue.color = pNeedle.color
-        canvas.drawText(leanFormat.format(lean), w / 2f, gy - gh * 1.7f, pHudValue)
+        canvas.drawText(leanText.de(lean), w / 2f, gy - gh * 1.7f, pHudValue)
 
         // Une fois le verdict rendu, on montre les couples : c'est là que le
         // joueur apprend de quel côté et de combien il s'est trompé.
         if (game.phase != BalanceGame.Phase.TESTING) {
             pHudText.textSize = 12f * dp
             canvas.drawText(
-                torqueFormat.format(game.leftTorque), w / 2f - gw / 2f - 24f * dp, gy + 5f * dp, pHudText
+                leftTorqueText.de(game.leftTorque), w / 2f - gw / 2f - 24f * dp, gy + 5f * dp, pHudText
             )
             canvas.drawText(
-                torqueFormat.format(game.rightTorque), w / 2f + gw / 2f + 24f * dp, gy + 5f * dp, pHudText
+                rightTorqueText.de(game.rightTorque), w / 2f + gw / 2f + 24f * dp, gy + 5f * dp, pHudText
             )
         }
     }

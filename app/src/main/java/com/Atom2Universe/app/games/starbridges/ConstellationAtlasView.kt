@@ -230,14 +230,28 @@ class ConstellationAtlasView @JvmOverloads constructor(
         }
     }
 
+    // La fiche de la figure touchée, formatée une fois par choix et non à chaque image du glissé.
+    private var detailFor: AtlasEntry? = null
+    private var detailEntries: List<AtlasEntry>? = null
+    private var detailIndex = -1
+    private var detailText = ""
+
     private fun drawSelection(canvas: Canvas) {
         val e = selected ?: return
-        val index = entries.indexOf(e)
+        if (detailFor !== e || detailEntries !== entries) {
+            detailFor = e
+            detailEntries = entries
+            detailIndex = entries.indexOf(e)
+            if (detailIndex >= 0) {
+                val date = DateFormat.getDateInstance(DateFormat.MEDIUM).format(Date(e.solvedAt))
+                val time = context.getString(R.string.starbridges_time, (e.seconds / 60).toInt(), (e.seconds % 60).toInt())
+                val size = context.getString(R.string.starbridges_size, e.size)
+                detailText = context.getString(R.string.starbridges_atlas_detail, size, time, date)
+            }
+        }
+        val index = detailIndex
         if (index < 0) return
-        val date = DateFormat.getDateInstance(DateFormat.MEDIUM).format(Date(e.solvedAt))
-        val time = context.getString(R.string.starbridges_time, (e.seconds / 60).toInt(), (e.seconds % 60).toInt())
-        val size = context.getString(R.string.starbridges_size, e.size)
-        val detail = context.getString(R.string.starbridges_atlas_detail, size, time, date)
+        val detail = detailText
         val y = height - 56f * dp
         pFill.color = 0xB0060A1C.toInt()
         canvas.drawRect(0f, y - 30f * dp, width.toFloat(), height.toFloat(), pFill)

@@ -16,6 +16,11 @@ abstract class SlideGridView<S : Any>(context: Context) : PuzzleView<S>(context)
     protected val grid = GridGeometry()
     private val r = RectF()
     private val arrow = Path()
+    private var arrowsLeft = Float.NaN
+    private var arrowsTop = Float.NaN
+    private var arrowsCell = Float.NaN
+    private var arrowsW = -1
+    private var arrowsH = -1
     private var dragStartX = 0f
     private var dragStartY = 0f
     private var dragDx = 0f
@@ -56,25 +61,29 @@ abstract class SlideGridView<S : Any>(context: Context) : PuzzleView<S>(context)
             }
         }
         canvas.restore()
+        // Les flèches du tour ne bougent pas pendant le glissé : un seul chemin, refait quand la grille change.
+        if (arrowsLeft != grid.left || arrowsTop != grid.top || arrowsCell != cell || arrowsW != w || arrowsH != h) {
+            arrowsLeft = grid.left; arrowsTop = grid.top; arrowsCell = cell; arrowsW = w; arrowsH = h
+            arrow.reset()
+            val a = cell * 0.18f
+            for (y in 0 until h) {
+                addArrow(grid.left - cell * 0.35f, grid.cy(y), a, -1, 0)
+                addArrow(grid.right + cell * 0.35f, grid.cy(y), a, 1, 0)
+            }
+            for (x in 0 until w) {
+                addArrow(grid.cx(x), grid.top - cell * 0.35f, a, 0, -1)
+                addArrow(grid.cx(x), grid.bottom + cell * 0.35f, a, 0, 1)
+            }
+        }
         fill.color = palette.secondary
-        val a = cell * 0.18f
-        for (y in 0 until h) {
-            drawArrow(canvas, grid.left - cell * 0.35f, grid.cy(y), a, -1, 0)
-            drawArrow(canvas, grid.right + cell * 0.35f, grid.cy(y), a, 1, 0)
-        }
-        for (x in 0 until w) {
-            drawArrow(canvas, grid.cx(x), grid.top - cell * 0.35f, a, 0, -1)
-            drawArrow(canvas, grid.cx(x), grid.bottom + cell * 0.35f, a, 0, 1)
-        }
+        canvas.drawPath(arrow, fill)
     }
 
-    private fun drawArrow(canvas: Canvas, cx: Float, cy: Float, s: Float, dx: Int, dy: Int) {
-        arrow.reset()
+    private fun addArrow(cx: Float, cy: Float, s: Float, dx: Int, dy: Int) {
         arrow.moveTo(cx + dx * s, cy + dy * s)
         arrow.lineTo(cx - dx * s * 0.6f + dy * s * 0.8f, cy - dy * s * 0.6f + dx * s * 0.8f)
         arrow.lineTo(cx - dx * s * 0.6f - dy * s * 0.8f, cy - dy * s * 0.6f - dx * s * 0.8f)
         arrow.close()
-        canvas.drawPath(arrow, fill)
     }
 
     override fun onTap(x: Float, y: Float) {

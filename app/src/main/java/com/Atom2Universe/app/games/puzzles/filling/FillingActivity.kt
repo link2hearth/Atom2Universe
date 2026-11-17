@@ -104,7 +104,7 @@ class FillingView(context: Context) : PuzzleView<FillingState>(context) {
                 else -> palette.cell
             }
             canvas.drawRect(r, fill)
-            if (v != 0) canvas.centeredText(v.toString(), r.centerX(), r.centerY(), cell * 0.5f,
+            if (v != 0) canvas.centeredText(number(v), r.centerX(), r.centerY(), cell * 0.5f,
                 when { i in errors -> palette.error; state.givens[i] != 0 -> palette.text; else -> palette.ink }, bold = state.givens[i] != 0)
         }
         // Lignes fines dans un bloc, épaisses entre blocs de chiffres différents.

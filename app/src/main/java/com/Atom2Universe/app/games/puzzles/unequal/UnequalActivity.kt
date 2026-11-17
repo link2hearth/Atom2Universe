@@ -33,7 +33,12 @@ class UnequalActivity : LatinPuzzleActivity<UnequalState>() {
 /** Les cases sont séparées par un petit couloir où se logent les chevrons. */
 class UnequalView(context: Context) : LatinView<UnequalState>(context) {
     override val gridGap = 0.14f
+    /** Tous les chevrons de la grille en un seul chemin : ils ne changent pas d'un coup à l'autre. */
     private val chevron = Path()
+    private var chevronRel: IntArray? = null
+    private var chevronLeft = Float.NaN
+    private var chevronTop = Float.NaN
+    private var chevronCell = Float.NaN
 
     override fun clueErrors(state: UnequalState) = state.broken()
 
@@ -42,6 +47,18 @@ class UnequalView(context: Context) : LatinView<UnequalState>(context) {
         val c = grid.cell
         stroke.strokeWidth = c * 0.05f
         stroke.color = palette.gridBold
+        // Les chevrons ne se touchent pas : un seul tracé donne la même image que chacun à part.
+        if (chevronRel !== state.rel || chevronLeft != grid.left || chevronTop != grid.top || chevronCell != c) {
+            chevronRel = state.rel; chevronLeft = grid.left; chevronTop = grid.top; chevronCell = c
+            chevron.reset()
+            addChevrons(state)
+        }
+        canvas.drawPath(chevron, stroke)
+    }
+
+    private fun addChevrons(state: UnequalState) {
+        val n = state.n
+        val c = grid.cell
         for (cell in 0 until n * n) for (d in 0..1) {
             val rel = state.rel[cell * 2 + d]
             if (rel == 0) continue
@@ -51,13 +68,11 @@ class UnequalView(context: Context) : LatinView<UnequalState>(context) {
             val cy = if (d == 0) grid.cy(y) else grid.y(y + 1)
             val dir = if (rel == UnequalState.LESS) -1f else 1f
             val s = c * 0.09f
-            chevron.reset()
             if (d == 0) {
                 chevron.moveTo(cx - dir * s, cy - s * 1.4f); chevron.lineTo(cx + dir * s, cy); chevron.lineTo(cx - dir * s, cy + s * 1.4f)
             } else {
                 chevron.moveTo(cx - s * 1.4f, cy - dir * s); chevron.lineTo(cx, cy + dir * s); chevron.lineTo(cx + s * 1.4f, cy - dir * s)
             }
-            canvas.drawPath(chevron, stroke)
         }
     }
 }

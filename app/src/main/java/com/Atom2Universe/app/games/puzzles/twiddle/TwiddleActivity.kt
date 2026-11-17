@@ -86,7 +86,7 @@ class TwiddleView(context: Context) : PuzzleView<TwiddleState>(context) {
         stroke.strokeWidth = cell * 0.035f
         stroke.color = color
         canvas.drawRoundRect(r, cell * 0.14f, cell * 0.14f, stroke)
-        canvas.centeredText(v.toString(), r.centerX(), r.centerY(), cell * 0.4f, palette.text, bold = true)
+        canvas.centeredText(number(v), r.centerX(), r.centerY(), cell * 0.4f, palette.text, bold = true)
     }
 
     /** Le bloc dont le centre est le plus proche du doigt. */

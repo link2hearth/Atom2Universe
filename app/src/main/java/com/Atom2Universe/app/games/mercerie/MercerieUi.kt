@@ -14,6 +14,7 @@ import android.graphics.RectF
 import android.graphics.Shader
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
+import android.os.SystemClock
 import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
@@ -40,10 +41,18 @@ object MercerieUi {
 
     /**
      * Les décors qui bougent sans cesse (mascotte qui respire, titre qui se balance, niveau en cours
-     * qui bat) se redessinent 30 fois par seconde, pas à chaque image de l'écran (120 Hz) : la
-     * tablette ne chauffe pas pour un hérisson qui respire.
+     * qui bat, pièces qui battent au repos) se redessinent 25 fois par seconde, pas à chaque image de
+     * l'écran (120 Hz) : la tablette ne chauffe pas pour un hérisson qui respire. (L'ancien « 33 ms
+     * après chaque image » tombait déjà, à 120 Hz, sur une image sur cinq : 24 par seconde.)
      */
-    const val IDLE_FRAME_MS = 33L
+    const val IDLE_FRAME_MS = 40L
+
+    /**
+     * Le délai jusqu'à la prochaine image de repos, calé sur l'horloge et non sur la dernière image :
+     * la mascotte, le titre et le plateau qui bougent ensemble tombent sur la même image de l'écran
+     * au lieu d'en demander chacun une.
+     */
+    fun idleDelay(): Long = IDLE_FRAME_MS - SystemClock.uptimeMillis() % IDLE_FRAME_MS
 
     private val format = java.text.NumberFormat.getIntegerInstance()
 
@@ -61,6 +70,14 @@ object MercerieUi {
         gravity = Gravity.CENTER
         includeFontPadding = false
     }
+}
+
+/**
+ * Une vue d'écran qui s'anime au repos. Quand une fiche se pose par-dessus ([covered]), elle se
+ * tient tranquille : un plateau en pause ne redessine plus rien derrière son voile.
+ */
+interface Coverable {
+    var covered: Boolean
 }
 
 /**
@@ -205,7 +222,7 @@ class FeltButton(context: Context, text: CharSequence, color: Int = Felt.PINK, b
 
 /** Le titre du jeu, en lettres de feutrine de toutes les couleurs, qui se balancent doucement. */
 @SuppressLint("ViewConstructor")
-class FeltTitleView(context: Context, text: String, private val sizeDp: Float = 62f) : View(context) {
+class FeltTitleView(context: Context, text: String, private val sizeDp: Float = 62f) : View(context), Coverable {
     private val lines = text.split('\n')
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply { typeface = MercerieUi.bold }
     private val glyph = Path()
@@ -214,6 +231,14 @@ class FeltTitleView(context: Context, text: String, private val sizeDp: Float = 
     /** Chaque lettre cousue une fois pour toutes dans une image ; seule l'image se balance ensuite. */
     private var letters: List<Bitmap> = emptyList()
     private var bakedSize = 0f
+    /** Le pied de chaque lettre (milieu de sa largeur, sur la ligne de base), mesuré une fois par largeur. */
+    private var footX = FloatArray(0)
+    private var footY = FloatArray(0)
+    private var placedWidth = -1
+    private val tick = Runnable { invalidate() }
+
+    override var covered = false
+        set(value) { if (field != value) { field = value; invalidate() } }
 
     private fun bake(size: Float) {
         letters.forEach { it.recycle() }
@@ -249,38 +274,58 @@ class FeltTitleView(context: Context, text: String, private val sizeDp: Float = 
         setMeasuredDimension(w, (size * 1.22f * lines.size + size * .4f).toInt())
     }
 
-    override fun onDraw(canvas: Canvas) {
+    /**
+     * Taille, images et place de chaque lettre pour la largeur [width] : rien de tout cela ne bouge
+     * d'une image à l'autre, seule la danse des lettres se calcule ensuite.
+     */
+    private fun place(width: Int) {
         val size = fit(width)
         paint.textSize = size
         if (size != bakedSize || letters.isEmpty()) bake(size)
-        val t = (System.nanoTime() - start) / 1e9f
+        val count = letters.size
+        footX = FloatArray(count)
+        footY = FloatArray(count)
         var n = 0
         for ((row, line) in lines.withIndex()) {
             val total = paint.measureText(line) + size * .06f * (line.length - 1)
             var x = (width - total) / 2
             val baseline = size * 1.05f + row * size * 1.22f
             for (ch in line) {
-                val s = ch.toString()
-                val w = paint.measureText(s)
+                val w = paint.measureText(ch.toString())
                 if (ch != ' ') {
-                    val bob = sin(t * 2.2f + n * .7f)
-                    canvas.save()
-                    canvas.translate(x + w / 2, baseline + bob * size * .035f)
-                    canvas.rotate(bob * 3.5f + (if (n % 2 == 0) -3f else 3f))
-                    letters.getOrNull(n)?.let { canvas.drawBitmap(it, -it.width / 2f, -size * BASE, smooth) }
-                    canvas.restore()
+                    if (n < count) { footX[n] = x + w / 2; footY[n] = baseline }
                     n++
                 }
                 x += w + size * .06f
             }
         }
-        postInvalidateDelayed(MercerieUi.IDLE_FRAME_MS)
+        placedWidth = width
+    }
+
+    override fun onDraw(canvas: Canvas) {
+        if (width != placedWidth) place(width)
+        val size = bakedSize
+        val t = (System.nanoTime() - start) / 1e9f
+        for (n in 0 until letters.size) {
+            val bob = sin(t * 2.2f + n * .7f)
+            val b = letters[n]
+            canvas.save()
+            canvas.translate(footX[n], footY[n] + bob * size * .035f)
+            canvas.rotate(bob * 3.5f + (if (n % 2 == 0) -3f else 3f))
+            canvas.drawBitmap(b, -b.width / 2f, -size * BASE, smooth)
+            canvas.restore()
+        }
+        // Un seul rappel retardé à la fois : un invalidate() extérieur ne dédouble pas la chaîne.
+        removeCallbacks(tick)
+        if (!covered) postDelayed(tick, MercerieUi.idleDelay())
     }
 
     override fun onDetachedFromWindow() {
+        removeCallbacks(tick)
         super.onDetachedFromWindow()
         letters.forEach { it.recycle() }
         letters = emptyList()
+        placedWidth = -1
     }
 
     private companion object {
@@ -357,13 +402,17 @@ enum class Mascot(val asset: String) {
  * Une mascotte qui vit : [mood] 0 tranquille (elle respire), 1 ravie (elle sautille), -1 dépitée
  * (elle s'affaisse, penchée).
  */
-class MascotView(context: Context, mascot: Mascot = Mascot.HEDGEHOG) : View(context) {
+class MascotView(context: Context, mascot: Mascot = Mascot.HEDGEHOG) : View(context), Coverable {
     var mood = 0
         set(value) { field = value; invalidate() }
+    /** Sous une fiche, tranquille ou dépitée, elle ne bouge plus ; ravie, elle sautille au rythme du repos. */
+    override var covered = false
+        set(value) { if (field != value) { field = value; invalidate() } }
     private val start = System.nanoTime()
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
     private val dst = RectF()
     private val image: Bitmap? = cached(context, mascot)
+    private val tick = Runnable { invalidate() }
 
     override fun onDraw(canvas: Canvas) {
         val img = image ?: return
@@ -384,8 +433,16 @@ class MascotView(context: Context, mascot: Mascot = Mascot.HEDGEHOG) : View(cont
         dst.set(cx - side / 2, bottom - side, cx + side / 2, bottom)
         canvas.drawBitmap(img, null, dst, paint)
         canvas.restore()
-        // Ravie, elle sautille vite : à pleine cadence. Sinon elle respire doucement.
-        if (mood > 0) postInvalidateOnAnimation() else postInvalidateDelayed(MercerieUi.IDLE_FRAME_MS)
+        // Un seul rappel retardé à la fois : un invalidate() extérieur (humeur, mise en page) ne
+        // dédouble pas la chaîne. Ravie, elle sautille vite : à pleine cadence. Sinon elle respire doucement.
+        removeCallbacks(tick)
+        if (mood > 0 && !covered) postInvalidateOnAnimation()
+        else if (mood > 0 || !covered) postDelayed(tick, MercerieUi.idleDelay())
+    }
+
+    override fun onDetachedFromWindow() {
+        removeCallbacks(tick)
+        super.onDetachedFromWindow()
     }
 
     private companion object {

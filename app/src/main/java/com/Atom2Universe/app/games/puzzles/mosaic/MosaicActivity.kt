@@ -74,7 +74,7 @@ class MosaicActivity : PictureModeActivity<MosaicState>() {
 class MosaicView(context: Context) : ShadeView<MosaicState>(context) {
     override fun size(state: MosaicState) = state.w to state.h
     override fun cellValue(state: MosaicState, i: Int) = state.cells[i]
-    override fun label(state: MosaicState, i: Int) = if (state.clues[i] >= 0) state.clues[i].toString() else null
+    override fun label(state: MosaicState, i: Int) = if (state.clues[i] >= 0) number(state.clues[i]) else null
     override fun change(state: MosaicState, i: Int, value: Int) = state.with(i, value)
     override fun errors(state: MosaicState) = state.clues.indices.filter { state.clues[it] >= 0 && state.clueState(it) < 0 }.toSet()
     override fun labelDone(state: MosaicState, i: Int) = state.clueState(i) == 1

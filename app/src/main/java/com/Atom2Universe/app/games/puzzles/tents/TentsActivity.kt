@@ -100,12 +100,12 @@ class TentsView(context: Context) : PuzzleView<TentsState>(context) {
         for (y in 0 until state.h) {
             val n = state.rowTents(y)
             val c = when { n > state.rowCounts[y] -> palette.error; n == state.rowCounts[y] -> palette.tertiary; else -> palette.text }
-            canvas.centeredText(state.rowCounts[y].toString(), grid.right + cell * 0.45f, grid.cy(y), cell * 0.45f, c, bold = true)
+            canvas.centeredText(number(state.rowCounts[y]), grid.right + cell * 0.45f, grid.cy(y), cell * 0.45f, c, bold = true)
         }
         for (x in 0 until state.w) {
             val n = state.colTents(x)
             val c = when { n > state.colCounts[x] -> palette.error; n == state.colCounts[x] -> palette.tertiary; else -> palette.text }
-            canvas.centeredText(state.colCounts[x].toString(), grid.cx(x), grid.bottom + cell * 0.45f, cell * 0.45f, c, bold = true)
+            canvas.centeredText(number(state.colCounts[x]), grid.cx(x), grid.bottom + cell * 0.45f, cell * 0.45f, c, bold = true)
         }
     }
 

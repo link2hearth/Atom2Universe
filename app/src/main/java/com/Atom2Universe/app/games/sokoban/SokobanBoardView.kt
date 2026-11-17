@@ -2,6 +2,8 @@ package com.Atom2Universe.app.games.sokoban
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.RenderNode
+import android.os.Build
 import android.util.AttributeSet
 import android.animation.ValueAnimator
 import android.view.animation.DecelerateInterpolator
@@ -30,6 +32,16 @@ class SokobanBoardView @JvmOverloads constructor(
     private var pushedFrom = -1
     private var pushedTo = -1
     private var facing = SokobanDir.DOWN
+
+    // Le dépôt ne bouge pas pendant un coup : il est gardé dans une couche de la carte
+    // graphique (Android 10+), repeinte seulement quand le niveau ou la taille changent.
+    private var floorNode: RenderNode? = null
+    private var floorFor: SokobanPuzzle? = null
+    private var floorW = 0
+    private var floorH = 0
+    private var floorCell = 0f
+    private var floorX = 0f
+    private var floorY = 0f
 
     // Swipe
     private var downX = 0f
@@ -86,12 +98,41 @@ class SokobanBoardView @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         val g = game ?: return
-        renderer.draw(canvas, g, cellSize, offsetX, offsetY,
+        val p = g.puzzle ?: return
+        if (!drawCachedFloor(canvas, p)) renderer.drawFloor(canvas, p, cellSize, offsetX, offsetY)
+        renderer.drawPieces(canvas, g, cellSize, offsetX, offsetY,
             progress, previousPlayer, pushedFrom, pushedTo, facing)
+    }
+
+    /** Le dépôt tiré de sa couche ; faux si elle n'est pas disponible (on le dessine alors en direct). */
+    private fun drawCachedFloor(canvas: Canvas, p: SokobanPuzzle): Boolean {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q || !canvas.isHardwareAccelerated) return false
+        if (width <= 0 || height <= 0 || cellSize <= 0f) return false
+        val node = floorNode ?: RenderNode("sokobanFloor").also {
+            it.setUseCompositingLayer(true, null)
+            floorNode = it
+        }
+        if (!node.hasDisplayList() || floorFor !== p || floorW != width || floorH != height ||
+            floorCell != cellSize || floorX != offsetX || floorY != offsetY) {
+            node.setPosition(0, 0, width, height)
+            val rc = node.beginRecording(width, height)
+            renderer.drawFloor(rc, p, cellSize, offsetX, offsetY)
+            node.endRecording()
+            floorFor = p
+            floorW = width
+            floorH = height
+            floorCell = cellSize
+            floorX = offsetX
+            floorY = offsetY
+        }
+        canvas.drawRenderNode(node)
+        return true
     }
 
     override fun onDetachedFromWindow() {
         animator?.cancel()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) floorNode?.discardDisplayList()
+        floorFor = null
         super.onDetachedFromWindow()
     }
 

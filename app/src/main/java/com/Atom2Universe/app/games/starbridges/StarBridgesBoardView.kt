@@ -110,6 +110,10 @@ class StarBridgesBoardView @JvmOverloads constructor(
     /** Cases occupées par une étoile, recalculées seulement quand la grille change. */
     private var occupied = BooleanArray(0)
     private var occupiedFor: List<SbNode>? = null
+    /** Les étoiles par numéro (même moment) : plus de recherche dans la liste pour chaque trait. */
+    private var nodeById = arrayOfNulls<SbNode>(0)
+    /** Liens posés sur chaque étoile, comptés en un seul passage sur les traits à chaque image. */
+    private var placedById = IntArray(0)
     /** Angle des lueurs, figé une fois la figure gagnée et embrasée. */
     private var frozenSpin = -1.0
 
@@ -164,6 +168,11 @@ class StarBridgesBoardView @JvmOverloads constructor(
         if (occupiedFor !== g.nodes || occupied.size != g.size * g.size) {
             occupied = BooleanArray(g.size * g.size)
             for (n in g.nodes) if (n.x in 0 until g.size && n.y in 0 until g.size) occupied[n.y * g.size + n.x] = true
+            var maxId = -1
+            for (n in g.nodes) if (n.id > maxId) maxId = n.id
+            nodeById = arrayOfNulls(maxId + 1)
+            for (n in g.nodes) if (n.id >= 0 && nodeById[n.id] == null) nodeById[n.id] = n
+            placedById = IntArray(maxId + 1)
             occupiedFor = g.nodes
         }
         for (y in 0 until g.size) for (x in 0 until g.size) {
@@ -173,11 +182,15 @@ class StarBridgesBoardView @JvmOverloads constructor(
 
         // Les traits.
         val lit = ignitionLitCount(now)
+        placedById.fill(0)
         for ((key, count) in g.bridges) {
             if (count <= 0) continue
             val a = g.endA(key); val b = g.endB(key)
-            val na = g.nodes.firstOrNull { it.id == a } ?: continue
-            val nb = g.nodes.firstOrNull { it.id == b } ?: continue
+            // Même compte que StarBridgesGame.bridgeCountFor, pour toutes les étoiles à la fois.
+            if (a in placedById.indices) placedById[a] += count
+            if (b != a && b in placedById.indices) placedById[b] += count
+            val na = nodeById.getOrNull(a) ?: continue
+            val nb = nodeById.getOrNull(b) ?: continue
             val order = ignition.indexOf(key)
             // Le feu est une vague : un trait flambe au passage, puis redevient or.
             val burning = g.solved && order >= 0 && lit - order in 0..2
@@ -221,7 +234,7 @@ class StarBridgesBoardView @JvmOverloads constructor(
         var spinning = false
         var flickering = false
         for (n in g.nodes) {
-            val placed = g.bridgeCountFor(n.id)
+            val placed = if (n.id in placedById.indices) placedById[n.id] else 0
             val over = placed > n.required
             if (over) flickering = true
             if (placed == n.required && !settled) spinning = true

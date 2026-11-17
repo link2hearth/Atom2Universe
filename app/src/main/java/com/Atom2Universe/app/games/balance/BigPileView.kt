@@ -339,7 +339,11 @@ class BigPileView @JvmOverloads constructor(
         drawGround(canvas, w, h)
         drawSupport(canvas)
         drawPlank(canvas)
-        for (p in game.pieces) {
+        // Boucles par indice ici et dans [drawBody] : le tas compte des dizaines de pièces, un
+        // itérateur par pièce et par image ne sert à rien.
+        val pieces = game.pieces
+        for (i in pieces.indices) {
+            val p = pieces[i]
             when (p.state) {
                 BigPiece.State.LANDED -> drawBody(canvas, p, 255)
                 BigPiece.State.FALLEN -> drawBody(canvas, p, (p.fade.coerceIn(0f, 1f) * 255).toInt())
@@ -432,7 +436,9 @@ class BigPileView @JvmOverloads constructor(
         canvas.translate(sx(b.x), sy(b.y))
         canvas.rotate(-Math.toDegrees(b.angle.toDouble()).toFloat())
         val half = BigPileRules.CELL / 2f * scale
-        for (part in b.parts) {
+        val parts = b.parts
+        for (i in parts.indices) {
+            val part = parts[i]
             canvas.save()
             canvas.translate(part.localX * scale, -part.localY * scale)
             drawCell(canvas, half, p.kind.ordinal, alpha)

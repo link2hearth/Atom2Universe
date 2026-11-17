@@ -6,6 +6,8 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
+import android.graphics.RenderNode
+import android.os.Build
 import android.os.SystemClock
 import android.util.AttributeSet
 import android.view.MotionEvent
@@ -22,6 +24,10 @@ class PipeTapView @JvmOverloads constructor(
         const val TURN_MS = 190L
         /** Bulles et aiguille au repos : 25 images par seconde suffisent. */
         const val IDLE_FRAME_MS = 40L
+        /** Ce que dessine drawTile : tout, l'immobile gardé dans la couche, ou ce qui bouge au repos. */
+        const val PART_ALL = 0
+        const val PART_STILL = 1
+        const val PART_LIVE = 2
     }
 
     var game: PipeTapGame? = null
@@ -56,6 +62,14 @@ class PipeTapView @JvmOverloads constructor(
     // au repos, bulles et aiguille avancent par un seul rappel retardé.
     private var live = false
     private val idleTick = Runnable { invalidate() }
+    // Au repos, panneaux, tuyaux et colliers ne bougent pas : ils sont gardés dans une couche de
+    // la carte graphique (Android 10+), repeinte seulement quand les tuyaux ou l'eau changent.
+    private var boardNode: RenderNode? = null
+    private var boardFor: PipeTapGame? = null
+    private var boardW = 0
+    private var boardH = 0
+    private var boardMasks = IntArray(0)
+    private var boardReached = BooleanArray(0)
     private val navy = Color.rgb(9, 23, 30)
     private val edge = Color.rgb(47, 73, 82)
     private val metal = Color.rgb(85, 115, 121)
@@ -76,6 +90,8 @@ class PipeTapView @JvmOverloads constructor(
     override fun onDetachedFromWindow() {
         live = false
         removeCallbacks(idleTick)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) boardNode?.discardDisplayList()
+        boardFor = null
         super.onDetachedFromWindow()
     }
     override fun onWindowVisibilityChanged(visibility: Int) {
@@ -124,7 +140,26 @@ class PipeTapView @JvmOverloads constructor(
         var busy = false
         val phase = if (animated) (frameTime % 2400L) / 2400f else 0f
         val n = g.grid.size
-        // Recessed frame, corner fasteners and individual enamel panels.
+        // Au repos (aucune case ne tourne, l'eau est arrivée), le plateau vient de sa couche :
+        // ne se redessinent que les bulles, l'aiguille et ce qui passe par-dessus elles.
+        if (animated && settled(g) && drawCachedBoard(canvas, g, phase)) {
+            for (y in 0 until n) for (x in 0 until n) drawTile(canvas, g, x, y, true, phase, PART_LIVE)
+            removeCallbacks(idleTick)
+            postDelayed(idleTick, IDLE_FRAME_MS)
+            return
+        }
+        drawFrame(canvas)
+        for (y in 0 until n) for (x in 0 until n) {
+            if (drawTile(canvas, g, x, y, animated, phase, PART_ALL)) busy = true
+        }
+        if (animated) {
+            removeCallbacks(idleTick)
+            if (busy) postInvalidateOnAnimation() else postDelayed(idleTick, IDLE_FRAME_MS)
+        }
+    }
+
+    /** Recessed frame and corner fasteners around the enamel panels. */
+    private fun drawFrame(canvas: Canvas) {
         fill(Color.rgb(4, 13, 19))
         round(canvas, board.left - 9 * density, board.top - 9 * density,
             board.right + 9 * density, board.bottom + 9 * density, 12 * density)
@@ -136,28 +171,44 @@ class PipeTapView @JvmOverloads constructor(
             val y = if (corner < 2) board.top - 4 * density else board.bottom + 4 * density
             fill(brass); canvas.drawCircle(x, y, 1.6f * density, ink)
         }
-        for (y in 0 until n) for (x in 0 until n) {
-            val id = y * n + x
-            val cx = board.left + (x + .5f) * tile
-            val cy = board.top + (y + .5f) * tile
-            val half = tile / 2
-            val amount = if (!reached[id]) 0f else if (!animated) 1f
-                else ((frameTime - arrivals[id]) / fillDuration).coerceIn(0f, 1f)
-            if (animated && reached[id] && amount < 1f) busy = true
+    }
+
+    /**
+     * Une case : panneau, tuyau, eau, bulles, colliers, moyeu. [part] choisit tout dessiner
+     * ([PART_ALL]), seulement l'immobile gardé dans la couche ([PART_STILL]), ou seulement ce
+     * qui bouge au repos ([PART_LIVE] : d'une case mouillée, tout à partir de sa première bulle,
+     * pour garder l'ordre de superposition). Rend vrai si la case est encore en mouvement.
+     */
+    private fun drawTile(canvas: Canvas, g: PipeTapGame, x: Int, y: Int, animated: Boolean, phase: Float, part: Int): Boolean {
+        val n = g.grid.size
+        val id = y * n + x
+        val cx = board.left + (x + .5f) * tile
+        val cy = board.top + (y + .5f) * tile
+        val half = tile / 2
+        val amount = if (!reached[id]) 0f else if (!animated) 1f
+            else ((frameTime - arrivals[id]) / fillDuration).coerceIn(0f, 1f)
+        var busy = animated && reached[id] && amount < 1f
+        val wet = amount > 0f
+        // Une case sèche n'a rien qui bouge : au repos, elle est tout entière dans la couche.
+        if (part == PART_LIVE && !wet) return busy
+        if (part != PART_LIVE) {
             fill(if ((x + y) % 2 == 0) Color.rgb(20, 40, 49) else Color.rgb(23, 44, 53))
             round(canvas, cx - half + 1, cy - half + 1, cx + half - 1, cy + half - 1, tile * .09f)
             stroke(edge, density * .6f)
             round(canvas, cx - half + 2, cy - half + 2, cx + half - 2, cy + half - 2, tile * .08f)
-            if (g.grid[y][x] == 0) continue
-            canvas.save()
-            // Clip before rotating so the pipe and water stay inside their tile.
-            canvas.clipRect(
-                board.left + x * tile, board.top + y * tile,
-                board.left + (x + 1) * tile, board.top + (y + 1) * tile
-            )
-            if (animated && frameTime - turns[id] < TURN_MS) busy = true
-            canvas.rotate(if (animated) rotationOffset(id, frameTime) else 0f, cx, cy)
-            val mask = g.grid[y][x]
+        }
+        if (g.grid[y][x] == 0) return busy
+        canvas.save()
+        // Clip before rotating so the pipe and water stay inside their tile.
+        canvas.clipRect(
+            board.left + x * tile, board.top + y * tile,
+            board.left + (x + 1) * tile, board.top + (y + 1) * tile
+        )
+        if (animated && frameTime - turns[id] < TURN_MS) busy = true
+        // La couche ne sert que quand aucune case ne tourne : la rotation y est nulle.
+        if (part == PART_ALL) canvas.rotate(if (animated) rotationOffset(id, frameTime) else 0f, cx, cy)
+        val mask = g.grid[y][x]
+        if (part != PART_LIVE) {
             // Concentric strokes give the pipes a solid wall and a recessed glass channel.
             for (layer in 0..3) {
                 val color = when (layer) { 0 -> Color.rgb(3, 14, 20); 1 -> metal; 2 -> edge; else -> navy }
@@ -172,30 +223,38 @@ class PipeTapView @JvmOverloads constructor(
                 fill(color)
                 canvas.drawCircle(cx, cy, width / 2f, ink)
             }
-            // Entry fills toward the hub, then branches fill outward.
-            if (amount > 0f) {
-                for (d in 0..3) if (mask and directions[d] != 0) {
-                    val incoming = parents[id] == d
-                    val from = if (incoming) 1f else 0f
-                    val to = if (incoming) 1f - (amount * 2).coerceAtMost(1f)
-                        else if (parents[id] < 0) amount else (amount * 2 - 1).coerceAtLeast(0f)
-                    if (from != to) {
-                        stroke(water, tile * .145f)
-                        canvas.drawLine(cx + dx[d] * half * from, cy + dy[d] * half * from,
-                            cx + dx[d] * half * to, cy + dy[d] * half * to, ink)
-                        stroke(Color.rgb(158, 255, 237), tile * .035f, 170)
-                        canvas.drawLine(cx + dx[d] * half * from, cy + dy[d] * half * from,
-                            cx + dx[d] * half * to, cy + dy[d] * half * to, ink)
-                    }
-                    if (amount == 1f && animated) {
-                        val p = (phase * 3 + (id % 7) / 7f) % 1f
-                        val travel = if (incoming) 1f - p else p
-                        fill(Color.rgb(222, 255, 246), 210)
-                        canvas.drawCircle(cx + dx[d] * half * travel, cy + dy[d] * half * travel,
-                            tile * .025f, ink)
-                    }
+        }
+        // Entry fills toward the hub, then branches fill outward.
+        if (wet) {
+            var first = true
+            for (d in 0..3) if (mask and directions[d] != 0) {
+                val incoming = parents[id] == d
+                val from = if (incoming) 1f else 0f
+                val to = if (incoming) 1f - (amount * 2).coerceAtMost(1f)
+                    else if (parents[id] < 0) amount else (amount * 2 - 1).coerceAtLeast(0f)
+                // L'eau de la première branche est sous la première bulle : elle va dans la couche.
+                val drawWater = part == PART_ALL || (part == PART_STILL) == first
+                if (drawWater && from != to) {
+                    stroke(water, tile * .145f)
+                    canvas.drawLine(cx + dx[d] * half * from, cy + dy[d] * half * from,
+                        cx + dx[d] * half * to, cy + dy[d] * half * to, ink)
+                    stroke(Color.rgb(158, 255, 237), tile * .035f, 170)
+                    canvas.drawLine(cx + dx[d] * half * from, cy + dy[d] * half * from,
+                        cx + dx[d] * half * to, cy + dy[d] * half * to, ink)
                 }
+                if (part != PART_STILL && amount == 1f && animated) {
+                    val p = (phase * 3 + (id % 7) / 7f) % 1f
+                    val travel = if (incoming) 1f - p else p
+                    fill(Color.rgb(222, 255, 246), 210)
+                    canvas.drawCircle(cx + dx[d] * half * travel, cy + dy[d] * half * travel,
+                        tile * .025f, ink)
+                }
+                first = false
+                if (part == PART_STILL) break
             }
+        }
+        // Colliers et moyeu passent par-dessus les bulles : ceux d'une case mouillée restent en direct.
+        if (part == PART_ALL || (part == PART_LIVE) == wet) {
             // Brass compression collars keep each rotatable segment easy to read.
             for (d in 0..3) if (mask and directions[d] != 0) {
                 val px = cx + dx[d] * tile * .40f
@@ -221,12 +280,62 @@ class PipeTapView @JvmOverloads constructor(
                 fill(if (amount > .5f) water else metal)
                 canvas.drawCircle(cx, cy, tile * .075f, ink)
             }
-            canvas.restore()
         }
-        if (animated) {
-            removeCallbacks(idleTick)
-            if (busy) postInvalidateOnAnimation() else postDelayed(idleTick, IDLE_FRAME_MS)
+        canvas.restore()
+        return busy
+    }
+
+    /** Plus aucune case ne tourne et l'eau est arrivée partout où elle va. */
+    private fun settled(g: PipeTapGame): Boolean {
+        val n = g.grid.size
+        for (y in 0 until n) for (x in 0 until n) {
+            val id = y * n + x
+            if (reached[id] && ((frameTime - arrivals[id]) / fillDuration).coerceIn(0f, 1f) < 1f) return false
+            if (g.grid[y][x] != 0 && frameTime - turns[id] < TURN_MS) return false
         }
+        return true
+    }
+
+    /** Le plateau immobile tiré de sa couche ; faux si elle n'est pas disponible. */
+    private fun drawCachedBoard(canvas: Canvas, g: PipeTapGame, phase: Float): Boolean {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q || !canvas.isHardwareAccelerated) return false
+        if (width <= 0 || height <= 0) return false
+        val node = boardNode ?: RenderNode("pipeTapBoard").also {
+            it.setUseCompositingLayer(true, null)
+            boardNode = it
+        }
+        if (!node.hasDisplayList() || !boardStateMatches(g)) {
+            node.setPosition(0, 0, width, height)
+            val rc = node.beginRecording(width, height)
+            drawFrame(rc)
+            val n = g.grid.size
+            for (y in 0 until n) for (x in 0 until n) drawTile(rc, g, x, y, true, phase, PART_STILL)
+            node.endRecording()
+            rememberBoardState(g)
+        }
+        canvas.drawRenderNode(node)
+        return true
+    }
+
+    private fun boardStateMatches(g: PipeTapGame): Boolean {
+        val n = g.grid.size
+        if (boardFor !== g || boardW != width || boardH != height ||
+            boardMasks.size != n * n || boardReached.size != reached.size) return false
+        for (y in 0 until n) {
+            val row = g.grid[y]
+            for (x in 0 until n) if (boardMasks[y * n + x] != row[x]) return false
+        }
+        for (i in reached.indices) if (boardReached[i] != reached[i]) return false
+        return true
+    }
+
+    private fun rememberBoardState(g: PipeTapGame) {
+        val n = g.grid.size
+        boardFor = g
+        boardW = width
+        boardH = height
+        boardMasks = IntArray(n * n) { g.grid[it / n][it % n] }
+        boardReached = reached.copyOf()
     }
 
     private fun rotationOffset(id: Int, now: Long): Float {

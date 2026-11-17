@@ -91,7 +91,7 @@ class RectView(context: Context) : PuzzleView<RectState>(context) {
             val v = state.numbers[i]
             if (v == 0) continue
             grid.rect(i % state.w, i / state.w, r)
-            canvas.centeredText(v.toString(), r.centerX(), r.centerY(), cell * 0.5f, palette.text, bold = true)
+            canvas.centeredText(number(v), r.centerX(), r.centerY(), cell * 0.5f, palette.text, bold = true)
         }
     }
 

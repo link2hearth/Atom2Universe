@@ -17,6 +17,7 @@ import android.view.SurfaceHolder
 import android.view.SurfaceView
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
+import com.Atom2Universe.app.games.balance.ReposEcran
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.min
@@ -79,6 +80,55 @@ class BiggerView @JvmOverloads constructor(
 
     /** Ce que la vue a demandé à l'écran la dernière fois : rester allumé ou non. */
     private var ecranGarde = false
+
+    // ── Calme ────────────────────────────────────────────────────────────────
+    /** Vrai quand plus rien ne roule ni ne s'anime : trente images par seconde suffisent. */
+    @Volatile private var calme = false
+
+    /** Le dernier geste sur le jeu (System.nanoTime), posé par le fil de l'interface. */
+    @Volatile private var dernierGeste = 0L
+
+    /** Ce que l'écran montre a-t-il cessé de bouger ? Fil de jeu seulement. */
+    private val repos = ReposEcran()
+
+    /** Le fil patiente ici au calme ; un geste l'abrège. Voir [patienter]. */
+    private val veille = Object()
+    private var reveil = false
+
+    private fun reveiller() {
+        synchronized(veille) {
+            reveil = true
+            veille.notifyAll()
+        }
+    }
+
+    /** Attend jusqu'à [echeance] (System.nanoTime), ou moins si un doigt se pose. */
+    private fun patienter(echeance: Long) {
+        synchronized(veille) {
+            while (running && !reveil) {
+                val ms = (echeance - System.nanoTime()) / 1_000_000L
+                if (ms <= 0L) break
+                veille.wait(ms)
+            }
+            reveil = false
+        }
+    }
+
+    /**
+     * Vrai quand aucun astre n'a glissé d'un demi-pixel depuis une demi-seconde (voir
+     * [ReposEcran]), sans effet, lâcher, débordement ni doigt posé. Ne bougent plus que les
+     * étoiles qui scintillent, le halo qui pulse et l'astre tenu qui tourne : de lentes
+     * ondulations, que trente images par seconde montrent aussi bien que soixante.
+     * Fil de jeu, sous `synchronized(game)`.
+     */
+    private fun auCalme(now: Long, dt: Float): Boolean {
+        repos.debut()
+        repos.monde(game.world, jarLeft, floorY, scale)
+        val fige = !game.over && !pendingDrop && game.cooldown <= 0f && game.danger <= 0f &&
+            shake <= 0f && bannerLife <= 0f && sparks.isEmpty() && waves.isEmpty() && popups.isEmpty() &&
+            now - dernierGeste > CALME_APRES_GESTE
+        return repos.fin(dt, fige)
+    }
 
     private val dp = resources.displayMetrics.density
 
@@ -233,6 +283,8 @@ class BiggerView @JvmOverloads constructor(
             if (running) return
             joinThread()
         }
+        calme = false
+        repos.oublier()
         running = true; lastNanos = System.nanoTime()
         thread = Thread(this, "BiggerPhysics").also { it.start() }
     }
@@ -271,6 +323,7 @@ class BiggerView @JvmOverloads constructor(
                 if (scale != old) geometryDirty = true
             }
         }
+        if (calme) reveiller()
     }
 
     /** À appeler une fois la partie restaurée ou créée, pour que « nouveau record » compare au bon chiffre. */
@@ -286,6 +339,9 @@ class BiggerView @JvmOverloads constructor(
             val now = System.nanoTime()
             val dt = ((now - lastNanos) / 1_000_000_000f).coerceAtMost(0.1f)
             lastNanos = now
+            // Au calme, une image dure deux fois plus longtemps : son plafond suit, pour que le
+            // bocal ne perde pas de temps à trente images par seconde.
+            val plafond = if (calme) CALM_FRAME_SIM else MAX_FRAME_SIM
             val enJeu = synchronized(game) {
                 if (pendingDrop && game.canDrop) {
                     pendingDrop = false
@@ -295,7 +351,7 @@ class BiggerView @JvmOverloads constructor(
                 // l'écran à 120 Hz de la tablette quand elle suivait l'image : passer le dessin
                 // à soixante ne change donc rien au bocal. Le plafond reste celui que
                 // [BiggerGame.step] imposait à une image en retard.
-                accumulator += dt.coerceAtMost(MAX_FRAME_SIM)
+                accumulator += dt.coerceAtMost(plafond)
                 while (accumulator >= FIXED_DT) {
                     game.step(FIXED_DT)
                     accumulator -= FIXED_DT
@@ -303,6 +359,7 @@ class BiggerView @JvmOverloads constructor(
                 handleEvents()
                 updateEffects(dt)
                 publishHud()
+                calme = auCalme(now, dt)
                 !game.over
             }
             // L'écran reste allumé pendant une partie, pas sur l'écran de fin.
@@ -322,6 +379,9 @@ class BiggerView @JvmOverloads constructor(
             // plus : vingt images par seconde lui suffisent.
             val reste = (if (enJeu) FRAME_NANOS else IDLE_FRAME_NANOS) - (System.nanoTime() - now)
             if (reste >= 1_000_000L) Thread.sleep(reste / 1_000_000L)
+            // Au calme, l'image suivante attend une image de plus, soit trente par seconde ; un
+            // doigt qui se pose l'abrège, la visée répond tout de suite.
+            if (calme) patienter(now + CALM_FRAME_NANOS)
         }
     }
 
@@ -343,6 +403,15 @@ class BiggerView @JvmOverloads constructor(
 
         /** Hors partie (écran de fin) : vingt images par seconde. */
         const val IDLE_FRAME_NANOS = 1_000_000_000L / 20L
+
+        /** Au calme, en partie : trente images par seconde. Voir [auCalme]. */
+        const val CALM_FRAME_NANOS = 1_000_000_000L / 30L
+
+        /** Temps simulé au plus par image au calme : une image de 1/30 s y tient avec son retard. */
+        const val CALM_FRAME_SIM = 1f / 20f
+
+        /** Un doigt levé depuis moins longtemps que ça (ns) : la visée peut encore bouger. */
+        const val CALME_APRES_GESTE = 300_000_000L
     }
 
     // ── Entrées ──────────────────────────────────────────────────────────────
@@ -350,6 +419,7 @@ class BiggerView @JvmOverloads constructor(
     private fun toWorldX(px: Float) = if (scale > 0f) (px - jarLeft) / scale else Accretion.WIDTH / 2f
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        dernierGeste = System.nanoTime()
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE -> {
                 if (!game.over) holdX = toWorldX(event.x).coerceIn(0f, Accretion.WIDTH)
@@ -363,6 +433,8 @@ class BiggerView @JvmOverloads constructor(
                 }
             }
         }
+        // Après le geste et pas avant : réveillé trop tôt, le fil dessinerait l'ancienne visée.
+        if (calme) reveiller()
         return true
     }
 

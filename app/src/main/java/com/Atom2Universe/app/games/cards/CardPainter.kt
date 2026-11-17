@@ -5,7 +5,6 @@ import android.graphics.Bitmap
 import android.graphics.BitmapShader
 import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.RectF
 import android.graphics.Shader
@@ -63,7 +62,6 @@ class CardPainter(
     private var backBitmap: Bitmap? = null
     private var backShader: BitmapShader? = null
     private val backPaint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
-    private val backMatrix = Matrix()
 
     init {
         refreshColors()
@@ -140,11 +138,18 @@ class CardPainter(
         val shader = backShader
         val bitmap = backBitmap
         if (shader != null && bitmap != null) {
-            backMatrix.setScale(r.width() / bitmap.width, r.height() / bitmap.height)
-            backMatrix.postTranslate(r.left, r.top)
-            shader.setLocalMatrix(backMatrix)
-            backPaint.shader = shader
-            canvas.drawRoundRect(r, rad, rad, backPaint)
+            // L'image est posée par le canevas, pas par la matrice du motif : changer cette matrice
+            // recrée le motif natif à chaque dos (des dizaines par image pendant les trajets).
+            val sx = r.width() / bitmap.width
+            val sy = r.height() / bitmap.height
+            if (sx > 0f && sy > 0f) {
+                backPaint.shader = shader
+                canvas.save()
+                canvas.translate(r.left, r.top)
+                canvas.scale(sx, sy)
+                canvas.drawRoundRect(0f, 0f, bitmap.width.toFloat(), bitmap.height.toFloat(), rad / sx, rad / sy, backPaint)
+                canvas.restore()
+            }
         } else {
             fill.color = palette.accentDim
             canvas.drawRoundRect(r, rad, rad, fill)

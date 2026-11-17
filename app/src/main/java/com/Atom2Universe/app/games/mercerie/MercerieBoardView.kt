@@ -32,7 +32,7 @@ import kotlin.random.Random
  * cousues, de plus en plus grands et dorés à mesure que le coup rapporte.
  */
 @SuppressLint("ViewConstructor")
-class MercerieBoardView(context: Context, val board: MercerieBoard, private val sound: MercerieSound?) : View(context) {
+class MercerieBoardView(context: Context, val board: MercerieBoard, private val sound: MercerieSound?) : View(context), Coverable {
 
     interface Listener {
         /** Score, coups ou objectifs ont bougé. */
@@ -53,6 +53,14 @@ class MercerieBoardView(context: Context, val board: MercerieBoard, private val 
     /** Montrer un coup possible (deux pièces qui battent) quand le joueur ne joue pas. */
     var hints = true
         set(value) { field = value; armHint(); invalidate() }
+
+    /**
+     * Une fiche (pause, aide, fin de partie) est posée sur le plateau : ce qui bat au repos attend
+     * qu'elle se referme. Un coup en train de se dérouler, lui, va jusqu'au bout.
+     */
+    override var covered = false
+        set(value) { if (field != value) { field = value; invalidate() } }
+    private val idleTick = Runnable { invalidate() }
 
     private class Sprite(val piece: Piece) {
         var x = 0f
@@ -258,6 +266,7 @@ class MercerieBoardView(context: Context, val board: MercerieBoard, private val 
 
     override fun onDetachedFromWindow() {
         removeCallbacks(showHint)
+        removeCallbacks(idleTick)
         super.onDetachedFromWindow()
     }
 
@@ -548,7 +557,7 @@ class MercerieBoardView(context: Context, val board: MercerieBoard, private val 
                 if (e.look == Look.GROW) growing.remove(e.cell)
             }
         }
-        floaters.removeAll { now - it.start > 850 }
+        if (floaters.isNotEmpty()) floaters.removeAll { now - it.start > 850 }
         cheer?.let { if (now - it.start > it.life) cheer = null }
         // Au repos, une pièce scintille de temps en temps.
         if (!busy && now >= nextTwinkle) {
@@ -573,11 +582,12 @@ class MercerieBoardView(context: Context, val board: MercerieBoard, private val 
                     if (travel >= 1f) continue
                     e.lastTrail = now
                     val horizontal = e.look == Look.CUT_H
-                    val (a, b) = cutEnds(e, travel)
+                    cutEnds(e, travel)
                     val x = cx(board.colOf(e.cell).toFloat())
                     val y = cy(board.rowOf(e.cell).toFloat())
                     val color = if (e.color in 0..5) Felt.COLORS[e.color] else Felt.PINK
-                    for (end in floatArrayOf(a, b)) {
+                    for (tip in 0..1) {
+                        val end = ends[tip]
                         if (horizontal) speck(end, y, color) else speck(x, end, color)
                     }
                 }
@@ -856,24 +866,28 @@ class MercerieBoardView(context: Context, val board: MercerieBoard, private val 
         return v * v * ((s + 1) * v + s) + 1
     }
 
-    /** Les deux bouts de la coupe d'une bobine, en pixels le long de la ligne. */
-    private fun cutEnds(e: Effect, travel: Float): Pair<Float, Float> {
+    /** Les deux bouts d'une coupe ou la place d'un papillon : rangés ici, sans nouvel objet à chaque image. */
+    private val ends = FloatArray(2)
+    private val wing = FloatArray(2)
+
+    /** Les deux bouts de la coupe d'une bobine, en pixels le long de la ligne, rangés dans [ends]. */
+    private fun cutEnds(e: Effect, travel: Float) {
         val horizontal = e.look == Look.CUT_H
         val e2 = ease(travel)
-        return if (horizontal) {
+        if (horizontal) {
             val x = cx(board.colOf(e.cell).toFloat())
             val lo = originX - cell * .2f
             val hi = originX + cell * board.cols + cell * .2f
-            (x - (x - lo) * e2) to (x + (hi - x) * e2)
+            ends[0] = x - (x - lo) * e2; ends[1] = x + (hi - x) * e2
         } else {
             val y = cy(board.rowOf(e.cell).toFloat())
             val lo = originY - cell * .2f
             val hi = originY + cell * board.rows + cell * .2f
-            (y - (y - lo) * e2) to (y + (hi - y) * e2)
+            ends[0] = y - (y - lo) * e2; ends[1] = y + (hi - y) * e2
         }
     }
 
-    /** La position d'un papillon en vol, sur un arc qui monte avant de piquer sur sa cible. */
+    /** La position d'un papillon en vol, sur un arc qui monte avant de piquer sur sa cible ([wing], réutilisé). */
     private fun wingsAt(e: Effect, u: Float): FloatArray {
         val x0 = cx(board.colOf(e.cell).toFloat()); val y0 = cy(board.rowOf(e.cell).toFloat())
         val x1 = cx(board.colOf(e.arg).toFloat()); val y1 = cy(board.rowOf(e.arg).toFloat())
@@ -881,10 +895,9 @@ class MercerieBoardView(context: Context, val board: MercerieBoard, private val 
         val mx = (x0 + x1) / 2 - (y1 - y0) * .3f * side
         val my = (y0 + y1) / 2 + (x1 - x0) * .3f * side - cell * 1.2f
         val k = ease(u)
-        return floatArrayOf(
-            (1 - k) * (1 - k) * x0 + 2 * (1 - k) * k * mx + k * k * x1,
-            (1 - k) * (1 - k) * y0 + 2 * (1 - k) * k * my + k * k * y1
-        )
+        wing[0] = (1 - k) * (1 - k) * x0 + 2 * (1 - k) * k * mx + k * k * x1
+        wing[1] = (1 - k) * (1 - k) * y0 + 2 * (1 - k) * k * my + k * k * y1
+        return wing
     }
 
     // ───────────────────────────── Dessin ─────────────────────────────
@@ -955,13 +968,17 @@ class MercerieBoardView(context: Context, val board: MercerieBoard, private val 
         }
         canvas.restore()
         // Pleine cadence pendant que ça bouge ; au repos, ce qui bat doucement (coup conseillé, bonus,
-        // minuteurs pressés, scintillement) se contente de 30 images par seconde, et sinon rien du tout
-        // jusqu'au prochain scintillement.
+        // minuteurs pressés, scintillement) se contente de 25 images par seconde, et sinon rien du tout
+        // jusqu'au prochain scintillement. Sous une fiche, le repos ne redessine rien.
+        // Un seul rappel retardé à la fois : un invalidate() extérieur (doigt, coup conseillé) ne
+        // dédouble pas la chaîne, qui sinon battrait deux ou trois fois plus vite.
+        removeCallbacks(idleTick)
         val calmFx = effects.all { it.look == Look.TWINKLE }
         if ((busy && !ended) || !calmFx || particles.isNotEmpty() || floaters.isNotEmpty() || cheer != null || shaking ||
             dimAge < DIM_MS || flashAge < flashLife) postInvalidateOnAnimation()
-        else if (selected >= 0 || hint != null || lively || effects.isNotEmpty()) postInvalidateDelayed(MercerieUi.IDLE_FRAME_MS)
-        else if (!ended) postInvalidateDelayed((nextTwinkle - now).coerceAtLeast(MercerieUi.IDLE_FRAME_MS))
+        else if (covered) return
+        else if (selected >= 0 || hint != null || lively || effects.isNotEmpty()) postDelayed(idleTick, MercerieUi.idleDelay())
+        else if (!ended) postDelayed(idleTick, (nextTwinkle - now).coerceAtLeast(MercerieUi.IDLE_FRAME_MS))
     }
 
     /** Dessine une pièce ; vrai si elle bouge d'elle-même au repos (bonus, minuteur pressé). */
@@ -974,10 +991,12 @@ class MercerieBoardView(context: Context, val board: MercerieBoard, private val 
             val i = board.idx(s.y.toInt().coerceIn(0, board.rows - 1), s.x.toInt().coerceIn(0, board.cols - 1))
             if (i == h[0] || i == h[1]) scale *= 1f + sin(now / 110f) * .07f
         }
-        // Le souffle des pompons repousse un instant les pièces voisines.
+        // Le souffle des pompons repousse un instant les pièces voisines. (Parcours par indice : un
+        // itérateur par pièce et par image, c'était quatre-vingts objets jetés à chaque image.)
         var ox = 0f
         var oy = 0f
-        for (e in effects) {
+        for (k in 0 until effects.size) {
+            val e = effects[k]
             if (e.look != Look.PUFF) continue
             val age = now - e.start
             if (age > 320) continue
@@ -1048,11 +1067,17 @@ class MercerieBoardView(context: Context, val board: MercerieBoard, private val 
             text.style = Paint.Style.FILL
             text.color = if (hot) 0xFFB3202E.toInt() else 0xFF3A2E36.toInt()
             text.alpha = paint.alpha
-            canvas.drawText(s.timer.toString(), bx, by + side * .05f + text.textSize * .36f, text)
+            canvas.drawText(timerText(s.timer), bx, by + side * .05f + text.textSize * .36f, text)
             canvas.restore()
         }
         return lively
     }
+
+    /** Les nombres des minuteurs, écrits une fois : un minuteur pressé est redessiné à chaque image. */
+    private val timerTexts = arrayOfNulls<String>(100)
+
+    private fun timerText(n: Int): String =
+        if (n >= 0 && n < timerTexts.size) timerTexts[n] ?: n.toString().also { timerTexts[n] = it } else n.toString()
 
     private fun scaled(src: RectF, kx: Float, ky: Float) {
         val hw = src.width() * kx / 2
@@ -1124,7 +1149,8 @@ class MercerieBoardView(context: Context, val board: MercerieBoard, private val 
         var x = width / 2f - word.width / 2
         val warnShake = if (word.tier == 0 && age < 450) sin(age / 28f) * size * .05f * (1f - age / 450f) else 0f
         paint.alpha = ((1f - out) * 255).toInt().coerceIn(0, 255)
-        for ((k, bmp) in word.letters.withIndex()) {
+        for (k in 0 until word.letters.size) {
+            val bmp = word.letters[k]
             val adv = word.advances[k]
             if (bmp != null) {
                 val appear = age - k * 38f
@@ -1158,7 +1184,9 @@ class MercerieBoardView(context: Context, val board: MercerieBoard, private val 
                 Look.CUT_H, Look.CUT_V -> {
                     val horizontal = e.look == Look.CUT_H
                     val travel = (age / CUT_MS).coerceIn(0f, 1f)
-                    val (lo, hi) = cutEnds(e, travel)
+                    cutEnds(e, travel)
+                    val lo = ends[0]
+                    val hi = ends[1]
                     val fade = if (travel < 1f) 1f else 1f - ((age - CUT_MS) / (e.life - CUT_MS)).coerceIn(0f, 1f)
                     val x0 = if (horizontal) lo else x
                     val x1 = if (horizontal) hi else x
@@ -1173,7 +1201,9 @@ class MercerieBoardView(context: Context, val board: MercerieBoard, private val 
                     paint.alpha = (fade * 255).toInt().coerceIn(0, 255)
                     val snip = 1f + sin(age / 30f) * .08f
                     val side = cell * 2.1f * snip
-                    for ((end, flip) in listOf(hi to 1f, lo to -1f)) {
+                    for (tip in 0..1) {
+                        val end = if (tip == 0) hi else lo
+                        val flip = if (tip == 0) 1f else -1f
                         val sx = if (horizontal) end else x
                         val sy = if (horizontal) y else end
                         canvas.save()

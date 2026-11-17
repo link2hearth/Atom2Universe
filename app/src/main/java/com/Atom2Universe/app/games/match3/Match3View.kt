@@ -130,6 +130,13 @@ class Match3View @JvmOverloads constructor(
         color = Color.WHITE; textAlign = Paint.Align.CENTER; isFakeBoldText = true
     }
 
+    // ── Couche des gemmes posées (API 29+) ────────────────────────────────────
+    // Pendant un échange ou une explosion, seules quelques gemmes bougent : les autres sont tirées
+    // d'une couche, repeinte seulement quand ce qu'elle montre change (relevé case par case).
+    private val stillState = IntArray(gridRows * gridCols + 7)
+    private val nodeState = IntArray(stillState.size)
+    private var gemsNode: RenderNode? = null
+
     // ── Timer ─────────────────────────────────────────────────────────────────
     private var timerMax   = TIMER_START
     private var timerValue = TIMER_START
@@ -274,8 +281,6 @@ class Match3View @JvmOverloads constructor(
         val now = SystemClock.uptimeMillis()
         tickTimer(now)
 
-        canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paintBg)
-
         val margin  = tileSize * 0.04f
         val radius  = tileSize * 0.18f
         val gemPad  = tileSize * 0.06f
@@ -284,19 +289,8 @@ class Match3View @JvmOverloads constructor(
         popping.fill(false)
         for (pop in popCells) popping[pop.r * gridCols + pop.c] = true
 
-        // Gemmes normales
-        for (r in 0 until gridRows) {
-            for (c in 0 until gridCols) {
-                if ((anim != null && ((r == anim.r1 && c == anim.c1) || (r == anim.r2 && c == anim.c2))) ||
-                    popping[r * gridCols + c] || cleared[r][c]) continue
-                val isHeld = r == dragRow && c == dragCol
-                val scale = if (isHeld) {
-                    val t = ((now - dragPressTime).toFloat() / DRAG_SCALE_MS).coerceIn(0f, 1f)
-                    1f + (DRAG_SCALE_MAX - 1f) * t
-                } else 1f
-                drawGem(canvas, grid[r][c], tileX(c), tileY(r), scale, margin, radius, gemPad, 255, isHeld)
-            }
-        }
+        // Gemmes posées
+        if (!drawCachedGems(canvas, now, anim, margin, radius, gemPad)) drawStillGems(canvas, now, anim, margin, radius, gemPad)
 
         // Gemmes en cours de swap (positions interpolées)
         if (anim != null) {
@@ -355,6 +349,58 @@ class Match3View @JvmOverloads constructor(
 
     private fun tileX(col: Int) = gridLeft + col * tileSize
 
+    private fun stillSkipped(r: Int, c: Int, anim: SwapAnim?) =
+        (anim != null && ((r == anim.r1 && c == anim.c1) || (r == anim.r2 && c == anim.c2))) ||
+            popping[r * gridCols + c] || cleared[r][c]
+
+    private fun heldScale(now: Long): Float {
+        val t = ((now - dragPressTime).toFloat() / DRAG_SCALE_MS).coerceIn(0f, 1f)
+        return 1f + (DRAG_SCALE_MAX - 1f) * t
+    }
+
+    /** Fond et gemmes posées (ni échangées, ni en explosion, ni vidées), dans l'ordre des cases. */
+    private fun drawStillGems(canvas: Canvas, now: Long, anim: SwapAnim?, margin: Float, radius: Float, gemPad: Float) {
+        canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paintBg)
+        for (r in 0 until gridRows) {
+            for (c in 0 until gridCols) {
+                if (stillSkipped(r, c, anim)) continue
+                val isHeld = r == dragRow && c == dragCol
+                val scale = if (isHeld) heldScale(now) else 1f
+                drawGem(canvas, grid[r][c], tileX(c), tileY(r), scale, margin, radius, gemPad, 255, isHeld)
+            }
+        }
+    }
+
+    /** Les gemmes posées tirées de leur couche ; faux si elle n'est pas disponible (dessin en direct). */
+    private fun drawCachedGems(canvas: Canvas, now: Long, anim: SwapAnim?, margin: Float, radius: Float, gemPad: Float): Boolean {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q || !canvas.isHardwareAccelerated) return false
+        if (width <= 0 || height <= 0 || tileSize <= 0f) return false
+        // Tout ce que montre la couche : chaque case (gemme, ou -1 si elle n'y est pas), la gemme tenue
+        // et sa taille, la géométrie. Comparé tel quel, sans empreinte : aucun risque de confusion.
+        var k = 0
+        for (r in 0 until gridRows) for (c in 0 until gridCols) stillState[k++] = if (stillSkipped(r, c, anim)) -1 else grid[r][c]
+        stillState[k++] = if (dragRow != -1) dragRow * gridCols + dragCol else -1
+        stillState[k++] = if (dragRow != -1) heldScale(now).toRawBits() else 0
+        stillState[k++] = tileSize.toRawBits()
+        stillState[k++] = gridLeft.toRawBits()
+        stillState[k++] = gridTop.toRawBits()
+        stillState[k++] = width
+        stillState[k] = height
+        val node = gemsNode ?: RenderNode("match3Gems").also {
+            it.setUseCompositingLayer(true, null)
+            gemsNode = it
+        }
+        if (!node.hasDisplayList() || !stillState.contentEquals(nodeState)) {
+            node.setPosition(0, 0, width, height)
+            val rc = node.beginRecording(width, height)
+            drawStillGems(rc, now, anim, margin, radius, gemPad)
+            node.endRecording()
+            stillState.copyInto(nodeState)
+        }
+        canvas.drawRenderNode(node)
+        return true
+    }
+
     private fun drawBonuses(canvas: Canvas, now: Long) {
         val burst = bonusBurst ?: return
         val t = ((now - bonusStarted).toFloat() / POP_ANIM_MS).coerceIn(0f, 1f)
@@ -365,7 +411,8 @@ class Match3View @JvmOverloads constructor(
         for (beam in burst.beams) {
             val x = tileX(beam.origin % gridCols) + tileSize / 2
             val y = tileY(beam.origin / gridCols) + tileSize / 2
-            for (core in listOf(false, true)) {
+            for (layer in 0..1) {
+                val core = layer == 1
                 paintBonus.color = if (core) 0xfffff4d0.toInt() else 0xffffb657.toInt()
                 paintBonus.alpha = (fade * if (core) 255 else 140).toInt()
                 paintBonus.strokeWidth = tileSize * (if (core) .1f else .6f) * fade
@@ -675,6 +722,7 @@ class Match3View @JvmOverloads constructor(
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) gemsNode?.discardDisplayList()
         pause()
         handler.removeCallbacksAndMessages(null)
         swapAnimator?.removeAllListeners(); swapAnimator?.cancel()

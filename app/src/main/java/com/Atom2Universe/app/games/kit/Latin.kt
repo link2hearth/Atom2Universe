@@ -235,7 +235,7 @@ abstract class LatinView<S : LatinHolder<S>>(context: Context) : PuzzleView<S>(c
                     b.fixed[i] -> palette.text
                     else -> palette.ink
                 }
-                canvas.centeredText(v.toString(), r.centerX(), r.centerY() + cell * 0.04f, cell * 0.52f, colour, bold = b.fixed[i])
+                canvas.centeredText(number(v), r.centerX(), r.centerY() + cell * 0.04f, cell * 0.52f, colour, bold = b.fixed[i])
             } else if (b.notes[i] != 0) {
                 val cols = if (b.n <= 4) 2 else 3
                 val sub = cell * 0.62f / cols
@@ -245,7 +245,7 @@ abstract class LatinView<S : LatinHolder<S>>(context: Context) : PuzzleView<S>(c
                     val slot = d - 1
                     val cx = r.centerX() + ((slot % cols) - (cols - 1) / 2f) * sub
                     val cy = r.centerY() + ((slot / cols) - ((b.n - 1) / cols) / 2f) * sub
-                    canvas.centeredText(d.toString(), cx, cy, sub * 0.8f, palette.secondary)
+                    canvas.centeredText(number(d), cx, cy, sub * 0.8f, palette.secondary)
                     k++
                 }
             }

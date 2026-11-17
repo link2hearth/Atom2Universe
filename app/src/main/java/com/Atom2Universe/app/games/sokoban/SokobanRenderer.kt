@@ -39,6 +39,13 @@ internal class SokobanRenderer {
     ) {
         val p = g.puzzle ?: return
         if (cellSize <= 0f) return
+        drawFloor(canvas, p, cellSize, offsetX, offsetY)
+        drawPieces(canvas, g, cellSize, offsetX, offsetY, progress, previousPlayer, pushedFrom, pushedTo, facing)
+    }
+
+    /** Le dépôt immobile (socle, sol, murs, quais) : il ne change qu'avec le niveau ou la taille. */
+    fun drawFloor(canvas: Canvas, p: SokobanPuzzle, cellSize: Float, offsetX: Float, offsetY: Float) {
+        if (cellSize <= 0f) return
         canvas.save()
         canvas.translate(offsetX, offsetY)
         canvas.scale(cellSize, cellSize)
@@ -85,6 +92,27 @@ internal class SokobanRenderer {
             }
             canvas.restore()
         }
+        canvas.restore()
+    }
+
+    /** Les caisses et le robot, par-dessus le dépôt ; seuls eux bougent pendant un coup. */
+    fun drawPieces(
+        canvas: Canvas,
+        g: SokobanGame,
+        cellSize: Float,
+        offsetX: Float,
+        offsetY: Float,
+        progress: Float = 1f,
+        previousPlayer: Int = g.player,
+        pushedFrom: Int = -1,
+        pushedTo: Int = -1,
+        facing: SokobanDir = SokobanDir.DOWN
+    ) {
+        val p = g.puzzle ?: return
+        if (cellSize <= 0f) return
+        canvas.save()
+        canvas.translate(offsetX, offsetY)
+        canvas.scale(cellSize, cellSize)
         for (box in g.boxes) {
             val from = if (box == pushedTo && progress < 1f) pushedFrom else box
             val x = from % p.width + (box % p.width - from % p.width) * progress
@@ -149,8 +177,11 @@ internal class SokobanRenderer {
             line(c, .28f, .25f, .72f, .59f, 0xFFF2C88C, .065f)
             line(c, .28f, .59f, .72f, .25f, 0xFFF2C88C, .065f)
         }
-        for (x in listOf(.19f, .81f)) for (y in listOf(.16f, .67f))
-            dot(c, x, y, .024f, 0xFF423D32)
+        // Les quatre rivets, sans listes de nombres à chaque image.
+        dot(c, .19f, .16f, .024f, 0xFF423D32)
+        dot(c, .19f, .67f, .024f, 0xFF423D32)
+        dot(c, .81f, .16f, .024f, 0xFF423D32)
+        dot(c, .81f, .67f, .024f, 0xFF423D32)
     }
 
 }

@@ -177,7 +177,19 @@ abstract class PuzzleView<S : Any>(context: Context) : View(context) {
         fill.color = color
         canvas.drawRoundRect(r, radius, radius, fill)
     }
+
+    /** Le texte d'un nombre du plateau, converti une seule fois : pas de chaîne neuve à chaque image. */
+    protected fun number(n: Int): String {
+        if (n !in NUMBERS.indices) return n.toString()
+        return NUMBERS[n] ?: n.toString().also { NUMBERS[n] = it }
+    }
 }
+
+/**
+ * Partagé par tous les plateaux (et les illustrations cuites hors du fil d'interface : une course ne
+ * fait que refaire la même chaîne). Hors de la classe : un compagnon gênerait les sous-classes anonymes.
+ */
+private val NUMBERS = arrayOfNulls<String>(1000)
 
 /**
  * Où tombe une grille de [cols] × [rows] cases dans un rectangle : taille de case et origine.

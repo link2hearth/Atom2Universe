@@ -52,6 +52,9 @@ class TheLineBoardView @JvmOverloads constructor(
 
     private val tracePath = Path()
     private val powerPath = Path()
+    /** La piste du mode Piste, reconstruite seulement quand le tracé ou la mise en page changent. */
+    private val trackPath = Path()
+    private var trackDirty = true
 
     /** Le tracé a bougé depuis la dernière sauvegarde : on sauvegarde au lever du doigt. */
     private var unsaved = false
@@ -70,6 +73,7 @@ class TheLineBoardView @JvmOverloads constructor(
         powerDone = solved
         unsaved = false
         visitedDirty = true
+        trackDirty = true
         lastTouchAt = SystemClock.uptimeMillis()
         rebake()
         invalidate()
@@ -79,6 +83,7 @@ class TheLineBoardView @JvmOverloads constructor(
     fun showSolved() {
         solved = true; powerDone = true; powerStart = -1L
         visitedDirty = true
+        trackDirty = true
         invalidate()
     }
 
@@ -90,6 +95,7 @@ class TheLineBoardView @JvmOverloads constructor(
         activePath = -1
         unsaved = false
         visitedDirty = true
+        trackDirty = true
         lastTouchAt = SystemClock.uptimeMillis()
         invalidate()
     }
@@ -115,6 +121,7 @@ class TheLineBoardView @JvmOverloads constructor(
         cell = min(availW / (p.width + 2 * MARGIN), availH / (p.height + 2 * MARGIN))
         ox = paddingLeft + (availW - cell * p.width) / 2f
         oy = paddingTop + (availH - cell * p.height) / 2f
+        trackDirty = true
 
         val bmp = baked?.takeIf { it.width == width && it.height == height }
             ?: Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888).also { baked?.recycle(); baked = it }
@@ -198,10 +205,12 @@ class TheLineBoardView @JvmOverloads constructor(
 
     private fun drawTrack(canvas: Canvas, g: TheLineGame, p: TheLinePuzzle, power: Float, now: Long) {
         val seq = g.paths.firstOrNull()?.sequence ?: return
-        if (seq.isNotEmpty()) {
-            buildPath(seq, tracePath)
-            CircuitPainter.copper(canvas, tracePath, cell)
+        // Pendant la respiration de la borne, la piste ne bouge pas : même chemin, rien à refaire.
+        if (trackDirty) {
+            buildPath(seq, trackPath)
+            trackDirty = false
         }
+        if (seq.isNotEmpty()) CircuitPainter.copper(canvas, trackPath, cell)
         val head = headOf(seq.size, power)
         if (power > 0f && seq.isNotEmpty()) {
             buildPath(seq, powerPath, head)
@@ -351,6 +360,7 @@ class TheLineBoardView @JvmOverloads constructor(
             onSolved?.invoke()
         } else unsaved = true
         visitedDirty = true
+        trackDirty = true
         invalidate()
     }
 

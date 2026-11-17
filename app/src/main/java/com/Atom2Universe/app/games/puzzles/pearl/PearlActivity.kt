@@ -36,7 +36,14 @@ class PearlActivity : PuzzleActivity<PearlState>() {
 }
 
 class PearlView(context: Context) : EdgeView<PearlState>(context) {
-    private val overloadCache = PuzzleStateCache<PearlState, Set<Int>> { it.overloaded() }
+    /** Une fois par état : les cases où plus de deux traits se rejoignent, et les perles non respectées. */
+    private class Analysis(val over: BooleanArray, val badPearl: BooleanArray)
+    private val analysis = PuzzleStateCache<PearlState, Analysis> { s ->
+        val n = s.w * s.h
+        val over = BooleanArray(n)
+        for (c in s.overloaded()) over[c] = true
+        Analysis(over, BooleanArray(n) { s.pearls[it] != 0 && s.degree(it) == 2 && !s.pearlOk(it) })
+    }
 
     override val dual = true
     override fun edgeGrid(state: PearlState) = state.grid
@@ -48,18 +55,23 @@ class PearlView(context: Context) : EdgeView<PearlState>(context) {
     override fun drawBoard(canvas: Canvas, state: PearlState, area: RectF) {
         layout(state, area)
         val cell = grid.cell
-        val over = overloadCache[state]
+        val a = analysis[state]
+        val over = a.over
+        val g = state.grid
         for (i in 0 until state.w * state.h) {
             grid.rect(i % state.w, i / state.w, r, cell * 0.04f)
             fill.color = palette.cell
             canvas.drawRoundRect(r, cell * 0.1f, cell * 0.1f, fill)
         }
-        drawEdges(canvas, state) { e -> if (state.grid.cells(e).any { it in over }) palette.error else palette.accent }
+        drawEdges(canvas, state) { e ->
+            val c1 = g.cellA(e); val c2 = g.cellB(e)
+            if ((c1 >= 0 && over[c1]) || (c2 >= 0 && over[c2])) palette.error else palette.accent
+        }
         for (i in 0 until state.w * state.h) {
             val p = state.pearls[i]
             if (p == 0) continue
             grid.rect(i % state.w, i / state.w, r)
-            val bad = state.degree(i) == 2 && !state.pearlOk(i)
+            val bad = a.badPearl[i]
             if (p == PearlState.BLACK) {
                 fill.color = if (bad) palette.error else palette.text
                 canvas.drawCircle(r.centerX(), r.centerY(), cell * 0.28f, fill)

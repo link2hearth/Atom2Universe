@@ -234,9 +234,11 @@ class PatternView(context: Context) : PuzzleView<PatternState>(context) {
         val doneBlocks = if (help) blocks[state] else null
         // Révélée, l'image se peint entière : aussi les cases colorées qu'on ne noircissait pas.
         val picture = if (state.picture >= 0 && doneClues.solved) PatternPictures.all[state.picture] else null
+        // Hors glissé, pas de recherche dans la table (elle emballerait chaque numéro de case).
+        val dragging = shown.isNotEmpty()
         for (i in state.cells.indices) {
             grid.rect(i % state.w, i / state.w, r)
-            val v = shown[i] ?: state.cells[i]
+            val v = if (dragging) shown[i] ?: state.cells[i] else state.cells[i]
             fill.color = when {
                 picture != null && picture.coloured(i) -> picture.colourAt(i)
                 v == 1 -> palette.text

@@ -58,8 +58,14 @@ class PegsView(context: Context) : PuzzleView<PegsState>(context) {
     private var dragY = 0f
     private var dragging = false
     private val shaderMatrix = Matrix()
-    private val shaders = HashMap<Int, RadialGradient>()
+    /** Le reflet des deux sortes de fiches (posée, soulevée), refait seulement quand la palette change. */
     private var shaderPalette: KitPalette? = null
+    private lateinit var restingShader: RadialGradient
+    private lateinit var liftedShader: RadialGradient
+    /** Les arrivées de la fiche prise, cherchées une fois et non à chaque image du glissé. */
+    private var targetsState: PegsState? = null
+    private var targetsFrom = -1
+    private var targets: List<Int> = emptyList()
 
     override fun onStateChanged() {
         selected = -1
@@ -69,7 +75,11 @@ class PegsView(context: Context) : PuzzleView<PegsState>(context) {
     override fun drawBoard(canvas: Canvas, state: PegsState, area: RectF) {
         grid.fit(area, state.w, state.h)
         val cell = grid.cell
-        val targets = if (selected >= 0) state.targets(selected) else emptyList()
+        if (targetsState !== state || targetsFrom != selected) {
+            targetsState = state
+            targetsFrom = selected
+            targets = if (selected >= 0) state.targets(selected) else emptyList()
+        }
         // Le plateau : chaque trou posé sur un socle aux couleurs du thème.
         for (i in state.cells.indices) {
             if (state.cells[i] == PegsState.WALL) continue
@@ -95,12 +105,14 @@ class PegsView(context: Context) : PuzzleView<PegsState>(context) {
     }
 
     private fun drawPeg(canvas: Canvas, cx: Float, cy: Float, cell: Float, lifted: Boolean) {
-        val base = if (lifted) palette.accent else palette.blend(palette.accent, palette.text, 0.25f)
-        if (shaderPalette !== palette) { shaders.clear(); shaderPalette = palette }
-        val shader = shaders.getOrPut(base) {
-            RadialGradient(-0.1f, -0.12f, 0.4f,
+        if (shaderPalette !== palette) {
+            shaderPalette = palette
+            fun shine(base: Int) = RadialGradient(-0.1f, -0.12f, 0.4f,
                 palette.blend(base, 0xFFFFFFFF.toInt(), 0.45f), base, Shader.TileMode.CLAMP)
+            liftedShader = shine(palette.accent)
+            restingShader = shine(palette.blend(palette.accent, palette.text, 0.25f))
         }
+        val shader = if (lifted) liftedShader else restingShader
         shaderMatrix.setScale(cell, cell)
         shaderMatrix.postTranslate(cx, cy)
         shader.setLocalMatrix(shaderMatrix)

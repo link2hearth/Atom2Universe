@@ -36,7 +36,10 @@ class UnrulyActivity : PuzzleActivity<UnrulyState>() {
 
 /** Un appui fait défiler vide → couleur du thème → couleur claire → vide ; l'appui long à l'envers. */
 class UnrulyView(context: Context) : PuzzleView<UnrulyState>(context) {
-    private val analysis = PuzzleStateCache<UnrulyState, Set<Int>> { it.errors() }
+    /** Les cases fautives, en tableau : lues à chaque image sans emballer leur numéro. */
+    private val analysis = PuzzleStateCache<UnrulyState, BooleanArray> { s ->
+        BooleanArray(s.cells.size).also { bad -> for (i in s.errors()) if (i in bad.indices) bad[i] = true }
+    }
 
     private val grid = GridGeometry()
     private val r = RectF()
@@ -58,7 +61,7 @@ class UnrulyView(context: Context) : PuzzleView<UnrulyState>(context) {
                 fill.color = if (v == 0) palette.onAccent else palette.surface
                 canvas.drawCircle(r.centerX(), r.centerY(), cell * 0.08f, fill)
             }
-            if (i in errors) {
+            if (errors[i]) {
                 stroke.color = palette.error
                 stroke.strokeWidth = cell * 0.08f
                 canvas.drawRoundRect(r, cell * 0.16f, cell * 0.16f, stroke)

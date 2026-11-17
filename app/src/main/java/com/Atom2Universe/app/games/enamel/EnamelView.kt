@@ -7,12 +7,15 @@ import android.graphics.DashPathEffect
 import android.graphics.Paint
 import android.graphics.RectF
 import android.graphics.Typeface
+import android.view.Choreographer
 import android.view.MotionEvent
 import android.view.View
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.science.SciencePalette
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.games.bigger.BiggerSoundEngine
+import kotlin.math.ceil
+import kotlin.math.floor
 import kotlin.math.hypot
 import kotlin.math.min
 import kotlin.random.Random
@@ -67,6 +70,18 @@ class EnamelView(context: Context) : View(context) {
      */
     var demo = false
     private val floatTick = Runnable { invalidate() }
+    /**
+     * L'accueil joue seul : une image au plus toutes les 10 ms, soit 60 par seconde sur l'écran à
+     * 120 Hz (60 et 90 Hz inchangés). Temps de l'écran, pas de l'horloge : la cadence reste régulière.
+     */
+    private var demoFrameAt = 0L
+    private val demoFrame = object : Choreographer.FrameCallback {
+        override fun doFrame(frameTimeNanos: Long) {
+            if (!active) return
+            if (frameTimeNanos - demoFrameAt >= DEMO_FRAME_NANOS) { demoFrameAt = frameTimeNanos; invalidate() }
+            else Choreographer.getInstance().postFrameCallback(this)
+        }
+    }
     private val hand = HandPainter()
     private val powerBar = PowerBarPainter()
     private val botRandom = Random.Default
@@ -83,7 +98,7 @@ class EnamelView(context: Context) : View(context) {
     init { isFocusable = true; contentDescription = context.getString(R.string.enamel_controls) }
 
     fun resume() { active = true; last = 0L; postInvalidateOnAnimation() }
-    fun pause() { active = false; cancelAim(); last = 0L }
+    fun pause() { active = false; cancelAim(); last = 0L; Choreographer.getInstance().removeFrameCallback(demoFrame) }
     fun reset() {
         game.reset(); reported = false; rings.clear(); messageLife = 0f; accumulator = 0f
         // Une partie neuve prend la hauteur qui va à l'écran du moment.
@@ -141,6 +156,7 @@ class EnamelView(context: Context) : View(context) {
         board = Bitmap.createBitmap(bw, bh, Bitmap.Config.ARGB_8888).also {
             val c = Canvas(it); c.scale(scale, scale); c.translate(.2f, .2f); art.board(c, game.height, game.width, game.baseDepth)
         }
+        footer.clear()
         cancelAim()
     }
 
@@ -220,7 +236,8 @@ class EnamelView(context: Context) : View(context) {
             canvas.restore()
         }
         if (game.over && !demo) drawOver(canvas)
-        if (active && (demo || game.moving || rings.isNotEmpty() || messageLife > 0f)) postInvalidateOnAnimation()
+        if (active && demo) Choreographer.getInstance().run { removeFrameCallback(demoFrame); postFrameCallback(demoFrame) }
+        else if (active && (game.moving || rings.isNotEmpty() || messageLife > 0f)) postInvalidateOnAnimation()
         else {
             last = 0L
             // Le palet qui flotte n'a besoin que d'une trentaine d'images par seconde.
@@ -350,7 +367,7 @@ class EnamelView(context: Context) : View(context) {
             var stopX = ex; var stopY = ey
             for (i in 1..pieces) {
                 val px = x + (ex - x) * i / pieces; val py = y + (ey - y) * i / pieces
-                if (game.pucks.any { hypot(it.x - px, it.y - py) <= it.radius + r }) {
+                if (touchesPuck(px, py, r)) {
                     stopX = px; stopY = py; hit = true; break
                 }
             }
@@ -365,6 +382,20 @@ class EnamelView(context: Context) : View(context) {
                 if (tx <= ty) dx = -dx else dy = -dy
             }
         }
+    }
+
+    /**
+     * Un palet à portée du point du guide. Appelé des centaines de fois par image pendant la visée :
+     * distances au carré, sans hypot ni itérateur.
+     */
+    private fun touchesPuck(x: Float, y: Float, r: Float): Boolean {
+        val pucks = game.pucks
+        for (i in pucks.indices) {
+            val q = pucks[i]
+            val dx = q.x - x; val dy = q.y - y; val reach = q.radius + r
+            if (dx * dx + dy * dy <= reach * reach) return true
+        }
+        return false
     }
 
     /** Couché : la frise en colonne, à droite de la planche, du plus petit palet en bas au plus gros en haut. */
@@ -385,8 +416,29 @@ class EnamelView(context: Context) : View(context) {
         }
     }
 
+    /**
+     * La frise ne change qu'avec le palet à jouer et les rangs découverts : elle est gardée en image
+     * (une bande assez large pour les ombres et l'anneau du palet à jouer).
+     */
     private fun drawFooter(c: Canvas) {
-        if (landscape) { drawColumn(c); return }
+        val key = game.current * 16L + maxOf(discoveredTier, game.current) + 1
+        if (landscape) {
+            val x = (left + game.width * scale + width) / 2
+            val unit = (height - COLUMN_TOP * dp - 12 * dp) / 12
+            val m = 1.25f * min(17 * dp, unit * .36f) + 4 * dp
+            footer.draw(c, key, floor(x - m).toInt(), 0, ceil(x + m).toInt(), height, paintFooter)
+        } else {
+            val y = height - 23 * dp
+            val unit = (width - 24 * dp) / 12
+            val m = 1.25f * min(13 * dp, unit * .35f) + 4 * dp
+            footer.draw(c, key, 0, floor(y - m).toInt().coerceAtLeast(0), width, ceil(y + m).toInt().coerceAtMost(height), paintFooter)
+        }
+    }
+
+    private val footer = StripCache()
+    private val paintFooter: (Canvas) -> Unit = { c -> if (landscape) drawColumn(c) else drawRow(c) }
+
+    private fun drawRow(c: Canvas) {
         val unit = (width - 24 * dp) / 12
         val start = 12 * dp + unit / 2
         val y = height - 23 * dp
@@ -482,6 +534,7 @@ class EnamelView(context: Context) : View(context) {
         const val BOT_LOOK = 4
         const val FLOAT_PERIOD = 2.4
         const val FLOAT_FRAME_MS = 30L
+        const val DEMO_FRAME_NANOS = 10_000_000L
 
         /** Couché : la planche commence sous la bannière (dp), et la frise a sa colonne à droite (dp). */
         const val TOP_INSET = 56f

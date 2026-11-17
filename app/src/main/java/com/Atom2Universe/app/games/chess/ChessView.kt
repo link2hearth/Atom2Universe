@@ -186,8 +186,7 @@ class ChessView @JvmOverloads constructor(
         if (!g.isInCheck) return
         for (row in 0..7) {
             for (col in 0..7) {
-                val square = Square(row, col)
-                val piece = g.getPieceAt(square) ?: continue
+                val piece = g.getPieceAt(row, col) ?: continue
                 if (piece.type == PieceType.KING && piece.color == g.currentTurn) {
                     val x = boardOffsetX + col * squareSize
                     val y = boardOffsetY + row * squareSize
@@ -257,15 +256,14 @@ class ChessView @JvmOverloads constructor(
 
         // Offset pour centrer les sprites (70% de la case)
         val pieceOffset = squareSize * 0.15f
+        // Case de la pièce en cours de drag, à ne pas dessiner (sans créer de Square par case)
+        val hidden = if (isDragging) draggedFrom else null
 
         for (row in 0..7) {
             for (col in 0..7) {
-                val square = Square(row, col)
+                if (hidden != null && hidden.row == row && hidden.col == col) continue
 
-                // Ne pas dessiner la pièce en cours de drag
-                if (isDragging && square == draggedFrom) continue
-
-                val piece = g.getPieceAt(square) ?: continue
+                val piece = g.getPieceAt(row, col) ?: continue
                 val bitmap = getScaledPieceBitmap(piece) ?: continue
 
                 val x = boardOffsetX + col * squareSize + pieceOffset
@@ -299,19 +297,23 @@ class ChessView @JvmOverloads constructor(
     private fun drawCoordinates(canvas: Canvas) {
         // Files (a-h) en bas
         for (col in 0..7) {
-            val file = ('a' + col).toString()
             val x = boardOffsetX + (col + 0.5f) * squareSize
             val y = boardOffsetY + boardSize + coordinateTextPaint.textSize * 1.5f
-            canvas.drawText(file, x, y, coordinateTextPaint)
+            canvas.drawText(FILE_LABELS[col], x, y, coordinateTextPaint)
         }
 
         // Rangs (1-8) à droite
         for (row in 0..7) {
-            val rank = (8 - row).toString()
             val x = boardOffsetX + boardSize + coordinateTextPaint.textSize * 2f
             val y = boardOffsetY + (row + 0.6f) * squareSize
-            canvas.drawText(rank, x, y, coordinateTextPaint)
+            canvas.drawText(RANK_LABELS[row], x, y, coordinateTextPaint)
         }
+    }
+
+    private companion object {
+        // Libellés des coordonnées, créés une fois plutôt qu'à chaque image pendant un drag
+        val FILE_LABELS = Array(8) { ('a' + it).toString() }
+        val RANK_LABELS = Array(8) { (8 - it).toString() }
     }
 
     /** Charge le pack optionnel, sinon génère les pièces Kotlin, une fois pour le cache. */

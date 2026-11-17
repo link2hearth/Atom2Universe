@@ -4,6 +4,7 @@ import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 import android.graphics.Typeface
@@ -90,12 +91,13 @@ class OthelloScoreView @JvmOverloads constructor(
     private val fill = Paint(Paint.ANTI_ALIAS_FLAG)
     private val stroke = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE }
     private val sprite = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
+    private val textColor = AppearanceStyle.color(context, R.attr.a2uTextColor)
     private val number = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         typeface = Typeface.DEFAULT_BOLD
         textSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 22f * k, resources.displayMetrics)
         textAlign = Paint.Align.CENTER
         fontFeatureSettings = "tnum"
-        color = AppearanceStyle.color(context, R.attr.a2uTextColor)
+        color = textColor
     }
     private val digits = number.measureText("64")
     private val robot = AppCompatResources.getDrawable(context, R.drawable.othello_ic_vs_ai)?.mutate()?.apply {
@@ -170,7 +172,11 @@ class OthelloScoreView @JvmOverloads constructor(
             canvas.drawRoundRect(rect, corner, corner, stroke)
         }
 
-        val save = if (faded) canvas.saveLayerAlpha(rect, 125) else canvas.save()
+        // Estompée : chaque élément prend l'alpha lui-même (ils ne se chevauchent pas, même rendu
+        // qu'un calque), sans tampon hors écran à chaque image pendant que le cercle respire.
+        val alpha = if (faded) FADED_ALPHA else 255
+        sprite.alpha = alpha
+        number.color = if (faded) ColorUtils.setAlphaComponent(textColor, Color.alpha(textColor) * FADED_ALPHA / 255) else textColor
         val showRobot = solo && color == OthelloGame.BLACK && robot != null
         val content = 2 * discR + gapText + digits + if (showRobot) gapIcon + iconSize else 0f
         var x = rect.centerX() - content / 2f
@@ -183,10 +189,14 @@ class OthelloScoreView @JvmOverloads constructor(
         x += digits
         if (showRobot) {
             x += gapIcon
+            robot?.alpha = alpha
             robot?.setBounds(x.toInt(), (cy - iconSize / 2f).toInt(), (x + iconSize).toInt(), (cy + iconSize / 2f).toInt())
             robot?.draw(canvas)
         }
-        canvas.restoreToCount(save)
+    }
+
+    private companion object {
+        const val FADED_ALPHA = 125
     }
 
     private fun discBitmap(color: Int): Bitmap =

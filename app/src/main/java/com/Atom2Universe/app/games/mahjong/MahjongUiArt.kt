@@ -87,19 +87,25 @@ internal class MahjongRewardView(context: Context, private val reward: MahjongRe
     private val targets=mutableMapOf<Int,RectF>()
     private var selected=initialStyle
     private var pressed:Int?=null
+    // Halo et rayon ne dépendent que de la taille : faits une fois, pas à chaque image de la fête.
+    private var halo:RadialGradient?=null
+    private val ray=Path()
     init { isClickable=true; contentDescription=context.getString(R.string.mj_reward_accessible,reward.pearls,reward.stars) }
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        val cx=w/2f; val cy=h*.41f
+        halo=if(w>0 && h>0) RadialGradient(cx,cy,max(w,h)*.6f,intArrayOf(0x38d3b56e,0x00d3b56e),null,Shader.TileMode.CLAMP) else null
+        ray.rewind(); ray.moveTo(cx,cy); ray.lineTo(cx-w*.09f,cy-h*.65f); ray.lineTo(cx+w*.09f,cy-h*.65f); ray.close()
+    }
     override fun onDraw(c: Canvas) {
         val animated=effects && ValueAnimator.areAnimatorsEnabled()
         val t=if(animated) ((SystemClock.uptimeMillis()-start)/1800f).coerceIn(0f,1f) else 1f
         val cx=width/2f; val cy=height*.41f
         p.style=Paint.Style.FILL
-        p.shader=RadialGradient(cx,cy,max(width,height)*.6f,intArrayOf(0x38d3b56e,0x00d3b56e),null,Shader.TileMode.CLAMP)
-        c.drawRect(0f,0f,width.toFloat(),height.toFloat(),p); p.shader=null
+        halo?.let { p.shader=it; c.drawRect(0f,0f,width.toFloat(),height.toFloat(),p); p.shader=null }
+        p.color=0x10ffffff
         repeat(12) { i ->
             c.save(); c.rotate(i*30f+t*20f,cx,cy)
-            p.color=0x10ffffff
-            val path=Path().apply { moveTo(cx,cy); lineTo(cx-width*.09f,cy-height*.65f); lineTo(cx+width*.09f,cy-height*.65f); close() }
-            c.drawPath(path,p); c.restore()
+            c.drawPath(ray,p); c.restore()
         }
         val reveal=((t-.15f)/.5f).coerceIn(0f,1f)
         val styles=reward.styles

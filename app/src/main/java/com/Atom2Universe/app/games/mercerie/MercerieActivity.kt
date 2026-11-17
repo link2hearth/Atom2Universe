@@ -3,6 +3,7 @@ package com.Atom2Universe.app.games.mercerie
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
@@ -32,6 +33,8 @@ class MercerieActivity : ThemedActivity() {
     private lateinit var root: FrameLayout
     private var screen = Screen.HOME
     private var card: View? = null
+    /** Ce qui s'anime au repos sur l'écran en cours (mascotte, titre, plateau, carte) : se calme sous une fiche. */
+    private val lively = ArrayList<Coverable>()
     private val progress by lazy { MercerieProgress(this) }
     private val workshop by lazy { MercerieWorkshop(this) }
     /** L'étage que l'atelier est en train de préparer pour le joueur, ou 0. */
@@ -116,6 +119,7 @@ class MercerieActivity : ThemedActivity() {
         if (open != null) {
             card = open
             root.addView(open, FrameLayout.LayoutParams(-1, -1))
+            cover(true)
         }
     }
 
@@ -137,10 +141,22 @@ class MercerieActivity : ThemedActivity() {
         card = null
         root.removeAllViews()
         root.addView(content, FrameLayout.LayoutParams(-1, -1))
+        lively.clear()
+        collectLively(content)
         // La couche de vol passe au-dessus de tout, fiches comprises, sans jamais prendre le doigt.
         val layer = flights ?: FlightLayer(this).also { flights = it; it.translationZ = 1000f }
         layer.clear()
         root.addView(layer, FrameLayout.LayoutParams(-1, -1))
+    }
+
+    private fun collectLively(view: View) {
+        if (view is Coverable) lively += view
+        if (view is ViewGroup) for (i in 0 until view.childCount) collectLively(view.getChildAt(i))
+    }
+
+    /** Une fiche se pose ([on]) ou s'en va : l'écran dessous cesse ou reprend de s'animer au repos. */
+    private fun cover(on: Boolean) {
+        for (v in lively) v.covered = on
     }
 
     private fun leaveGame() {
@@ -417,6 +433,7 @@ class MercerieActivity : ThemedActivity() {
     private fun closeCard() {
         card?.let { root.removeView(it) }
         card = null
+        cover(false)
     }
 
     /**
@@ -443,6 +460,7 @@ class MercerieActivity : ThemedActivity() {
         }
         card = veil
         root.addView(veil, FrameLayout.LayoutParams(-1, -1))
+        cover(true)
         box.scaleX = .8f; box.scaleY = .8f; box.alpha = 0f
         box.animate().scaleX(1f).scaleY(1f).alpha(1f).setDuration(180).start()
     }
@@ -779,21 +797,29 @@ class MercerieActivity : ThemedActivity() {
         }, delay)
     }
 
+    /**
+     * Ne réécrit un compteur que s'il a changé : le plateau rappelle [refreshHud] à chaque pièce qui
+     * part, et un texte réécrit, même identique, refait la mise en page de l'écran à l'image suivante.
+     */
+    private fun TextView.show(value: String) {
+        if (!TextUtils.equals(text, value)) text = value
+    }
+
     private fun refreshHud() {
         val board = boardView?.board ?: return
-        movesText?.text = MercerieUi.number(if (board.bonus && shownMoves >= 0) shownMoves else board.movesLeft)
-        scoreText?.text = MercerieUi.number(board.score)
+        movesText?.show(MercerieUi.number(if (board.bonus && shownMoves >= 0) shownMoves else board.movesLeft))
+        scoreText?.show(MercerieUi.number(board.score))
         starBar?.score = board.score
-        for ((chip, view) in chipTexts) view.text = chipText(chip, board)
+        for ((chip, view) in chipTexts) view.show(chipText(chip, board))
         parText?.let { label ->
             // Coups du défi qui restent ; tenu, une coche ; manqué, la médaille grise sans nombre.
             val left = board.level.par - board.movesUsed
             val gold = board.beatsPar || (!board.bonus && !board.finished && left >= 0)
-            label.text = when {
+            label.show(when {
                 board.beatsPar -> getString(R.string.mercerie_sym_done)
                 gold -> MercerieUi.number(left)
                 else -> ""
-            }
+            })
             if (gold != parGold) {
                 parGold = gold
                 parIcon?.setImageBitmap(medal(gold))

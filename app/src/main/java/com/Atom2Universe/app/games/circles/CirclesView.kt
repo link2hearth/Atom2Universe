@@ -6,7 +6,9 @@ import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.RadialGradient
 import android.graphics.RectF
+import android.graphics.RenderNode
 import android.graphics.Shader
+import android.os.Build
 import android.os.SystemClock
 import android.util.AttributeSet
 import android.view.MotionEvent
@@ -72,6 +74,17 @@ class CirclesView @JvmOverloads constructor(
     private var ringSlices = emptyArray<Array<Path>>()
     private var haloShader: Shader? = null
     private var nucleusShader: Shader? = null
+
+    // ── Anneaux immobiles, gardés dans une couche de la carte graphique (Android 10+) ──
+    // Au repos, seul le noyau palpite : les anneaux ne sont repeints que si leur état change.
+    private var ringsNode: RenderNode? = null
+    private var ringsFor: CirclesGame? = null
+    private var ringsW = 0
+    private var ringsH = 0
+    private var ringsPrimary = -1
+    private var ringsLinked = -1
+    private var ringsRot = IntArray(0)
+    private var ringsColors = IntArray(0)
 
     // ── Animation de rotation ─────────────────────────────────────────────────────
     private var animActive = false
@@ -179,10 +192,11 @@ class CirclesView @JvmOverloads constructor(
 
         canvas.save()
         canvas.translate(width / 2f, height / 2f)
+        // Le halo reste dessiné en direct : son opacité suit celle laissée par l'image précédente.
         fxPaint.shader = haloShader
         canvas.drawCircle(0f, 0f, boardRadius * 1.18f, fxPaint)
         fxPaint.shader = null
-        drawRings(canvas, g)
+        if (animActive || !drawCachedRings(canvas, g)) drawRings(canvas, g)
         val busy = drawEffects(canvas, now, dt)
         canvas.restore()
 
@@ -195,7 +209,66 @@ class CirclesView @JvmOverloads constructor(
 
     override fun onDetachedFromWindow() {
         removeCallbacks(pulseTick)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) ringsNode?.discardDisplayList()
+        ringsFor = null
         super.onDetachedFromWindow()
+    }
+
+    /**
+     * Les anneaux au repos, tirés de leur couche (repeinte seulement quand rotations, couleurs,
+     * sélection ou taille changent). Faux si la couche n'est pas disponible : on dessine alors en direct.
+     * [canvas] est déjà centré sur l'atome.
+     */
+    private fun drawCachedRings(canvas: Canvas, g: CirclesGame): Boolean {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q || !canvas.isHardwareAccelerated) return false
+        if (width <= 0 || height <= 0) return false
+        val node = ringsNode ?: RenderNode("circlesRings").also {
+            it.setUseCompositingLayer(true, null)
+            ringsNode = it
+        }
+        if (!node.hasDisplayList() || !ringsStateMatches(g)) {
+            node.setPosition(0, 0, width, height)
+            val rc = node.beginRecording(width, height)
+            rc.translate(width / 2f, height / 2f)
+            drawRings(rc, g)
+            node.endRecording()
+            rememberRingsState(g)
+        }
+        canvas.save()
+        canvas.translate(-width / 2f, -height / 2f)
+        canvas.drawRenderNode(node)
+        canvas.restore()
+        return true
+    }
+
+    private fun ringsStateMatches(g: CirclesGame): Boolean {
+        val n = g.ringCount
+        if (ringsFor !== g || ringsW != width || ringsH != height || ringsRot.size != n ||
+            ringsPrimary != touchRingIndex || ringsLinked != touchLinked) return false
+        var k = 0
+        for (i in 0 until n) {
+            if (ringsRot[i] != g.rotations[i]) return false
+            for (c in g.rings[i]) {
+                if (k >= ringsColors.size || ringsColors[k] != c) return false
+                k++
+            }
+        }
+        return k == ringsColors.size
+    }
+
+    private fun rememberRingsState(g: CirclesGame) {
+        val n = g.ringCount
+        ringsFor = g
+        ringsW = width
+        ringsH = height
+        ringsPrimary = touchRingIndex
+        ringsLinked = touchLinked
+        ringsRot = g.rotations.copyOf(n)
+        var total = 0
+        for (i in 0 until n) total += g.rings[i].size
+        ringsColors = IntArray(total)
+        var k = 0
+        for (i in 0 until n) for (c in g.rings[i]) ringsColors[k++] = c
     }
 
     private fun ensureLayout(g: CirclesGame) {

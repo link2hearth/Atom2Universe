@@ -147,7 +147,8 @@ class ForgeView(context: Context, var game: ForgeGame = ForgeGame(), private val
             }
         }
         // Highlight the physical down edge without rotating the board.
-        if (game.kind == 2) for (edge in game.activeDeliveryEdges) {
+        if (game.kind == 2) for (edge in 0..3) {
+            if (!deliveryEdgeActive(edge)) continue
             paint.color = 0xff78ffa9.toInt()
             val verticalEdge = edge == 1 || edge == 2
             repeat(if (verticalEdge) game.rows else game.cols) { cell ->
@@ -194,6 +195,15 @@ class ForgeView(context: Context, var game: ForgeGame = ForgeGame(), private val
         }
         drawEffects(canvas, right, bottom)
         canvas.restore()
+    }
+
+    /** Same edges as game.activeDeliveryEdges (any other value is drawn at the bottom), without three new collections per frame. */
+    private fun deliveryEdgeActive(edge: Int): Boolean {
+        for (i in game.cells.indices) if (game.cells[i] == ForgeGame.CORE) {
+            val aim = game.coreEdges[i]
+            if (aim == edge || (edge == 0 && aim !in 1..3)) return true
+        }
+        return false
     }
 
     private fun drawEffects(canvas: Canvas, right: Float, bottom: Float) {

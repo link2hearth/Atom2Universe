@@ -144,7 +144,9 @@ class MapView(context: Context) : PuzzleView<MapState>(context) {
     override fun onLongPress(x: Float, y: Float) = act(x, y, true)
 
     companion object {
-        fun colour(palette: KitPalette, k: Int) = palette.piece(intArrayOf(0, 2, 4, 6)[k])
+        /** Les teintes des quatre couleurs de la carte, parmi celles des pièces. */
+        private val PIECES = intArrayOf(0, 2, 4, 6)
+        fun colour(palette: KitPalette, k: Int) = palette.piece(PIECES[k])
     }
 }
 

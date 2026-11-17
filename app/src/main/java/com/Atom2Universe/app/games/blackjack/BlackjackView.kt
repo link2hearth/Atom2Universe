@@ -12,6 +12,7 @@ import android.graphics.RectF
 import android.graphics.Typeface
 import android.graphics.Path
 import android.util.AttributeSet
+import android.util.SparseArray
 import android.view.View
 import kotlin.math.sin
 import kotlin.math.roundToInt
@@ -120,6 +121,45 @@ class BlackjackView @JvmOverloads constructor(
     private val naturalLabel = context.getString(R.string.blackjack_natural)
     private val dealerLabel = context.getString(R.string.blackjack_dealer)
     private val youLabel = context.getString(R.string.blackjack_you)
+
+    // Les textes chiffrés (mises, gains, carte visible du croupier) sont composés une fois par valeur,
+    // pas à chaque image de l'animation des tours des IA.
+    private val betLabels = SparseArray<String>()
+    private val gainLabels = SparseArray<String>()
+    private val lossLabels = SparseArray<String>()
+    private val upCardLabels = arrayOfNulls<String>(52)
+
+    private inline fun label(cache: SparseArray<String>, key: Int, make: () -> String): String =
+        cache.get(key) ?: make().also { cache.put(key, it) }
+
+    private fun number(n: Int): String = if (n in NUMBERS.indices) NUMBERS[n] else n.toString()
+
+    private fun betLabel(bet: Int): String = label(betLabels, bet) { "⚛$bet" }
+
+    private fun upCardLabel(card: BlackjackCard): String {
+        if (card.suit !in 0..3 || card.rank !in 1..13) return card.rankLabel + card.suitSymbol
+        val i = card.suit * 13 + card.rank - 1
+        return upCardLabels[i] ?: (card.rankLabel + card.suitSymbol).also { upCardLabels[i] = it }
+    }
+
+    /** Le gain ou la perte d'une main réglée, sous ses cartes. */
+    private fun drawPayout(canvas: Canvas, hand: BlackjackHand, x: Float, y: Float, size: Float) {
+        val res = hand.payoutResult ?: return
+        val bet = hand.bet
+        val text = when (res) {
+            PayoutResult.WIN -> label(gainLabels, bet) { "+$bet ⚛" }
+            PayoutResult.WIN_BJ -> (bet * 1.5f).toInt().let { gain -> label(gainLabels, gain) { "+$gain ⚛" } }
+            PayoutResult.LOSE -> label(lossLabels, bet) { "-$bet ⚛" }
+            PayoutResult.PUSH -> "="
+        }
+        val paint = when (res) {
+            PayoutResult.WIN, PayoutResult.WIN_BJ -> winPaint
+            PayoutResult.LOSE -> losePaint
+            PayoutResult.PUSH -> pushPaint
+        }
+        paint.textSize = size
+        canvas.drawText(text, x, y, paint)
+    }
 
     // ── Manga bubbles ────────────────────────────────────────────────────────────
     data class MangaBubble(
@@ -257,12 +297,13 @@ class BlackjackView @JvmOverloads constructor(
         drawCardStack(canvas, dHand.cards, cx, cardBottom, cardW, cardH)
 
         // Value / label
-        val v = dHand.displayValue
+        // Toutes retournées, la valeur visible est celle de la main.
+        val allUp = dHand.cards.all { it.faceUp }
         val valStr = when {
-            dHand.cards.all { it.faceUp } && dHand.isBust -> bustLabel
-            dHand.cards.all { it.faceUp } && dHand.isBlackjack -> naturalLabel
-            dHand.cards.all { it.faceUp } -> v.toString()
-            else -> dHand.cards.firstOrNull { it.faceUp }?.let { "${it.rankLabel}${it.suitSymbol}" } ?: "?"
+            allUp && dHand.isBust -> bustLabel
+            allUp && dHand.isBlackjack -> naturalLabel
+            allUp -> number(dHand.value)
+            else -> dHand.cards.firstOrNull { it.faceUp }?.let { upCardLabel(it) } ?: "?"
         }
         val labelSize = if (widgetMode) dp(12f) else dp(14f)
         subtitlePaint.textSize = labelSize
@@ -321,11 +362,10 @@ class BlackjackView @JvmOverloads constructor(
 
                 drawCardStack(canvas, h.cards, handCx, cardBottom, cardW, cardH)
 
-                val handVal = h.value
                 val valStr = when (h.actionState) {
                     ActionState.BUST -> bustLabel
                     ActionState.BLACKJACK -> naturalLabel
-                    else -> if (h.cards.isNotEmpty()) handVal.toString() else ""
+                    else -> if (h.cards.isNotEmpty()) number(h.value) else ""
                 }
                 val vPaint = when (h.actionState) {
                     ActionState.BUST -> bustPaint
@@ -337,19 +377,10 @@ class BlackjackView @JvmOverloads constructor(
 
                 if (h.bet > 0 && !widgetMode) {
                     betPaint.textSize = dp(10f)
-                    canvas.drawText("⚛${h.bet}", handCx, cardBottom + dp(27f), betPaint)
+                    canvas.drawText(betLabel(h.bet), handCx, cardBottom + dp(27f), betPaint)
                 }
 
-                h.payoutResult?.let { res ->
-                    val (rStr, rPaint) = when (res) {
-                        PayoutResult.WIN -> "+${h.bet} ⚛" to winPaint
-                        PayoutResult.WIN_BJ -> "+${(h.bet * 1.5f).toInt()} ⚛" to winPaint
-                        PayoutResult.LOSE -> "-${h.bet} ⚛" to losePaint
-                        PayoutResult.PUSH -> "=" to pushPaint
-                    }
-                    rPaint.textSize = dp(13f)
-                    canvas.drawText(rStr, handCx, cardBottom + dp(40f), rPaint)
-                }
+                drawPayout(canvas, h, handCx, cardBottom + dp(40f), dp(13f))
             }
 
             if (!widgetMode) {
@@ -401,7 +432,7 @@ class BlackjackView @JvmOverloads constructor(
             val valStr = when (hand.actionState) {
                 ActionState.BUST -> bustLabel
                 ActionState.BLACKJACK -> naturalLabel
-                else -> if (hand.cards.isNotEmpty()) hand.value.toString() else ""
+                else -> if (hand.cards.isNotEmpty()) number(hand.value) else ""
             }
             val vPaint = when (hand.actionState) {
                 ActionState.BUST -> bustPaint
@@ -413,19 +444,10 @@ class BlackjackView @JvmOverloads constructor(
 
             if (hand.bet > 0) {
                 betPaint.textSize = dp(12f)
-                canvas.drawText("⚛${hand.bet}", handCx, cardBottom + dp(33f), betPaint)
+                canvas.drawText(betLabel(hand.bet), handCx, cardBottom + dp(33f), betPaint)
             }
 
-            hand.payoutResult?.let { res ->
-                val (rStr, rPaint) = when (res) {
-                    PayoutResult.WIN -> "+${hand.bet} ⚛" to winPaint
-                    PayoutResult.WIN_BJ -> "+${(hand.bet * 1.5f).toInt()} ⚛" to winPaint
-                    PayoutResult.LOSE -> "-${hand.bet} ⚛" to losePaint
-                    PayoutResult.PUSH -> "=" to pushPaint
-                }
-                rPaint.textSize = dp(14f)
-                canvas.drawText(rStr, handCx, cardBottom + dp(49f), rPaint)
-            }
+            drawPayout(canvas, hand, handCx, cardBottom + dp(49f), dp(14f))
         }
 
         namePaint.textSize = dp(12f)
@@ -469,7 +491,7 @@ class BlackjackView @JvmOverloads constructor(
                 val valStr = when (hand.actionState) {
                     ActionState.BUST -> bustLabel
                     ActionState.BLACKJACK -> naturalLabel
-                    else -> if (hand.cards.isNotEmpty()) hand.value.toString() else ""
+                    else -> if (hand.cards.isNotEmpty()) number(hand.value) else ""
                 }
                 val vPaint = when (hand.actionState) {
                     ActionState.BUST -> bustPaint
@@ -481,19 +503,10 @@ class BlackjackView @JvmOverloads constructor(
 
                 if (hand.bet > 0) {
                     betPaint.textSize = dp(10f)
-                    canvas.drawText("⚛${hand.bet}", handCx, cardBottom + dp(26f), betPaint)
+                    canvas.drawText(betLabel(hand.bet), handCx, cardBottom + dp(26f), betPaint)
                 }
 
-                hand.payoutResult?.let { res ->
-                    val (rStr, rPaint) = when (res) {
-                        PayoutResult.WIN -> "+${hand.bet} ⚛" to winPaint
-                        PayoutResult.WIN_BJ -> "+${(hand.bet * 1.5f).toInt()} ⚛" to winPaint
-                        PayoutResult.LOSE -> "-${hand.bet} ⚛" to losePaint
-                        PayoutResult.PUSH -> "=" to pushPaint
-                    }
-                    rPaint.textSize = dp(11f)
-                    canvas.drawText(rStr, handCx, cardBottom + dp(38f), rPaint)
-                }
+                drawPayout(canvas, hand, handCx, cardBottom + dp(38f), dp(11f))
             }
 
             namePaint.textSize = dp(10f)
@@ -659,10 +672,22 @@ class BlackjackView @JvmOverloads constructor(
 
     private companion object {
         const val CARD_RATIO = 1.42f
+        /** Les valeurs de main (jusqu'à 30) en texte, faites une fois. */
+        val NUMBERS = Array(32) { it.toString() }
     }
 
     override fun onDetachedFromWindow() {
         removeCallbacks(animTick)
+        animRunning = false
         super.onDetachedFromWindow()
+    }
+
+    /** Écran caché pendant le tour d'une IA : la boucle s'arrête, et reprend au retour s'il reste à animer. */
+    override fun onWindowVisibilityChanged(visibility: Int) {
+        super.onWindowVisibilityChanged(visibility)
+        if (visibility != VISIBLE) {
+            removeCallbacks(animTick)
+            animRunning = false
+        } else if (isThinking || bubbles.isNotEmpty()) startAnimating()
     }
 }

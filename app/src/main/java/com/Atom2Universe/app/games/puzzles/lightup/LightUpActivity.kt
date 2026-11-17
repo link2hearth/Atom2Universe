@@ -42,7 +42,11 @@ class LightUpActivity : PuzzleActivity<LightUpState>() {
 class LightUpView(context: Context) : PuzzleView<LightUpState>(context) {
     private val grid = GridGeometry()
     private val r = RectF()
-    private val lighting = PuzzleStateCache<LightUpState, LightUpState.Lighting> { it.lighting() }
+    /** Une fois par état : l'éclairage, et les ampoules autour de chaque mur numéroté. */
+    private class Analysis(val lighting: LightUpState.Lighting, val around: IntArray)
+    private val lighting = PuzzleStateCache<LightUpState, Analysis> { s ->
+        Analysis(s.lighting(), IntArray(s.walls.size) { if (!s.isOpen(it) && s.walls[it] >= 0) s.lightsAround(it) else 0 })
+    }
     private val shaderMatrix = Matrix()
     private var shaderPalette: KitPalette? = null
     private lateinit var bulbShader: RadialGradient
@@ -51,7 +55,9 @@ class LightUpView(context: Context) : PuzzleView<LightUpState>(context) {
     override fun drawBoard(canvas: Canvas, state: LightUpState, area: RectF) {
         grid.fit(area, state.w, state.h)
         val cell = grid.cell
-        val (lit, clash) = lighting[state].let { it.lit to it.clashes }
+        val a = lighting[state]
+        val lit = a.lighting.lit
+        val clash = a.lighting.clashes
         if (shaderPalette !== palette) {
             shaderPalette = palette
             fun bulb(colour: Int) = RadialGradient(0f, -0.05f, 0.32f,
@@ -69,13 +75,13 @@ class LightUpView(context: Context) : PuzzleView<LightUpState>(context) {
                 canvas.drawRect(r, fill)
                 val v = state.walls[i]
                 if (v >= 0) {
-                    val on = state.lightsAround(i)
+                    val on = a.around[i]
                     val colour = when {
                         on > v -> palette.error
                         on == v -> palette.withAlpha(palette.surface, 0.55f)
                         else -> palette.surface
                     }
-                    canvas.centeredText(v.toString(), r.centerX(), r.centerY(), cell * 0.5f, colour, bold = true)
+                    canvas.centeredText(number(v), r.centerX(), r.centerY(), cell * 0.5f, colour, bold = true)
                 }
             }
         }
