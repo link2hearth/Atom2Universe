@@ -60,7 +60,7 @@ class Game2048Activity : ThemedActivity(), Game2048View.SwipeListener {
     private lateinit var statusText: TextView
     private lateinit var sizeSpinner: Spinner
     private lateinit var targetSpinner: Spinner
-    private lateinit var newButton: Button
+    private lateinit var newButton: View
     private lateinit var quantumSwitch: SwitchCompat
     private lateinit var jokerButton: Button
 
@@ -166,9 +166,7 @@ class Game2048Activity : ThemedActivity(), Game2048View.SwipeListener {
 
     private fun updateTargetSpinner(size: Int) {
         val pool = currentPool(size)
-        val adapter = ArrayAdapter(this, com.Atom2Universe.app.R.layout.item_spinner_selected,
-            pool.map { it.toString() })
-        adapter.setDropDownViewResource(com.Atom2Universe.app.R.layout.item_spinner_dropdown)
+        val adapter = targetAdapter(pool)
         ignoreSpinnerChange = true
         targetSpinner.adapter = adapter
         val currentTarget = if (quantumMode) game.quantumTarget else game.target
@@ -187,6 +185,20 @@ class Game2048Activity : ThemedActivity(), Game2048View.SwipeListener {
             }
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
+    }
+
+    /** Les objectifs de la liste, précédés d'une cible : la puce se comprend sans étiquette. */
+    private fun targetAdapter(pool: List<Int>): ArrayAdapter<String> {
+        val adapter = ArrayAdapter(this, R.layout.item_spinner_selected,
+            pool.map { getString(R.string.game2048_target_format, it) })
+        adapter.setDropDownViewResource(R.layout.item_spinner_dropdown)
+        return adapter
+    }
+
+    /** Le message de fin de partie, par-dessus la grille ; rien pendant la partie. */
+    private fun showStatus(text: String?) {
+        statusText.text = text
+        statusText.visibility = if (text.isNullOrEmpty()) View.GONE else View.VISIBLE
     }
 
     private fun confirmNewGame() {
@@ -231,16 +243,13 @@ class Game2048Activity : ThemedActivity(), Game2048View.SwipeListener {
         boardView.refresh()
         updateDisplays()
         refreshJokerButton()
-        statusText.text = getString(R.string.game2048_status_play)
+        showStatus(null)
         saveCurrent()
     }
 
     private fun updateTargetSpinnerSelection(size: Int, target: Int) {
         val pool = currentPool(size)
-        val adapter = ArrayAdapter(this, com.Atom2Universe.app.R.layout.item_spinner_selected,
-            pool.map { it.toString() })
-        adapter.setDropDownViewResource(com.Atom2Universe.app.R.layout.item_spinner_dropdown)
-        targetSpinner.adapter = adapter
+        targetSpinner.adapter = targetAdapter(pool)
         val idx = pool.indexOf(target).coerceAtLeast(0)
         targetSpinner.setSelection(idx)
 
@@ -332,7 +341,7 @@ class Game2048Activity : ThemedActivity(), Game2048View.SwipeListener {
         saveUniverses()
         updateDisplays()
         val winTarget = if (quantumMode) game.quantumTarget else game.target
-        statusText.text = getString(R.string.game2048_status_win, winTarget)
+        showStatus(getString(R.string.game2048_status_win, winTarget))
 
         // Payé selon l'objectif choisi : facile / normal / difficile de la taille.
         val pool = if (game.quantumMode) QUANTUM_TARGET_POOLS[game.size] else TARGET_POOLS[game.size]
@@ -354,7 +363,7 @@ class Game2048Activity : ThemedActivity(), Game2048View.SwipeListener {
         parallelUniverses++
         saveUniverses()
         updateDisplays()
-        statusText.text = getString(R.string.game2048_status_over, game.bestTile)
+        showStatus(getString(R.string.game2048_status_over, game.bestTile))
 
         boardView.postDelayed(autoRestart, 1500)
     }
@@ -406,14 +415,13 @@ class Game2048Activity : ThemedActivity(), Game2048View.SwipeListener {
         updateDisplays()
         refreshJokerButton()
 
-        if (game.gameOver) {
-            statusText.text = getString(R.string.game2048_status_over, game.bestTile)
-        } else if (game.hasWon) {
-            val winTarget = if (quantumMode) game.quantumTarget else game.target
-            statusText.text = getString(R.string.game2048_status_win, winTarget)
-        } else {
-            statusText.text = getString(R.string.game2048_status_play)
-        }
+        showStatus(when {
+            game.gameOver -> getString(R.string.game2048_status_over, game.bestTile)
+            game.hasWon -> getString(R.string.game2048_status_win, if (quantumMode) game.quantumTarget else game.target)
+            else -> null
+        })
+        // Partie finie au moment de quitter : le message, puis la relance, comme en jeu.
+        if (game.gameOver || game.hasWon) boardView.postDelayed(autoRestart, 1500)
     }
 
     private fun saveCurrent() {
@@ -470,7 +478,7 @@ class Game2048Activity : ThemedActivity(), Game2048View.SwipeListener {
         return map
     }
 
-    /** Couché : la grille sur toute la hauteur et la bulle des réglages ; la partie ne bouge pas. */
+    /** Couché : la grille au milieu, compteurs et réglages de part et d'autre ; la partie ne bouge pas. */
     override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
         super.onConfigurationChanged(newConfig)
         Landscape.swapLayout(this, R.layout.activity_game2048)

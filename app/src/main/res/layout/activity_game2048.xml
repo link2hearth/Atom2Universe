@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- 2048 debout : la bannière (retour, titre, nouvelle partie en icône, règles), les trois compteurs,
+     une ligne de réglages (grille, objectif, mode quantique), le joker en mode quantique, puis la
+     grille. Le message de fin de partie s'affiche par-dessus la grille, le temps de la relance. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -6,44 +9,66 @@
     android:background="?attr/a2uScreenBackground">
     <tag android:id="@id/app_effects_scene" android:value="true" />
 
-    <!-- Header -->
-    <LinearLayout
+    <com.Atom2Universe.app.util.FitRow
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="12dp"
-        android:gravity="center_vertical">
+        android:layout_height="wrap_content">
 
-        <ImageButton
-            android:id="@+id/back_button"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:src="@drawable/ic_app_back"
-            android:tint="@color/audio_text_primary"
-            android:background="?selectableItemBackgroundBorderless"
-            android:contentDescription="@string/back" />
-
-        <TextView
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/game2048_title"
-            android:textSize="22sp"
-            android:textColor="@color/startup_text_primary"
-            android:layout_marginStart="8dp" />
+            android:orientation="horizontal"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="8dp"
+            android:gravity="center_vertical">
 
-        <ImageButton
-            android:id="@+id/game2048_info_button"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/kit_rules"
-            android:padding="10dp"
-            android:src="@drawable/ic_info"
-        android:tint="?attr/a2uMusicAccent" />
-    </LinearLayout>
+            <ImageButton
+                android:id="@+id/back_button"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:src="@drawable/ic_app_back"
+                android:tint="@color/audio_text_primary"
+                android:background="?selectableItemBackgroundBorderless"
+                android:contentDescription="@string/back" />
 
-    <!-- Score panel -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:maxLines="1"
+                android:text="@string/game2048_title"
+                android:textSize="22sp"
+                android:textColor="@color/startup_text_primary" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <ImageButton
+                android:id="@+id/game2048_new_button"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_marginStart="8dp"
+                android:background="?selectableItemBackgroundBorderless"
+                android:contentDescription="@string/game2048_new"
+                android:padding="10dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_refresh"
+                android:tint="@color/audio_text_primary" />
+
+            <ImageButton
+                android:id="@+id/game2048_info_button"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/kit_rules"
+                android:padding="10dp"
+                android:src="@drawable/ic_info"
+                android:tint="?attr/a2uMusicAccent" />
+        </LinearLayout>
+    </com.Atom2Universe.app.util.FitRow>
+
+    <!-- Les trois compteurs -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -61,6 +86,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxLines="1"
                 android:text="@string/game2048_score_label"
                 android:textColor="@color/startup_text_secondary"
                 android:textSize="11sp" />
@@ -68,6 +94,7 @@
                 android:id="@+id/game2048_score"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxLines="1"
                 android:text="0"
                 android:textColor="@color/startup_text_primary"
                 android:textSize="20sp"
@@ -83,6 +110,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxLines="1"
                 android:text="@string/game2048_best_label"
                 android:textColor="@color/startup_text_secondary"
                 android:textSize="11sp" />
@@ -90,6 +118,7 @@
                 android:id="@+id/game2048_best"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxLines="1"
                 android:text="0"
                 android:textColor="#EDC22E"
                 android:textSize="20sp"
@@ -105,6 +134,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxLines="1"
                 android:text="@string/game2048_universes_label"
                 android:textColor="@color/startup_text_secondary"
                 android:textSize="11sp" />
@@ -112,6 +142,7 @@
                 android:id="@+id/game2048_universes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxLines="1"
                 android:text="0"
                 android:textColor="#7E57C2"
                 android:textSize="20sp"
@@ -119,7 +150,7 @@
         </LinearLayout>
     </LinearLayout>
 
-    <!-- Controls: taille + cible + nouvelle partie -->
+    <!-- Réglages : grille, objectif, mode quantique (réduits d'un bloc si l'écran est étroit) -->
     <com.Atom2Universe.app.util.FitRow
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -128,96 +159,53 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
+            android:paddingHorizontal="16dp"
             android:paddingBottom="6dp"
-            android:gravity="center_vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/game2048_size_label"
-                android:textColor="@color/startup_text_secondary"
-                android:textSize="12sp"
-                android:layout_marginEnd="4dp" />
+            android:gravity="center">
 
             <com.Atom2Universe.app.util.ImmersiveSpinner
                 android:id="@+id/game2048_size_spinner"
-                android:layout_width="96dp"
-                android:layout_height="40dp"
-                android:layout_marginEnd="12dp" />
-
-            <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/game2048_target_label"
-                android:textColor="@color/startup_text_secondary"
-                android:textSize="12sp"
-                android:layout_marginEnd="4dp" />
+                android:layout_height="44dp"
+                android:background="?attr/a2uChipBackground"
+                android:paddingHorizontal="6dp"
+                android:popupBackground="?attr/a2uPopupBackground"
+                android:spinnerMode="dropdown" />
 
             <com.Atom2Universe.app.util.ImmersiveSpinner
                 android:id="@+id/game2048_target_spinner"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_weight="1"
-                android:layout_marginEnd="8dp" />
-
-            <Button
-                android:id="@+id/game2048_new_button"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:text="@string/game2048_new"
-                android:textSize="12sp"
-                android:backgroundTint="#607D8B" />
-        </LinearLayout>
+                android:layout_height="44dp"
+                android:layout_marginStart="8dp"
+                android:background="?attr/a2uChipBackground"
+                android:paddingHorizontal="6dp"
+                android:popupBackground="?attr/a2uPopupBackground"
+                android:spinnerMode="dropdown" />
 
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/game2048_quantum_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:maxLines="1"
+                android:text="@string/game2048_quantum_mode"
+                android:textColor="#A78BFA"
+                android:textSize="14sp" />
+        </LinearLayout>
     </com.Atom2Universe.app.util.FitRow>
 
-    <!-- Ligne Mode Quantique 🐱 -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:paddingBottom="4dp"
-        android:gravity="center_vertical">
+    <!-- Le joker, en mode quantique seulement -->
+    <Button
+        android:id="@+id/game2048_joker_button"
+        android:layout_width="wrap_content"
+        android:layout_height="44dp"
+        android:layout_gravity="center_horizontal"
+        android:maxLines="1"
+        android:textSize="14sp"
+        android:backgroundTint="#1E293B"
+        android:textColor="@color/startup_text_primary"
+        android:visibility="gone" />
 
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/game2048_quantum_switch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/game2048_quantum_mode"
-            android:textColor="#A78BFA"
-            android:textSize="13sp"
-            android:layout_marginEnd="12dp" />
-
-        <!-- Bouton joker (visible seulement en mode quantique) -->
-        <Button
-            android:id="@+id/game2048_joker_button"
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:text="🐱 ×0"
-            android:textSize="13sp"
-            android:backgroundTint="#1E293B"
-            android:visibility="gone" />
-
-    </LinearLayout>
-
-    <!-- Status -->
-    <TextView
-        android:id="@+id/game2048_status"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:paddingBottom="6dp"
-        android:gravity="center"
-        android:textColor="@color/startup_text_secondary"
-        android:textSize="13sp"
-        android:text="@string/game2048_status_play" />
-
-    <!-- Board -->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -229,6 +217,21 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center" />
+
+        <!-- Fin de partie, par-dessus la grille -->
+        <TextView
+            android:id="@+id/game2048_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="16dp"
+            android:background="?attr/a2uPopupBackground"
+            android:gravity="center"
+            android:paddingHorizontal="18dp"
+            android:paddingVertical="12dp"
+            android:textColor="@color/startup_text_primary"
+            android:textSize="17sp"
+            android:visibility="gone" />
     </FrameLayout>
 
 </LinearLayout>
