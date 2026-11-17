@@ -17,6 +17,7 @@ import android.graphics.drawable.Drawable
 import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
+import android.widget.LinearLayout
 import android.widget.TextView
 import kotlin.math.PI
 import kotlin.math.abs
@@ -59,6 +60,45 @@ object MercerieUi {
         setTextColor(color)
         gravity = Gravity.CENTER
         includeFontPadding = false
+    }
+}
+
+/**
+ * Le contenu d'une fiche : une colonne qui s'arrange de la largeur qu'elle reçoit, mesurée à chaque
+ * fois (une rotation compte). Les blocs déclarés par [wide] prennent [wideWidth] au plus, moins sur
+ * un téléphone étroit ; les rangées déclarées par [row] mettent leurs boutons l'un sous l'autre
+ * quand ils ne tiennent pas côte à côte. [gap] : l'écart entre deux boutons.
+ */
+class CardColumn(context: Context, private val wideWidth: Int, private val gap: Int) : LinearLayout(context) {
+    private val wide = ArrayList<View>()
+    private val rows = ArrayList<LinearLayout>()
+
+    init {
+        orientation = VERTICAL
+        gravity = Gravity.CENTER_HORIZONTAL
+    }
+
+    fun wide(view: View) { wide += view }
+
+    fun row(row: LinearLayout) { rows += row }
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        val room = if (MeasureSpec.getMode(widthMeasureSpec) == MeasureSpec.UNSPECIFIED) Int.MAX_VALUE
+        else MeasureSpec.getSize(widthMeasureSpec) - paddingLeft - paddingRight
+        for (v in wide) v.layoutParams.width = min(wideWidth, room)
+        val free = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
+        for (row in rows) {
+            var sum = gap * (row.childCount - 1)
+            for (i in 0 until row.childCount) row.getChildAt(i).let { it.measure(free, free); sum += it.measuredWidth }
+            val stacked = sum > room
+            val want = if (stacked) VERTICAL else HORIZONTAL
+            if (row.orientation != want) row.orientation = want
+            for (i in 1 until row.childCount) (row.getChildAt(i).layoutParams as android.view.ViewGroup.MarginLayoutParams).apply {
+                topMargin = if (stacked) gap else 0
+                leftMargin = if (stacked) 0 else gap
+            }
+        }
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
     }
 }
 

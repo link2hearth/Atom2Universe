@@ -106,6 +106,7 @@ class SidePanel(private val activity: Activity) {
         fun bind(activity: Activity, bubble: LinearLayout) {
             val dp = activity.resources.displayMetrics.density
             style(activity, bubble)
+            scrollable(activity, bubble)
             val holder = bubble.parent as? FrameLayout ?: return
             val row = holder.parent as? LinearLayout ?: return
             val margin = (12 * dp).toInt()
@@ -170,6 +171,32 @@ class SidePanel(private val activity: Activity) {
         }
 
         private fun dragging(bubble: View) = bubble.getTag(R.id.side_panel) == true
+
+        /**
+         * Une bulle décrite en XML porte ses vues directement : sur un téléphone couché, peu haut,
+         * le bas de la bulle passait sous le bord de l'écran. Ses vues passent dans une colonne qui
+         * défile, comme dans les bulles construites en code ; tant que tout tient, rien ne change.
+         * Après une rotation, la bulle reçoit de nouveau ses vues en direct : on les y range encore.
+         */
+        private fun scrollable(activity: Activity, bubble: LinearLayout) {
+            val children = (0 until bubble.childCount).map { bubble.getChildAt(it) }.filter { it.tag != GRIP_TAG }
+            if (children.isEmpty() || children.any { it is ScrollView }) return
+            val column = LinearLayout(activity).apply {
+                orientation = LinearLayout.VERTICAL
+                gravity = bubble.gravity
+            }
+            for (child in children) {
+                val params = child.layoutParams
+                bubble.removeView(child)
+                column.addView(child, params)
+            }
+            val scroll = ScrollView(activity).apply {
+                isVerticalScrollBarEnabled = false
+                overScrollMode = View.OVER_SCROLL_NEVER
+                addView(column, FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+            }
+            bubble.addView(scroll, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+        }
 
         private fun style(activity: Activity, bubble: LinearLayout) {
             val dp = activity.resources.displayMetrics.density

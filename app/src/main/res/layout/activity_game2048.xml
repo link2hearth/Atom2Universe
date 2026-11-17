@@ -120,52 +120,58 @@
     </LinearLayout>
 
     <!-- Controls: taille + cible + nouvelle partie -->
-    <LinearLayout
+    <com.Atom2Universe.app.util.FitRow
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:paddingBottom="6dp"
-        android:gravity="center_vertical">
+        android:layout_height="wrap_content">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/game2048_size_label"
-            android:textColor="@color/startup_text_secondary"
-            android:textSize="12sp"
-            android:layout_marginEnd="4dp" />
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="6dp"
+            android:gravity="center_vertical">
 
-        <com.Atom2Universe.app.util.ImmersiveSpinner
-            android:id="@+id/game2048_size_spinner"
-            android:layout_width="96dp"
-            android:layout_height="40dp"
-            android:layout_marginEnd="12dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/game2048_size_label"
+                android:textColor="@color/startup_text_secondary"
+                android:textSize="12sp"
+                android:layout_marginEnd="4dp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/game2048_target_label"
-            android:textColor="@color/startup_text_secondary"
-            android:textSize="12sp"
-            android:layout_marginEnd="4dp" />
+            <com.Atom2Universe.app.util.ImmersiveSpinner
+                android:id="@+id/game2048_size_spinner"
+                android:layout_width="96dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="12dp" />
 
-        <com.Atom2Universe.app.util.ImmersiveSpinner
-            android:id="@+id/game2048_target_spinner"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:layout_marginEnd="8dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/game2048_target_label"
+                android:textColor="@color/startup_text_secondary"
+                android:textSize="12sp"
+                android:layout_marginEnd="4dp" />
 
-        <Button
-            android:id="@+id/game2048_new_button"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:text="@string/game2048_new"
-            android:textSize="12sp"
-            android:backgroundTint="#607D8B" />
-    </LinearLayout>
+            <com.Atom2Universe.app.util.ImmersiveSpinner
+                android:id="@+id/game2048_target_spinner"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp" />
+
+            <Button
+                android:id="@+id/game2048_new_button"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="@string/game2048_new"
+                android:textSize="12sp"
+                android:backgroundTint="#607D8B" />
+        </LinearLayout>
+
+    </com.Atom2Universe.app.util.FitRow>
 
     <!-- Ligne Mode Quantique 🐱 -->
     <LinearLayout

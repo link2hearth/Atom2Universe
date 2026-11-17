@@ -24,6 +24,7 @@ import com.Atom2Universe.app.science.SciencePalette
 import com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder
 import com.Atom2Universe.app.util.enableImmersiveMode
 import com.Atom2Universe.app.util.followImmersiveMode
+import com.Atom2Universe.app.util.FitRow
 import com.Atom2Universe.app.util.showGameRules
 import com.google.android.material.button.MaterialButton
 import java.time.LocalDate
@@ -109,7 +110,8 @@ class AtomBlocksActivity : ThemedActivity() {
         if (extra != null) header.addView(extra, LinearLayout.LayoutParams(-2, -2).apply { marginEnd = dp(8) })
         header.addView(icon(R.drawable.ic_info, R.string.kit_rules) { showGameRules(R.string.ab_title, R.string.ab_rules) }, LinearLayout.LayoutParams(dp(48), dp(48)))
         header.addView(icon(android.R.drawable.ic_menu_preferences, R.string.ab_settings) { showSettings() }, LinearLayout.LayoutParams(dp(48), dp(48)))
-        root.addView(header)
+        // Téléphone étroit : la bannière est réduite d'un bloc plutôt que de couper ses boutons.
+        root.addView(FitRow(this).apply { addView(header, android.widget.FrameLayout.LayoutParams(-1, -2)) })
         setContentView(root)
         return root
     }

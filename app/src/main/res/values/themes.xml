@@ -224,6 +224,19 @@
         <item name="strokeColor">?attr/a2uOutlineColor</item>
         <item name="backgroundTint">@color/sudoku_pad_button_background</item>
     </style>
+    <!-- Sudoku couché sur un téléphone : même pavé, plus bas, pour que la bulle tienne sans défiler -->
+    <style name="SudokuCompactPadButton" parent="SudokuPadButton">
+        <item name="android:layout_height">38dp</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+    <style name="SudokuCompactActionButton" parent="SudokuLandActionButton">
+        <item name="android:layout_height">36dp</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:paddingStart">2dp</item>
+        <item name="android:paddingEnd">2dp</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:maxLines">1</item>
+    </style>
 
     <!-- Styles Shop (clicker) -->
     <style name="ShopStatRow">

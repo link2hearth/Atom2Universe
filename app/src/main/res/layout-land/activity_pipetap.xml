@@ -116,29 +116,35 @@
                         android:textColor="?attr/a2uTextColor"
                         android:textSize="14sp" />
 
-                    <LinearLayout
+                    <com.Atom2Universe.app.util.FitRow
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="24dp"
-                        android:orientation="horizontal">
+                        android:layout_marginTop="24dp">
 
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/pipetap_btn_again"
-                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="12dp"
-                            android:text="@string/pipetap_btn_again"
-                            android:textColor="?attr/a2uSecondaryTextColor" />
+                            android:orientation="horizontal">
 
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/pipetap_btn_next"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/pipetap_btn_next"
-                            android:textColor="?attr/a2uOnAccentColor"
-                            android:backgroundTint="?attr/a2uMusicAccent" />
-                    </LinearLayout>
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/pipetap_btn_again"
+                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="12dp"
+                                android:text="@string/pipetap_btn_again"
+                                android:textColor="?attr/a2uSecondaryTextColor" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/pipetap_btn_next"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/pipetap_btn_next"
+                                android:textColor="?attr/a2uOnAccentColor"
+                                android:backgroundTint="?attr/a2uMusicAccent" />
+                        </LinearLayout>
+
+                    </com.Atom2Universe.app.util.FitRow>
                 </LinearLayout>
             </FrameLayout>
         </FrameLayout>

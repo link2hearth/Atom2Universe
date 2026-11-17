@@ -16,6 +16,7 @@ import android.util.TypedValue
 import android.view.Gravity
 import android.view.HapticFeedbackConstants
 import android.view.View
+import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.*
 import androidx.activity.OnBackPressedCallback
@@ -344,7 +345,7 @@ class JigsawActivity : ThemedActivity() {
             }
             options.addView(radio, RadioGroup.LayoutParams(-1, dp(48)))
         }
-        page.addView(options); sheet.setContentView(page); sheet.show()
+        page.addView(options); sheet.setContentView(scrolling(page)); sheet.show()
     }
     private fun startSurprise() {
         val paths = JigsawImages.paths(this, collection)
@@ -595,7 +596,7 @@ class JigsawActivity : ThemedActivity() {
         }
         page.addView(buy, LinearLayout.LayoutParams(-1, dp(56)).apply { topMargin = dp(16) })
         sheet.setOnDismissListener { if (guideSheet === sheet) guideSheet = null }
-        sheet.setContentView(page); sheet.show()
+        sheet.setContentView(scrolling(page)); sheet.show()
     }
     private fun complete(celebrate: Boolean = false) {
         val current = game ?: return
@@ -617,6 +618,11 @@ class JigsawActivity : ThemedActivity() {
     }
     private fun showRules() {
         showGameRules(R.string.jigsaw_title, R.string.jigsaw_rules)
+    }
+    /** Téléphone couché, peu haut : la feuille défile au lieu de cacher ses derniers choix. */
+    private fun scrolling(page: View) = androidx.core.widget.NestedScrollView(this).apply {
+        setBackgroundColor(palette.surface)
+        addView(page, ViewGroup.LayoutParams(-1, -2))
     }
     private fun sheetPage(titleRes: Int) = LinearLayout(this).apply {
         orientation = LinearLayout.VERTICAL; setPadding(dp(24), dp(20), dp(24), dp(28)); setBackgroundColor(palette.surface)

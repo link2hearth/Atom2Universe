@@ -67,54 +67,61 @@
     </LinearLayout>
 
     <!-- Boutons -->
-    <LinearLayout
-        android:id="@+id/toolbar"
+    <com.Atom2Universe.app.util.FitRow
+        android:id="@+id/toolbar_fit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:paddingStart="12dp"
-        android:paddingTop="4dp"
-        android:paddingEnd="12dp"
-        android:paddingBottom="4dp"
         app:layout_constraintTop_toBottomOf="@id/header">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/new_game_button"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:text="@string/solitaire_new_game" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/undo_button"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_marginStart="8dp"
-            android:text="@string/solitaire_undo" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/auto_finish_button"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_marginStart="8dp"
-            android:text="@string/solitaire_auto_finish"
-            android:visibility="gone" />
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
-        <TextView
-            android:id="@+id/status_text"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="?attr/a2uSecondaryTextColor"
-            android:textSize="14sp" />
-    </LinearLayout>
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="12dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="4dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/new_game_button"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="@string/solitaire_new_game" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/undo_button"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginStart="8dp"
+                android:text="@string/solitaire_undo" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/auto_finish_button"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginStart="8dp"
+                android:text="@string/solitaire_auto_finish"
+                android:visibility="gone" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/status_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="?attr/a2uSecondaryTextColor"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+    </com.Atom2Universe.app.util.FitRow>
 
     <!-- Plateau -->
     <com.Atom2Universe.app.games.solitaire.SolitaireView
@@ -122,7 +129,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:padding="4dp"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_fit"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

@@ -19,6 +19,7 @@ import androidx.appcompat.widget.SwitchCompat
 import com.Atom2Universe.app.AppearanceStyle
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
+import com.Atom2Universe.app.util.FitRow
 import com.Atom2Universe.app.util.enableImmersiveMode
 import com.Atom2Universe.app.util.showGameRules
 import java.time.LocalDate
@@ -114,6 +115,8 @@ class MahjongActivity : ThemedActivity() {
     private fun LinearLayout.full(view:View,gap:Int=8,height:Int=ViewGroup.LayoutParams.WRAP_CONTENT) {
         addView(view,LinearLayout.LayoutParams(-1,height).apply { topMargin=dp(gap) })
     }
+    /** Une bande du haut trop chargée pour un téléphone étroit est réduite d'un bloc plutôt que coupée à droite. */
+    private fun fitted(row:LinearLayout):View=FitRow(this).apply { addView(row,FrameLayout.LayoutParams(-1,-2)) }
     private fun root()=column().apply {
         setPadding(dp(12),dp(8),dp(12),dp(10))
         background=AppearanceStyle.screen(this@MahjongActivity)
@@ -177,7 +180,7 @@ class MahjongActivity : ThemedActivity() {
     private fun showMenu() {
         save(); releaseBoard(); run=null; screen="menu"; dialog?.dismiss(); dialog=null
         val root=root(); setContentView(root)
-        root.full(menuBanner(),0)
+        root.full(fitted(menuBanner()),0)
         val scroll=ScrollView(this).apply { isFillViewport=true; clipToPadding=false }
         val body=column().apply { setPadding(0,dp(4),0,dp(8)) }
         scroll.addView(body); root.addView(scroll,LinearLayout.LayoutParams(-1,0,1f))
@@ -429,7 +432,7 @@ class MahjongActivity : ThemedActivity() {
         val current=run ?: return
         releaseBoard(); screen="board"
         val root=root().apply { background=MahjongTableDrawable(this@MahjongActivity,store.table) }; setContentView(root)
-        root.full(boardBanner(current),0)
+        root.full(fitted(boardBanner(current)),0)
         progress=ProgressBar(this,null,android.R.attr.progressBarStyleHorizontal).apply {
             max=current.game.tiles.size; progressTintList=android.content.res.ColorStateList.valueOf(accent)
         }

@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Éprouvettes couché : la bande du titre en haut, les tubes sur toute la hauteur, et la bulle
+     (difficulté, nouvelle partie, mystère, formules, recommencer, annuler, pipette) qu'on déplace
+     à volonté. Sur un téléphone couché, les tubes gardent ainsi une taille lisible. -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/a2uScreenBackground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/lab_sort_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/a2uPanelBackground"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="4dp">
+
+            <ImageButton
+                android:id="@+id/lab_sort_back_button"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/color_stack_back"
+                android:src="@drawable/ic_app_back"
+                android:tint="@color/audio_text_primary" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:text="@string/lab_sort_title"
+                android:textColor="@color/startup_text_primary"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/lab_sort_moves"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="monospace"
+                android:text="@string/color_stack_moves_zero"
+                android:textColor="@color/startup_text_secondary"
+                android:textSize="16sp" />
+
+            <ImageButton
+                android:id="@+id/lab_sort_info_button"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="4dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/kit_rules"
+                android:padding="10dp"
+                android:src="@drawable/ic_info"
+                android:tint="?attr/a2uMusicAccent" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <com.Atom2Universe.app.games.colorstack.LabSortView
+                android:id="@+id/lab_sort_view"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:id="@+id/side_panel"
+                    android:layout_width="180dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <com.Atom2Universe.app.util.ImmersiveSpinner
+                            android:id="@+id/lab_sort_difficulty_spinner"
+                            android:layout_width="0dp"
+                            android:layout_height="40dp"
+                            android:layout_weight="1"
+                            android:background="?attr/a2uChipBackground"
+                            android:padding="8dp"
+                            android:popupBackground="?attr/a2uPopupBackground" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/lab_sort_btn_new"
+                            style="@style/Widget.MaterialComponents.Button.TextButton"
+                            android:layout_width="48dp"
+                            android:layout_height="40dp"
+                            android:layout_marginStart="8dp"
+                            android:contentDescription="@string/color_stack_btn_new"
+                            android:insetLeft="0dp"
+                            android:insetRight="0dp"
+                            android:minWidth="0dp"
+                            android:padding="0dp"
+                            app:backgroundTint="?attr/a2uMusicAccent"
+                            app:icon="@drawable/ic_refresh"
+                            app:iconGravity="textStart"
+                            app:iconPadding="0dp"
+                            app:iconSize="24dp"
+                            app:iconTint="@color/audio_on_accent" />
+                    </LinearLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/lab_sort_chip_mystery"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="6dp"
+                        android:text="@string/lab_sort_mystery"
+                        android:textColor="@color/startup_text_primary"
+                        app:backgroundTint="@color/sudoku_pad_button_background" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/lab_sort_chip_formulas"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="2dp"
+                        android:text="@string/lab_sort_formulas"
+                        android:textColor="@color/startup_text_primary"
+                        app:backgroundTint="@color/sudoku_pad_button_background" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/lab_sort_btn_restart"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="0dp"
+                            android:layout_height="48dp"
+                            android:layout_marginHorizontal="2dp"
+                            android:layout_weight="1"
+                            android:contentDescription="@string/color_stack_btn_restart"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:minWidth="0dp"
+                            android:paddingHorizontal="0dp"
+                            app:backgroundTint="@color/sudoku_pad_button_background"
+                            app:icon="@drawable/ic_restart"
+                            app:iconGravity="textStart"
+                            app:iconPadding="0dp"
+                            app:iconSize="24dp"
+                            app:iconTint="@color/startup_text_primary"
+                            app:strokeColor="?attr/a2uOutlineColor" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/lab_sort_btn_undo"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="0dp"
+                            android:layout_height="48dp"
+                            android:layout_marginHorizontal="2dp"
+                            android:layout_weight="1"
+                            android:contentDescription="@string/color_stack_btn_undo"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:minWidth="0dp"
+                            android:paddingHorizontal="0dp"
+                            android:text=""
+                            android:textColor="@color/startup_text_primary"
+                            app:backgroundTint="@color/sudoku_pad_button_background"
+                            app:icon="@drawable/ic_undo"
+                            app:iconGravity="textStart"
+                            app:iconPadding="4dp"
+                            app:iconSize="22dp"
+                            app:iconTint="@color/startup_text_primary"
+                            app:strokeColor="?attr/a2uOutlineColor" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/lab_sort_btn_pipette"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="0dp"
+                            android:layout_height="48dp"
+                            android:layout_marginHorizontal="2dp"
+                            android:layout_weight="1"
+                            android:contentDescription="@string/lab_sort_pipette"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:minWidth="0dp"
+                            android:paddingHorizontal="0dp"
+                            android:text=""
+                            android:textColor="@color/startup_text_primary"
+                            app:backgroundTint="@color/sudoku_pad_button_background"
+                            app:icon="@drawable/ic_pipette"
+                            app:iconGravity="textStart"
+                            app:iconPadding="4dp"
+                            app:iconSize="22dp"
+                            app:iconTint="@color/startup_text_primary"
+                            app:strokeColor="?attr/a2uOutlineColor" />
+                    </LinearLayout>
+                </LinearLayout>
+            </FrameLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Écran de victoire -->
+    <FrameLayout
+        android:id="@+id/lab_sort_win"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#B3000000"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:id="@+id/lab_sort_win_card"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_lab_win_card"
+            android:gravity="center_horizontal"
+            android:minWidth="280dp"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <TextView
+                android:id="@+id/lab_sort_win_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lab_sort_win_title"
+                android:textColor="#FF4ADE80"
+                android:textSize="28sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/lab_sort_win_moves"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:textColor="@color/startup_text_primary"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/lab_sort_win_reward"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textColor="@color/startup_text_secondary"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/lab_sort_win_close"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_marginEnd="6dp"
+                    android:layout_weight="1"
+                    android:text="@string/close"
+                    android:textColor="@color/startup_text_primary"
+                    app:backgroundTint="@color/sudoku_pad_button_background"
+                    app:strokeColor="?attr/a2uOutlineColor" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/lab_sort_win_new"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="6dp"
+                    android:layout_weight="1"
+                    android:text="@string/color_stack_btn_new"
+                    android:textColor="@color/audio_on_accent"
+                    app:backgroundTint="?attr/a2uMusicAccent" />
+            </LinearLayout>
+        </LinearLayout>
+    </FrameLayout>
+</FrameLayout>

@@ -796,25 +796,30 @@ class SurvivorView @JvmOverloads constructor(
         val cx = width / 2f
         pFill.color = Color.argb(205, 9, 25, 32)
         canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), pFill)
+        // Écran couché, peu haut (téléphone) : en-tête resserré et armes sur deux colonnes.
+        val wide = width > height
+        val compact = height < dp(560f)
         pText.textAlign = Paint.Align.CENTER
         pText.color = C_XP_FILL; pText.textSize = sp(28f)
-        canvas.drawText(sTitle, cx, dp(52f), pText)
+        canvas.drawText(sTitle, cx, dp(if (compact) 38f else 52f), pText)
 
         pText.textSize = sp(11f); pText.color = C_GRAY
-        canvas.drawText(context.getString(R.string.survivor_sanctuary), cx, dp(73f), pText)
-        val nextY = dp(98f)
+        canvas.drawText(context.getString(R.string.survivor_sanctuary), cx, dp(if (compact) 56f else 73f), pText)
+        val nextY = dp(if (compact) 78f else 98f)
         pText.textSize = sp(14f); pText.color = C_GRAY
         canvas.drawText(sSelectWeapon, cx, nextY, pText)
 
-        val cardW = width * 0.84f
+        val columns = if (wide) 2 else 1
+        val rows = (wpnCards.size + columns - 1) / columns
         val gap   = dp(8f)
-        val startY = nextY + dp(18f)
-        val cardH = min(dp(68f), (height - startY - dp(14f) - gap * 6f) / 7f).coerceAtLeast(dp(30f))
+        val cardW = if (columns == 1) width * 0.84f else (width * 0.92f - gap) / 2f
+        val startY = nextY + dp(if (compact) 12f else 18f)
+        val cardH = min(dp(68f), (height - startY - dp(14f) - gap * (rows - 1)) / rows).coerceAtLeast(dp(30f))
 
         wpnCards.forEachIndexed { i, card ->
-            val top   = startY + i * (cardH + gap)
-            val left  = cx - cardW / 2f
-            val right = cx + cardW / 2f
+            val top   = startY + (i / columns) * (cardH + gap)
+            val left  = if (columns == 1) cx - cardW / 2f else width * 0.04f + (i % columns) * (cardW + gap)
+            val right = left + cardW
             weaponCardRects[i].set(left, top, right, top + cardH)
 
             pFill.color = C_CARD_BG
@@ -853,27 +858,36 @@ class SurvivorView @JvmOverloads constructor(
         pFill.color = Color.argb(210, 9, 25, 32)
         canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), pFill)
 
+        // Couché sur un téléphone, la hauteur manque : le titre à gauche, la partie et les boutons à droite.
+        val split = width > height && height < dp(560f)
+        val titleX = if (split) width * 0.28f else cx
+        val sideX = if (split) width * 0.68f else cx
+
         // Un bloc titre : la silhouette du survivant, le nom, la devise.
-        val headY = height * 0.16f
-        art.player(canvas, cx, headY, dp(30f), 0f, false)
+        val headY = if (split) height * 0.5f - dp(56f) else height * 0.16f
+        art.player(canvas, titleX, headY, dp(30f), 0f, false)
         pText.textAlign = Paint.Align.CENTER
         pText.color = C_XP_FILL; pText.textSize = sp(34f)
-        canvas.drawText(sTitle, cx, headY + dp(66f), pText)
+        canvas.drawText(sTitle, titleX, headY + dp(66f), pText)
         pText.textSize = sp(11f); pText.color = C_GRAY
-        canvas.drawText(context.getString(R.string.survivor_sanctuary), cx, headY + dp(86f), pText)
+        canvas.drawText(context.getString(R.string.survivor_sanctuary), titleX, headY + dp(86f), pText)
 
-        var y = headY + dp(118f)
-        if (game.bestTime > 0f) {
+        val run = savedRun
+        // Couché, la colonne de droite (record, partie sauvegardée, boutons) est centrée en hauteur.
+        val best = game.bestTime > 0f
+        val columnH = (if (best) dp(26f) else 0f) + (if (run != null) dp(108f) else dp(10f)) +
+            (if (run != null) dp(112f) else dp(50f))
+        var y = if (split) ((height - columnH) / 2f).coerceAtLeast(dp(8f)) + (if (best) dp(13f) else 0f) else headY + dp(118f)
+        if (best) {
             pText.textSize = sp(13f); pText.color = C_GRAY
-            canvas.drawText(bestSummary(), cx, y, pText)
-            y += dp(26f)
+            canvas.drawText(bestSummary(), sideX, y, pText)
+            y += dp(if (split) 13f else 26f)
         }
 
         // La partie sauvegardée se montre avant de se proposer : on voit ce qu'on reprend.
-        val run = savedRun
         val labels = ArrayList<String>(2)
         if (run != null) {
-            y = drawRunCard(canvas, cx, y, run) + dp(20f)
+            y = drawRunCard(canvas, sideX, y, run) + dp(20f)
             labels.add(sResume)
         } else {
             y += dp(10f)
@@ -881,7 +895,7 @@ class SurvivorView @JvmOverloads constructor(
         labels.add(sNewGame)
         // Les boutons gardent la même hauteur qu'il y ait une partie à reprendre ou non :
         // sinon l'unique bouton flotterait au milieu du vide.
-        drawButtonStack(canvas, cx, max(y, height * 0.60f), labels)
+        drawButtonStack(canvas, sideX, if (split) y else max(y, height * 0.60f), labels)
         pText.color = Color.WHITE
     }
 
@@ -930,15 +944,17 @@ class SurvivorView @JvmOverloads constructor(
         canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), pFill)
 
         val cx = width / 2f
+        // Peu de hauteur (téléphone couché) : en-tête resserré, cartes moins hautes, toutes à l'écran.
+        val compact = height < dp(470f)
         pText.color = Color.WHITE; pText.textSize = sp(28f)
-        canvas.drawText(sLevelUp, cx, dp(70f), pText)
+        canvas.drawText(sLevelUp, cx, dp(if (compact) 42f else 70f), pText)
         pText.textSize = sp(14f); pText.color = C_GRAY
-        canvas.drawText(sChoose, cx, dp(100f), pText)
+        canvas.drawText(sChoose, cx, dp(if (compact) 66f else 100f), pText)
 
         val cardW = (width * 0.82f)
-        val cardH = dp(100f)
-        val startY = dp(120f)
-        val gap = dp(12f)
+        val startY = dp(if (compact) 80f else 120f)
+        val gap = dp(if (compact) 8f else 12f)
+        val cardH = min(dp(100f), (height - startY - dp(12f) - gap * 2f) / 3f).coerceAtLeast(dp(48f))
 
         choices.forEachIndexed { i, opt ->
             val top = startY + i * (cardH + gap)
@@ -958,7 +974,7 @@ class SurvivorView @JvmOverloads constructor(
             val iconCx = left + dp(50f)
             val iconCy = top + cardH / 2f
             pFill.color = Color.argb(180, Color.red(opt.cardColor), Color.green(opt.cardColor), Color.blue(opt.cardColor))
-            canvas.drawCircle(iconCx, iconCy, dp(22f), pFill)
+            canvas.drawCircle(iconCx, iconCy, min(dp(22f), cardH * .36f), pFill)
             pText.color = Color.WHITE; pText.textSize = sp(11f)
             canvas.drawText(context.getString(opt.shortRes), iconCx, iconCy + sp(4f), pText)
 

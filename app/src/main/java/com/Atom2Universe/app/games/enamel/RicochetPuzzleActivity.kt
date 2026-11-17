@@ -20,6 +20,7 @@ import com.Atom2Universe.app.games.bigger.BiggerSoundEngine
 import com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder
 import com.Atom2Universe.app.util.Landscape
 import com.Atom2Universe.app.util.enableImmersiveMode
+import com.Atom2Universe.app.util.FitRow
 import com.Atom2Universe.app.util.showGameRules
 import kotlin.random.Random
 
@@ -90,7 +91,9 @@ class RicochetPuzzleActivity : ThemedActivity() {
         }
         return LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL; setBackgroundColor(colors.background)
-            addView(bar, LinearLayout.LayoutParams(-1, -2))
+            // Debout sur un téléphone étroit, la bannière est réduite d'un bloc : le titre garde sa ligne.
+            addView(FitRow(this@RicochetPuzzleActivity).apply { flexDp = 150f; addView(bar, android.widget.FrameLayout.LayoutParams(-1, -2)) },
+                LinearLayout.LayoutParams(-1, -2))
             addView(board, LinearLayout.LayoutParams(-1, 0, 1f))
         }
     }

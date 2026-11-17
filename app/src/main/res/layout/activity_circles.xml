@@ -15,139 +15,146 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Header -->
-    <LinearLayout
-        android:id="@+id/circles_header"
+    <com.Atom2Universe.app.util.FitRow
+        android:id="@+id/circles_header_fit"
         android:layout_width="0dp"
-        android:layout_height="52dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingHorizontal="4dp"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageButton
-            android:id="@+id/circles_back_button"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/circles_back"
-            android:padding="10dp"
-            android:src="@drawable/ic_arrow_back_24"
-            app:tint="?attr/a2uMusicAccent" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_weight="1"
-            android:letterSpacing="0.18"
-            android:text="@string/circles_title"
-            android:textAllCaps="true"
-            android:textColor="?attr/a2uTextColor"
-            android:textSize="17sp"
-            android:textStyle="bold" />
-
-        <!-- La difficulté : un appui passe à la suivante. -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/circles_diff_button"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="wrap_content"
-            android:layout_height="38dp"
-            android:layout_marginEnd="8dp"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            android:minWidth="0dp"
-            android:paddingHorizontal="14dp"
-            android:textAllCaps="false"
-            android:textSize="14sp"
-            android:textColor="?attr/a2uTextColor"
-            app:backgroundTint="?attr/a2uRaisedColor"
-            app:cornerRadius="16dp"
-            app:strokeColor="?attr/a2uMusicAccent" />
-
-        <TextView
-            android:id="@+id/circles_tv_reward"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="6dp"
-            android:background="?attr/a2uChipBackground"
-            android:paddingHorizontal="12dp"
-            android:paddingVertical="5dp"
-            android:textColor="?attr/a2uMusicAccent"
-            android:textSize="13sp"
-            android:textStyle="bold" />
-
-        <!-- Moves in header -->
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="6dp"
-            android:background="?attr/a2uChipBackground"
+            android:id="@+id/circles_header"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingHorizontal="12dp"
-            android:paddingVertical="5dp">
+            android:paddingHorizontal="4dp">
+
+            <ImageButton
+                android:id="@+id/circles_back_button"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/circles_back"
+                android:padding="10dp"
+                android:src="@drawable/ic_arrow_back_24"
+                app:tint="?attr/a2uMusicAccent" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/circles_label_moves"
-                android:textColor="?attr/a2uSecondaryTextColor"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/circles_tv_moves"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
+                android:layout_weight="1"
+                android:letterSpacing="0.18"
+                android:text="@string/circles_title"
+                android:textAllCaps="true"
                 android:textColor="?attr/a2uTextColor"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+            <!-- La difficulté : un appui passe à la suivante. -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/circles_diff_button"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:layout_marginEnd="8dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:minWidth="0dp"
+                android:paddingHorizontal="14dp"
+                android:textAllCaps="false"
+                android:textSize="14sp"
+                android:textColor="?attr/a2uTextColor"
+                app:backgroundTint="?attr/a2uRaisedColor"
+                app:cornerRadius="16dp"
+                app:strokeColor="?attr/a2uMusicAccent" />
+
+            <TextView
+                android:id="@+id/circles_tv_reward"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
+                android:background="?attr/a2uChipBackground"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="5dp"
+                android:textColor="?attr/a2uMusicAccent"
                 android:textSize="13sp"
                 android:textStyle="bold" />
 
+            <!-- Moves in header -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
+                android:background="?attr/a2uChipBackground"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/circles_label_moves"
+                    android:textColor="?attr/a2uSecondaryTextColor"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/circles_tv_moves"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:textColor="?attr/a2uTextColor"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/circles_btn_hint"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/circles_btn_hint"
+                android:padding="10dp"
+                android:src="@drawable/ic_hint"
+                app:tint="?attr/a2uMusicAccent" />
+
+            <ImageButton
+                android:id="@+id/circles_btn_restart"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/circles_btn_restart"
+                android:padding="10dp"
+                android:src="@drawable/ic_restart"
+                app:tint="?attr/a2uTextColor" />
+
+            <ImageButton
+                android:id="@+id/circles_btn_new"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/circles_btn_new"
+                android:padding="10dp"
+                android:src="@drawable/ic_refresh"
+                app:tint="?attr/a2uTextColor" />
+
+            <ImageButton
+                android:id="@+id/circles_info_button"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/kit_rules"
+                android:padding="10dp"
+                android:src="@drawable/ic_info"
+            android:tint="?attr/a2uMusicAccent" />
+
         </LinearLayout>
 
-        <ImageButton
-            android:id="@+id/circles_btn_hint"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/circles_btn_hint"
-            android:padding="10dp"
-            android:src="@drawable/ic_hint"
-            app:tint="?attr/a2uMusicAccent" />
-
-        <ImageButton
-            android:id="@+id/circles_btn_restart"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/circles_btn_restart"
-            android:padding="10dp"
-            android:src="@drawable/ic_restart"
-            app:tint="?attr/a2uTextColor" />
-
-        <ImageButton
-            android:id="@+id/circles_btn_new"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/circles_btn_new"
-            android:padding="10dp"
-            android:src="@drawable/ic_refresh"
-            app:tint="?attr/a2uTextColor" />
-
-        <ImageButton
-            android:id="@+id/circles_info_button"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/kit_rules"
-            android:padding="10dp"
-            android:src="@drawable/ic_info"
-        android:tint="?attr/a2uMusicAccent" />
-
-    </LinearLayout>
+    </com.Atom2Universe.app.util.FitRow>
 
     <!-- L'anneau : carré, sur toute la place sous la bannière. -->
     <com.Atom2Universe.app.games.circles.CirclesView
@@ -158,7 +165,7 @@
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/circles_header"
+        app:layout_constraintTop_toBottomOf="@id/circles_header_fit"
         app:layout_constraintVertical_bias="0.5" />
 
     <!-- Win overlay : voile léger, l'atome en résonance reste visible derrière -->
@@ -171,7 +178,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/circles_header">
+        app:layout_constraintTop_toBottomOf="@id/circles_header_fit">
 
         <LinearLayout
             android:layout_width="wrap_content"

@@ -8,83 +8,89 @@
     android:background="?attr/a2uScreenBackground">
 
     <!-- Barre supérieure : retour, difficulté, niveau, recommencer, nouveau, règles -->
-    <LinearLayout
+    <com.Atom2Universe.app.util.FitRow
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:paddingStart="4dp"
-        android:paddingEnd="12dp"
-        android:background="?attr/a2uPanelBackground">
+        android:layout_height="wrap_content">
 
-        <ImageButton
-            android:id="@+id/mobile_btn_back"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:padding="10dp"
-            android:src="@drawable/ic_app_back"
-            app:tint="@color/audio_text_primary"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/balance_back" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="4dp"
+            android:paddingEnd="12dp"
+            android:background="?attr/a2uPanelBackground">
 
-        <com.Atom2Universe.app.util.ImmersiveSpinner
-            android:id="@+id/mobile_difficulty_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:minWidth="120dp"
-            android:layout_marginStart="4dp"
-            android:padding="8dp"
-            android:background="?attr/a2uChipBackground"
-            android:popupBackground="?attr/a2uPopupBackground" />
+            <ImageButton
+                android:id="@+id/mobile_btn_back"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:padding="10dp"
+                android:src="@drawable/ic_app_back"
+                app:tint="@color/audio_text_primary"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/balance_back" />
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
+            <com.Atom2Universe.app.util.ImmersiveSpinner
+                android:id="@+id/mobile_difficulty_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:minWidth="120dp"
+                android:layout_marginStart="4dp"
+                android:padding="8dp"
+                android:background="?attr/a2uChipBackground"
+                android:popupBackground="?attr/a2uPopupBackground" />
 
-        <TextView
-            android:id="@+id/mobile_level"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:textColor="@color/audio_text_secondary"
-            android:textSize="13sp" />
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
 
-        <ImageButton
-            android:id="@+id/mobile_btn_restart"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:layout_marginStart="4dp"
-            android:padding="10dp"
-            android:src="@drawable/ic_restart"
-            app:tint="@color/audio_text_secondary"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/mobile_btn_restart"
-            android:tooltipText="@string/mobile_btn_restart" />
+            <TextView
+                android:id="@+id/mobile_level"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:textColor="@color/audio_text_secondary"
+                android:textSize="13sp" />
 
-        <ImageButton
-            android:id="@+id/mobile_btn_new"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:padding="10dp"
-            android:src="@drawable/ic_refresh"
-            app:tint="@color/audio_text_secondary"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/balance_btn_new"
-            android:tooltipText="@string/balance_btn_new" />
+            <ImageButton
+                android:id="@+id/mobile_btn_restart"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_marginStart="4dp"
+                android:padding="10dp"
+                android:src="@drawable/ic_restart"
+                app:tint="@color/audio_text_secondary"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/mobile_btn_restart"
+                android:tooltipText="@string/mobile_btn_restart" />
 
-        <ImageButton
-            android:id="@+id/mobile_btn_info"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginStart="4dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/kit_rules"
-            android:padding="10dp"
-            android:src="@drawable/ic_info"
-        android:tint="?attr/a2uMusicAccent" />
+            <ImageButton
+                android:id="@+id/mobile_btn_new"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:padding="10dp"
+                android:src="@drawable/ic_refresh"
+                app:tint="@color/audio_text_secondary"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/balance_btn_new"
+                android:tooltipText="@string/balance_btn_new" />
 
-    </LinearLayout>
+            <ImageButton
+                android:id="@+id/mobile_btn_info"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="4dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/kit_rules"
+                android:padding="10dp"
+                android:src="@drawable/ic_info"
+            android:tint="?attr/a2uMusicAccent" />
+
+        </LinearLayout>
+
+    </com.Atom2Universe.app.util.FitRow>
 
     <!-- Scène : le mobile -->
     <com.Atom2Universe.app.games.balance.MobileView

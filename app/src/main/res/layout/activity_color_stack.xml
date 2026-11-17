@@ -8,126 +8,133 @@
     android:layout_height="match_parent"
     android:background="?attr/a2uScreenBackground">
 
-    <LinearLayout
-        android:id="@+id/color_stack_header"
+    <com.Atom2Universe.app.util.FitRow
+        android:id="@+id/color_stack_header_fit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/a2uPanelBackground"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingHorizontal="8dp"
-        android:paddingVertical="6dp"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageButton
-            android:id="@+id/color_stack_back_button"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/color_stack_back"
-            android:src="@drawable/ic_app_back"
-            android:tint="@color/audio_text_primary" />
-
-        <TextView
-            android:id="@+id/color_stack_moves"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_weight="1"
-            android:ellipsize="end"
-            android:fontFamily="monospace"
-            android:maxLines="1"
-            android:text="@string/color_stack_moves_zero"
-            android:textColor="@color/startup_text_secondary"
-            android:textSize="18sp" />
-
-        <!-- Niveaux : une, deux ou trois barres -->
         <LinearLayout
-            android:id="@+id/color_stack_levels"
-            android:layout_width="wrap_content"
-            android:layout_height="44dp"
-            android:background="?attr/a2uChipBackground"
+            android:id="@+id/color_stack_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/a2uPanelBackground"
+            android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:padding="3dp">
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="6dp">
 
             <ImageButton
-                android:id="@+id/color_stack_level_easy"
-                android:layout_width="42dp"
-                android:layout_height="match_parent"
-                android:background="@null"
-                android:contentDescription="@string/color_stack_difficulty_easy"
-                android:padding="8dp"
-                android:scaleType="fitCenter" />
+                android:id="@+id/color_stack_back_button"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/color_stack_back"
+                android:src="@drawable/ic_app_back"
+                android:tint="@color/audio_text_primary" />
+
+            <TextView
+                android:id="@+id/color_stack_moves"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:fontFamily="monospace"
+                android:maxLines="1"
+                android:text="@string/color_stack_moves_zero"
+                android:textColor="@color/startup_text_secondary"
+                android:textSize="18sp" />
+
+            <!-- Niveaux : une, deux ou trois barres -->
+            <LinearLayout
+                android:id="@+id/color_stack_levels"
+                android:layout_width="wrap_content"
+                android:layout_height="44dp"
+                android:background="?attr/a2uChipBackground"
+                android:orientation="horizontal"
+                android:padding="3dp">
+
+                <ImageButton
+                    android:id="@+id/color_stack_level_easy"
+                    android:layout_width="42dp"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:contentDescription="@string/color_stack_difficulty_easy"
+                    android:padding="8dp"
+                    android:scaleType="fitCenter" />
+
+                <ImageButton
+                    android:id="@+id/color_stack_level_medium"
+                    android:layout_width="42dp"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:contentDescription="@string/color_stack_difficulty_medium"
+                    android:padding="8dp"
+                    android:scaleType="fitCenter" />
+
+                <ImageButton
+                    android:id="@+id/color_stack_level_hard"
+                    android:layout_width="42dp"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:contentDescription="@string/color_stack_difficulty_hard"
+                    android:padding="8dp"
+                    android:scaleType="fitCenter" />
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/color_stack_btn_new"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="44dp"
+                android:layout_marginStart="10dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:minWidth="0dp"
+                android:paddingHorizontal="14dp"
+                android:text="@string/color_stack_btn_new"
+                android:textAllCaps="false"
+                android:textColor="@color/audio_on_accent"
+                android:textSize="16sp"
+                app:backgroundTint="?attr/a2uMusicAccent" />
 
             <ImageButton
-                android:id="@+id/color_stack_level_medium"
-                android:layout_width="42dp"
-                android:layout_height="match_parent"
-                android:background="@null"
-                android:contentDescription="@string/color_stack_difficulty_medium"
-                android:padding="8dp"
-                android:scaleType="fitCenter" />
+                android:id="@+id/color_stack_btn_restart"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_marginStart="6dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/color_stack_btn_restart"
+                android:padding="9dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_restart"
+                android:tint="@color/startup_text_primary" />
 
             <ImageButton
-                android:id="@+id/color_stack_level_hard"
-                android:layout_width="42dp"
-                android:layout_height="match_parent"
-                android:background="@null"
-                android:contentDescription="@string/color_stack_difficulty_hard"
-                android:padding="8dp"
-                android:scaleType="fitCenter" />
+                android:id="@+id/color_stack_btn_undo"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/color_stack_btn_undo"
+                android:padding="9dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_undo"
+                android:tint="@color/startup_text_primary" />
+
+            <ImageButton
+                android:id="@+id/color_stack_info_button"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/kit_rules"
+                android:padding="10dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_info"
+                android:tint="?attr/a2uMusicAccent" />
         </LinearLayout>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/color_stack_btn_new"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="44dp"
-            android:layout_marginStart="10dp"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            android:minWidth="0dp"
-            android:paddingHorizontal="14dp"
-            android:text="@string/color_stack_btn_new"
-            android:textAllCaps="false"
-            android:textColor="@color/audio_on_accent"
-            android:textSize="16sp"
-            app:backgroundTint="?attr/a2uMusicAccent" />
-
-        <ImageButton
-            android:id="@+id/color_stack_btn_restart"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:layout_marginStart="6dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/color_stack_btn_restart"
-            android:padding="9dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_restart"
-            android:tint="@color/startup_text_primary" />
-
-        <ImageButton
-            android:id="@+id/color_stack_btn_undo"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/color_stack_btn_undo"
-            android:padding="9dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_undo"
-            android:tint="@color/startup_text_primary" />
-
-        <ImageButton
-            android:id="@+id/color_stack_info_button"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/kit_rules"
-            android:padding="10dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_info"
-            android:tint="?attr/a2uMusicAccent" />
-    </LinearLayout>
+    </com.Atom2Universe.app.util.FitRow>
 
     <!-- Vue du jeu : les colonnes s'y ajustent à la largeur comme à la hauteur -->
     <com.Atom2Universe.app.games.colorstack.ColorStackView
@@ -137,6 +144,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/color_stack_header" />
+        app:layout_constraintTop_toBottomOf="@id/color_stack_header_fit" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -19,6 +19,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
+import com.Atom2Universe.app.util.FitRow
 import com.Atom2Universe.app.util.enableImmersiveMode
 import kotlinx.coroutines.launch
 
@@ -46,6 +47,8 @@ class FarmActivity : ThemedActivity() {
     private var actionOrigin: PointF? = null
     private var shownCoins: Long? = null
     private lateinit var toolbar: LinearLayout
+    /** Le cadre de la barre : sur un téléphone étroit, il la réduit d'un bloc pour que la bourse reste lisible. */
+    private lateinit var toolbarBox: FitRow
     private lateinit var balance: TextView
     private lateinit var selection: FarmArtView
     private lateinit var produceIcon: FarmArtView
@@ -202,7 +205,8 @@ class FarmActivity : ThemedActivity() {
         toolbar.addView(manureIcon, LinearLayout.LayoutParams(dp(48), dp(48)).apply { leftMargin = dp(2) })
         regionIcon = icon(FarmArtView.Kind.MAP, R.string.farm_regions) { chooseRegion() }
         toolbar.addView(regionIcon, LinearLayout.LayoutParams(dp(48), dp(48)))
-        root.addView(toolbar, FrameLayout.LayoutParams(-1, dp(58), Gravity.TOP).apply {
+        toolbarBox = FitRow(this).apply { flexDp = 120f; addView(toolbar, FrameLayout.LayoutParams(-1, dp(58))) }
+        root.addView(toolbarBox, FrameLayout.LayoutParams(-1, -2, Gravity.TOP).apply {
             setMargins(dp(10), dp(8), dp(10), 0)
         })
         visitDock = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL }
@@ -544,7 +548,7 @@ class FarmActivity : ThemedActivity() {
         bubble = card
         val availableWidth = (root.width - dp(24)).coerceAtLeast(1)
         val cardWidth = minOf(dp(380), availableWidth)
-        val top = toolbar.bottom + dp(10)
+        val top = toolbarBox.bottom + dp(10)
         val maxHeight = minOf((root.height * heightFraction).toInt(), root.height - top - dp(16)).coerceAtLeast(1)
         card.measure(View.MeasureSpec.makeMeasureSpec(cardWidth, View.MeasureSpec.EXACTLY),
             View.MeasureSpec.makeMeasureSpec(maxHeight, View.MeasureSpec.AT_MOST))
@@ -1041,7 +1045,7 @@ class FarmActivity : ThemedActivity() {
             val instruction = text("", 15, true); body.addView(instruction)
             val help = text("", 13).apply { setPadding(0, dp(4), 0, dp(6)) }; body.addView(help)
             val surface = FarmCookingView(this, session)
-            val boardHeight = minOf(dp(200), ((root.height - toolbar.bottom - dp(100)) * .4f).toInt()).coerceAtLeast(dp(100))
+            val boardHeight = minOf(dp(200), ((root.height - toolbarBox.bottom - dp(100)) * .4f).toInt()).coerceAtLeast(dp(100))
             body.addView(surface, LinearLayout.LayoutParams(-1, boardHeight))
             val assist = button(getString(R.string.farm_kitchen_assist)) { surface.assistGesture() }
             body.addView(assist)

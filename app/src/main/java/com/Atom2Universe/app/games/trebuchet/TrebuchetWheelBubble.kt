@@ -452,6 +452,12 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
         }
         val w = xUnit + unitWidth + PAD_DP * dp
         val h = (HEADER_DP + PAD_DP * 2f + dials.size * ROW_DP) * dp
+        // Plus haute que la place (téléphone couché, bandeau d'aide sur deux lignes) : la bulle se
+        // réduit d'un bloc depuis son bord haut plutôt que de perdre sa dernière roulette.
+        val room = MeasureSpec.getSize(heightMeasureSpec).toFloat()
+        val k = if (MeasureSpec.getMode(heightMeasureSpec) != MeasureSpec.UNSPECIFIED && room > 0f && h > room) room / h else 1f
+        scaleX = k; scaleY = k
+        pivotX = w / 2f; pivotY = 0f
         setMeasuredDimension(w.roundToInt(), h.roundToInt())
     }
 

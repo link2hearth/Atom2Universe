@@ -3,6 +3,7 @@ package com.Atom2Universe.app.games.mercerie
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +17,7 @@ import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
+import com.Atom2Universe.app.util.FitFrame
 import com.Atom2Universe.app.util.enableImmersiveMode
 import com.Atom2Universe.app.util.updateSystemBarsVisibility
 
@@ -170,15 +172,22 @@ class MercerieActivity : ThemedActivity() {
 
     /**
      * Barre du haut : retour à gauche, suivi du titre ; à droite, de gauche à droite, la bascule
-     * jour / nuit, le haut-parleur et l'aide. Le titre se range à gauche pour ne jamais passer sous
-     * les boutons de droite sur un téléphone.
+     * jour / nuit, le haut-parleur et l'aide. Le titre prend la place entre les deux et rapetisse
+     * sur un téléphone étroit plutôt que de passer sous les boutons de droite.
      */
-    private fun topBar(title: String?, onBack: () -> Unit): View = FrameLayout(this).apply {
+    private fun topBar(title: String?, onBack: () -> Unit): View = LinearLayout(this).apply {
+        orientation = LinearLayout.HORIZONTAL
+        gravity = Gravity.CENTER_VERTICAL
         setPadding(dp(12f), dp(10f), dp(12f), 0)
-        addView(roundButton(R.string.mercerie_sym_back, onBack), FrameLayout.LayoutParams(-2, -2, Gravity.START or Gravity.CENTER_VERTICAL))
-        if (title != null) addView(MercerieUi.label(context, 22f).apply { text = title },
-            FrameLayout.LayoutParams(-2, -2, Gravity.START or Gravity.CENTER_VERTICAL).apply { leftMargin = dp(66f) })
-        addView(rightButtons(), FrameLayout.LayoutParams(-2, -2, Gravity.END or Gravity.CENTER_VERTICAL))
+        addView(roundButton(R.string.mercerie_sym_back, onBack))
+        val label = MercerieUi.label(context, 22f).apply {
+            text = title.orEmpty()
+            gravity = Gravity.START or Gravity.CENTER_VERTICAL
+            maxLines = 1
+            setAutoSizeTextTypeUniformWithConfiguration(dp(11f), textSize.toInt(), 1, TypedValue.COMPLEX_UNIT_PX)
+        }
+        addView(label, LinearLayout.LayoutParams(0, dp(52f), 1f).apply { leftMargin = dp(14f); rightMargin = dp(8f) })
+        addView(rightButtons())
     }
 
     /** Bascule jour / nuit, haut-parleur et aide, côte à côte. */
@@ -240,11 +249,15 @@ class MercerieActivity : ThemedActivity() {
         val level = MercerieUi.label(this, 16f).apply { text = getString(R.string.mercerie_level, next) }
         val levels = button(R.string.mercerie_levels, Felt.MINT) { showMap() }
 
+        // Sur un petit écran, la mascotte rapetisse (puis la guirlande) ; s'il manque encore de la
+        // place, l'accueil entier est réduit d'un bloc : rien ne passe sous le bord de l'écran.
+        val fit = FitFrame(this)
         if (landscape) {
             // Couché : le titre et Pique à gauche, les boutons à droite.
             val left = column().apply { gravity = Gravity.CENTER }
             left.add(title, width = -1)
             left.add(pique, width = dp(190f), height = dp(190f))
+            fit.elastic(pique, dp(90f), square = true)
             val right = column().apply { gravity = Gravity.CENTER }
             right.add(play)
             right.add(level, top = 10f)
@@ -260,12 +273,14 @@ class MercerieActivity : ThemedActivity() {
             frame.addView(BuntingView(this), FrameLayout.LayoutParams(-1, dp(56f), Gravity.TOP))
             frame.addView(row, FrameLayout.LayoutParams(-1, -1))
             frame.addView(topBar(null) { finish() }, FrameLayout.LayoutParams(-1, -2, Gravity.TOP))
-            setScreen(Screen.HOME, frame)
+            fit.addView(frame, ViewGroup.LayoutParams(-1, -1))
+            setScreen(Screen.HOME, fit)
             return
         }
         val content = column()
         content.add(topBar(null) { finish() }, width = -1)
-        content.add(BuntingView(this), width = -1, height = dp(70f))
+        val bunting = BuntingView(this)
+        content.add(bunting, width = -1, height = dp(70f))
         content.add(spacer(), height = 0, weight = .6f)
         content.add(title, width = -1)
         content.add(pique, width = dp(210f), height = dp(210f), top = 4f)
@@ -275,8 +290,11 @@ class MercerieActivity : ThemedActivity() {
         content.add(spacer(), height = 0, weight = .7f)
         content.add(totals())
         content.add(levels, top = 14f)
-        content.add(spacer(), height = 0, weight = 1f)
-        setScreen(Screen.HOME, content)
+        content.add(spacer(), height = dp(10f), weight = 1f)
+        fit.elastic(pique, dp(100f), square = true)
+        fit.elastic(bunting, dp(36f))
+        fit.addView(content, ViewGroup.LayoutParams(-1, -1))
+        setScreen(Screen.HOME, fit)
     }
 
     // ───────────────────────────── Carte ─────────────────────────────
@@ -401,33 +419,46 @@ class MercerieActivity : ThemedActivity() {
         card = null
     }
 
-    /** Pose une fiche au milieu de l'écran, sur un voile. [dismissable] : toucher à côté la referme. */
-    private fun showCard(dismissable: Boolean, build: LinearLayout.() -> Unit) {
+    /**
+     * Pose une fiche au milieu de l'écran, sur un voile. [dismissable] : toucher à côté la referme.
+     * Trop haute pour l'écran (téléphone couché), elle est réduite d'un bloc plutôt que coupée ;
+     * [fits] à faux pour une fiche qui fait déjà défiler son contenu (l'aide).
+     */
+    private fun showCard(dismissable: Boolean, fits: Boolean = true, build: CardColumn.() -> Unit) {
         closeCard()
-        val panel = column().apply {
+        val panel = CardColumn(this, dp(300f), dp(12f)).apply {
             background = FeltDrawable(context, Felt.PAPER, 34f, threadColor = Felt.PINK)
             setPadding(dp(30f), dp(26f), dp(30f), dp(30f))
             isClickable = true
             build()
         }
+        val box = FitFrame(this, shrinks = fits).apply { addView(panel, ViewGroup.LayoutParams(-2, -2)) }
         val veil = FrameLayout(this).apply {
             setBackgroundColor(Felt.VEIL)
             isClickable = true
             if (dismissable) setOnClickListener { closeCard() }
-            addView(panel, FrameLayout.LayoutParams(-2, -2, Gravity.CENTER).apply {
+            addView(box, FrameLayout.LayoutParams(-1, -1).apply {
                 leftMargin = dp(18f); rightMargin = dp(18f); topMargin = dp(10f); bottomMargin = dp(10f)
             })
         }
         card = veil
         root.addView(veil, FrameLayout.LayoutParams(-1, -1))
-        panel.scaleX = .8f; panel.scaleY = .8f; panel.alpha = 0f
-        panel.animate().scaleX(1f).scaleY(1f).alpha(1f).setDuration(180).start()
+        box.scaleX = .8f; box.scaleY = .8f; box.alpha = 0f
+        box.animate().scaleX(1f).scaleY(1f).alpha(1f).setDuration(180).start()
     }
 
-    private fun LinearLayout.buttons(vararg items: View) {
-        val row = LinearLayout(context).apply { orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER }
-        for ((n, b) in items.withIndex()) row.addView(b, LinearLayout.LayoutParams(-2, -2).apply { if (n > 0) leftMargin = dp(12f) })
-        add(row, top = 20f)
+    /** Une rangée de boutons ; trop large pour la fiche (téléphone étroit), ils passent l'un sous l'autre. */
+    private fun CardColumn.buttons(vararg items: View) {
+        val line = LinearLayout(context).apply { orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER }
+        for (b in items) line.addView(b, LinearLayout.LayoutParams(-2, -2))
+        row(line)
+        add(line, top = 20f)
+    }
+
+    /** Un bloc large de fiche : 300 de large au plus, moins sur un téléphone étroit. */
+    private fun CardColumn.addWide(view: View, height: Int = -2, top: Float = 0f, weight: Float = 0f) {
+        add(view, width = dp(300f), height = height, top = top, weight = weight)
+        wide(view)
     }
 
     /**
@@ -523,9 +554,9 @@ class MercerieActivity : ThemedActivity() {
             portalIcon to R.string.mercerie_help_portal,
             medal(true) to R.string.mercerie_help_par
         )
-        showCard(dismissable = true) {
+        showCard(dismissable = true, fits = false) {
             add(MercerieUi.label(context, 24f, Felt.PINK).apply { text = getString(R.string.mercerie_help_title) })
-            add(hintToggle(), width = dp(300f), top = 10f)
+            addWide(hintToggle(), top = 10f)
             val list = column().apply { gravity = Gravity.START }
             for ((icon, textRes) in rows) list.addView(LinearLayout(context).apply {
                 orientation = LinearLayout.HORIZONTAL
@@ -545,7 +576,7 @@ class MercerieActivity : ThemedActivity() {
             })
             val scroll = ScrollView(context).apply { addView(list) }
             // La liste prend la place qui reste : en paysage, elle défile dans la fiche.
-            add(scroll, width = dp(300f), height = 0, top = 10f, weight = 1f)
+            addWide(scroll, height = 0, top = 10f, weight = 1f)
             buttons(button(R.string.close) { closeCard() })
         }
     }
@@ -656,9 +687,11 @@ class MercerieActivity : ThemedActivity() {
             side.add(spacer(), height = 0, weight = 1f)
             side.add(scoreBox)
             side.add(spacer(), height = 0, weight = .6f)
+            // Téléphone couché, peu haut : la colonne est réduite d'un bloc plutôt que rognée en bas.
+            val sideFit = FitFrame(this).apply { addView(side, ViewGroup.LayoutParams(-1, -1)) }
             content = LinearLayout(this).apply {
                 orientation = LinearLayout.HORIZONTAL
-                addView(side, LinearLayout.LayoutParams(dp(244f), -1).apply {
+                addView(sideFit, LinearLayout.LayoutParams(dp(244f), -1).apply {
                     leftMargin = dp(10f); topMargin = dp(10f); bottomMargin = dp(10f)
                 })
                 addView(view, LinearLayout.LayoutParams(0, -1, 1f))
@@ -666,15 +699,31 @@ class MercerieActivity : ThemedActivity() {
         } else {
             val column = column()
             column.add(topBar(title) { showPause() }, width = -1)
-            val hud = LinearLayout(this).apply {
-                orientation = LinearLayout.HORIZONTAL
-                gravity = Gravity.CENTER_VERTICAL
+            val hud = column().apply {
                 background = FeltDrawable(context, Felt.PAPER, 30f, threadColor = Felt.KRAFT)
                 setPadding(dp(14f), dp(10f), dp(16f), dp(14f))
+            }
+            val line = LinearLayout(this).apply {
+                orientation = LinearLayout.HORIZONTAL
+                gravity = Gravity.CENTER_VERTICAL
                 addView(movesBox)
                 parBox?.let { addView(it) }
-                addView(goals, LinearLayout.LayoutParams(0, -2, 1f))
-                addView(scoreBox)
+            }
+            // Téléphone étroit : les objectifs n'ont plus la place entre les coups et le score, ils
+            // passent sur une seconde ligne plutôt que d'être rognés.
+            val free = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+            val need = listOfNotNull(movesBox, parBox, goals, scoreBox).sumOf { it.measure(free, free); it.measuredWidth }
+            val room = (resources.configuration.screenWidthDp * resources.displayMetrics.density).toInt() -
+                dp(24f) - hud.paddingLeft - hud.paddingRight
+            if (need <= room) {
+                line.addView(goals, LinearLayout.LayoutParams(0, -2, 1f))
+                line.addView(scoreBox)
+                hud.add(line, width = -1)
+            } else {
+                line.addView(spacer(), LinearLayout.LayoutParams(0, 0, 1f))
+                line.addView(scoreBox)
+                hud.add(line, width = -1)
+                hud.add(goals, top = 6f)
             }
             column.addView(hud, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(8f); leftMargin = dp(12f); rightMargin = dp(12f) })
             column.add(view, width = -1, height = 0, weight = 1f)
@@ -781,7 +830,7 @@ class MercerieActivity : ThemedActivity() {
             flights?.confetti(stars)
             val titles = resources.getStringArray(when (stars) { 3 -> R.array.mercerie_win_3; 2 -> R.array.mercerie_win_2; else -> R.array.mercerie_win_1 })
             showCard(dismissable = false) {
-                add(FeltTitleView(context, titles.random(), 40f), width = dp(300f))
+                addWide(FeltTitleView(context, titles.random(), 40f))
                 add(StarsView(context, stars), width = dp(210f), height = dp(78f), top = 2f)
                 // Le score se compte sous les yeux du joueur.
                 val total = MercerieUi.label(context, 30f).apply { text = MercerieUi.number(0) }

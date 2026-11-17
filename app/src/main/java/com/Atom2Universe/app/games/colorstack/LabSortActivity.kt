@@ -3,6 +3,7 @@ package com.Atom2Universe.app.games.colorstack
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.ColorStateList
+import android.content.res.Configuration
 import android.os.Bundle
 import android.os.VibrationEffect
 import android.os.Vibrator
@@ -21,6 +22,7 @@ import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
+import com.Atom2Universe.app.util.Landscape
 import com.Atom2Universe.app.util.enableImmersiveMode
 import com.Atom2Universe.app.util.showGameRules
 import com.google.android.material.button.MaterialButton
@@ -73,6 +75,8 @@ class LabSortActivity : ThemedActivity(), LabSortView.Listener {
         super.onCreate(savedInstanceState)
         enableImmersiveMode()
         setContentView(R.layout.activity_lab_sort)
+        // Couché : les tubes sur toute la hauteur, les réglages et actions dans la bulle latérale.
+        Landscape.bindSidePanel(this)
 
         prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
         mysteryOn = prefs.getBoolean(KEY_MYSTERY, false)
@@ -133,6 +137,11 @@ class LabSortActivity : ThemedActivity(), LabSortView.Listener {
 
         setupSpinner()
         updateUI()
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        Landscape.swapLayout(this, R.layout.activity_lab_sort)
     }
 
     override fun onPause() {

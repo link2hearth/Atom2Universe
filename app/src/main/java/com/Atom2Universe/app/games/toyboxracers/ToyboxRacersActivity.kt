@@ -1329,6 +1329,25 @@ class ToyboxRacersActivity : ThemedActivity() {
             visibility = View.GONE
         }
 
+        /**
+         * Téléphone couché, peu haut : sous sa poignée (le titre, qu'on tire pour la déplacer), la
+         * bulle défile au lieu de perdre ses dernières lignes. Tant que tout tient, rien ne change.
+         */
+        fun scrollBelowTitle(panel: LinearLayout) {
+            val rest = (1 until panel.childCount).map { panel.getChildAt(it) }
+            val column = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
+            for (v in rest) {
+                val params = v.layoutParams
+                panel.removeView(v)
+                column.addView(v, params)
+            }
+            panel.addView(ScrollView(this).apply {
+                isVerticalScrollBarEnabled = false
+                overScrollMode = View.OVER_SCROLL_NEVER
+                addView(column, FrameLayout.LayoutParams(-1, -2))
+            }, LinearLayout.LayoutParams(-1, -2))
+        }
+
         fun row(parent: LinearLayout, vararg views: View, heightDp: Int = 42, bottomDp: Int = 6): LinearLayout {
             val line = LinearLayout(this).apply {
                 orientation = LinearLayout.HORIZONTAL
@@ -1533,6 +1552,7 @@ class ToyboxRacersActivity : ThemedActivity() {
             action(getString(R.string.toybox_editor_delete), 0xAA9A4B4B.toInt()) { deleteEditorVolume() }
         )
 
+        scrollBelowTitle(editorPanel)
         root.addView(editorPanel, FrameLayout.LayoutParams(dp(286), -2).apply {
             gravity = Gravity.TOP or Gravity.END
             rightMargin = dp(14)
@@ -1594,6 +1614,7 @@ class ToyboxRacersActivity : ThemedActivity() {
         row(editorPositionPanel, editorRotateLeftButton, editorRotationAxisButton, editorRotateRightButton)
         row(editorPositionPanel, editorRotationStepButton, bottomDp = 2)
         editorTrackBankEdgeRow = row(editorPositionPanel, editorTrackBankEdgeButton, bottomDp = 0)
+        scrollBelowTitle(editorPositionPanel)
         root.addView(editorPositionPanel, FrameLayout.LayoutParams(dp(206), -2).apply {
             gravity = Gravity.BOTTOM or Gravity.START
             leftMargin = dp(18)

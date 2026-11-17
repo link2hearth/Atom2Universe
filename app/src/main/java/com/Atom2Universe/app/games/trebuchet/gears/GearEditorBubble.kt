@@ -472,6 +472,11 @@ class GearEditorBubble @JvmOverloads constructor(
         }
         val w = xUnit + unitWidth + PAD_DP * dp
         val h = fixed + dials.size * rowDp * dp
+        // Même aux lignes les plus serrées, plus haute que la place (téléphone couché) : la bulle
+        // se réduit d'un bloc depuis son bord haut plutôt que de perdre ses dernières lignes.
+        val k = if (MeasureSpec.getMode(heightMeasureSpec) != MeasureSpec.UNSPECIFIED && available > 0f && h > available) available / h else 1f
+        scaleX = k; scaleY = k
+        pivotX = w / 2f; pivotY = 0f
         setMeasuredDimension(w.roundToInt(), h.roundToInt())
     }
 
