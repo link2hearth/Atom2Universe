@@ -49,9 +49,10 @@ class BlackBoxActivity : PuzzleActivity<BlackBoxState>() {
 
     override fun createControls(): View = LinearLayout(this).apply {
         gravity = Gravity.CENTER
-        val b = actionButton(R.string.blackbox_check, R.drawable.ic_check, primary = true) { current?.let { play(it.check()) } }
+        // Une coche seule : son nom reste lu par l'accessibilité et en appui long.
+        val b = iconAction(R.drawable.ic_check, getString(R.string.blackbox_check), primary = true) { current?.let { play(it.check()) } }
         checkButton = b
-        addView(b, LinearLayout.LayoutParams((140 * dp).toInt(), LinearLayout.LayoutParams.WRAP_CONTENT))
+        addView(b, LinearLayout.LayoutParams((48 * dp).toInt(), (48 * dp).toInt()))
     }
 
     override fun onStateShown(state: BlackBoxState) {

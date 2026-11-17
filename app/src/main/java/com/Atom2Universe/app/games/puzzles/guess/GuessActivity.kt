@@ -6,8 +6,12 @@ import android.graphics.RectF
 import android.graphics.drawable.GradientDrawable
 import android.view.Gravity
 import android.view.View
-import android.widget.LinearLayout
 import com.Atom2Universe.app.R
+import com.Atom2Universe.app.util.Landscape
+import com.google.android.flexbox.AlignItems
+import com.google.android.flexbox.FlexWrap
+import com.google.android.flexbox.FlexboxLayout
+import com.google.android.flexbox.JustifyContent
 import com.Atom2Universe.app.games.kit.KitArtwork
 import com.Atom2Universe.app.games.kit.KitPalette
 import com.Atom2Universe.app.games.kit.PuzzleActivity
@@ -27,7 +31,7 @@ class GuessActivity : PuzzleActivity<GuessState>() {
     )
     override val defaultPreset = 1
 
-    private var swatchRow: LinearLayout? = null
+    private var swatchRow: FlexboxLayout? = null
     private var submitButton: MaterialButton? = null
 
     override fun createBoard() = GuessView(this)
@@ -45,24 +49,27 @@ class GuessActivity : PuzzleActivity<GuessState>() {
     override val revealsOnLoss = true
     override fun statusText(state: GuessState) = getString(R.string.guess_status, state.guesses.size, state.maxGuesses)
 
-    override fun createControls(): View = LinearLayout(this).apply {
-        orientation = LinearLayout.HORIZONTAL
-        gravity = Gravity.CENTER_VERTICAL
-        val row = LinearLayout(context).apply { orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER }
-        swatchRow = row
-        addView(row, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
-        val submit = actionButton(R.string.guess_submit, R.drawable.ic_check, primary = true) {
+    /**
+     * Les pastilles de couleur puis la coche d'essai, qui passent à la ligne quand la place manque
+     * (bulle couchée étroite) au lieu de déborder.
+     */
+    override fun createControls(): View = FlexboxLayout(this).apply {
+        flexWrap = FlexWrap.WRAP
+        justifyContent = JustifyContent.CENTER
+        alignItems = AlignItems.CENTER
+        swatchRow = this
+        submitButton = iconAction(R.drawable.ic_check, getString(R.string.guess_submit), primary = true) {
             current?.submit()?.let { play(it) }
         }
-        submitButton = submit
-        addView(submit, LinearLayout.LayoutParams((84 * dp).toInt(), LinearLayout.LayoutParams.WRAP_CONTENT))
     }
 
     override fun onStateShown(state: GuessState) {
         val row = swatchRow ?: return
-        if (row.childCount != state.colours) {
+        val submit = submitButton ?: return
+        if (row.childCount != state.colours + 1) {
             row.removeAllViews()
             val size = (min(40f, 300f / state.colours) * dp).toInt()
+            val gap = (3 * dp).toInt()
             for (c in 0 until state.colours) {
                 row.addView(View(this).apply {
                     background = GradientDrawable().apply {
@@ -74,8 +81,12 @@ class GuessActivity : PuzzleActivity<GuessState>() {
                         val s = current ?: return@setOnClickListener
                         if (!s.isSolved && !s.isLost) play(s.put(c))
                     }
-                }, LinearLayout.LayoutParams(size, size).apply { marginStart = (3 * dp).toInt(); marginEnd = (3 * dp).toInt() })
+                }, FlexboxLayout.LayoutParams(size, size).apply { setMargins(gap, gap, gap, gap) })
             }
+            Landscape.detach(submit)
+            row.addView(submit, FlexboxLayout.LayoutParams((44 * dp).toInt(), (44 * dp).toInt()).apply {
+                setMargins(gap * 2, gap, gap, gap)
+            })
         }
         submitButton?.let {
             it.isEnabled = state.canSubmit && !state.isSolved && !state.isLost

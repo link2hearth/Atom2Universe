@@ -15,6 +15,10 @@ import com.Atom2Universe.app.games.kit.KitArtwork
 import com.Atom2Universe.app.games.kit.PuzzleStateCache
 import com.Atom2Universe.app.games.kit.KitPalette
 import com.Atom2Universe.app.games.kit.PuzzleView
+import com.google.android.flexbox.AlignItems
+import com.google.android.flexbox.FlexWrap
+import com.google.android.flexbox.FlexboxLayout
+import com.google.android.flexbox.JustifyContent
 import kotlin.math.abs
 import kotlin.math.min
 import kotlin.random.Random
@@ -57,17 +61,19 @@ class PatternActivity : PictureModeActivity<PatternState>() {
         setOnClickListener { onClick() }
     }
 
-    private fun spaced() = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
-        marginStart = (4 * dp).toInt(); marginEnd = (4 * dp).toInt()
+    private fun spaced() = FlexboxLayout.LayoutParams(FlexboxLayout.LayoutParams.WRAP_CONTENT, FlexboxLayout.LayoutParams.WRAP_CONTENT).apply {
+        setMargins((4 * dp).toInt(), (3 * dp).toInt(), (4 * dp).toInt(), (3 * dp).toInt())
     }
 
     /**
      * L'outil de l'appui simple (noircir ou poser une croix, l'appui long fait l'autre), l'aide
      * qui barre les blocs bien placés, et en mode « Images » la pastille qui ouvre la galerie.
+     * Les pastilles passent à la ligne quand la bulle est étroite.
      */
-    override fun createControls(): View = LinearLayout(this).apply {
-        orientation = LinearLayout.HORIZONTAL
-        gravity = Gravity.CENTER
+    override fun createControls(): View = FlexboxLayout(this).apply {
+        flexWrap = FlexWrap.WRAP
+        justifyContent = JustifyContent.CENTER
+        alignItems = AlignItems.CENTER
         for ((mode, text) in listOf(1 to R.string.pattern_tool_fill, 2 to R.string.pattern_tool_cross)) {
             val c = chip(getString(text)) {
                 (board as PatternView).tool = mode

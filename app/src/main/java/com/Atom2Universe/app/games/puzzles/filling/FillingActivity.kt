@@ -40,14 +40,19 @@ class FillingActivity : PuzzleActivity<FillingState>() {
     override val hasHints = true
     override fun hint(state: FillingState) = state.hint()
 
-    override fun createControls(): View = LinearLayout(this).apply {
-        gravity = Gravity.CENTER
-        for (d in 1..9) addView(key(d.toString()) { (board as FillingView).enter(d) }, weight())
-        addView(key(getString(R.string.kit_erase)) { (board as FillingView).enter(0) }, weight())
+    /** Le pavé : neuf chiffres et la gomme, rangés selon la place (une rangée debout, un bloc couché). */
+    private val keys = ArrayList<View>()
+    private val pad by lazy { LinearLayout(this).apply { orientation = LinearLayout.VERTICAL } }
+
+    override fun createControls(): View {
+        for (d in 1..9) keys.add(key(d.toString()) { (board as FillingView).enter(d) })
+        keys.add(key(getString(R.string.kit_erase)) { (board as FillingView).enter(0) })
+        return pad
     }
 
-    private fun weight() = LinearLayout.LayoutParams(0, (44 * dp).toInt(), 1f).apply {
-        marginStart = (2 * dp).toInt(); marginEnd = (2 * dp).toInt()
+    override fun onArranged(landscape: Boolean) {
+        keys.forEach { (it as TextView).textSize = if (landscape) 19f else 17f }
+        layoutKeys(pad, keys, portraitHeightDp = 44)
     }
 
     private fun key(text: String, onClick: () -> Unit) = TextView(this).apply {

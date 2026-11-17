@@ -307,39 +307,14 @@ abstract class LatinPuzzleActivity<S : LatinHolder<S>> : PuzzleActivity<S>() {
     override fun onArranged(landscape: Boolean) = layoutPad()
 
     /**
-     * Debout, une seule rangée sous la grille. Couché, la colonne a de la hauteur : un vrai pavé,
-     * grandes touches en grille (3 × 3 pour 9 chiffres), la gomme et le crayon sur la dernière ligne.
+     * Debout, une seule rangée sous la grille. Couché, des touches carrées serrées (chiffres, gomme,
+     * crayon) en rangées équilibrées de six au plus, à la taille que permet la bulle : le pavé
+     * laisse de la hauteur aux actions au lieu de déborder.
      */
     private fun layoutPad() {
         val box = pad ?: return
-        if (keys.isEmpty()) return
-        keys.forEach { Landscape.detach(it) }
-        box.removeAllViews()
-        val n = keys.size - 2
-        val landscape = landscapeLayout
-        val height = ((if (landscape) 62 else 46) * dp).toInt()
-        keys.forEach { it.textSize = if (landscape) 22f else 18f }
-        fun row() = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }.also {
-            box.addView(it, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT).apply { bottomMargin = (if (landscape) 4 * dp else 0f).toInt() })
-        }
-        if (!landscape) {
-            val r = row()
-            keys.forEach { r.addView(it, weight(height)) }
-            return
-        }
-        val cols = when (n) { in 0..5 -> n; 6, 9 -> 3; else -> 4 }
-        var r: LinearLayout? = null
-        for (i in 0 until n) {
-            if (i % cols == 0) r = row()
-            r!!.addView(keys[i], weight(height))
-        }
-        // Une rangée incomplète garde des touches de la même largeur.
-        val rest = (cols - n % cols) % cols
-        repeat(rest) { r!!.addView(View(this), weight(height)) }
-        val last = row()
-        last.addView(keys[n], weight(height))
-        last.addView(keys[n + 1], weight(height))
+        keys.forEach { it.textSize = if (landscapeLayout) 20f else 18f }
+        layoutKeys(box, keys)
     }
 
     private fun press(d: Int) {
@@ -351,10 +326,6 @@ abstract class LatinPuzzleActivity<S : LatinHolder<S>> : PuzzleActivity<S>() {
                 else -> b.set(cell, d)
             }
         }
-    }
-
-    private fun weight(height: Int) = LinearLayout.LayoutParams(0, height, 1f).apply {
-        marginStart = (2 * dp).toInt(); marginEnd = (2 * dp).toInt()
     }
 
     private fun key(text: String, onClick: () -> Unit) = TextView(this).apply {
