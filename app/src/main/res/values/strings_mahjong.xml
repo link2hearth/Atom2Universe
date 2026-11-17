@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="mj_title">Mahjong Garden</string>
-    <string name="mj_description">Six tile puzzles: ice slides, rotating gravity, a limited tray and paths to open.</string>
+    <string name="mj_description">The real mahjong solitaire and five variants: pyramids, triples, links, cascades, ice and tens.</string>
     <string name="mj_tagline">A little focus. A cascade of delight.</string>
     <string name="mj_sound">Porcelain chimes</string>
     <string name="mj_journey_title">The porcelain trail</string>
@@ -18,8 +18,8 @@
     <string name="mj_cascade">Cascade</string>
     <string name="mj_slide">Slide</string>
     <string name="mj_ten">Perfect ten</string>
-    <string name="mj_classic_desc">Match identical tiles with a clear top and a free left or right side. Several copies of a pattern can be available: choose the two that uncover the tiles you need below. Removing the wrong copies can leave their partners trapped in the layers. Undo lets you change that choice.</string>
-    <string name="mj_triple_desc">Take uncovered tiles into a seven-slot tray. Three identical tiles clear together. Their third copy may be buried under other families: plan which incomplete sets you can hold while reaching it. The new puzzles require several occupied slots, so picking an extra family at the wrong moment can fill the tray. Undo lets you try another order.</string>
+    <string name="mj_classic_desc">The classic mahjong solitaire. Match two identical free tiles: nothing on top, and an open left or right side. Each family has four copies: choose the pair that frees the tiles you need underneath.</string>
+    <string name="mj_triple_desc">Tap uncovered tiles to move them into the seven-slot tray. Three tiles of the same family clear together. If the tray fills up, the board is blocked: keep room for the sets you are building.</string>
     <string name="mj_connect_desc">Connect identical tiles through empty space with at most two right-angle turns; the outside border counts. When several copies are available, choose which partners to remove to open the right passage. A valid connection can leave the remaining copies without a route. Study the corners and shared passages before matching.</string>
     <string name="mj_cascade_desc">Connect identical tiles through empty space with at most two turns, including the outside border. After every pair, all remaining tiles fall in the indicated direction: down, left, up, right, then down again. Imagine where the tiles will land before choosing a pair: a fall can open a new route or trap the remaining matches.</string>
     <string name="mj_slide_desc">On ice, you choose the direction, never the distance! Swipe a tile horizontally or vertically: it travels to the wall or stops just before the next tile, without pushing it. You can also select a tile and tap an empty cell in the desired direction. Highlighted cells show the possible stops.\n\nOnly one tile is active, highlighted in gold. Move it as many times as needed, then tap an identical tile on a clear straight line to commit the pair. If you choose another tile without matching, the previous tile returns to its dotted origin: that attempt is cancelled.\n\nMost pairs need another family as a stopper. Matching a family too early can make the rest impossible: work out which stopping tiles you must keep. Undo lets you try a different order. Hint uses a complete solution to suggest the next selection, slide or pair.</string>
@@ -27,8 +27,8 @@
     <string name="mj_daily">Today’s board · +40 bonus pearls</string>
     <string name="mj_daily_replay">Replay today’s board</string>
     <string name="mj_daily_note">A shared daily seed, playable offline. The bonus is awarded once per board date. No streak to maintain.</string>
-    <string name="mj_collection">Textures and porcelain</string>
-    <string name="mj_collection_desc">Two independent collections: material textures and porcelain illustrations. Unlock them with pearls, then tap Use.</string>
+    <string name="mj_collection">Collection</string>
+    <string name="mj_collection_desc">Two collections: tile materials and flower illustrations. Unlock them with pearls, then tap Use.</string>
     <string name="mj_theme_jade">Jade garden</string>
     <string name="mj_theme_sakura">Sakura porcelain</string>
     <string name="mj_theme_ocean">Ocean glass</string>
@@ -73,11 +73,11 @@
     <string name="mj_best">Personal best · %1$d points</string>
     <string name="mj_next">Next board</string>
     <string name="mj_board_description">Mahjong board. Tap tiles to select them, then match according to the current mode.</string>
-    <string name="mj_rules">YOUR CELESTIAL GARDEN\nSix modes, Journey and Daily Gift each have their own save. All modes and helpers are available for free.\n\nEARNING PEARLS\nA victory earns 30 pearls, plus one per three starting tiles and a combo bonus. Each match raises the combo up to ×8; a mistake resets it. Half of the hundreds of points earned above base match points becomes bonus pearls, rounded down.\n\nSTAR DAYS\nEach day, a featured mode doubles game pearls, including combo bonuses. On Saturday and Sunday, every mode doubles them! The bonus is fixed when a board starts, even if finished later. ×2 bonuses never stack. Every fifth victory gives +100 pearls. The daily board gives +40 once per date. These two gifts are not doubled. No daily streak to maintain.\n\nTEXTURES AND PORCELAIN\nOpen Textures and porcelain in the menu, or Textures during a game. Two tabs let you separately choose and unlock tile materials and illustrations for values 1 and 2. Three designs are free in each tab. Buy the others in any order: the first costs 350 pearls, then the price rises after each purchase in the same tab. Pearls are spent; designs stay yours. No playtime requirement. Previously owned designs are kept.</string>
+    <string name="mj_rules">YOUR CELESTIAL GARDEN\nSix modes, Journey and Daily Gift each have their own save.\n\nSTARS AND PEARLS\nChain your matches quickly to raise the multiplier. At the end, your score gives one to three stars; each star earns pearls, more on bigger boards.\n\nSTARRY DATES\nEach day, a featured mode doubles the pearls. On Saturday and Sunday, every mode does! The bonus is fixed when the board starts. Every five victories: +100 pearls. Daily Gift: +40 once per date. These two gifts are not doubled.\n\nTEXTURES AND PORCELAIN\nTextures change the tile material and the color of their back. Porcelain illustrates the four flower tiles. Three of each are free; buy the others in any order, the price rises after each purchase in the same tab.</string>
     <string name="mj_settings">Settings</string>
     <string name="mj_effects">Animations and sparkles</string>
     <string name="mj_haptics">Gentle vibrations</string>
-    <string name="mj_collection_short">Textures and porcelain</string>
+    <string name="mj_collection_short">Collection</string>
     <string name="mj_journey_short">Journey</string>
     <string name="mj_daily_short">Daily gift</string>
     <string name="mj_number">%1$d</string>
@@ -93,12 +93,12 @@
     <string name="mj_collection_count">%1$d / %2$d · ◈ %3$d</string>
     <string name="mj_style_available">%1$s. Tap Use to apply this design.</string>
     <string name="mj_style_waiting">%1$s. Tap to see the price and unlock this design with pearls.</string>
-    <string name="mj_style_preview_help">Each collection has its own material texture. Illustrations decorate only values 1 and 2; values 3 to 9 use countable central motifs. Choose any design: each purchase raises the next price, with no playtime requirement.</string>
-    <string name="mj_reward_accessible">Victory: %1$d pearls and %2$d new porcelains. Tap a revealed tile to use its design.</string>
+    <string name="mj_style_preview_help">Textures change the tile material and the color of their back. Porcelain illustrates the four flower tiles. Choose any design: each purchase raises the next price, with no playtime requirement.</string>
+    <string name="mj_reward_accessible">Victory: %1$d pearls, %2$d stars.</string>
     <string name="mj_mode_help">%1$s\n\n%2$s</string>
-    <string name="mj_help_tools">THE THREE HELPERS\nUndo goes back one move. Hint reveals a pair or a move in Slide. Shuffle rebuilds the board; in Triples it also clears the tray. All helpers are free and unlimited.\n\nCOMBOS AND PEARLS\nChain correct matches to raise the multiplier up to ×8. A wrong pair resets the combo, keeping earned points. Combo points earn extra pearls on victory. No speed is required. Undo restores previous points, so repeating a move cannot farm rewards.\n\nYOUR PORCELAIN\nOpen the collection to buy a design or equip an owned one. Numbers show value; circle, diamond and star distinguish the three suits. Illustrations are decorative.\n\nEach mode saves its board and undo history separately.</string>
-    <string name="mj_garden_help">YOUR CELESTIAL GARDEN\nSix modes, Journey and Daily Gift each have their own save. All modes and helpers are available for free.\n\nEARNING PEARLS\nA victory earns 30 pearls, plus one per three starting tiles and a combo bonus. Each match raises the combo up to ×8; a mistake resets it. Half of the hundreds of points earned above base match points becomes bonus pearls, rounded down.\n\nSTAR DAYS\nEach day, a featured mode doubles game pearls, including combo bonuses. On Saturday and Sunday, every mode doubles them! The bonus is fixed when a board starts, even if finished later. ×2 bonuses never stack. Every fifth victory gives +100 pearls. The daily board gives +40 once per date. These two gifts are not doubled. No daily streak to maintain.\n\nTEXTURES AND PORCELAIN\nOpen Textures and porcelain in the menu, or Textures during a game. Two tabs let you separately choose and unlock tile materials and illustrations for values 1 and 2. Three designs are free in each tab. Buy the others in any order: the first costs 350 pearls, then the price rises after each purchase in the same tab. Pearls are spent; designs stay yours. No playtime requirement. Previously owned designs are kept.</string>
-    <string name="mj_collection_help">CHOOSE YOUR DESIGNS\nFrom the menu, tap Textures and porcelain. During a game, tap Textures at the top.\n\nTEXTURES\n24 materials for tile backgrounds, colors and edges. Tap Use on an owned texture to apply it. Tap a locked card, then Unlock and use to buy it.\n\nPORCELAIN\n24 illustrations for values 1 and 2, paired with any texture you choose. Values 3 to 9 keep countable motifs. Switch tabs to choose or buy illustrations.\n\nPEARLS\nThree designs are free in each collection. Each collection has its own progressive prices: 350 pearls, then 350 + 100 × n + 12 × n² after n purchases in that tab. Both share your pearl balance. No playtime requirement.\n\nTextures included in your previous porcelain purchases remain yours for free. Changing designs preserves every game and undo history.</string>
+    <string name="mj_help_tools">CHAIN AND STARS\nEach match made before the ring around the multiplier runs out raises it, up to ×8. Points = base × multiplier. Undo and shuffle break the chain. At the end, the score gives one to three stars, and the stars give the pearls.\n\nHELPERS\nUndo: unlimited. Hint: three per board, it shows a move that still leads to the end. Shuffle: only when no move is left, twice per board; after that the board is lost. Every board can be finished.</string>
+    <string name="mj_garden_help">YOUR CELESTIAL GARDEN\nSix modes, Journey and Daily Gift each have their own save.\n\nSTARS AND PEARLS\nChain your matches quickly to raise the multiplier. At the end, your score gives one to three stars; each star earns pearls, more on bigger boards.\n\nSTARRY DATES\nEach day, a featured mode doubles the pearls. On Saturday and Sunday, every mode does! The bonus is fixed when the board starts. Every five victories: +100 pearls. Daily Gift: +40 once per date. These two gifts are not doubled.\n\nTEXTURES AND PORCELAIN\nTextures change the tile material and the color of their back. Porcelain illustrates the four flower tiles. Three of each are free; buy the others in any order, the price rises after each purchase in the same tab.</string>
+    <string name="mj_collection_help">CHOOSE YOUR DESIGNS\nFrom the menu, tap the tiles next to your pearls. During a game, tap the collection button at the top.\n\nTEXTURES\n24 materials for the tile face and the color of their back.\n\nPORCELAIN\n24 illustrations for the four flower tiles.\n\nSCENERY\n12 landscapes behind the board.\n\nPEARLS\nThree designs are free in each tab. Each tab has its own rising prices: 350 pearls, then 350 + 100 × n + 12 × n² after n purchases in that tab. Changing a design keeps your games.</string>
     <string name="mj_journey_help">THE PORCELAIN TRAIL\nA journey alternating the six games. Finish a board to advance. Its save is independent of free-play modes.\n\nEach stage earns pearls to buy your chosen designs. The ×2 bonus applies if the mode is featured or the board starts on a weekend. Helpers remain free.</string>
     <string name="mj_daily_help">DAILY GIFT\nA new offline board each day, with 40 extra pearls on your first completion for that date. Its mode rotates between the six games.\n\nAn unfinished daily board stays saved even after midnight. Finish it whenever you like; the next board will use the current date. Replays still give normal rewards. There is no streak to lose and no deadline.</string>
     <string-array name="mj_porcelain_names">
@@ -122,7 +122,7 @@
     <string name="mj_weekend_bonus">Star weekend · all games earn ×2 pearls</string>
     <string name="mj_featured_bonus">Today’s feature · %1$s · ×2 pearls</string>
     <string name="mj_run_bonus">Star game · ×2 pearl reward</string>
-    <string name="mj_reward_breakdown">Combos: +%1$d ◈ · game ×%2$d · gift +%3$d ◈</string>
+    <string name="mj_reward_breakdown">Stars: %1$d / 3 · game ×%2$d · gift +%3$d ◈</string>
     <string name="mj_reward_daily_bonus">Daily gift: +40 ◈</string>
     <string name="mj_textures">Textures</string>
     <string name="mj_porcelains">Porcelain</string>
@@ -131,8 +131,8 @@
     <string name="mj_porcelain_selection">Applied porcelain: %1$s · independent of the texture.</string>
     <string name="mj_apply_visual">Use</string>
     <string name="mj_visual_applied">%1$s: applied!</string>
-    <string name="mj_texture_preview_help">This texture changes the material, color and edges of every tile. Your illustrations stay the same. Buying unlocks and applies it; switching owned textures is free.</string>
-    <string name="mj_porcelain_preview_help">This porcelain changes the illustrations on values 1 and 2. Your texture stays the same. Buying unlocks and applies these illustrations; switching owned porcelain is free.</string>
+    <string name="mj_texture_preview_help">This texture changes the material and the colored back of every tile. Buying unlocks and applies it; switching owned textures is free.</string>
+    <string name="mj_porcelain_preview_help">This porcelain illustrates the four flower tiles. Your texture stays the same. Buying unlocks and applies it; switching owned porcelain is free.</string>
     <string-array name="mj_texture_names">
         <item>Crackled jade</item>
         <item>Gold-veined jade</item>
@@ -161,4 +161,22 @@
     </string-array>
     <string name="mj_bonus_badge" translatable="false">◈ ×2</string>
     <string-array name="mj_gravity_arrows" translatable="false"><item>↓</item><item>←</item><item>↑</item><item>→</item></string-array>
+    <!-- Dessins des tuiles traditionnelles : ce sont des motifs, pas du texte à traduire. -->
+    <string-array name="mj_glyph_numerals" translatable="false"><item>一</item><item>二</item><item>三</item><item>四</item><item>五</item><item>六</item><item>七</item><item>八</item><item>九</item></string-array>
+    <string-array name="mj_glyph_winds" translatable="false"><item>東</item><item>南</item><item>西</item><item>北</item></string-array>
+    <string-array name="mj_glyph_dragons" translatable="false"><item>中</item><item>發</item></string-array>
+    <string name="mj_glyph_wan" translatable="false">萬</string>
+    <string name="mj_help_tools_untimed">CHAIN AND STARS\nNo timer here: each match raises the multiplier, up to ×8, as long as you do not undo or shuffle. At the end, the score gives one to three stars, and the stars give the pearls.\n\nHELPERS\nUndo: unlimited. Hint: three per board. Shuffle: only when the board has no way out, twice per board; after that the board is lost. Every board can be finished.</string>
+    <string name="mj_no_moves">No moves left</string>
+    <string name="mj_no_solution">No way out</string>
+    <string name="mj_tray_full">Tray full</string>
+    <string name="mj_board_lost">Board blocked</string>
+    <string name="mj_shuffle_count">Shuffle · %1$d</string>
+    <string name="mj_restart">Restart</string>
+    <string name="mj_hints_left">Hint, %1$d left</string>
+    <string name="mj_tables">Scenery</string>
+    <string name="mj_table_selection">Scenery in use: %1$s · tap Use to change.</string>
+    <string name="mj_next_table_price">Next scenery · %1$d pearls</string>
+    <string name="mj_table_preview_help">This landscape appears behind all your boards. Buying unlocks and applies it; switching owned scenery is free.</string>
+    <string-array name="mj_table_names"><item>Sunset valley</item><item>Lotus at dawn</item><item>Bamboo forest</item><item>Tea terraces</item><item>Imperial palace</item><item>Koi pond</item><item>Cloud monastery</item><item>Evening blossoms</item><item>Moonlit harbor</item><item>Autumn valley</item><item>Starry lake</item><item>Snowy temple</item></string-array>
 </resources>

@@ -2,6 +2,7 @@ package com.Atom2Universe.app.games.mahjong
 
 import android.content.Context
 import android.graphics.*
+import com.Atom2Universe.app.R
 import com.Atom2Universe.app.hub.CachedHubArtworkDrawable
 import kotlin.math.*
 
@@ -24,146 +25,231 @@ internal object MahjongStyles {
     fun get(id: Int) = styles[id.coerceIn(0, COUNT - 1)]
 }
 
-/** Illustrated porcelain; every face retains a distinct suit and countable pips. */
+/**
+ * Tuiles de mahjong traditionnelles en relief : face ivoire (légèrement teintée par la texture
+ * de la collection), tranche ivoire puis dos coloré, visibles à gauche et en bas.
+ * La porcelaine équipée illustre les quatre fleurs ; les saisons ont leurs propres dessins.
+ */
 class MahjongArt(private val context: Context? = null) {
     private val p = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
     private val shape = Path()
     private val oval = RectF()
     private val source = Rect()
+    private val numerals = context?.resources?.getStringArray(R.array.mj_glyph_numerals) ?: emptyArray()
+    private val winds = context?.resources?.getStringArray(R.array.mj_glyph_winds) ?: emptyArray()
+    private val dragons = context?.resources?.getStringArray(R.array.mj_glyph_dragons) ?: emptyArray()
+    private val wan = context?.getString(R.string.mj_glyph_wan) ?: ""
+    private val serif = Typeface.create(Typeface.SERIF, Typeface.BOLD)
     init { context?.let(MahjongAtlas::load) }
 
+    /** Couleur du dos (et de la tranche) selon la texture de la collection. */
+    fun backColor(texture: Int) = mix(MahjongStyles.get(texture).glaze, 0xff0c3b33.toInt(), .28f)
+
+    /**
+     * Face en (x, y, w, h) ; l'épaisseur [depth] déborde à gauche et en bas, l'ombre au-delà.
+     */
     fun tile(c: Canvas, x: Float, y: Float, w: Float, h: Float, face: Int, accent: Int,
              selected: Boolean = false, dim: Boolean = false, back: Boolean = false, style: Int = 0,
-             texture: Int = style) {
+             texture: Int = style, depth: Float = w * .13f, shadow: Boolean = true) {
         if (w <= 0 || h <= 0) return
-        val skin = MahjongStyles.get(texture)
         val save = c.save(); c.translate(x, y)
         val r = w * .12f
-        p.shader = null; p.style = Paint.Style.FILL; p.color = 0x300e335b
-        c.drawRoundRect(w*.025f, h*.09f, w*1.025f, h*1.07f, r, r, p)
-        p.color = skin.edge
-        c.drawRoundRect(0f, h*.075f, w, h*1.025f, r, r, p)
-        p.color = mix(skin.glaze, Color.WHITE, .35f)
-        c.drawRoundRect(w*.02f, h*.058f, w*.98f, h*.988f, r, r, p)
-        p.shader = LinearGradient(0f, 0f, w*.75f, h,
-            if (back) mix(skin.glaze, Color.WHITE, .12f) else Color.WHITE,
-            if (back) darken(skin.glaze, .72f) else skin.light, Shader.TileMode.CLAMP)
-        c.drawRoundRect(0f, 0f, w, h*.95f, r, r, p)
-        val textureSave=c.save()
-        shape.reset(); shape.addRoundRect(0f,0f,w,h*.95f,r,r,Path.Direction.CW)
-        c.clipPath(shape)
-        p.shader=null; p.color=Color.WHITE; p.alpha=if(back) 80 else 210
-        oval.set(0f,0f,w,h*.95f)
-        MahjongAtlas.texture(c,texture,oval,p,source)
-        p.alpha=255
-        c.restoreToCount(textureSave)
-        p.shader = null; p.style = Paint.Style.STROKE; p.strokeWidth = w*.018f
-        p.color = if (back) 0x80ffffff.toInt() else mix(skin.edge, Color.WHITE, .6f)
-        c.drawRoundRect(w*.06f, h*.045f, w*.94f, h*.90f, r*.65f, r*.65f, p)
-        if (texture % 2 == 1) {
-            p.color = 0xffd99c34.toInt(); p.strokeWidth = w*.025f
-            for (corner in 0..3) {
-                val cx = if (corner % 2 == 0) w*.09f else w*.91f
-                val cy = if (corner < 2) h*.07f else h*.87f
-                c.drawLine(cx-w*.04f, cy, cx+w*.04f, cy, p)
-                c.drawLine(cx, cy-w*.04f, cx, cy+w*.04f, p)
-            }
+        p.shader = null; p.style = Paint.Style.FILL
+        if (shadow) {
+            p.color = 0x50000000
+            p.maskFilter = BlurMaskFilter(max(1f, w * .05f), BlurMaskFilter.Blur.NORMAL)
+            c.drawRoundRect(-depth * 1.55f, depth * 1.35f, w - depth * .55f, h + depth * 1.75f, r, r, p)
+            p.maskFilter = null
         }
+        // Tranche : dos coloré au loin, ivoire contre la face.
+        val backTone = backColor(texture)
+        val steps = 9
+        for (k in steps downTo 1) {
+            val t = k / steps.toFloat(); val off = depth * t
+            p.color = if (t > .45f) mix(backTone, darken(backTone, .62f), (t - .45f) / .55f)
+                else mix(0xffe9dfc6.toInt(), 0xffcdbd98.toInt(), t / .45f)
+            c.drawRoundRect(-off, off, w - off, h + off, r, r, p)
+        }
+        p.style = Paint.Style.STROKE; p.strokeWidth = max(1f, w * .012f); p.color = 0x40000000
+        c.drawRoundRect(-depth, depth, w - depth, h + depth, r, r, p)
+        p.style = Paint.Style.FILL
+        // Face.
         if (back) {
-            p.style = Paint.Style.STROKE; p.color = 0xaaffffff.toInt(); p.strokeWidth = w*.018f
-            c.drawCircle(w*.5f, h*.46f, w*.28f, p)
-            c.drawCircle(w*.5f, h*.46f, w*.235f, p)
-            oval.set(w*.12f,h*.15f,w*.88f,h*.77f)
-            p.style=Paint.Style.FILL; p.color=Color.WHITE
-            if (!MahjongAtlas.draw(c,style,oval,p,source)) motif(c,w*.5f,h*.46f,w*.16f,1,0xffffe1a1.toInt())
+            p.shader = LinearGradient(0f, 0f, w, h, mix(backTone, Color.WHITE, .25f), darken(backTone, .85f), Shader.TileMode.CLAMP)
+            c.drawRoundRect(0f, 0f, w, h, r, r, p); p.shader = null
+            oval.set(w * .14f, h * .2f, w * .86f, h * .2f + w * .72f)
+            p.color = Color.WHITE; p.alpha = 230
+            MahjongAtlas.draw(c, style, oval, p, source); p.alpha = 255
         } else {
-            val suit = (face / 9).coerceIn(0, 2); val count = face % 9 + 1
-            // The material belongs to the collection; large countable marks lead the face.
-            p.style=Paint.Style.FILL; p.color=skin.inks[suit]; p.typeface=Typeface.DEFAULT_BOLD
-            p.textSize=w*.19f; p.textAlign=Paint.Align.LEFT
-            val rank=context?.getString(com.Atom2Universe.app.R.string.mj_number,count) ?: count.toString()
-            c.drawText(rank,w*.14f,h*.22f,p)
-            motif(c,w*.79f,h*.16f,w*.065f,suitMotifs[suit],skin.inks[suit])
-            val points=pipPositions[count-1]
-            for(i in points.indices step 2) {
-                val cx=w*(.5f+points[i]*.255f)
-                val cy=h*(.52f+points[i+1]*.19f)
-                if(count<=2) {
-                    val size=w*(if(count==1) .58f else .36f)
-                    oval.set(cx-size/2,cy-size/2,cx+size/2,cy+size/2)
-                    p.style=Paint.Style.FILL; p.color=Color.WHITE
-                    if(!MahjongAtlas.draw(c,style,oval,p,source))
-                        motif(c,cx,cy,size*.35f,suitMotifs[suit],skin.inks[suit])
-                } else {
-                    val radius=w*(if(count<=5) .105f else .087f)
-                    motif(c,cx,cy+w*.012f,radius,suitMotifs[suit],0x403b3452)
-                    motif(c,cx,cy,radius,suitMotifs[suit],skin.inks[suit])
-                }
-            }
+            p.shader = LinearGradient(0f, 0f, w * .8f, h, 0xfffffdf6.toInt(), 0xffefe5cf.toInt(), Shader.TileMode.CLAMP)
+            c.drawRoundRect(0f, 0f, w, h, r, r, p); p.shader = null
+            val clip = c.save()
+            shape.reset(); shape.addRoundRect(0f, 0f, w, h, r, r, Path.Direction.CW); c.clipPath(shape)
+            p.color = Color.WHITE; p.alpha = 64
+            oval.set(0f, 0f, w, h); MahjongAtlas.texture(c, texture, oval, p, source); p.alpha = 255
+            c.restoreToCount(clip)
+            symbol(c, face, w * .1f, h * .08f, w * .8f, h * .84f, style)
         }
-        p.style = Paint.Style.STROKE; p.strokeWidth = w*.025f; p.color = 0xc0ffffff.toInt()
-        oval.set(w*.06f, h*.03f, w*.34f, h*.24f); c.drawArc(oval, 190f, 90f, false, p)
+        // Biseau : lumière en haut à gauche, ombre en bas à droite.
+        p.style = Paint.Style.STROKE; p.strokeWidth = max(1f, w * .03f)
+        p.shader = LinearGradient(0f, 0f, w, h, intArrayOf(0xd0ffffff.toInt(), 0x00ffffff, 0x2a000000),
+            floatArrayOf(0f, .5f, 1f), Shader.TileMode.CLAMP)
+        c.drawRoundRect(w * .02f, w * .02f, w - w * .02f, h - w * .02f, r * .85f, r * .85f, p)
+        p.shader = null; p.strokeWidth = max(1f, w * .01f); p.color = 0x30000000
+        c.drawRoundRect(0f, 0f, w, h, r, r, p)
+        p.style = Paint.Style.FILL
+        if (dim) { p.color = 0x30122030; c.drawRoundRect(0f, 0f, w, h, r, r, p) }
         if (selected) {
-            p.strokeWidth = w*.045f; p.color = 0xffffca52.toInt()
-            c.drawRoundRect(-w*.03f, -h*.02f, w*1.03f, h*.98f, r, r, p)
+            p.color = 0x55ffd34d; c.drawRoundRect(0f, 0f, w, h, r, r, p)
+            p.style = Paint.Style.STROKE; p.strokeWidth = w * .05f; p.color = 0xffffb627.toInt()
+            c.drawRoundRect(0f, 0f, w, h, r, r, p); p.style = Paint.Style.FILL
         }
-        if (dim) { p.style = Paint.Style.FILL; p.color = 0x20264172; c.drawRoundRect(0f,0f,w,h*.95f,r,r,p) }
-        p.style = Paint.Style.FILL; c.restoreToCount(save)
+        c.restoreToCount(save)
     }
 
-    private fun motif(c: Canvas, x: Float, y: Float, r: Float, kind: Int, color: Int) {
-        p.shader = null; p.color = color; p.style = Paint.Style.FILL; p.strokeCap = Paint.Cap.ROUND
-        when (kind) {
-            0 -> {
-                p.style = Paint.Style.STROKE; p.strokeWidth = r*.3f; c.drawCircle(x,y,r*.8f,p)
-                p.style = Paint.Style.FILL; c.drawCircle(x,y,r*.34f,p)
-            }
+    // ---- Symboles ---------------------------------------------------------------------------
+
+    private fun symbol(c: Canvas, face: Int, x: Float, y: Float, w: Float, h: Float, porcelain: Int) {
+        when {
+            face < 9 -> dots(c, face + 1, x, y, w, h)
+            face < 18 -> bamboo(c, face - 8, x, y, w, h)
+            face < 27 -> character(c, face - 17, x, y, w, h)
+            face < 31 -> glyph(c, winds.getOrNull(face - 27), x, y, w, h, INK, .66f)
+            face == 31 -> glyph(c, dragons.getOrNull(0), x, y, w, h, RED, .66f)
+            face == 32 -> glyph(c, dragons.getOrNull(1), x, y, w, h, GREEN, .66f)
+            face == 33 -> whiteDragon(c, x, y, w, h)
+            // Une famille = un seul dessin : les quatre fleurs portent la porcelaine équipée,
+            // les quatre saisons la lanterne (le soleil si la lanterne est déjà équipée).
+            face < 38 -> bonus(c, porcelain, x, y, w, h)
+            else -> bonus(c, if (porcelain == LANTERN) SUN else LANTERN, x, y, w, h)
+        }
+    }
+
+    private fun pip(c: Canvas, cx: Float, cy: Float, r: Float, color: Int) {
+        p.style = Paint.Style.FILL; p.shader = null
+        p.color = color; c.drawCircle(cx, cy, r, p)
+        p.color = 0xfffffbf0.toInt(); c.drawCircle(cx, cy, r * .66f, p)
+        p.color = color; c.drawCircle(cx, cy, r * .4f, p)
+        p.color = 0x90ffffff.toInt(); c.drawCircle(cx - r * .14f, cy - r * .14f, r * .13f, p)
+        p.style = Paint.Style.STROKE; p.strokeWidth = r * .1f; p.color = darken(color, .75f)
+        c.drawCircle(cx, cy, r, p); p.style = Paint.Style.FILL
+    }
+
+    private fun dots(c: Canvas, rank: Int, x: Float, y: Float, w: Float, h: Float) {
+        fun at(fx: Float, fy: Float, r: Float, color: Int) = pip(c, x + w * fx, y + h * fy, w * r, color)
+        when (rank) {
             1 -> {
-                repeat(5) { i ->
-                    val a = i * PI * 2 / 5 - PI / 2
-                    c.drawCircle(x+cos(a).toFloat()*r*.53f, y+sin(a).toFloat()*r*.53f, r*.43f,p)
-                }
-                p.color = 0xffffd777.toInt(); c.drawCircle(x,y,r*.25f,p)
+                val cx = x + w / 2; val cy = y + h / 2; val r = min(w, h) * .45f
+                p.style = Paint.Style.FILL
+                p.color = GREEN; c.drawCircle(cx, cy, r, p)
+                p.color = 0xfffffbf0.toInt(); c.drawCircle(cx, cy, r * .84f, p)
+                p.color = BLUE; c.drawCircle(cx, cy, r * .72f, p)
+                p.color = 0xfffffbf0.toInt()
+                repeat(8) { i -> val a = i * PI / 4; c.drawCircle(cx + cos(a).toFloat() * r * .56f, cy + sin(a).toFloat() * r * .56f, r * .08f, p) }
+                p.color = RED; c.drawCircle(cx, cy, r * .38f, p)
+                p.color = 0xfffffbf0.toInt(); c.drawCircle(cx, cy, r * .22f, p)
+                p.color = RED; c.drawCircle(cx, cy, r * .11f, p)
             }
-            2 -> {
-                shape.reset(); shape.moveTo(x-r*.75f,y+r*.8f)
-                shape.cubicTo(x-r*1.1f,y-r*.7f,x+r*.4f,y-r*1.1f,x+r*.75f,y-r*.8f)
-                shape.cubicTo(x+r,y+r*.5f,x-r*.2f,y+r*1.1f,x-r*.75f,y+r*.8f)
-                c.drawPath(shape,p); p.color = 0x90ffffff.toInt(); p.strokeWidth = r*.12f
-                c.drawLine(x-r*.48f,y+r*.5f,x+r*.45f,y-r*.5f,p)
+            2 -> { at(.5f, .26f, .25f, GREEN); at(.5f, .74f, .25f, BLUE) }
+            3 -> { at(.22f, .18f, .2f, BLUE); at(.5f, .5f, .2f, RED); at(.78f, .82f, .2f, GREEN) }
+            4 -> { at(.27f, .27f, .22f, BLUE); at(.73f, .27f, .22f, GREEN); at(.27f, .73f, .22f, GREEN); at(.73f, .73f, .22f, BLUE) }
+            5 -> { at(.24f, .21f, .2f, BLUE); at(.76f, .21f, .2f, GREEN); at(.5f, .5f, .2f, RED); at(.24f, .79f, .2f, GREEN); at(.76f, .79f, .2f, BLUE) }
+            6 -> { for (fx in floatArrayOf(.28f, .72f)) { at(fx, .16f, .18f, GREEN); at(fx, .56f, .18f, RED); at(fx, .85f, .18f, RED) } }
+            7 -> {
+                at(.2f, .1f, .15f, GREEN); at(.5f, .22f, .15f, GREEN); at(.8f, .34f, .15f, GREEN)
+                for (fx in floatArrayOf(.3f, .7f)) { at(fx, .62f, .16f, RED); at(fx, .88f, .16f, RED) }
             }
-            3 -> {
-                shape.reset(); shape.moveTo(x,y-r); shape.lineTo(x+r*.8f,y)
-                shape.lineTo(x,y+r); shape.lineTo(x-r*.8f,y); shape.close(); c.drawPath(shape,p)
-                p.color = 0x60ffffff; shape.reset(); shape.moveTo(x,y-r); shape.lineTo(x,y+r)
-                shape.lineTo(x-r*.8f,y); shape.close(); c.drawPath(shape,p)
-            }
-            4 -> star(c,x,y,r,color)
-            5 -> {
-                shape.reset(); shape.moveTo(x+r*.65f,y-r*.76f)
-                shape.cubicTo(x-r*1.25f,y-r*1.15f,x-r*1.25f,y+r*1.15f,x+r*.65f,y+r*.76f)
-                shape.cubicTo(x-r*.20f,y+r*.4f,x-r*.20f,y-r*.4f,x+r*.65f,y-r*.76f)
-                c.drawPath(shape,p)
-            }
-            6 -> {
-                p.style = Paint.Style.STROKE; p.strokeWidth = r*.30f
-                repeat(2) { i ->
-                    shape.reset(); shape.moveTo(x-r,y-r*.4f+i*r*.7f)
-                    shape.cubicTo(x-r*.35f,y-r*1.05f+i*r*.7f,x+r*.3f,y+r*.25f+i*r*.7f,x+r,y-r*.4f+i*r*.7f)
-                    c.drawPath(shape,p)
-                }
-            }
+            8 -> for (fy in floatArrayOf(.12f, .37f, .63f, .88f)) { at(.28f, fy, .16f, BLUE); at(.72f, fy, .16f, BLUE) }
             else -> {
-                oval.set(x-r,y-r,x+r,y+r); c.drawArc(oval,190f,160f,true,p)
-                p.color = 0x90ffffff.toInt(); p.strokeWidth = r*.12f
-                for (i in -1..1) c.drawLine(x,y+r*.2f,x+i*r*.65f,y-r*.7f,p)
+                val colors = intArrayOf(BLUE, RED, GREEN)
+                for ((row, fy) in floatArrayOf(.15f, .5f, .85f).withIndex()) for (fx in floatArrayOf(.17f, .5f, .83f)) at(fx, fy, .15f, colors[row])
             }
         }
-        p.style = Paint.Style.FILL
     }
+
+    private fun stick(c: Canvas, cx: Float, cy: Float, length: Float, color: Int, angle: Float = 0f) {
+        val half = length / 2; val wide = length * .16f
+        c.save(); c.rotate(angle, cx, cy)
+        p.style = Paint.Style.FILL; p.shader = null
+        p.color = color
+        c.drawRoundRect(cx - wide / 2, cy - half, cx + wide / 2, cy + half, wide * .45f, wide * .45f, p)
+        p.color = darken(color, .7f)
+        for (f in floatArrayOf(-.42f, 0f, .42f)) {
+            c.drawRoundRect(cx - wide * .62f, cy + f * length - wide * .17f, cx + wide * .62f, cy + f * length + wide * .17f, wide * .15f, wide * .15f, p)
+        }
+        p.color = 0x70ffffff
+        c.drawRoundRect(cx - wide * .3f, cy - half * .86f, cx - wide * .08f, cy + half * .86f, wide * .1f, wide * .1f, p)
+        c.restore()
+    }
+
+    private fun bamboo(c: Canvas, rank: Int, x: Float, y: Float, w: Float, h: Float) {
+        fun at(fx: Float, fy: Float, length: Float, color: Int = GREEN, angle: Float = 0f) = stick(c, x + w * fx, y + h * fy, h * length, color, angle)
+        when (rank) {
+            1 -> {
+                // Une grande tige et ses feuilles, en souvenir de l'oiseau du 1.
+                at(.5f, .52f, .86f, GREEN)
+                p.color = GREEN; p.style = Paint.Style.FILL
+                for ((side, fy) in listOf(-1f to .3f, 1f to .5f, -1f to .7f)) {
+                    shape.reset()
+                    val bx = x + w * .5f; val by = y + h * fy
+                    shape.moveTo(bx, by)
+                    shape.quadTo(bx + side * w * .3f, by - h * .12f, bx + side * w * .46f, by - h * .02f)
+                    shape.quadTo(bx + side * w * .26f, by + h * .03f, bx, by)
+                    c.drawPath(shape, p)
+                }
+                p.color = RED; c.drawCircle(x + w * .5f, y + h * .07f, w * .07f, p)
+            }
+            2 -> { at(.5f, .26f, .42f, BLUE); at(.5f, .74f, .42f, GREEN) }
+            3 -> { at(.5f, .26f, .42f, BLUE); at(.3f, .74f, .42f); at(.7f, .74f, .42f) }
+            4 -> { at(.3f, .26f, .42f, BLUE); at(.7f, .26f, .42f); at(.3f, .74f, .42f); at(.7f, .74f, .42f, BLUE) }
+            5 -> { at(.2f, .26f, .42f); at(.8f, .26f, .42f, BLUE); at(.5f, .5f, .42f, RED); at(.2f, .74f, .42f, BLUE); at(.8f, .74f, .42f) }
+            6 -> for (fy in floatArrayOf(.26f, .74f)) for ((i, fx) in floatArrayOf(.2f, .5f, .8f).withIndex()) at(fx, fy, .42f, if (fy < .5f) GREEN else if (i == 1) BLUE else GREEN)
+            7 -> { at(.5f, .15f, .28f, RED); for (fy in floatArrayOf(.5f, .84f)) for (fx in floatArrayOf(.2f, .5f, .8f)) at(fx, fy, .28f, if (fy < .7f) GREEN else BLUE) }
+            8 -> {
+                for ((fy, sign) in listOf(.26f to 1f, .74f to -1f)) {
+                    at(.14f, fy, .42f); at(.86f, fy, .42f)
+                    at(.37f, fy, .42f, BLUE, 18f * sign); at(.63f, fy, .42f, BLUE, -18f * sign)
+                }
+            }
+            else -> for (fy in floatArrayOf(.16f, .5f, .84f)) for (fx in floatArrayOf(.2f, .5f, .8f)) at(fx, fy, .28f, if (fx == .5f) RED else GREEN)
+        }
+    }
+
+    private fun glyph(c: Canvas, text: String?, x: Float, y: Float, w: Float, h: Float, color: Int, share: Float, top: Float = .5f) {
+        if (text.isNullOrEmpty()) return
+        p.style = Paint.Style.FILL; p.shader = null; p.color = color
+        p.typeface = serif; p.textAlign = Paint.Align.CENTER
+        p.textSize = min(h * share, w * 1.02f)
+        val cy = y + h * top
+        c.drawText(text, x + w / 2, cy - (p.ascent() + p.descent()) / 2, p)
+    }
+
+    private fun character(c: Canvas, rank: Int, x: Float, y: Float, w: Float, h: Float) {
+        glyph(c, numerals.getOrNull(rank - 1), x, y, w, h, INK, .4f, .25f)
+        glyph(c, wan, x, y, w, h, RED, .5f, .7f)
+    }
+
+    private fun whiteDragon(c: Canvas, x: Float, y: Float, w: Float, h: Float) {
+        p.style = Paint.Style.STROKE; p.color = BLUE; p.shader = null
+        p.strokeWidth = w * .07f
+        c.drawRoundRect(x + w * .08f, y + h * .1f, x + w * .92f, y + h * .9f, w * .06f, w * .06f, p)
+        p.strokeWidth = w * .03f
+        c.drawRoundRect(x + w * .22f, y + h * .21f, x + w * .78f, y + h * .79f, w * .03f, w * .03f, p)
+        p.style = Paint.Style.FILL
+        for (fx in floatArrayOf(.08f, .92f)) for (fy in floatArrayOf(.1f, .9f)) c.drawCircle(x + w * fx, y + h * fy, w * .06f, p)
+    }
+
+    private fun bonus(c: Canvas, illustration: Int, x: Float, y: Float, w: Float, h: Float) {
+        val side = min(w * 1.08f, h)
+        oval.set(x + (w - side) / 2, y + (h - side) / 2, x + (w + side) / 2, y + (h + side) / 2)
+        p.shader = null; p.style = Paint.Style.FILL; p.color = Color.WHITE
+        MahjongAtlas.draw(c, illustration, oval, p, source)
+    }
+
+    // ---- Petits dessins de l'interface ------------------------------------------------------
 
     fun star(c: Canvas, x: Float, y: Float, r: Float, color: Int) {
-        p.style = Paint.Style.FILL; p.color = color; shape.reset()
+        p.style = Paint.Style.FILL; p.color = color; p.shader = null; shape.reset()
         repeat(10) { i ->
             val a = -PI/2 + i*PI/5; val radius = if (i%2==0) r else r*.45f
             val px = x+cos(a).toFloat()*radius; val py = y+sin(a).toFloat()*radius
@@ -200,98 +286,115 @@ class MahjongArt(private val context: Context? = null) {
         MahjongAtlas.treasure(c,2,oval,p,source)
     }
 
-    // The board repaints its backdrop on every animation frame: theme colour and gradient
-    // are built once per size and accent.
-    private val surface by lazy {
-        context?.let { com.Atom2Universe.app.AppearanceStyle.color(it,com.Atom2Universe.app.R.attr.a2uSurfaceColor) } ?: 0xffedf9ff.toInt()
-    }
-    private var backdropShader: Shader? = null
-    private var backdropW = 0f
-    private var backdropH = 0f
-    private var backdropAccent = 0
-
-    fun backdrop(c: Canvas, w: Float, h: Float, accent: Int) {
+    /**
+     * Le tapis de jeu : un vert de jade profond et des vagues seigaiha très discrètes.
+     * Dessiné une fois par taille dans un bitmap par la vue du plateau.
+     */
+    fun table(c: Canvas, w: Float, h: Float, id: Int = 0, thumbnail: Boolean = false) {
         if (w <= 0 || h <= 0) return
         p.style = Paint.Style.FILL
-        if (backdropShader == null || w != backdropW || h != backdropH || accent != backdropAccent) {
-            backdropShader = RadialGradient(w*.5f,h*.42f,max(w,h)*.8f,mix(surface,accent,.12f),surface,Shader.TileMode.CLAMP)
-            backdropW = w; backdropH = h; backdropAccent = accent
+        val landscape = context?.let { if (thumbnail) MahjongAtlas.tableThumb(it, id) else MahjongAtlas.table(it, id) }
+        if (landscape != null) {
+            // Le paysage couvre tout (recadré au centre), assombri pour que les tuiles ressortent :
+            // plus sombre en haut sous la bande du score, un peu en bas, et sur les bords.
+            val scale = max(w / landscape.width, h / landscape.height)
+            val sw = w / scale; val sh = h / scale
+            source.set(((landscape.width - sw) / 2).toInt(), ((landscape.height - sh) / 2).toInt(),
+                ((landscape.width + sw) / 2).toInt(), ((landscape.height + sh) / 2).toInt())
+            oval.set(0f, 0f, w, h)
+            p.color = Color.WHITE; c.drawBitmap(landscape, source, oval, p)
+            val dim = MahjongAtlas.tableDim(id)
+            if (dim > 0f) { p.color = Color.argb((dim * 255).toInt(), 0, 0, 0); c.drawRect(0f, 0f, w, h, p) }
+            p.shader = LinearGradient(0f, 0f, 0f, h, intArrayOf(0x70000000, 0x10000000, 0x08000000, 0x50000000),
+                floatArrayOf(0f, .18f, .72f, 1f), Shader.TileMode.CLAMP)
+            c.drawRect(0f, 0f, w, h, p)
+            p.shader = RadialGradient(w / 2, h * .5f, max(w, h) * .75f, intArrayOf(0x00000000, 0x00000000, 0x45000000),
+                floatArrayOf(0f, .62f, 1f), Shader.TileMode.CLAMP)
+            c.drawRect(0f, 0f, w, h, p); p.shader = null
+            return
         }
-        p.shader = backdropShader
-        c.drawRoundRect(0f,0f,w,h,w*.045f,w*.045f,p); p.shader = null
-        p.color = (accent and 0x00ffffff) or 0x16000000; p.style = Paint.Style.STROKE; p.strokeWidth = max(1f,w*.001f)
-        for (i in 0..2) {
-            c.save(); c.rotate(i*60f,w*.5f,h*.5f)
-            c.drawOval(w*.12f,h*.17f,w*.88f,h*.83f,p); c.restore()
+        p.shader = LinearGradient(0f, 0f, 0f, h, 0xff17534a.toInt(), 0xff0b2c28.toInt(), Shader.TileMode.CLAMP)
+        c.drawRect(0f, 0f, w, h, p); p.shader = null
+        val r = max(w, h) / 22f
+        p.style = Paint.Style.STROKE; p.strokeWidth = max(1f, r * .07f); p.color = 0x12ffffff
+        var row = 0; var cy = -r
+        while (cy < h + r * 2) {
+            val shift = if (row % 2 == 0) 0f else r
+            var cx = -r * 2 + shift
+            while (cx < w + r * 2) {
+                for (k in 0..3) { val rr = r * (1f - k * .24f); oval.set(cx - rr, cy - rr, cx + rr, cy + rr); c.drawArc(oval, 180f, 180f, false, p) }
+                cx += r * 2
+            }
+            cy += r * .5f; row++
         }
-        p.color=(accent and 0x00ffffff) or 0x30000000
-        c.drawRoundRect(w*.015f,h*.01f,w*.985f,h*.99f,w*.04f,w*.04f,p)
         p.style = Paint.Style.FILL
+        p.shader = RadialGradient(w / 2, h * .45f, max(w, h) * .75f, intArrayOf(0x00000000, 0x00000000, 0x66000000),
+            floatArrayOf(0f, .55f, 1f), Shader.TileMode.CLAMP)
+        c.drawRect(0f, 0f, w, h, p); p.shader = null
     }
 
-    fun modeScene(c: Canvas, w: Float, h: Float, mode: Int, style: Int) {
+    /** Cartes du menu : une petite scène de vraies tuiles qui montre la règle du mode. */
+    fun modeScene(c: Canvas, w: Float, h: Float, mode: Int, style: Int, texture: Int = style) {
         val color = modeColors[mode.coerceIn(0,7)]
-        p.shader = LinearGradient(0f,0f,w,h,mix(color,Color.WHITE,.22f),color,Shader.TileMode.CLAMP)
+        p.shader = LinearGradient(0f,0f,w,h,mix(color,Color.WHITE,.18f),darken(color,.82f),Shader.TileMode.CLAMP)
         p.style = Paint.Style.FILL; c.drawRect(0f,0f,w,h,p); p.shader = null
-        p.color = 0x28ffffff; c.drawCircle(w*.86f,h*.08f,w*.57f,p); c.drawCircle(w*.04f,h*.83f,w*.30f,p)
-        val tw = min(w*.25f,h*.32f); val th = tw*1.24f
-        fun piece(cx: Float, cy: Float, face: Int, rotation: Float = 0f, back: Boolean = false) {
+        p.color = 0x22ffffff; c.drawCircle(w*.86f,h*.08f,w*.57f,p); c.drawCircle(w*.04f,h*.83f,w*.30f,p)
+        val tw = min(w*.2f,h*.24f); val th = tw*1.33f; val d = tw*.13f
+        fun piece(cx: Float, cy: Float, face: Int, rotation: Float = 0f, layer: Int = 0) {
             c.save(); c.rotate(rotation,cx,cy)
-            tile(c,cx-tw/2,cy-th/2,tw,th,face,color,back=back,style=style); c.restore()
+            tile(c,cx-tw/2+layer*d,cy-th/2-layer*d,tw,th,face,color,style=style,texture=texture,depth=d); c.restore()
         }
         when (mode) {
-            0 -> { for (i in 0..3) piece(w*(.22f+i*.19f),h*.4f,i*5); piece(w*.5f,h*.28f,10,-8f) }
-            1 -> { for (i in 0..2) piece(w*(.25f+i*.25f),h*(.32f+abs(i-1)*.07f),1,(i-1)*9f) }
+            0 -> {
+                // Une petite pyramide : trois tuiles, deux à cheval dessus, une au sommet.
+                val step = tw * .98f
+                for (i in 2 downTo 0) piece(w*.5f+(i-1)*step,h*.42f,intArrayOf(0,31,9)[i])
+                for (i in 1 downTo 0) piece(w*.5f+(i-.5f)*step,h*.42f,intArrayOf(27,33)[i],layer=1)
+                piece(w*.5f,h*.42f,34,layer=2)
+            }
+            1 -> {
+                for (i in 0..2) piece(w*(.27f+i*.23f),h*(.30f+abs(i-1)*.04f),32,(i-1)*8f)
+                p.color = 0x55ffffff; c.drawRoundRect(w*.1f,h*.56f,w*.9f,h*.56f+th*.62f,tw*.2f,tw*.2f,p)
+            }
             2 -> {
-                p.color = 0xffffedb5.toInt(); p.style = Paint.Style.STROKE; p.strokeWidth = w*.025f
-                shape.reset(); shape.moveTo(w*.25f,h*.4f); shape.lineTo(w*.25f,h*.16f)
-                shape.lineTo(w*.76f,h*.16f); shape.lineTo(w*.76f,h*.4f); c.drawPath(shape,p)
-                piece(w*.25f,h*.4f,4,-9f); piece(w*.76f,h*.4f,4,9f)
+                p.color = 0xfffff1c2.toInt(); p.style = Paint.Style.STROKE; p.strokeWidth = w*.022f
+                shape.reset(); shape.moveTo(w*.26f,h*.38f); shape.lineTo(w*.26f,h*.12f)
+                shape.lineTo(w*.74f,h*.12f); shape.lineTo(w*.74f,h*.38f); c.drawPath(shape,p); p.style = Paint.Style.FILL
+                piece(w*.26f,h*.42f,4); piece(w*.74f,h*.42f,4)
+                piece(w*.5f,h*.45f,20)
             }
             3 -> {
-                p.color=0xffffedb5.toInt(); p.style=Paint.Style.STROKE; p.strokeWidth=w*.025f
-                c.drawArc(RectF(w*.18f,h*.13f,w*.82f,h*.60f),-65f,255f,false,p)
-                c.drawLine(w*.25f,h*.16f,w*.18f,h*.28f,p); c.drawLine(w*.18f,h*.28f,w*.34f,h*.27f,p)
-                piece(w*.38f,h*.28f,11,-8f); piece(w*.61f,h*.43f,11,8f)
+                p.color=0xfffff1c2.toInt(); p.style=Paint.Style.STROKE; p.strokeWidth=w*.022f
+                c.drawArc(RectF(w*.16f,h*.1f,w*.84f,h*.62f),-65f,255f,false,p)
+                c.drawLine(w*.24f,h*.14f,w*.17f,h*.27f,p); c.drawLine(w*.17f,h*.27f,w*.33f,h*.26f,p); p.style=Paint.Style.FILL
+                piece(w*.38f,h*.3f,13,-8f); piece(w*.62f,h*.45f,13,8f)
             }
             4 -> {
-                // A frozen lane and a snow crystal identify the full-distance slide rule.
                 p.style=Paint.Style.FILL; p.color=0x35ffffff
-                c.drawRoundRect(w*.16f,h*.12f,w*.83f,h*.43f,w*.035f,w*.035f,p)
-                p.color=0x50ffffff; p.style=Paint.Style.STROKE; p.strokeWidth=w*.012f
-                c.drawRoundRect(w*.57f,h*.14f,w*.82f,h*.45f,w*.035f,w*.035f,p)
-                p.color=0xffffedb5.toInt(); p.strokeWidth=w*.025f
-                c.drawLine(w*.32f,h*.25f,w*.68f,h*.25f,p)
-                c.drawLine(w*.68f,h*.25f,w*.60f,h*.19f,p); c.drawLine(w*.68f,h*.25f,w*.60f,h*.31f,p)
-                piece(w*.27f,h*.25f,2); piece(w*.70f,h*.56f,2)
-                p.color=0xc0ffffff.toInt(); p.style=Paint.Style.STROKE; p.strokeWidth=w*.013f
-                for(angle in listOf(0f,60f,120f)) {
-                    c.save(); c.rotate(angle,w*.30f,h*.52f)
-                    c.drawLine(w*.23f,h*.52f,w*.37f,h*.52f,p); c.restore()
-                }
+                c.drawRoundRect(w*.14f,h*.12f,w*.86f,h*.44f,w*.035f,w*.035f,p)
+                p.color=0xfffff1c2.toInt(); p.style=Paint.Style.STROKE; p.strokeWidth=w*.022f
+                c.drawLine(w*.36f,h*.27f,w*.66f,h*.27f,p)
+                c.drawLine(w*.66f,h*.27f,w*.59f,h*.21f,p); c.drawLine(w*.66f,h*.27f,w*.59f,h*.33f,p)
                 p.style=Paint.Style.FILL
+                piece(w*.25f,h*.28f,28); piece(w*.76f,h*.52f,28)
             }
-            5 -> { piece(w*.3f,h*.37f,3,-10f); piece(w*.69f,h*.37f,14,10f); star(c,w*.5f,h*.18f,w*.07f,0xffffe896.toInt()) }
-            6 -> { for(i in 0..2) piece(w*(.23f+i*.25f),h*(.45f-i*.09f),i*10,(i-1)*12f); star(c,w*.83f,h*.15f,w*.09f,0xffffe48b.toInt()) }
+            5 -> { piece(w*.3f,h*.36f,2,-9f); piece(w*.7f,h*.36f,15,9f); star(c,w*.5f,h*.14f,w*.06f,0xffffe896.toInt()) }
+            6 -> { for(i in 0..2) piece(w*(.25f+i*.25f),h*(.44f-i*.08f),intArrayOf(31,23,38)[i],(i-1)*10f); star(c,w*.84f,h*.14f,w*.08f,0xffffe48b.toInt()) }
             else -> { chest(c,w*.24f,h*.19f,w*.52f,.6f); star(c,w*.22f,h*.18f,w*.06f,Color.WHITE) }
         }
-        for(i in 0..5) star(c,w*(.11f+i*.155f),h*(.09f+i%3*.19f),w*.018f,0x90ffffff.toInt())
-        p.shader = LinearGradient(0f,h*.55f,0f,h,Color.TRANSPARENT,0x88344966.toInt(),Shader.TileMode.CLAMP)
+        for(i in 0..5) star(c,w*(.11f+i*.155f),h*(.07f+i%3*.05f),w*.016f,0x90ffffff.toInt())
+        p.shader = LinearGradient(0f,h*.55f,0f,h,Color.TRANSPARENT,0x88203040.toInt(),Shader.TileMode.CLAMP)
         c.drawRect(0f,h*.55f,w,h,p); p.shader = null
     }
 
     companion object {
-        private val suitMotifs=intArrayOf(0,3,4)
-        private val pipPositions=arrayOf(
-            floatArrayOf(0f,0f),
-            floatArrayOf(-.6f,-.65f,.6f,.65f),
-            floatArrayOf(-1f,-1f,0f,0f,1f,1f),
-            floatArrayOf(-1f,-1f,1f,-1f,-1f,1f,1f,1f),
-            floatArrayOf(-1f,-1f,1f,-1f,0f,0f,-1f,1f,1f,1f),
-            floatArrayOf(-1f,-1f,1f,-1f,-1f,0f,1f,0f,-1f,1f,1f,1f),
-            floatArrayOf(-1f,-1f,0f,-1f,1f,-1f,0f,0f,-1f,1f,0f,1f,1f,1f),
-            floatArrayOf(-1f,-1f,0f,-1f,1f,-1f,-1f,0f,1f,0f,-1f,1f,0f,1f,1f,1f),
-            floatArrayOf(-1f,-1f,0f,-1f,1f,-1f,-1f,0f,0f,0f,1f,0f,-1f,1f,0f,1f,1f,1f))
+        private const val INK = 0xff15233d.toInt()
+        private const val RED = 0xffc4292a.toInt()
+        private const val GREEN = 0xff177a47.toInt()
+        private const val BLUE = 0xff1d4f9c.toInt()
+        /** Lanterne corail et Soleil d'ambre dans l'atlas des porcelaines. */
+        private const val LANTERN = 11
+        private const val SUN = 9
         val accents = intArrayOf(0xff21b49a.toInt(),0xffee80a4.toInt(),0xff29b9dc.toInt(),0xff9d79e8.toInt(),0xffffb53c.toInt(),0xfff0785c.toInt())
         val modeColors = intArrayOf(0xff36b9aa.toInt(),0xffe17cae.toInt(),0xff5da9eb.toInt(),0xffaa84e5.toInt(),
             0xff68b8cd.toInt(),0xfff18d79.toInt(),0xff6387da.toInt(),0xffd58eb8.toInt())
@@ -303,5 +406,5 @@ class MahjongArt(private val context: Context? = null) {
 
 class MahjongHubTileDrawable(context: Context) : CachedHubArtworkDrawable() {
     private val art=MahjongArt(context.applicationContext)
-    override fun render(canvas: Canvas, w: Float, h: Float) { art.modeScene(canvas,w,h,1,3) }
+    override fun render(canvas: Canvas, w: Float, h: Float) { art.modeScene(canvas,w,h,0,3) }
 }

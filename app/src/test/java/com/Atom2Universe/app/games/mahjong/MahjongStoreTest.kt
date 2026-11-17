@@ -69,24 +69,6 @@ class MahjongStoreTest {
         assertEquals(store.summary("CLASSIC"),MahjongStore(prefs).summary("CLASSIC"))
     }
 
-    @Test fun legacySummariesCountSavedTilesWithoutMigratingTheMemoryBoard() {
-        val store=MahjongStore(prefs)
-        val game=MahjongGame(MahjongMode.CLASSIC,99,5)
-        game.restore(game.snapshot().copy(tiles=List(36) { id ->
-            MahjongTile(id,id%6,id/6,0,id/2,removed=id<2)
-        }))
-        val raw=JSONObject(MahjongSave.encode(game,true,false,0L,id="legacy-memory"))
-            .put("version",2).put("mode","MEMORY").toString()
-        prefs.edit().putString("run_journey",raw).putString("current_journey","legacy-memory").commit()
-        // Loading this old board would replace Memory with a 32-tile ice board.
-        assertEquals(MahjongStore.Summary(36,34),store.summary("journey"))
-        assertEquals(raw,prefs.getString("run_journey",null))
-        assertEquals("legacy-memory",prefs.getString("current_journey",null))
-        val cached=prefs.all.toMap()
-        assertEquals(MahjongStore.Summary(36,34),store.summary("journey"))
-        assertEquals(cached,prefs.all)
-    }
-
     @Test fun summariesRefreshIfTheStoredPayloadChangesWithoutMetadata() {
         val store=MahjongStore(prefs)
         val run=store.newRun("CLASSIC",21312L)
@@ -129,20 +111,6 @@ class MahjongStoreTest {
             assertTrue(slot,restored.game.history.isNotEmpty())
         }
         assertEquals(8,ids.values.toSet().size)
-    }
-
-    @Test fun migrationPreservesTheLegacyRunAndAlreadyEarnedCollection() {
-        val game=MahjongGame(MahjongMode.TRIPLE,99,5)
-        game.solution.first().take(2).forEach { game.tap(it) }
-        val legacy=JSONObject(MahjongSave.encode(game,false,false,0L)).put("version",1).apply { remove("id") }
-        prefs.edit().putString("run",legacy.toString()).putInt("wins",5).putInt("pearls",500).putInt("theme",2).commit()
-        val store=MahjongStore(prefs)
-        assertEquals(game.snapshot(),store.load("TRIPLE")!!.game.snapshot())
-        assertEquals(500,store.pearls); assertEquals(5,store.wins); assertEquals(4,store.style)
-        assertTrue(store.unlocked.containsAll(listOf(0,2,4,6)))
-        assertFalse(prefs.contains("run"))
-        val id=store.load("TRIPLE")!!.id
-        assertEquals(id,MahjongStore(prefs).load("TRIPLE")!!.id)
     }
 
     @Test fun victoriesEarnPearlsWithoutAutomaticUnlocksAndReceiptsSurviveStaleSaves() {
@@ -232,7 +200,7 @@ class MahjongStoreTest {
         val run=store.newRun("CLASSIC",saturday)
         assertEquals(2,store.resumeOrCreate("CLASSIC",monday).bonusMultiplier)
         finish(run.game)
-        val expected=(30+run.game.tiles.size/3+MahjongCollection.comboBonus(run.game))*2
+        val expected=(12+run.game.tiles.size/4)*run.game.stars*2
         assertEquals(expected,store.finish(run)!!.pearls)
         assertEquals(expected,store.pearls)
         assertEquals(2,store.load("CLASSIC")!!.bonusMultiplier)
@@ -257,6 +225,19 @@ class MahjongStoreTest {
         assertEquals(1,reopened.texture); assertEquals(7,reopened.style)
         assertEquals(462,reopened.nextTexturePrice)
         assertFalse(7 in reopened.unlockedTextures)
+    }
+
+    @Test fun sceneryHasThreeFreeLandscapesAndItsOwnPrices() {
+        val store=MahjongStore(prefs)
+        assertEquals(setOf(0,1,2),store.unlockedTables); assertEquals(0,store.table)
+        store.equipTable(2); assertEquals(2,store.table)
+        store.equipTable(9); assertEquals(2,store.table)
+        assertFalse(store.purchaseTable(9))
+        prefs.edit().putInt("pearls",1000).commit()
+        assertTrue(store.purchaseTable(9)); assertEquals(650,store.pearls); assertEquals(9,store.table)
+        assertFalse(store.purchaseTable(9)); assertFalse(store.purchaseTable(MahjongAtlas.TABLES))
+        assertEquals(462,store.nextTablePrice); assertEquals(350,store.nextTexturePrice); assertEquals(350,store.nextPrice)
+        assertEquals(9,MahjongStore(prefs).table)
     }
 
     @Test fun separatingTexturesPreservesMaterialsIncludedInPreviousPurchasesOnlyOnce() {
@@ -305,68 +286,6 @@ class MahjongStoreTest {
         val journey=store.newRun("journey",21312L)
         assertEquals(5,journey.game.stage)
         assertEquals(MahjongMode.SLIDE,journey.game.mode)
-    }
-
-    @Test fun replacingLegacyMemoryKeepsEconomyCollectionAndJourneyProgress() {
-        prefs.edit().putBoolean("independent_saves_v2",true).putInt("pearls",876)
-            .putInt("wins",11).putInt("stage",5)
-            .putStringSet("porcelains",setOf("0","1","2","17"))
-            .putStringSet("textures",setOf("0","1","2","9"))
-            .putInt("porcelain",17).putInt("texture",9).commit()
-        val legacyGame=MahjongGame(MahjongMode.CLASSIC,99,5)
-        legacyGame.restore(legacyGame.snapshot().copy(tiles=List(36) { id ->
-            MahjongTile(id,id%6,id/6,0,id/2)
-        }))
-        val legacy=JSONObject(MahjongSave.encode(legacyGame,true,false,0L,id="legacy-memory"))
-            .put("version",2).put("mode","MEMORY")
-        prefs.edit().putString("run_journey",legacy.toString())
-            .putString("current_journey","legacy-memory").commit()
-        val store=MahjongStore(prefs)
-        val resumed=store.resumeOrCreate("journey",21312L)
-        assertEquals(MahjongMode.SLIDE,resumed.game.mode)
-        assertEquals("legacy-memory",resumed.id); assertEquals(5,resumed.game.stage)
-        assertEquals(876,store.pearls); assertEquals(11,store.wins); assertEquals(5,store.stage)
-        assertEquals(17,store.style); assertEquals(9,store.texture)
-        store.save(resumed)
-        assertEquals(4,JSONObject(prefs.getString("run_journey",null)!!).getInt("version"))
-        assertEquals(resumed.game.snapshot(),MahjongStore(prefs).load("journey")!!.game.snapshot())
-    }
-
-    @Test fun iceMigrationKeepsInventoryAndOnlyCreditsItsVictoryOnce() {
-        val store=MahjongStore(prefs)
-        prefs.edit().putInt("pearls",876).putInt("wins",11).putInt("stage",5)
-            .putStringSet("porcelains",setOf("0","1","2","17"))
-            .putStringSet("textures",setOf("0","1","2","9"))
-            .putInt("porcelain",17).putInt("texture",9).commit()
-        val initial=store.newRun("SLIDE",21312L)
-        val legacy=JSONObject(MahjongSave.encode(initial)).put("version",3)
-        prefs.edit().putString("run_SLIDE",legacy.toString()).commit()
-        val migrated=store.resumeOrCreate("SLIDE",21313L)
-        assertTrue(migrated.iceMigration)
-        assertEquals(initial.id,migrated.id)
-        assertEquals(876,store.pearls); assertEquals(11,store.wins); assertEquals(5,store.stage)
-        assertEquals(17,store.style); assertEquals(9,store.texture)
-        assertEquals(initial.game.remaining,migrated.game.remaining)
-        assertEquals(initial.game.assists,migrated.game.assists)
-        val witness=migrated.game.solutionSteps.toList()
-        val stale=MahjongSave.decode(MahjongSave.encode(migrated))!!
-        store.save(migrated)
-        assertEquals(4,JSONObject(prefs.getString("run_SLIDE",null)!!).getInt("version"))
-        assertFalse(store.load("SLIDE")!!.iceMigration)
-        assertEquals(migrated.game.snapshot(),store.load("SLIDE")!!.game.snapshot())
-        for(step in witness) {
-            step.slide?.let { move -> assertEquals(MahjongGame.Result.MOVED,migrated.game.slide(move.id,move.x,move.y)) }
-            step.ids.forEach { migrated.game.tap(it) }
-        }
-        assertTrue(migrated.game.complete)
-        val reward=store.finish(migrated)!!
-        val earned=store.pearls
-        assertEquals(876+reward.pearls,earned)
-        assertEquals(12,store.wins); assertEquals(5,store.stage)
-        assertEquals(reward,store.finish(migrated))
-        store.save(stale)
-        assertEquals(earned,store.pearls); assertEquals(12,store.wins)
-        assertEquals(reward,store.load("SLIDE")!!.reward)
     }
 
     private fun finish(game:MahjongGame) {

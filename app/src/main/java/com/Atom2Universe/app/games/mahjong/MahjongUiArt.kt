@@ -52,6 +52,19 @@ internal class MahjongIconDrawable(private val icon: MahjongIcon, private val ti
     @Suppress("DEPRECATION") override fun getOpacity() = PixelFormat.TRANSLUCENT
 }
 
+/** Le paysage choisi dans la collection, en fond de tout l'écran de jeu (bandeau compris). */
+internal class MahjongTableDrawable(context: Context, private val id: Int) : Drawable() {
+    private val art = MahjongArt(context)
+    override fun draw(c: Canvas) {
+        val save = c.save(); c.translate(bounds.left.toFloat(), bounds.top.toFloat())
+        art.table(c, bounds.width().toFloat(), bounds.height().toFloat(), id)
+        c.restoreToCount(save)
+    }
+    override fun setAlpha(alpha: Int) = Unit
+    override fun setColorFilter(colorFilter: ColorFilter?) = Unit
+    @Suppress("DEPRECATION") override fun getOpacity() = PixelFormat.OPAQUE
+}
+
 internal class MahjongGiftMeter(context: Context, private val victories: Int) : View(context) {
     private val art=MahjongArt(context)
     init { contentDescription=context.getString(R.string.mj_gift_progress,victories%5,5) }
@@ -74,7 +87,7 @@ internal class MahjongRewardView(context: Context, private val reward: MahjongRe
     private val targets=mutableMapOf<Int,RectF>()
     private var selected=initialStyle
     private var pressed:Int?=null
-    init { isClickable=true; contentDescription=context.getString(R.string.mj_reward_accessible,reward.pearls,reward.styles.size) }
+    init { isClickable=true; contentDescription=context.getString(R.string.mj_reward_accessible,reward.pearls,reward.stars) }
     override fun onDraw(c: Canvas) {
         val animated=effects && ValueAnimator.areAnimatorsEnabled()
         val t=if(animated) ((SystemClock.uptimeMillis()-start)/1800f).coerceIn(0f,1f) else 1f
@@ -108,8 +121,20 @@ internal class MahjongRewardView(context: Context, private val reward: MahjongRe
         }
         val chestWidth=min(width*.38f,height*.40f)
         art.chest(c,cx-chestWidth/2,height*.66f,chestWidth,reveal)
-        val starRadius=min(width*.055f,height*.065f)
-        repeat(3) { i -> art.star(c,cx+(i-1)*starRadius*3.1f,height*.12f-abs(i-1)*height*.015f,starRadius,0xffffb834.toInt()) }
+        // Les étoiles gagnées s'allument une à une ; les autres restent en creux.
+        val starRadius=min(width*.085f,height*.1f)
+        repeat(3) { i ->
+            val x=cx+(i-1)*starRadius*2.5f; val y=height*.14f-abs(i-1)*height*.025f
+            val earned=i<reward.stars
+            val pop=((t-.2f-i*.18f)/.18f).coerceIn(0f,1f)
+            art.star(c,x,y,starRadius*1.08f,0x55000000)
+            art.star(c,x,y,starRadius,0x55ffffff)
+            if(earned && pop>0f) {
+                val scale=if(pop<1f) .4f+.9f*pop-.3f*pop*pop else 1f
+                art.star(c,x,y,starRadius*scale,0xffffc233.toInt())
+                art.star(c,x-starRadius*.12f,y-starRadius*.12f,starRadius*scale*.45f,0x88fff3c4.toInt())
+            }
+        }
         if(t<1f) repeat(44) { i ->
             val x=(i*73%101)/101f*width
             val y=((i*37%97)/97f*height*.5f+t*height*.8f)%height

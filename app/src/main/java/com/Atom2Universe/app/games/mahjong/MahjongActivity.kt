@@ -35,7 +35,7 @@ class MahjongActivity : ThemedActivity() {
     private var board: MahjongBoardView? = null
     private var screen = "menu"
     private var collectionReturn = "menu"
-    private var collectionTextures = true
+    private var collectionTab = 0
     private var chimes: MahjongChimes? = null
     private var dialog: AlertDialog? = null
     private val handler = Handler(Looper.getMainLooper())
@@ -58,17 +58,14 @@ class MahjongActivity : ThemedActivity() {
     private var boardControls: ViewGroup? = null
     private var cachedHintState: MahjongSnapshot? = null
     private data class Hint(val ids: List<Int>, val slide: MahjongSlide?, val limited: Boolean,
-                            val continuation: List<MahjongSolutionStep>)
+                            val continuation: List<MahjongSolutionStep>, val lost: Boolean)
     private var cachedHint: Hint? = null
-    private var scoreAnimator: ValueAnimator? = null
-    private var displayedScore = 0
-    private lateinit var scoreLabel: TextView
-    private lateinit var remainingLabel: TextView
-    private lateinit var comboLabel: TextView
-    private lateinit var gravityLabel: TextView
     private lateinit var undoButton: View
-    private lateinit var shuffleButton: View
+    private lateinit var hintButton: View
+    private lateinit var hintBadge: TextView
     private lateinit var progress: ProgressBar
+    private var boardFrame: FrameLayout? = null
+    private var stuckPanel: View? = null
     private val ink get() = AppearanceStyle.color(this,R.attr.a2uTextColor)
     private val muted get() = AppearanceStyle.color(this,R.attr.a2uSecondaryTextColor)
     private val surface get() = AppearanceStyle.color(this,R.attr.a2uSurfaceColor)
@@ -80,6 +77,7 @@ class MahjongActivity : ThemedActivity() {
         R.string.mj_cascade_desc,R.string.mj_slide_desc,R.string.mj_ten_desc)
     private val styleNames get() = resources.getStringArray(R.array.mj_porcelain_names)
     private val textureNames get() = resources.getStringArray(R.array.mj_texture_names)
+    private val tableNames get() = resources.getStringArray(R.array.mj_table_names)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState); enableImmersiveMode()
@@ -93,7 +91,7 @@ class MahjongActivity : ThemedActivity() {
                 }
             }
         })
-        collectionTextures=savedInstanceState?.getBoolean("collection_textures",true) ?: true
+        collectionTab=(savedInstanceState?.getInt("collection_tab",0) ?: 0).coerceIn(0,2)
         collectionReturn=savedInstanceState?.getString("collection_return") ?: "menu"
         val slot=savedInstanceState?.getString("active_slot")
         val pendingSlot=savedInstanceState?.getString("loading_slot")
@@ -128,10 +126,10 @@ class MahjongActivity : ThemedActivity() {
         setOnClickListener { action() }
         setOnLongClickListener { Toast.makeText(this@MahjongActivity,title,Toast.LENGTH_SHORT).show(); true }
     }
-    private fun header(title:String,back:()->Unit,extra:View?=null,help:()->Unit)=LinearLayout(this).apply {
+    private fun header(title:String,back:()->Unit,extra:View?=null,titleColor:Int=ink,help:()->Unit)=LinearLayout(this).apply {
         gravity=Gravity.CENTER_VERTICAL
         addView(icon(MahjongIcon.BACK,R.string.mj_back,action=back),LinearLayout.LayoutParams(dp(48),dp(48)))
-        addView(label(title,21f).apply { setTypeface(typeface,Typeface.BOLD); gravity=Gravity.CENTER; maxLines=2 },
+        addView(label(title,21f,titleColor).apply { setTypeface(typeface,Typeface.BOLD); gravity=Gravity.CENTER; maxLines=2 },
             LinearLayout.LayoutParams(0,-2,1f))
         if(extra!=null) addView(extra,LinearLayout.LayoutParams(dp(48),dp(48)).apply { marginEnd=dp(5) })
         addView(icon(MahjongIcon.INFO,R.string.kit_rules,action=help),LinearLayout.LayoutParams(dp(48),dp(48)))
@@ -149,14 +147,15 @@ class MahjongActivity : ThemedActivity() {
             gravity=Gravity.CENTER; maxLines=1; importantForAccessibility=View.IMPORTANT_FOR_ACCESSIBILITY_NO
         })
     }
-    private fun collectionProgress(textures:Boolean=true):View = column().apply {
-        val owned=if(textures) store.unlockedTextures else store.unlocked
+    private fun collectionProgress(tab:Int=0):View = column().apply {
+        val owned=owned(tab)
         background=panel(); setPadding(dp(12),dp(8),dp(12),dp(8))
-        if(owned.size==MahjongStyles.COUNT) {
+        if(owned.size==itemCount(tab)) {
             addView(label(getString(R.string.mj_collection_complete),14f,accent))
         } else {
-            val price=if(textures) store.nextTexturePrice else store.nextPrice
-            addView(label(getString(if(textures) R.string.mj_next_texture_price else R.string.mj_next_price,price),14f).apply { setTypeface(typeface,Typeface.BOLD) })
+            val price=price(tab)
+            val next=intArrayOf(R.string.mj_next_texture_price,R.string.mj_next_price,R.string.mj_next_table_price)[tab]
+            addView(label(getString(next,price),14f).apply { setTypeface(typeface,Typeface.BOLD) })
             addView(label(getString(if(store.pearls>=price) R.string.mj_can_buy else R.string.mj_save_pearls,
                 (price-store.pearls).coerceAtLeast(0)),12f,muted))
             addView(ProgressBar(this@MahjongActivity,null,android.R.attr.progressBarStyleHorizontal).apply {
@@ -169,7 +168,9 @@ class MahjongActivity : ThemedActivity() {
     private fun modeHelp(mode:MahjongMode) {
         board?.pause()
         showGameRules(modeTitles[mode.ordinal],getString(R.string.mj_mode_help,
-            getString(descriptions[mode.ordinal]),getString(R.string.mj_help_tools))) { board?.resume() }
+            getString(descriptions[mode.ordinal]),getString(if(mode==MahjongMode.SLIDE) R.string.mj_help_tools_untimed else R.string.mj_help_tools))) {
+            if(stuckPanel==null) board?.resume()
+        }
     }
     private fun gardenHelp()=showGameRules(R.string.mj_title,R.string.mj_garden_help)
 
@@ -269,7 +270,7 @@ class MahjongActivity : ThemedActivity() {
         }
         card.addView(object:View(this) {
             private val art=MahjongArt(this@MahjongActivity)
-            override fun onDraw(c:Canvas) { art.modeScene(c,width.toFloat(),height.toFloat(),index,(index*2+store.style)%MahjongStyles.COUNT) }
+            override fun onDraw(c:Canvas) { art.modeScene(c,width.toFloat(),height.toFloat(),index,store.style,store.texture) }
         },FrameLayout.LayoutParams(-1,-1))
         card.addView(label(getString(title),19f,Color.WHITE).apply {
             setTypeface(typeface,Typeface.BOLD); setPadding(dp(12),0,dp(40),dp(12)); maxLines=2
@@ -330,12 +331,12 @@ class MahjongActivity : ThemedActivity() {
     }
 
     private fun showLoading() {
-        val root=root(); setContentView(root)
-        root.full(header(getString(R.string.mj_title),{ showMenu() }) { gardenHelp() },0)
+        val root=root().apply { background=MahjongTableDrawable(this@MahjongActivity,store.table) }; setContentView(root)
+        root.full(header(getString(R.string.mj_title),{ showMenu() },titleColor=Color.WHITE) { gardenHelp() },0)
         root.addView(column().apply {
             gravity=Gravity.CENTER
             addView(ProgressBar(this@MahjongActivity),LinearLayout.LayoutParams(dp(40),dp(40)))
-            full(label(getString(R.string.mj_preparing),16f,muted).apply { gravity=Gravity.CENTER },16)
+            full(label(getString(R.string.mj_preparing),16f,0xddffffff.toInt()).apply { gravity=Gravity.CENTER },16)
         },LinearLayout.LayoutParams(-1,0,1f))
     }
 
@@ -358,12 +359,14 @@ class MahjongActivity : ThemedActivity() {
     private fun copyGame(game:MahjongGame,history:Boolean=false) = MahjongGame(game.mode,game.seed,game.stage,initializeBoard=false).apply {
         restore(game.snapshot())
         solutionSteps.addAll(game.solutionSteps)
+        hintsUsed=game.hintsUsed; shufflesUsed=game.shufflesUsed
         if(history) this.history.addAll(game.history)
     }
 
     private fun requestHint(show:Boolean) {
         val current=run ?: return
         if(boardBusy || current.game.complete) return
+        if(show && current.game.hintsLeft<=0) { pulse(hintButton); return }
         cancelHint()
         val revision=hintRevision
         val target=board ?: return
@@ -375,31 +378,39 @@ class MahjongActivity : ThemedActivity() {
                 current.game.solutionSteps.clear(); current.game.solutionSteps.addAll(suggestion.continuation)
             }
             if(show) {
-                target.showHint(suggestion.ids,suggestion.slide)
-                if(suggestion.limited) { pulse(undoButton); pulse(shuffleButton) }
+                if(suggestion.ids.isNotEmpty()) {
+                    // Un indice n'est compté que s'il montre vraiment un coup.
+                    current.game.hintsUsed++; target.showHint(suggestion.ids,suggestion.slide); updateHud(); saveSoon()
+                } else pulse(undoButton)
             }
-            if(suggestion.ids.isEmpty() && !suggestion.limited) pulse(shuffleButton)
+            // Glissières et Pile dix : le solveur repère un plateau devenu sans issue.
+            if(suggestion.lost && (current.game.mode==MahjongMode.SLIDE || current.game.mode==MahjongMode.TEN)) showStuck(noSolution=true)
         }
         cachedHint?.takeIf { cachedHintState==state }?.let { deliver(it); return }
         val copy=copyGame(current.game)
-        hintTask=compute({ Hint(copy.hint(),copy.slideHint(),copy.hintSearchLimited,copy.solutionSteps.toList()) },::deliver,{})
+        hintTask=compute({ Hint(copy.hint(),copy.slideHint(),copy.hintSearchLimited,copy.solutionSteps.toList(),copy.hintProvedLost) },::deliver,{})
     }
 
     private fun shuffleBoard() {
         val current=run ?: return
-        if(boardBusy) return
+        if(boardBusy || current.game.shufflesLeft<=0) return
         cancelHint()
         val target=board ?: return
         val revision=++boardRevision
         val copy=copyGame(current.game,history=true)
         setBoardBusy(true)
-        boardTask=compute({ copy.shuffle(); copy },{ shuffled ->
+        boardTask=compute({ copy.shuffle() to copy },{ (done,shuffled) ->
             if(revision==boardRevision && run===current && board===target) {
-                current.game.restore(shuffled.snapshot())
-                current.game.history.clear(); current.game.history.addAll(shuffled.history)
-                current.game.solution.clear(); current.game.solution.addAll(shuffled.solution)
-                current.game.solutionSteps.clear(); current.game.solutionSteps.addAll(shuffled.solutionSteps)
-                setBoardBusy(false); target.refresh(); updateHud(); save()
+                setBoardBusy(false)
+                if(done) {
+                    current.game.restore(shuffled.snapshot())
+                    current.game.history.clear(); current.game.history.addAll(shuffled.history)
+                    current.game.solution.clear(); current.game.solution.addAll(shuffled.solution)
+                    current.game.solutionSteps.clear(); current.game.solutionSteps.addAll(shuffled.solutionSteps)
+                    current.game.shufflesUsed=shuffled.shufflesUsed
+                    target.refresh(shuffled=true); target.resume(); updateHud(); save()
+                    if(current.game.stuck) showStuck()
+                } else showStuck(lost=true)
             }
         },{
             if(revision==boardRevision && board===target) {
@@ -417,7 +428,7 @@ class MahjongActivity : ThemedActivity() {
     private fun showBoard() {
         val current=run ?: return
         releaseBoard(); screen="board"
-        val root=root(); setContentView(root)
+        val root=root().apply { background=MahjongTableDrawable(this@MahjongActivity,store.table) }; setContentView(root)
         root.full(boardBanner(current),0)
         progress=ProgressBar(this,null,android.R.attr.progressBarStyleHorizontal).apply {
             max=current.game.tiles.size; progressTintList=android.content.res.ColorStateList.valueOf(accent)
@@ -425,43 +436,46 @@ class MahjongActivity : ThemedActivity() {
         root.full(progress,2,dp(4))
         board=MahjongBoardView(this,current.game,accent,store.style,effects,prefs.getBoolean("haptics",true),store.texture).apply {
             onMove={ result -> if(run===current) this@MahjongActivity.onMove(result) }
-            onTurned={ if(run===current) updateHud() }
         }
-        root.addView(board,LinearLayout.LayoutParams(-1,0,1f).apply { topMargin=dp(3) })
-        if(current.iceMigration) {
-            current.iceMigration=false
-            Toast.makeText(this,R.string.mj_ice_migration,Toast.LENGTH_LONG).show()
-        }
-        displayedScore=current.game.score; updateHud(); save()
+        val frame=FrameLayout(this).apply { clipChildren=false }
+        frame.addView(board,FrameLayout.LayoutParams(-1,-1))
+        boardFrame=frame
+        root.addView(frame,LinearLayout.LayoutParams(-1,0,1f).apply { topMargin=dp(3) })
+        updateHud(); save()
+        if(current.game.stuck) showStuck()
     }
 
-    /**
-     * Bannière du plateau : retour, score, multiplicateur et tuiles restantes (avec la prochaine
-     * chute en Cascade) ; puis annuler, indice, mélanger, Nouveau, visuels et règles.
-     */
+    /** Bannière du plateau : retour, nom du mode, puis annuler, indice (avec son compteur), Nouveau, visuels et règles. */
     private fun boardBanner(current:MahjongSave.Saved)=LinearLayout(this).apply {
         gravity=Gravity.CENTER_VERTICAL
         addView(icon(MahjongIcon.BACK,R.string.mj_back) { showMenu() },LinearLayout.LayoutParams(dp(48),dp(48)))
-        scoreLabel=label("",21f).apply { setTypeface(typeface,Typeface.BOLD); setPadding(dp(12),0,dp(4),0) }
-        comboLabel=label("",21f,0xffc27417.toInt()).apply { setTypeface(typeface,Typeface.BOLD) }
-        remainingLabel=label("",15f,muted).apply { setPadding(dp(10),0,dp(4),0) }
-        gravityLabel=label("",26f,accent).apply { setTypeface(typeface,Typeface.BOLD); setPadding(dp(8),0,dp(4),0) }
-        addView(scoreLabel); addView(comboLabel); addView(remainingLabel)
-        if(current.game.mode==MahjongMode.CASCADE) addView(gravityLabel)
+        val title=when {
+            current.journey -> getString(R.string.mj_stage,current.game.stage)
+            current.daily -> getString(R.string.mj_daily_short)
+            else -> getString(modeTitles[current.game.mode.ordinal])
+        }
+        addView(label(title,19f,Color.WHITE).apply {
+            setTypeface(typeface,Typeface.BOLD); maxLines=1; ellipsize=android.text.TextUtils.TruncateAt.END
+            setPadding(dp(10),0,dp(4),0)
+        },LinearLayout.LayoutParams(0,-2,1f))
         if(current.bonusMultiplier==2) addView(label(getString(R.string.mj_bonus_badge),15f,accent).apply {
-            setTypeface(typeface,Typeface.BOLD); setPadding(dp(10),0,dp(4),0)
+            setTypeface(typeface,Typeface.BOLD); setPadding(dp(6),0,dp(8),0)
         })
-        addView(Space(this@MahjongActivity),LinearLayout.LayoutParams(0,0,1f))
         val controls=LinearLayout(this@MahjongActivity).apply { gravity=Gravity.CENTER_VERTICAL }
         boardControls=controls
-        undoButton=icon(MahjongIcon.UNDO,R.string.mj_undo) {
-            cancelHint()
-            if(!boardBusy && current.game.undo()) { board?.refresh(); updateHud(); saveSoon() }
+        undoButton=icon(MahjongIcon.UNDO,R.string.mj_undo) { undoMove() }
+        controls.addView(undoButton,LinearLayout.LayoutParams(dp(48),dp(48)).apply { marginEnd=dp(5) })
+        hintBadge=label("",11f,androidx.core.content.ContextCompat.getColor(this@MahjongActivity,R.color.audio_on_accent)).apply {
+            setTypeface(typeface,Typeface.BOLD); gravity=Gravity.CENTER; setPadding(0,0,0,0)
+            background=GradientDrawable().apply { shape=GradientDrawable.OVAL; setColor(accent) }
+            importantForAccessibility=View.IMPORTANT_FOR_ACCESSIBILITY_NO
         }
-        val hint=icon(MahjongIcon.HINT,R.string.mj_hint) { requestHint(show=true) }
-        shuffleButton=icon(MahjongIcon.SHUFFLE,R.string.mj_shuffle) { shuffleBoard() }
-        for(control in listOf(undoButton,hint,shuffleButton)) controls.addView(control,
-            LinearLayout.LayoutParams(dp(48),dp(48)).apply { marginEnd=dp(5) })
+        hintButton=FrameLayout(this@MahjongActivity).apply {
+            addView(icon(MahjongIcon.HINT,R.string.mj_hint) { requestHint(show=true) },FrameLayout.LayoutParams(dp(48),dp(48)))
+            addView(hintBadge,FrameLayout.LayoutParams(dp(19),dp(19),Gravity.TOP or Gravity.END))
+            clipChildren=false
+        }
+        controls.addView(hintButton,LinearLayout.LayoutParams(dp(50),dp(50)).apply { marginEnd=dp(5) })
         controls.addView(label(getString(R.string.mj_new_short),16f,androidx.core.content.ContextCompat.getColor(this@MahjongActivity,R.color.audio_on_accent)).apply {
             setTypeface(typeface,Typeface.BOLD); gravity=Gravity.CENTER; setPadding(dp(16),0,dp(16),0)
             background=GradientDrawable().apply { setColor(accent); cornerRadius=AppearanceStyle.corner(this@MahjongActivity,20f) }
@@ -475,23 +489,91 @@ class MahjongActivity : ThemedActivity() {
         addView(icon(MahjongIcon.INFO,R.string.kit_rules) { modeHelp(current.game.mode) },LinearLayout.LayoutParams(dp(48),dp(48)))
     }
 
+    private fun undoMove() {
+        val current=run ?: return
+        cancelHint()
+        if(!boardBusy && current.game.undo()) { hideStuck(); board?.refresh(); board?.resume(); updateHud(); saveSoon() }
+    }
+
+    /**
+     * Plus aucun coup : Mélanger (s'il en reste) ou Annuler. Sans mélange restant, ou quand
+     * aucune redistribution n'existe, le plateau est perdu : Recommencer ou Annuler.
+     */
+    private fun showStuck(noSolution:Boolean=false,lost:Boolean=false) {
+        val current=run ?: return
+        val game=current.game
+        val frame=boardFrame ?: return
+        if(game.complete || screen!="board") return
+        hideStuck()
+        board?.pause()
+        val canShuffle=!lost && game.shufflesLeft>0
+        val title=when {
+            !canShuffle -> R.string.mj_board_lost
+            game.mode==MahjongMode.TRIPLE && game.tray.size>=MahjongGame.TRAY -> R.string.mj_tray_full
+            noSolution -> R.string.mj_no_solution
+            else -> R.string.mj_no_moves
+        }
+        val panel=column().apply {
+            gravity=Gravity.CENTER_HORIZONTAL; background=panel(surface,accent); elevation=dp(10).toFloat()
+            setPadding(dp(20),dp(14),dp(20),dp(16)); isClickable=true
+        }
+        panel.addView(label(getString(title),21f).apply { setTypeface(typeface,Typeface.BOLD); gravity=Gravity.CENTER })
+        val row=LinearLayout(this).apply { gravity=Gravity.CENTER }
+        if(canShuffle) row.addView(panelButton(MahjongIcon.SHUFFLE,getString(R.string.mj_shuffle_count,game.shufflesLeft),true) {
+            hideStuck(); shuffleBoard()
+        }) else row.addView(panelButton(MahjongIcon.PLAY,getString(R.string.mj_restart),true) { openSlot(current.slot,fresh=true) })
+        if(game.history.isNotEmpty()) row.addView(panelButton(MahjongIcon.UNDO,getString(R.string.mj_undo),false) { undoMove() },
+            LinearLayout.LayoutParams(-2,dp(52)).apply { marginStart=dp(10) })
+        panel.addView(row,LinearLayout.LayoutParams(-2,-2).apply { topMargin=dp(12) })
+        frame.addView(panel,FrameLayout.LayoutParams(-2,-2,Gravity.CENTER))
+        stuckPanel=panel
+        if(effects && ValueAnimator.areAnimatorsEnabled()) {
+            panel.scaleX=.85f; panel.scaleY=.85f; panel.alpha=0f
+            panel.animate().scaleX(1f).scaleY(1f).alpha(1f).setDuration(220).start()
+        }
+    }
+
+    private fun hideStuck() {
+        stuckPanel?.let { (it.parent as? ViewGroup)?.removeView(it) }
+        stuckPanel=null
+    }
+
+    private fun panelButton(symbol:MahjongIcon,text:String,primary:Boolean,action:()->Unit)=LinearLayout(this).apply {
+        gravity=Gravity.CENTER_VERTICAL; setPadding(dp(14),0,dp(18),0); minimumHeight=dp(52)
+        val tint=if(primary) androidx.core.content.ContextCompat.getColor(this@MahjongActivity,R.color.audio_on_accent) else ink
+        background=if(primary) GradientDrawable().apply { setColor(accent); cornerRadius=AppearanceStyle.corner(this@MahjongActivity,20f) } else panel()
+        isClickable=true; isFocusable=true; contentDescription=text
+        setOnClickListener { action() }
+        addView(ImageView(this@MahjongActivity).apply {
+            setImageDrawable(MahjongIconDrawable(symbol,tint)); importantForAccessibility=View.IMPORTANT_FOR_ACCESSIBILITY_NO
+        },LinearLayout.LayoutParams(dp(22),dp(22)).apply { marginEnd=dp(8) })
+        addView(label(text,16f,tint).apply { setTypeface(typeface,Typeface.BOLD); importantForAccessibility=View.IMPORTANT_FOR_ACCESSIBILITY_NO })
+    }
+
     private fun onMove(result:MahjongGame.Result) {
         val current=run ?: return
         cancelHint()
         val matched=result==MahjongGame.Result.MATCHED
-        if(matched && prefs.getBoolean("sound",true)) chimes?.play(current.game.combo)
-        updateHud(matched)
+        if(prefs.getBoolean("sound",true)) {
+            if(matched) chimes?.play(current.game.combo)
+            else if(result==MahjongGame.Result.SELECTED || result==MahjongGame.Result.MOVED || result==MahjongGame.Result.TRAY_FULL) chimes?.click()
+        }
+        updateHud()
         if(current.game.complete) {
             store.finish(current)
             // finish() has just written the completed run: a pending move save is obsolete.
             saveHandler.removeCallbacks(delayedSave); savePending=false
             handler.removeCallbacksAndMessages(null)
-            if(effects) handler.postDelayed({ if(run===current && screen=="board" && !isFinishing && !isDestroyed) showReward() },650)
+            if(effects) handler.postDelayed({ if(run===current && screen=="board" && !isFinishing && !isDestroyed) showReward() },900)
             else showReward()
         } else {
-            if(result==MahjongGame.Result.TRAY_FULL) pulse(shuffleButton)
-            else if(matched && current.game.mode!=MahjongMode.TRIPLE) requestHint(show=false)
-            if(result==MahjongGame.Result.TRAY_FULL) pulse(undoButton)
+            if(result==MahjongGame.Result.TRAY_FULL || (matched || result==MahjongGame.Result.SELECTED &&
+                current.game.mode==MahjongMode.TRIPLE) && current.game.stuck) {
+                // Le panneau attend que la dernière tuile se soit posée.
+                handler.postDelayed({ if(run===current && screen=="board" && current.game.stuck) showStuck() },if(effects) 450L else 0L)
+            }
+            else if((matched || result==MahjongGame.Result.MOVED) &&
+                (current.game.mode==MahjongMode.SLIDE || current.game.mode==MahjongMode.TEN)) requestHint(show=false)
             // Ice focus and its rollback origin are durable, including a blocked swipe
             // that selected a different tile. Other pair selections remain transient.
             if(result==MahjongGame.Result.MATCHED || result==MahjongGame.Result.MOVED ||
@@ -509,7 +591,7 @@ class MahjongActivity : ThemedActivity() {
             .setPositiveButton(R.string.mj_new_board) { _,_ ->
                 openSlot(current.slot,fresh=true)
             }.create().also { popup ->
-                popup.setOnDismissListener { if(screen=="board") board?.resume() }
+                popup.setOnDismissListener { if(screen=="board" && stuckPanel==null) board?.resume() }
                 popup.show()
             }
     }
@@ -519,46 +601,31 @@ class MahjongActivity : ThemedActivity() {
         view.animate().cancel(); view.scaleX=1.12f; view.scaleY=1.12f
         view.animate().scaleX(1f).scaleY(1f).setDuration(350).start()
     }
-    private fun updateHud(animate:Boolean=false) {
+    private fun updateHud() {
         val current=run?.game ?: return
-        scoreAnimator?.cancel()
-        if(animate && effects && ValueAnimator.areAnimatorsEnabled()) {
-            scoreAnimator=ValueAnimator.ofInt(displayedScore,current.score).apply {
-                duration=260
-                addUpdateListener { displayedScore=it.animatedValue as Int; scoreLabel.text=getString(R.string.mj_number,displayedScore) }
-                start()
-            }
-        } else { displayedScore=current.score; scoreLabel.text=getString(R.string.mj_number,current.score) }
-        scoreLabel.contentDescription=getString(R.string.mj_score,current.score)
-        comboLabel.text=getString(R.string.mj_multiplier,current.combo.coerceAtLeast(1))
-        if(animate) pulse(comboLabel)
-        remainingLabel.text=getString(R.string.mj_fraction,current.remaining,current.tiles.size)
-        remainingLabel.contentDescription=getString(R.string.mj_remaining,current.remaining,current.tiles.size)
+        if(screen!="board") return
         progress.progress=current.tiles.size-current.remaining
         undoButton.isEnabled=!boardBusy && current.history.isNotEmpty() && !current.complete
         undoButton.alpha=if(undoButton.isEnabled) 1f else .4f
-        if(current.mode==MahjongMode.CASCADE) {
-            // La flèche suit le plateau : couché, il a tourné d'un quart de tour.
-            val shown=if(board?.turned==true) (current.gravityDirection+3)%4 else current.gravityDirection
-            gravityLabel.text=resources.getStringArray(R.array.mj_gravity_arrows)[shown]
-            gravityLabel.contentDescription=resources.getStringArray(R.array.mj_gravity_directions)[shown]
-        }
+        hintBadge.text=getString(R.string.mj_number,current.hintsLeft)
+        hintButton.alpha=if(current.hintsLeft>0) 1f else .4f
+        hintButton.contentDescription=getString(R.string.mj_hints_left,current.hintsLeft)
     }
 
     private fun showReward() {
         val current=run ?: return
         val reward=current.reward ?: store.finish(current) ?: return
         releaseBoard(); screen="reward"
-        val root=root(); setContentView(root)
+        val root=root().apply { background=MahjongTableDrawable(this@MahjongActivity,store.table) }; setContentView(root)
         val title=when { reward.gift -> R.string.mj_big_gift; reward.styles.isEmpty() -> R.string.mj_victory_short; else -> R.string.mj_new_porcelain }
-        root.full(header(getString(title),{ showMenu() }) { gardenHelp() },0)
+        root.full(header(getString(title),{ showMenu() },titleColor=Color.WHITE) { gardenHelp() },0)
         val amount=label(getString(R.string.mj_pearl_gain,reward.pearls),32f,accent).apply {
             gravity=Gravity.CENTER; setTypeface(typeface,Typeface.BOLD)
         }
         root.full(amount,6)
-        root.full(label(getString(R.string.mj_result_short,current.game.score,current.game.peakCombo),15f,muted).apply { gravity=Gravity.CENTER },0)
-        root.full(label(getString(R.string.mj_reward_breakdown,reward.comboBonus,current.bonusMultiplier,
-            if(reward.gift) 100 else 0),13f,muted).apply { gravity=Gravity.CENTER },0)
+        root.full(label(getString(R.string.mj_result_short,current.game.score,current.game.peakCombo),15f,0xddffffff.toInt()).apply { gravity=Gravity.CENTER },0)
+        root.full(label(getString(R.string.mj_reward_breakdown,reward.stars,current.bonusMultiplier,
+            if(reward.gift) 100 else 0),13f,0xccffffff.toInt()).apply { gravity=Gravity.CENTER },0)
         val chosenName=label(if(reward.styles.isNotEmpty()) styleNames[reward.styles.first()] else "",20f).apply { gravity=Gravity.CENTER }
         root.addView(MahjongRewardView(this,reward,store.style,effects) { id -> store.equip(id); chosenName.text=styleNames[id] },
             LinearLayout.LayoutParams(-1,0,1f))
@@ -576,7 +643,7 @@ class MahjongActivity : ThemedActivity() {
     }
 
     private fun openCollection() {
-        collectionReturn=screen; collectionTextures=true; save(); releaseBoard(); showCollection()
+        collectionReturn=screen; collectionTab=0; save(); releaseBoard(); showCollection()
     }
     private fun leaveCollection() {
         when(collectionReturn) {
@@ -585,35 +652,44 @@ class MahjongActivity : ThemedActivity() {
             else -> showMenu()
         }
     }
+
+    // Onglets de la collection : 0 textures, 1 porcelaines, 2 fonds.
+    private fun itemCount(tab:Int)=if(tab==2) MahjongAtlas.TABLES else MahjongStyles.COUNT
+    private fun names(tab:Int):Array<String> = when(tab) { 0 -> textureNames; 1 -> styleNames; else -> tableNames }
+    private fun owned(tab:Int)=when(tab) { 0 -> store.unlockedTextures; 1 -> store.unlocked; else -> store.unlockedTables }
+    private fun equipped(tab:Int)=when(tab) { 0 -> store.texture; 1 -> store.style; else -> store.table }
+    private fun price(tab:Int)=when(tab) { 0 -> store.nextTexturePrice; 1 -> store.nextPrice; else -> store.nextTablePrice }
+    private fun equip(tab:Int,id:Int)=when(tab) { 0 -> store.equipTexture(id); 1 -> store.equip(id); else -> store.equipTable(id) }
+    private fun purchase(tab:Int,id:Int)=when(tab) { 0 -> store.purchaseTexture(id); 1 -> store.purchase(id); else -> store.purchaseTable(id) }
+
     private fun showCollection() {
         screen="collection"
-        val textures=collectionTextures
-        val names=if(textures) textureNames else styleNames
-        val owned=if(textures) store.unlockedTextures else store.unlocked
-        val equipped=if(textures) store.texture else store.style
-        val price=if(textures) store.nextTexturePrice else store.nextPrice
+        val tab=collectionTab
+        val names=names(tab); val owned=owned(tab); val equipped=equipped(tab); val price=price(tab)
         val root=root(); setContentView(root)
         root.full(header(getString(R.string.mj_collection_short),{ leaveCollection() }) {
             showGameRules(R.string.mj_collection,R.string.mj_collection_help)
         },0)
         val tabs=LinearLayout(this)
-        for(isTexture in listOf(true,false)) {
-            tabs.addView(label(getString(if(isTexture) R.string.mj_textures else R.string.mj_porcelains),16f).apply {
+        val tabTitles=intArrayOf(R.string.mj_textures,R.string.mj_porcelains,R.string.mj_tables)
+        val tabTags=arrayOf("tab:textures","tab:porcelains","tab:tables")
+        for(index in 0..2) {
+            tabs.addView(label(getString(tabTitles[index]),16f).apply {
                 gravity=Gravity.CENTER; setTypeface(typeface,Typeface.BOLD)
-                background=panel(if(textures==isTexture) MahjongArt.mix(surface,accent,.24f) else surface)
-                tag=if(isTexture) "tab:textures" else "tab:porcelains"
-                isSelected=textures==isTexture; isClickable=true; isFocusable=true
-                setOnClickListener { collectionTextures=isTexture; showCollection() }
+                background=panel(if(tab==index) MahjongArt.mix(surface,accent,.24f) else surface)
+                tag=tabTags[index]
+                isSelected=tab==index; isClickable=true; isFocusable=true
+                setOnClickListener { collectionTab=index; showCollection() }
             },LinearLayout.LayoutParams(0,dp(48),1f).apply { marginStart=dp(3); marginEnd=dp(3) })
         }
         root.full(tabs,6)
-        root.full(label(getString(if(textures) R.string.mj_texture_selection else R.string.mj_porcelain_selection,
-            names[equipped]),13f,muted),2)
-        root.full(label(getString(R.string.mj_collection_count,owned.size,MahjongStyles.COUNT,store.pearls),16f).apply { gravity=Gravity.CENTER },0)
-        root.full(collectionProgress(textures),4)
+        val selection=intArrayOf(R.string.mj_texture_selection,R.string.mj_porcelain_selection,R.string.mj_table_selection)[tab]
+        root.full(label(getString(selection,names[equipped]),13f,muted),2)
+        root.full(label(getString(R.string.mj_collection_count,owned.size,itemCount(tab),store.pearls),16f).apply { gravity=Gravity.CENTER },0)
+        root.full(collectionProgress(tab),4)
         val scroll=ScrollView(this); val body=column(); scroll.addView(body)
         root.addView(scroll,LinearLayout.LayoutParams(-1,0,1f))
-        val cards=(0 until MahjongStyles.COUNT).map { id ->
+        val cards=(0 until itemCount(tab)).map { id ->
             val card=object:FrameLayout(this) {
                 override fun onMeasure(w:Int,h:Int) {
                     super.onMeasure(w,MeasureSpec.makeMeasureSpec((MeasureSpec.getSize(w)*1.55f).toInt(),MeasureSpec.EXACTLY))
@@ -621,37 +697,49 @@ class MahjongActivity : ThemedActivity() {
             }.apply {
                 background=panel(if(id==equipped) MahjongArt.mix(surface,accent,.18f) else surface)
                 clipToOutline=true; isClickable=true; isFocusable=true
-                tag=if(textures) "texture:$id" else "porcelain:$id"
+                tag="${tabTags[tab].removePrefix("tab:")}:$id"
                 contentDescription=getString(if(id in owned) R.string.mj_style_available else R.string.mj_style_waiting,names[id])
                 setOnClickListener {
                     if(id in owned) {
-                        if(textures) store.equipTexture(id) else store.equip(id)
-                        showCollection()
+                        equip(tab,id); showCollection()
                         Toast.makeText(this@MahjongActivity,getString(R.string.mj_visual_applied,names[id]),Toast.LENGTH_SHORT).show()
-                    } else showStylePreview(id,textures)
+                    } else showStylePreview(id,tab)
                 }
             }
             card.addView(object:View(this) {
                 private val art=MahjongArt(this@MahjongActivity)
                 override fun onDraw(c:Canvas) {
-                    val w=width*.60f; val h=w*1.24f
+                    if(tab==2) {
+                        // Le paysage en vignette, avec deux tuiles posées dessus pour juger le contraste.
+                        art.table(c,width.toFloat(),height.toFloat(),id,thumbnail=true)
+                        val w=width*.3f; val h=w*1.33f
+                        art.tile(c,width*.5f-w*1.02f+w*.13f,height*.38f-h/2,w,h,31,accent,style=store.style,texture=store.texture)
+                        art.tile(c,width*.5f+w*.02f+w*.13f,height*.38f-h/2,w,h,34,accent,style=store.style,texture=store.texture)
+                        return
+                    }
+                    val textures=tab==0
+                    val w=width*.56f; val h=w*1.33f
                     val material=if(textures) id else store.texture
                     val icon=if(textures) store.style else id
-                    art.tile(c,width*.15f,height*.07f,w,h,if(textures) 4 else 0,accent,style=icon,texture=material)
+                    art.tile(c,width*.2f,height*.07f,w,h,if(textures) 4 else 34,accent,style=icon,texture=material)
                     val small=width*.30f
                     c.save(); c.rotate(10f,width*.70f,height*.39f)
-                    art.tile(c,width*.57f,height*.29f,small,small*1.24f,if(textures) 8 else 10,accent,style=icon,texture=material)
+                    art.tile(c,width*.6f,height*.29f,small,small*1.33f,if(textures) 32 else 34,accent,style=icon,texture=material)
                     c.restore()
                 }
             },FrameLayout.LayoutParams(-1,-1))
-            val caption=column()
-            caption.addView(label(names[id],12f).apply { gravity=Gravity.CENTER; maxLines=2; setTypeface(typeface,Typeface.BOLD) })
+            val onImage=tab==2
+            val caption=column().apply {
+                if(onImage) background=GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,intArrayOf(0x00000000,0xcc000000.toInt()))
+                setPadding(0,dp(14),0,dp(5))
+            }
+            caption.addView(label(names[id],12f,if(onImage) Color.WHITE else ink).apply { gravity=Gravity.CENTER; maxLines=2; setTypeface(typeface,Typeface.BOLD) })
             caption.addView(label(if(id in owned) getString(if(id==equipped) R.string.mj_equipped else R.string.mj_apply_visual)
-                else getString(R.string.mj_price,price),11f,if(id in owned) accent else muted).apply { gravity=Gravity.CENTER })
-            card.addView(caption,FrameLayout.LayoutParams(-1,-2,Gravity.BOTTOM).apply { bottomMargin=dp(5) })
+                else getString(R.string.mj_price,price),11f,if(id in owned) accent else if(onImage) 0xddffffff.toInt() else muted).apply { gravity=Gravity.CENTER })
+            card.addView(caption,FrameLayout.LayoutParams(-1,-2,Gravity.BOTTOM))
             val mark=ImageView(this).apply {
                 setImageDrawable(MahjongIconDrawable(if(id==equipped) MahjongIcon.CHECK else MahjongIcon.LOCK,
-                    if(id==equipped) accent else muted))
+                    if(id==equipped) accent else if(onImage) Color.WHITE else muted))
                 setPadding(dp(5),dp(5),dp(5),dp(5))
                 visibility=if(id==equipped || id !in owned) View.VISIBLE else View.GONE
             }
@@ -660,26 +748,27 @@ class MahjongActivity : ThemedActivity() {
         }
         addGrid(body,cards,if(resources.configuration.orientation==Configuration.ORIENTATION_LANDSCAPE) { if(resources.configuration.screenWidthDp>=700) 6 else 5 } else if(resources.configuration.screenWidthDp>=600) 4 else 3)
     }
-    private fun showStylePreview(id:Int,textures:Boolean) {
-        val names=if(textures) textureNames else styleNames
-        val price=if(textures) store.nextTexturePrice else store.nextPrice
+    private fun showStylePreview(id:Int,tab:Int) {
+        val names=names(tab); val price=price(tab)
         val body=column().apply { setPadding(dp(18),dp(12),dp(18),dp(12)) }
         body.addView(object:View(this) {
             private val art=MahjongArt(this@MahjongActivity)
             override fun onDraw(c:Canvas) {
-                val w=minOf(width/4.5f,height*.58f); val h=w*1.24f
-                repeat(3) { i -> art.tile(c,width/2f+(i-1)*w*1.12f-w/2,(height-h)/2,w,h,
-                    if(textures) intArrayOf(4,14,26)[i] else intArrayOf(0,10,18)[i],accent,
-                    style=if(textures) store.style else id,texture=if(textures) id else store.texture) }
+                if(tab==2) art.table(c,width.toFloat(),height.toFloat(),id,thumbnail=true)
+                val w=minOf(width/4.5f,height*.55f); val h=w*1.33f
+                repeat(3) { i -> art.tile(c,width/2f+(i-1)*w*1.12f-w/2+w*.06f,(height-h)/2,w,h,
+                    when(tab) { 0 -> intArrayOf(4,32,22)[i]; 1 -> intArrayOf(34,31,34)[i]; else -> intArrayOf(0,34,27)[i] },accent,
+                    style=if(tab==1) id else store.style,texture=if(tab==0) id else store.texture) }
             }
-        },LinearLayout.LayoutParams(-1,dp(160)))
-        body.full(label(getString(if(textures) R.string.mj_texture_preview_help else R.string.mj_porcelain_preview_help),15f).apply { gravity=Gravity.CENTER })
+        },LinearLayout.LayoutParams(-1,dp(if(tab==2) 220 else 160)))
+        val help=intArrayOf(R.string.mj_texture_preview_help,R.string.mj_porcelain_preview_help,R.string.mj_table_preview_help)[tab]
+        body.full(label(getString(help),15f).apply { gravity=Gravity.CENTER })
         body.full(label(getString(R.string.mj_purchase_balance,store.pearls,price),15f).apply { gravity=Gravity.CENTER })
         val scroll=ScrollView(this).apply { addView(body) }
         dialog=AlertDialog.Builder(this).setTitle(names[id]).setView(scroll)
             .setNegativeButton(R.string.close,null)
             .setPositiveButton(getString(R.string.mj_buy,price)) { _,_ ->
-                if(if(textures) store.purchaseTexture(id) else store.purchase(id)) {
+                if(purchase(tab,id)) {
                     chimes?.play(8); showCollection()
                     Toast.makeText(this,getString(R.string.mj_visual_applied,names[id]),Toast.LENGTH_SHORT).show()
                 }
@@ -715,25 +804,26 @@ class MahjongActivity : ThemedActivity() {
         boardRevision++; boardTask?.cancel(true); boardTask=null; cancelHint()
         workHandler.removeCallbacksAndMessages(null)
         cachedHintState=null; cachedHint=null; boardBusy=false; boardControls=null; loading=null
-        handler.removeCallbacksAndMessages(null); scoreAnimator?.cancel(); scoreAnimator=null
+        handler.removeCallbacksAndMessages(null)
+        stuckPanel=null; boardFrame=null
         board?.pause(); board=null
     }
     override fun onPause() {
         cancelHint(); boardRevision++; boardTask?.cancel(true); boardTask=null; worker.purge()
         if(boardBusy) setBoardBusy(false)
-        handler.removeCallbacksAndMessages(null); scoreAnimator?.cancel(); board?.pause(); save(); super.onPause()
+        handler.removeCallbacksAndMessages(null); board?.pause(); save(); super.onPause()
     }
     override fun onResume() {
         super.onResume()
         val pending=loading
         if(screen=="loading" && boardTask==null && pending!=null) openSlot(pending.slot,pending.fresh,pending.restoring)
         else if(screen=="board" && run?.game?.complete==true) showReward()
-        else { if(screen=="board") updateHud(); board?.resume() }
+        else { if(screen=="board") updateHud(); if(stuckPanel==null) board?.resume() }
     }
     override fun onSaveInstanceState(outState:Bundle) {
         save(); outState.putString("screen",screen); outState.putString("active_slot",run?.slot)
         loading?.let { outState.putString("loading_slot",it.slot); outState.putBoolean("loading_fresh",it.fresh); outState.putBoolean("loading_restoring",it.restoring) }
-        outState.putBoolean("collection_textures",collectionTextures); outState.putString("collection_return",collectionReturn)
+        outState.putInt("collection_tab",collectionTab); outState.putString("collection_return",collectionReturn)
         super.onSaveInstanceState(outState)
     }
     override fun onConfigurationChanged(newConfig:Configuration) {

@@ -7,7 +7,8 @@ import android.util.JsonToken
 import java.io.StringReader
 import kotlin.random.Random
 
-internal data class MahjongReward(val pearls: Int, val styles: List<Int>, val gift: Boolean, val comboBonus: Int)
+/** Les perles suivent les étoiles (une à trois) ; [styles] reste vide, les achats se font dans la collection. */
+internal data class MahjongReward(val pearls: Int, val styles: List<Int>, val gift: Boolean, val stars: Int)
 
 /** Each mode, the journey and the daily board have a separate durable slot. */
 internal class MahjongStore(val prefs: SharedPreferences) {
@@ -39,6 +40,21 @@ internal class MahjongStore(val prefs: SharedPreferences) {
     val texturePurchases get() = prefs.getInt("texture_purchases", 0).coerceIn(0, 21)
     val nextTexturePrice get() = MahjongCollection.price(texturePurchases)
 
+    /** Fonds : trois paysages offerts, les autres s'achètent avec leurs propres prix croissants. */
+    val unlockedTables get() = prefs.getStringSet("tables", setOf("0", "1", "2"))!!
+        .mapNotNull { it.toIntOrNull() }.filter { it in 0 until MahjongAtlas.TABLES }.toSet()
+    val table get() = prefs.getInt("table", 0).takeIf { it in unlockedTables } ?: 0
+    val tablePurchases get() = prefs.getInt("table_purchases", 0).coerceIn(0, MahjongAtlas.TABLES)
+    val nextTablePrice get() = MahjongCollection.price(tablePurchases)
+    fun equipTable(id: Int) { if (id in unlockedTables) prefs.edit().putInt("table", id).apply() }
+    fun purchaseTable(id: Int): Boolean = synchronized(prefs) {
+        if (id !in 0 until MahjongAtlas.TABLES || id in unlockedTables || pearls < nextTablePrice) return@synchronized false
+        prefs.edit().putInt("pearls", pearls - nextTablePrice)
+            .putInt("table_purchases", tablePurchases + 1)
+            .putStringSet("tables", (unlockedTables + id).map(Int::toString).toSet())
+            .putInt("table", id).commit()
+    }
+
     fun equipTexture(id: Int) { if (id in unlockedTextures) prefs.edit().putInt("texture", id).apply() }
     fun purchaseTexture(id: Int): Boolean = synchronized(prefs) {
         if (id !in 0 until MahjongStyles.COUNT || id in unlockedTextures || pearls < nextTexturePrice)
@@ -68,6 +84,14 @@ internal class MahjongStore(val prefs: SharedPreferences) {
         if (!prefs.contains("textures")) prefs.edit()
             .putStringSet("textures", unlocked.map(Int::toString).toSet())
             .putInt("texture", style).apply()
+        // Les plateaux d'avant les vraies tuiles ne se relisent pas : on les oublie ; perles,
+        // victoires et collection restent.
+        if (prefs.getInt("save_format", 0) < MahjongSave.VERSION) {
+            val edit = prefs.edit()
+            prefs.all.keys.filter { key -> listOf("run_", "current_", "rewarded_", "summary_").any(key::startsWith) }
+                .forEach { edit.remove(it) }
+            edit.putInt("save_format", MahjongSave.VERSION).apply()
+        }
     }
 
     fun load(slot: String) = prefs.getString("run_$slot", null)?.let(MahjongSave::decode)?.takeIf { it.slot == slot }
@@ -139,8 +163,8 @@ internal class MahjongStore(val prefs: SharedPreferences) {
             }
             reader.endObject()
             require(reader.peek() == JsonToken.END_DOCUMENT)
-            require(version in 1..4 && !(journey && daily))
-            require(MahjongMode.entries.any { it.name == mode } || (mode == "MEMORY" && version <= 2 && (journey || daily)))
+            require(version == MahjongSave.VERSION && !(journey && daily))
+            require(MahjongMode.entries.any { it.name == mode })
             require(slot == when { journey -> "journey"; daily -> "daily"; else -> mode })
             result
         }
@@ -199,18 +223,19 @@ internal class MahjongStore(val prefs: SharedPreferences) {
         val gift = (wins + 1) % 5 == 0
         val receipts = prefs.getStringSet("daily_receipts", emptySet())!!.toMutableSet()
         val dailyBonus = run.daily && receipts.add(run.day.toString())
-        val comboBonus = MahjongCollection.comboBonus(run.game)
-        val amount = (30 + run.game.tiles.size / 3 + comboBonus) * run.bonusMultiplier +
+        val stars = run.game.stars
+        val amount = (12 + run.game.tiles.size / 4) * stars * run.bonusMultiplier +
             (if (gift) 100 else 0) + (if (dailyBonus) 40 else 0)
         val balance = (pearls.toLong() + amount).coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
         val styles = emptyList<Int>()
-        val reward = MahjongReward(amount, styles, gift, comboBonus)
+        val reward = MahjongReward(amount, styles, gift, stars)
         run.reward = reward
         val mode = run.game.mode.name
         val edit = prefs.edit().putInt("wins", wins + 1)
             .putInt("wins_$mode", prefs.getInt("wins_$mode", 0) + 1)
             .putInt("pearls", balance)
             .putInt("best_$mode", maxOf(run.game.score, prefs.getInt("best_$mode", 0)))
+            .putInt("stars_$mode", maxOf(stars, prefs.getInt("stars_$mode", 0)))
             .putStringSet("porcelains", (unlocked + styles).map(Int::toString).toSet())
             .putStringSet("daily_receipts", receipts)
         writeRun(edit, run)

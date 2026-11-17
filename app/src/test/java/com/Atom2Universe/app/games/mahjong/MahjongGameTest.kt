@@ -2,303 +2,185 @@ package com.Atom2Universe.app.games.mahjong
 
 import org.junit.Assert.*
 import org.junit.Test
+import kotlin.math.abs
 
 class MahjongGameTest {
-    private fun play(game: MahjongGame, steps: List<MahjongSolutionStep>) {
-        for (step in steps) {
-            step.slide?.let { move -> assertEquals(MahjongGame.Result.MOVED, game.slide(move.id, move.x, move.y)) }
-            step.ids.forEach { id ->
-                assertTrue("${game.mode}: blocked tile $id", game.isFree(game.tiles[id]))
-                val result = game.tap(id)
-                assertTrue("${game.mode}: unexpected $result", result == MahjongGame.Result.SELECTED || result == MahjongGame.Result.MATCHED)
-            }
-        }
-    }
+    private val dealt = listOf(MahjongMode.CLASSIC, MahjongMode.TRIPLE, MahjongMode.CONNECT, MahjongMode.CASCADE)
 
-    @Test fun allGeneratedPuzzlesHaveACompleteLegalWitness() {
-        for (mode in MahjongMode.entries) for (stage in listOf(1, 2, 5, 20)) repeat(4) { seed ->
-            val game = MahjongGame(mode, seed, stage)
-            play(game, game.solutionSteps.toList())
-            assertTrue("$mode stage=$stage seed=$seed", game.complete)
-            assertTrue(game.tray.isEmpty())
+    /** Rejoue un témoin de fin complète avec les vraies règles du jeu. */
+    private fun finish(game: MahjongGame, steps: List<MahjongSolutionStep> = game.solutionSteps.toList()) {
+        for (step in steps) for (id in step.ids) {
+            val result = game.tap(id)
+            assertTrue("$result on $id", result == MahjongGame.Result.SELECTED || result == MahjongGame.Result.MATCHED)
         }
-    }
-
-    @Test fun everyRedealPreservesRemainingIdsAndProvidesALegalFinish() {
-        for (mode in MahjongMode.entries) for (stage in listOf(1, 5)) repeat(3) { seed ->
-            val game = MahjongGame(mode, seed, stage)
-            play(game, game.solutionSteps.take(4))
-            val remaining = game.tiles.filter { !it.removed }.map { it.id }.toSet()
-            val before = game.snapshot()
-            game.shuffle()
-            assertEquals(remaining, game.board.map { it.id }.toSet())
-            val recovered = game.snapshot()
-            val witness = game.solutionSteps.toList()
-            assertTrue(game.undo())
-            assertEquals(before.tiles, game.snapshot().tiles)
-            assertEquals(before.tray, game.tray)
-            game.restore(recovered)
-            play(game, witness)
-            assertTrue("$mode stage=$stage seed=$seed", game.complete)
-        }
-    }
-
-    @Test fun classicStartsLayeredAndCannotPickCoveredTiles() {
-        val game = MahjongGame(MahjongMode.CLASSIC, 7)
-        assertTrue(game.tiles.any { it.z > 0 })
-        val covered = game.tiles.first { tile -> game.tiles.any { it.x == tile.x && it.y == tile.y && it.z > tile.z } }
-        assertFalse(game.isFree(covered))
-        assertEquals(MahjongGame.Result.BLOCKED, game.tap(covered.id))
-    }
-
-    @Test fun tripleRequiresIncompleteSetsBeforeReachingBuriedCopies() {
-        repeat(6) { seed ->
-            val game = MahjongGame(MahjongMode.TRIPLE, seed)
-            assertEquals(3, game.tiles.map { it.z }.distinct().size)
-            assertTrue(game.board.filter(game::isFree).groupingBy { it.face }.eachCount().values.all { it < 3 })
-            var peak = 0
-            for (id in game.solution.flatten()) {
-                game.tap(id)
-                peak = maxOf(peak, game.tray.size)
-            }
-            assertTrue(peak >= 5)
-            assertTrue(game.complete)
-        }
-    }
-
-    @Test fun fullTrayCanBeUndoneOrRedealtWithoutLosingTiles() {
-        val game = MahjongGame(MahjongMode.TRIPLE, 9, initializeBoard = false).apply {
-            repeat(9) { tiles += MahjongTile(it, it % 6, it / 6, 0, it / 3) }
-        }
-        val count = game.remaining
-        val free = game.board.filter(game::isFree).take(8)
-        free.forEachIndexed { i, tile -> tile.face = i }
-        free.take(7).forEach { game.tap(it.id) }
-        assertEquals(7, game.tray.size)
-        assertEquals(MahjongGame.Result.TRAY_FULL, game.tap(free[7].id))
-        assertTrue(game.hint().isEmpty())
-        assertEquals(count, game.remaining)
-        assertTrue(game.undo()); assertEquals(6, game.tray.size)
-        game.shuffle()
-        assertEquals(count, game.board.size)
-        play(game, game.solutionSteps.toList())
         assertTrue(game.complete)
     }
 
-    @Test fun classicShuffleRescuesTwoStackedTilesAndUndoRestoresThem() {
-        val game = MahjongGame(MahjongMode.CLASSIC, 81, 5)
-        game.tiles.forEach { it.removed = true }
-        val a = game.tiles[0]; val b = game.tiles[1]
-        a.removed = false; b.removed = false
-        a.x = 2; a.y = 2; a.z = 0; a.face = 3
-        b.x = 2; b.y = 2; b.z = 1; b.face = 3
-        assertTrue(game.hint().isEmpty())
-        game.shuffle()
-        assertEquals(setOf(a.id, b.id), game.board.map { it.id }.toSet())
-        assertEquals(2, game.hint().size)
-        assertTrue(game.undo())
-        assertEquals(1, game.tiles[1].z)
-        assertTrue(game.hint().isEmpty())
-    }
-
-    @Test fun connectAllowsPerimeterButRejectsBlockedInternalPairs() {
-        val game = fullGrid(MahjongMode.CONNECT)
-        val path = game.connection(game.tiles[0], game.tiles[5])
-        assertNotNull(path)
-        assertTrue(path!!.any { it.y == -1 })
-        assertNull(game.connection(game.tiles[7], game.tiles[28]))
-        assertNotNull(game.connection(game.tiles[7], game.tiles[8]))
-        listOf(8, 9, 15, 21).forEach { game.tiles[it].removed = true }
-        assertNotNull(game.connection(game.tiles[7], game.tiles[22]))
-    }
-
-    @Test fun cascadeRequiresAnOpenPathAndRotatesGravityWithUndo() {
-        val blocked = fullGrid(MahjongMode.CASCADE)
-        blocked.tiles[7].face = 0; blocked.tiles[28].face = 0
-        blocked.tap(7)
-        assertEquals(MahjongGame.Result.MISMATCH, blocked.tap(28))
-        assertEquals(36, blocked.remaining)
-        val game = MahjongGame(MahjongMode.CASCADE, 2)
-        for (step in game.solutionSteps.take(4)) {
-            val before = game.snapshot()
-            val direction = game.gravityDirection
-            play(game, listOf(step))
-            assertEquals((direction + 1) % 4, game.gravityDirection)
-            if (direction % 2 == 0) for (column in game.board.groupBy { it.x }.values) {
-                val start = if (direction == 0) game.rows - column.size else 0
-                assertEquals((start until start + column.size).toList(), column.map { it.y }.sorted())
-            } else for (row in game.board.groupBy { it.y }.values) {
-                val start = if (direction == 1) 0 else game.columns - row.size
-                assertEquals((start until start + row.size).toList(), row.map { it.x }.sorted())
+    @Test fun everyShapeIsWellFormedSupportedAndSplitsIntoPairsAndTriples() {
+        for ((index, shape) in MahjongShapes.all.withIndex()) {
+            assertEquals("shape $index", 0, shape.size % 6)
+            for ((i, a) in shape.withIndex()) for (b in shape.drop(i + 1)) {
+                assertFalse("overlap in $index", a.z == b.z && abs(a.x - b.x) < 2 && abs(a.y - b.y) < 2)
             }
-            val after = game.snapshot()
-            assertTrue(game.undo())
-            assertEquals(before.tiles, game.snapshot().tiles)
-            assertEquals(direction, game.gravityDirection)
-            play(game, listOf(step))
-            assertEquals(after.tiles, game.snapshot().tiles)
-        }
-    }
-
-    @Test fun slidePuzzlesRequireSeveralRealMovesAndAreDeterministic() {
-        for (stage in listOf(1, 5)) repeat(6) { seed ->
-            val game = MahjongGame(MahjongMode.SLIDE, seed, stage)
-            assertEquals(game.snapshot(), MahjongGame(MahjongMode.SLIDE, seed, stage).snapshot())
-            val diagonalPairs = game.board.groupBy { it.face }.values.count { (a, b) -> a.x != b.x && a.y != b.y }
-            assertTrue("Only $diagonalPairs necessary slides", diagonalPairs >= 3)
-            assertTrue(game.solutionSteps.count { it.slide != null } >= 3)
-            assertTrue(game.hint().isNotEmpty())
-            game.slideHint()?.let { assertTrue(game.canSlide(it.id,it.x,it.y)) }
-            // A long initial corridor is cosmetic. The stopper may only become
-            // reachable after several slides; certify that it is indispensable.
-            val quality = MahjongIceSolver.analyze(game)!!
-            assertTrue(quality.stopperDependentPairs >= game.remaining / 2 - 1)
-            assertTrue(quality.losingChoices >= if (stage < 4) 1 else 2)
-        }
-    }
-
-    @Test fun iceHintsFollowACompleteSolutionWithoutChangingTheBoard() {
-        for (stage in listOf(1,5)) repeat(2) { seed ->
-            val game = MahjongGame(MahjongMode.SLIDE,seed,stage)
-            var steps = 0
-            while (!game.complete && steps++ < 1000) {
-                val before = game.snapshot()
-                val ids = game.hint()
-                val slide = game.slideHint()
-                assertEquals(before,game.snapshot())
-                assertTrue("No winning hint: stage=$stage seed=$seed",ids.isNotEmpty())
-                if (slide != null) {
-                    assertEquals(listOf(slide.id),ids)
-                    if (game.selected != slide.id) game.tap(slide.id)
-                    assertEquals(MahjongGame.Result.MOVED,game.slide(slide.id,slide.x,slide.y))
-                } else ids.forEach { game.tap(it) }
+            for (a in shape.filter { it.z > 0 }) for (dx in 0..1) for (dy in 0..1) {
+                assertTrue("unsupported in $index", shape.any { b -> b.z == a.z - 1 && a.x + dx - b.x in 0..1 && a.y + dy - b.y in 0..1 })
             }
-            assertTrue("Hints looped: stage=$stage seed=$seed",game.complete)
+            // Portrait : huit tuiles de large au plus.
+            assertTrue(shape.maxOf { it.x } + 2 <= 16)
         }
     }
 
-    @Test fun iceStopsAtWallsOrBeforeTilesAndNeverAllowsAnIntermediateStop() {
-        val game = MahjongGame(MahjongMode.SLIDE, 0, initializeBoard = false)
-        game.tiles += listOf(MahjongTile(0,2,2,0,0), MahjongTile(1,5,2,0,1),
-            MahjongTile(2,2,0,0,2), MahjongTile(3,2,5,0,3))
-        val before = game.snapshot()
-        assertEquals(MahjongSlide(0,4,2), game.iceSlideTarget(0,1,0))
-        assertEquals(MahjongSlide(0,0,2), game.iceSlideTarget(0,-1,0))
-        assertEquals(MahjongSlide(0,2,1), game.iceSlideTarget(0,0,-1))
-        assertEquals(MahjongSlide(0,2,4), game.iceSlideTarget(0,0,1))
-        assertNull(game.iceSlideTarget(0,0,0)); assertNull(game.iceSlideTarget(0,1,1))
-        assertFalse(game.canSlide(0,3,2))
-        assertEquals(MahjongGame.Result.BLOCKED, game.slide(0,3,2))
-        assertEquals(before, game.snapshot())
-        game.tap(0)
-        assertEquals(MahjongGame.Result.MOVED, game.slideDirection(0,1,0))
-        assertEquals(MahjongCell(4,2), MahjongCell(game.tiles[0].x,game.tiles[0].y))
-        assertEquals(before.tiles[1], game.tiles[1]) // The stopping tile is never pushed or merged.
-        assertEquals(MahjongGame.Result.BLOCKED, game.slideDirection(0,1,0))
-        assertEquals(1, game.moves)
-        assertTrue(game.undo())
-        assertEquals(before.tiles, game.tiles)
-        assertEquals(0, game.selected)
-        assertEquals(MahjongCell(2,2), game.focusOrigin)
+    @Test fun everyDealtBoardHasACompleteLegalWitnessAtEveryTier() {
+        for (mode in dealt) for (stage in listOf(1, 4, 8)) for (seed in 1..3) {
+            val game = MahjongGame(mode, seed * 101 + stage, stage)
+            assertTrue(game.tiles.size >= 48)
+            val kinds = game.tiles.groupingBy { MahjongFaces.kind(it.face) }.eachCount()
+            assertTrue("$mode copies", kinds.values.all { it % game.groupSize == 0 && it <= game.groupSize * 2 })
+            finish(game)
+        }
     }
 
-    @Test fun focusSurvivesMultipleSlidesButReturnsToOriginWhenAnotherTileIsChosen() {
-        val game = MahjongGame(MahjongMode.SLIDE, 0, initializeBoard = false)
-        game.tiles += listOf(MahjongTile(0,1,1,0,0), MahjongTile(1,4,3,0,0),
-            MahjongTile(2,1,4,0,1), MahjongTile(3,4,4,0,1))
-        game.tap(0)
-        assertEquals(MahjongGame.Result.MOVED, game.slideDirection(0,1,0))
-        assertEquals(MahjongGame.Result.MOVED, game.slideDirection(0,0,1))
-        assertEquals(MahjongCell(5,5), MahjongCell(game.tiles[0].x,game.tiles[0].y))
-        assertEquals(MahjongCell(1,1), game.focusOrigin)
-        game.tap(0)
-        assertEquals(0, game.selected); assertEquals(MahjongCell(1,1), game.focusOrigin)
-        val pending = game.snapshot()
-        // Preview another tile as if the previous focus has already returned.
-        assertEquals(MahjongSlide(2,1,2), game.iceSlideTarget(2,0,-1))
-        assertEquals(pending, game.snapshot())
-        assertEquals(MahjongGame.Result.SELECTED, game.tap(2))
-        assertEquals(MahjongCell(1,1), MahjongCell(game.tiles[0].x,game.tiles[0].y))
-        assertEquals(2, game.selected); assertEquals(MahjongCell(1,4), game.focusOrigin)
-        assertTrue(game.undo())
-        assertEquals(pending.tiles, game.tiles)
-        assertEquals(pending.focusId, game.selected); assertEquals(pending.focusOrigin, game.focusOrigin)
-        assertEquals(MahjongGame.Result.MOVED, game.slideDirection(2,0,-1))
-        assertEquals(MahjongCell(1,1), MahjongCell(game.tiles[0].x,game.tiles[0].y))
-        assertEquals(MahjongCell(1,2), MahjongCell(game.tiles[2].x,game.tiles[2].y))
-        assertEquals(2, game.selected); assertEquals(MahjongCell(1,4), game.focusOrigin)
-        // Touching a different tile still transfers focus if the swipe is blocked.
-        assertEquals(MahjongGame.Result.SELECTED,game.slideDirection(3,0,-1))
-        assertEquals(MahjongCell(1,4),MahjongCell(game.tiles[2].x,game.tiles[2].y))
-        assertEquals(3,game.selected); assertEquals(MahjongCell(4,4),game.focusOrigin)
-        val blocked = game.snapshot()
-        assertEquals(MahjongGame.Result.BLOCKED,game.slideDirection(3,0,-1))
-        assertEquals(blocked,game.snapshot())
+    @Test fun classicNeedsAnEmptyTopAndAFreeSide() {
+        val game = MahjongGame(MahjongMode.CLASSIC, 1, initializeBoard = false).apply {
+            tiles += MahjongTile(0, 0, 0, 0, 5)
+            tiles += MahjongTile(1, 2, 0, 0, 7)
+            tiles += MahjongTile(2, 4, 0, 0, 5)
+            tiles += MahjongTile(3, 1, 0, 1, 7)
+            tiles += MahjongTile(4, 8, 0, 0, 7)
+        }
+        // The upper tile straddles the first two: both are covered.
+        assertFalse(game.isFree(game.tiles[0])); assertFalse(game.isFree(game.tiles[1]))
+        assertTrue(game.isFree(game.tiles[2])); assertTrue(game.isFree(game.tiles[3]))
+        assertEquals(MahjongGame.Result.BLOCKED, game.tap(0))
+        assertEquals(MahjongGame.Result.SELECTED, game.tap(3))
+        assertEquals(MahjongGame.Result.MATCHED, game.tap(4))
+        // Uncovered, the middle tile is still held on both sides.
+        assertTrue(game.isFree(game.tiles[0])); assertFalse(game.isFree(game.tiles[1]))
+        assertEquals(MahjongGame.Result.SELECTED, game.tap(0))
+        assertEquals(MahjongGame.Result.MATCHED, game.tap(2))
+        assertTrue(game.isFree(game.tiles[1]))
     }
 
-    @Test fun slideRejectsObstaclesDiagonalsAndOutsideBoardAndUndoIsExact() {
-        val game = MahjongGame(MahjongMode.SLIDE, 3)
-        game.tiles.forEach { it.removed = true }
-        val a = game.tiles[0]; val b = game.tiles[1]; val blocker = game.tiles[2]
-        a.removed = false; b.removed = false; blocker.removed = false
-        a.x = 0; a.y = 0; a.face = 1
-        b.x = 2; b.y = 5; b.face = 1
-        blocker.x = 1; blocker.y = 0; blocker.face = 2
-        val before = game.snapshot()
-        assertEquals(MahjongGame.Result.BLOCKED, game.slide(a.id, 2, 0))
-        assertEquals(MahjongGame.Result.BLOCKED, game.slide(a.id, 1, 1))
-        assertEquals(MahjongGame.Result.BLOCKED, game.slide(a.id, -1, 0))
-        assertEquals(MahjongGame.Result.BLOCKED, game.slide(a.id, 0, 2))
-        assertEquals(before, game.snapshot())
-        game.tap(a.id); assertEquals(MahjongGame.Result.SELECTED, game.tap(b.id))
-        assertEquals(MahjongGame.Result.MOVED, game.slide(a.id, 0, 5))
-        assertEquals(1, game.moves)
-        assertEquals((0..5).map { MahjongCell(0,it) }, game.lastPath)
-        assertTrue(game.undo()); assertEquals(before.tiles, game.snapshot().tiles)
-        assertEquals(0, game.moves)
-        game.slide(a.id, 0, 5)
-        assertEquals(MahjongGame.Result.MATCHED, game.tap(b.id))
-        assertEquals(1, game.remaining)
-        assertNull(game.selected); assertNull(game.focusOrigin)
-        assertTrue(game.undo())
-        assertEquals(a.id, game.selected); assertEquals(MahjongCell(0,0), game.focusOrigin)
-        assertEquals(3, game.remaining)
-    }
-
-    @Test fun tenUsesPipsAcrossSuitsButRequiresAnUnobstructedStraightLine() {
-        val game = fullGrid(MahjongMode.TEN)
-        game.tiles[0].face = 0
-        game.tiles[1].face = 26
-        game.tiles[2].face = 26
-        game.tiles[8].face = 26
+    @Test fun flowersMatchAnyFlowerAndSeasonsAnySeason() {
+        val game = MahjongGame(MahjongMode.CLASSIC, 1, initializeBoard = false).apply {
+            tiles += MahjongTile(0, 0, 0, 0, 34); tiles += MahjongTile(1, 4, 0, 0, 37)
+            tiles += MahjongTile(2, 8, 0, 0, 38); tiles += MahjongTile(3, 12, 0, 0, 34)
+        }
         assertTrue(game.compatible(game.tiles[0], game.tiles[1]))
-        game.tap(0); assertEquals(MahjongGame.Result.MISMATCH, game.tap(2))
-        game.tap(0); assertEquals(MahjongGame.Result.MISMATCH, game.tap(8))
-        game.tap(0); assertEquals(MahjongGame.Result.MATCHED, game.tap(1))
-        assertEquals(34, game.remaining)
-        game.tiles[3].face = 13; game.tiles[4].face = 22
-        assertTrue(game.compatible(game.tiles[3], game.tiles[4]))
-        game.tap(3); assertEquals(MahjongGame.Result.MATCHED, game.tap(4))
+        assertFalse(game.compatible(game.tiles[1], game.tiles[2]))
+        assertEquals(MahjongGame.Result.SELECTED, game.tap(0))
+        assertEquals(MahjongGame.Result.MISMATCH, game.tap(2))
+        assertEquals(MahjongGame.Result.MISMATCH, game.tap(1))
+        assertEquals(MahjongGame.Result.MATCHED, game.tap(0))
     }
 
-    @Test fun mistakesResetFlowButAssistsPreserveEarnedPoints() {
-        val game = MahjongGame(MahjongMode.CASCADE, 812)
-        play(game, game.solutionSteps.take(1))
-        assertEquals(100, game.score)
-        val a = game.board.first(); val b = game.board.first { it.face != a.face }
-        game.tap(a.id); assertEquals(MahjongGame.Result.MISMATCH, game.tap(b.id))
-        assertEquals(0, game.combo)
-        game.shuffle()
-        val sequence = game.solutionSteps.toList()
-        play(game, sequence.take(1)); assertEquals(200, game.score)
-        play(game, sequence.drop(1).take(1)); assertEquals(400, game.score)
-        val bonus = MahjongCollection.comboBonus(game)
-        game.undo(); assertEquals(200, game.score); assertEquals(2, game.peakCombo)
-        play(game, sequence.drop(1).take(1))
-        assertEquals(bonus, MahjongCollection.comboBonus(game))
+    @Test fun quickMatchesChainUntilTheRingRunsOutAndStarsFollowTheScore() {
+        val game = MahjongGame(MahjongMode.CLASSIC, 7, 1)
+        val steps = game.solutionSteps.toList()
+        for (id in steps[0].ids) game.tap(id)
+        assertEquals(1, game.combo); assertEquals(10, game.score)
+        for (id in steps[1].ids) game.tap(id)
+        assertEquals(2, game.combo); assertEquals(30, game.score)
+        game.tick(game.chainSeconds + .1f)
+        assertFalse(game.chaining)
+        for (id in steps[2].ids) game.tap(id)
+        assertEquals(1, game.combo)
+        // Undo breaks the chain.
+        for (id in steps[3].ids) game.tap(id)
+        assertEquals(2, game.combo)
+        assertTrue(game.undo()); assertEquals(0, game.combo)
+        for (id in steps[3].ids) game.tap(id)
+        // A perfect chain gives three stars, no chain one.
+        val perfect = MahjongGame(MahjongMode.CLASSIC, 7, 1)
+        finish(perfect)
+        assertEquals(perfect.maxScore, perfect.score)
+        assertEquals(3, perfect.stars)
+        val slow = MahjongGame(MahjongMode.CLASSIC, 7, 1)
+        for (step in slow.solutionSteps.toList()) { step.ids.forEach(slow::tap); slow.tick(60f) }
+        assertTrue(slow.complete); assertEquals(1, slow.stars)
     }
 
-    private fun fullGrid(mode: MahjongMode) = MahjongGame(mode, 1, initializeBoard = false).apply {
-        repeat(36) { tiles += MahjongTile(it, it % 6, it / 6, 0, it % 27) }
+    @Test fun slideHasNoTimer() {
+        val game = MahjongGame(MahjongMode.SLIDE, 3, 1)
+        assertFalse(game.timed)
+        val plan = game.solutionSteps.toList()
+        loop@ for (step in plan) {
+            step.slide?.let { game.slide(it.id, it.x, it.y) }
+            for (id in step.ids) if (game.tap(id) == MahjongGame.Result.MATCHED) break@loop
+        }
+        assertEquals(1, game.combo)
+        assertFalse(game.tick(120f))
+        assertTrue(game.chaining)
+    }
+
+    @Test fun shuffleKeepsTheFamiliesAndAlwaysLeavesAFinish() {
+        for (mode in dealt) {
+            val game = MahjongGame(mode, 42, 4)
+            val steps = game.solutionSteps.toList()
+            steps.take(steps.size / 3).forEach { step -> step.ids.forEach(game::tap) }
+            // Triples : la réserve retourne sur le plateau avant la redistribution.
+            val live = game.tiles.filter { !it.removed }
+            val before = live.map { MahjongFaces.kind(it.face) }.sorted()
+            val positions = live.map { Triple(it.id, it.x, it.y) }.toSet()
+            assertTrue(game.shuffle())
+            assertEquals(1, game.shufflesUsed); assertEquals(1, game.shufflesLeft)
+            assertTrue(game.tray.isEmpty())
+            assertEquals(before, game.board.map { MahjongFaces.kind(it.face) }.sorted())
+            assertEquals(positions, game.board.map { Triple(it.id, it.x, it.y) }.toSet())
+            finish(game)
+            // Undo never gives the shuffle back.
+            val again = MahjongGame(mode, 42, 4)
+            assertTrue(again.shuffle()); assertTrue(again.undo())
+            assertEquals(1, again.shufflesLeft)
+        }
+    }
+
+    @Test fun twoStackedTilesCannotBeRedealtAndTheBoardStaysIntact() {
+        val game = MahjongGame(MahjongMode.CLASSIC, 1, initializeBoard = false).apply {
+            tiles += MahjongTile(0, 0, 0, 0, 3); tiles += MahjongTile(1, 0, 0, 1, 3)
+        }
+        assertTrue(game.stuck)
+        val before = game.snapshot()
+        assertFalse(game.shuffle())
+        assertEquals(before, game.snapshot()); assertEquals(0, game.shufflesUsed); assertTrue(game.history.isEmpty())
+    }
+
+    @Test fun fullTrayBlocksTriplesAndHintsFollowAFinish() {
+        val game = MahjongGame(MahjongMode.TRIPLE, 9, 1)
+        val hint = game.hint()
+        assertEquals(1, hint.size)
+        assertFalse(game.hintSearchLimited)
+        finish(game)
+        val stuck = MahjongGame(MahjongMode.TRIPLE, 1, initializeBoard = false).apply {
+            repeat(21) { tiles += MahjongTile(it, it % 8 * 2, it / 8 * 2, 0, it % 7) }
+        }
+        repeat(7) { assertNotEquals(MahjongGame.Result.MATCHED, stuck.tap(it)) }
+        assertEquals(MahjongGame.TRAY, stuck.tray.size)
+        assertTrue(stuck.stuck)
+        assertEquals(MahjongGame.Result.TRAY_FULL, stuck.tap(8))
+    }
+
+    @Test fun classicHintsStillLeadToTheEndAfterTheWitnessIsAbandoned() {
+        val game = MahjongGame(MahjongMode.CLASSIC, 5, 4)
+        // Play legal pairs that are not the witness, then ask for hints until the end.
+        repeat(3) { MahjongSolver.anyMove(game).forEach(game::tap) }
+        var guard = 0
+        while (!game.complete && guard++ < 200) {
+            val ids = game.hint()
+            if (ids.isEmpty()) { assertTrue(game.hintProvedLost); return }
+            ids.forEach(game::tap)
+        }
+        assertTrue(game.complete)
+    }
+
+    @Test fun connectFindsPathsAroundTheBorder() {
+        val game = MahjongGame(MahjongMode.CONNECT, 1, 1, initializeBoard = false).apply {
+            for (x in 0 until 6) for (y in 0 until 8) tiles += MahjongTile(tiles.size, x, y, 0, (x + y * 6) % 30)
+        }
+        val corner = game.tiles.first { it.x == 0 && it.y == 0 }
+        val reach = game.reachable(corner).toSet()
+        // Along the top border to any tile of the first row, and down the left border.
+        assertTrue(game.tiles.filter { it.y == 0 || it.x == 0 }.all { it.id == corner.id || it.id in reach })
+        assertFalse(game.tiles.first { it.x == 3 && it.y == 4 }.id in reach)
     }
 }

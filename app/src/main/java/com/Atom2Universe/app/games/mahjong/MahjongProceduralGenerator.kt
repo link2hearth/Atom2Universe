@@ -5,6 +5,7 @@ import kotlin.random.Random
 
 /** Fresh dependency graphs and positions. This constructor deliberately has no layout-bank dependency. */
 internal object MahjongProceduralGenerator {
+    // Glissières et Pile dix seulement : les autres modes passent par MahjongDealer.
     const val MAX_ATTEMPTS = 384
     const val MAX_STATES = 120_000
     data class Report(val procedural: Boolean, val attempts: Int, val states: Int)
@@ -24,41 +25,23 @@ internal object MahjongProceduralGenerator {
             else MahjongPuzzleGenerator.tileCount(game.mode, game.stage)
         val work = Work(maxStates)
         var attempts = 0
-        var parent: MahjongGame? = null
-        var parentScore = Int.MIN_VALUE
-        var age = 0
         if (live.size <= standard && live.isNotEmpty()) while (attempts < maxAttempts && work.remaining > 0) {
             cancelled(); attempts++
             val candidate = MahjongGame(game.mode, game.seed, game.stage, initializeBoard = false)
             candidate.restore(candidate.snapshot().copy(matches = game.matches))
             val full = live.size == standard
-            if (age++ >= 64) { parent = null; parentScore = Int.MIN_VALUE; age = 0 }
-            val built = if (parent != null) {
-                candidate.restore(parent.snapshot())
-                mutate(candidate, random)
-            } else when (game.mode) {
+            val built = when (game.mode) {
                 MahjongMode.SLIDE -> ice(candidate, live.size, random)
-                MahjongMode.TRIPLE -> triple(candidate, live.size, random, work)
-                MahjongMode.CLASSIC, MahjongMode.CONNECT, MahjongMode.TEN ->
-                    dependencies(candidate, live.size, random)
-                MahjongMode.CASCADE -> cascade(candidate, live.size, random)
+                MahjongMode.TEN -> dependencies(candidate, live.size, random)
+                else -> return false
             }
             if (!built) continue
             val plan = if (game.mode == MahjongMode.SLIDE) {
                 val quality = MahjongIceSolver.analyze(candidate, minOf(3_000, work.remaining)) ?: continue
                 work.states += quality.states
                 quality.solution.takeIf { !full || MahjongIceGenerator.isPuzzle(quality, live.size / 2, game.stage >= 4) }
-            } else if (full) {
-                val quality = work.analyze(candidate)
-                if (game.mode == MahjongMode.CASCADE && quality.result.steps != null &&
-                    quality.choices.none { it.outcome == MahjongPuzzleSolver.Outcome.UNKNOWN }) {
-                    val bad = quality.choices.count { it.outcome == MahjongPuzzleSolver.Outcome.UNSOLVABLE }
-                    val good = quality.choices.size - bad
-                    val score = minOf(bad, if (game.stage >= 4) 2 else 1) * 20 - good * 3
-                    if (score >= parentScore) { parent = copy(candidate); parentScore = score }
-                }
-                certify(candidate, work, quality)
-            } else work.solve(candidate).steps
+            } else if (full) certify(candidate, work.analyze(candidate))
+            else work.solve(candidate).steps
             if (plan == null) continue
             val actual = live.shuffled(random)
             val palette = (0 until 27).shuffled(random)
@@ -73,7 +56,7 @@ internal object MahjongProceduralGenerator {
                 step.slide?.let { MahjongSlide(ids.getValue(it.id), it.x, it.y) }) }
             // Solver certificates were replayed against the real engine before ID/face relabelling.
             game.solutionSteps += mapped
-            game.solution += mapped.flatMap { it.ids }.chunked(if (game.mode == MahjongMode.TRIPLE) 3 else 2)
+            game.solution += mapped.flatMap { it.ids }.chunked(2)
             game.generation = Report(true, attempts, work.states)
             return true
         }
@@ -85,82 +68,31 @@ internal object MahjongProceduralGenerator {
         game.tiles += MahjongTile(game.tiles.size, cell % 6, cell / 6, z, face)
     }
 
-    private fun mutate(game: MahjongGame, random: Random): Boolean {
-        val a = game.tiles.random(random)
-        val b = game.tiles.random(random)
-        if (a.face == b.face) return false
-        val old = a.face; a.face = b.face; b.face = old
-        return true
-    }
 
-    /** Four copies share two keys: spending the two outside keys leaves a dependency cycle. */
+    /** Pile dix : des couloirs qui se croisent, chaque paire ouvre la suivante. */
     private fun dependencies(game: MahjongGame, count: Int, random: Random): Boolean {
         val hard = game.stage >= 4
         val cores = if (count >= 16 && hard) 2 else if (count >= 8) 1 else 0
-        var face = 0
         repeat(cores) { core ->
             val available = (0 until game.columns * game.rows).filter { cell -> game.tiles.none { it.x == cell % 6 && it.y == cell / 6 } }
-            when (game.mode) {
-                MahjongMode.CLASSIC -> {
-                    // Separated starting towers avoid accidental lateral locks in the dependency cycle.
-                    val cells = available.filter { (it % 6 + it / 6) % 2 == 0 }.shuffled(random).take(4)
-                    if (cells.size < 4) return false
-                    add(game, cells[0], 0, face); add(game, cells[0], 1, face + 1)
-                    add(game, cells[1], 0, face + 1); add(game, cells[1], 1, face)
-                    add(game, cells[2], 0, face); add(game, cells[3], 0, face)
-                }
-                MahjongMode.CONNECT -> {
-                    val origins = available.filter { it % 6 < 5 && it / 6 < game.rows - 1 &&
-                        listOf(it + 1, it + 6, it + 7).all(available::contains) }
-                    if (origins.isEmpty()) return false
-                    val origin = origins.random(random)
-                    add(game, origin, 0, face); add(game, origin + 7, 0, face)
-                    add(game, origin + 1, 0, face + 1); add(game, origin + 6, 0, face + 1)
-                    val outside = available.filter { cell ->
-                        cell % 6 !in origin % 6..origin % 6 + 1 && cell / 6 !in origin / 6..origin / 6 + 1
-                    }.shuffled(random)
-                    val a = outside.firstOrNull() ?: return false
-                    val b = outside.firstOrNull { it % 6 != a % 6 && it / 6 != a / 6 } ?: return false
-                    add(game, a, 0, face); add(game, b, 0, face)
-                }
-                MahjongMode.TEN -> {
-                    val xs = listOf(random.nextInt(0, 2), random.nextInt(2, 4), random.nextInt(4, 6))
-                    val row = random.nextInt(game.rows - 1)
-                    val ys = listOf(row, row + 1)
-                    val cells = listOf(ys[0] * 6 + xs[0], ys[0] * 6 + xs[1], ys[1] * 6 + xs[1], ys[1] * 6 + xs[2])
-                    if (cells.any { it !in available }) return false
-                    cells.forEachIndexed { i, cell -> add(game, cell, 0, if (i % 2 == 0) core else 8 - core) }
-                }
-                else -> return false
-            }
-            face += 2
+            val xs = listOf(random.nextInt(0, 2), random.nextInt(2, 4), random.nextInt(4, 6))
+            val row = random.nextInt(game.rows - 1)
+            val ys = listOf(row, row + 1)
+            val cells = listOf(ys[0] * 6 + xs[0], ys[0] * 6 + xs[1], ys[1] * 6 + xs[1], ys[1] * 6 + xs[2])
+            if (cells.any { it !in available }) return false
+            cells.forEachIndexed { i, cell -> add(game, cell, 0, if (i % 2 == 0) core else 8 - core) }
         }
-        val protected = if (game.mode == MahjongMode.CLASSIC) (0 until cores).flatMap { core ->
-            listOf(game.tiles[core * 6 + 4], game.tiles[core * 6 + 5]).map { it.y * 6 + it.x }
-        }.toSet() else emptySet()
         // Insert new removable pairs backwards. Their removal restores the previous geometry.
         while (game.tiles.size < count) {
             cancelled()
             var inserted = false
             for (trial in 0 until 48) {
-                val slots = if (game.mode == MahjongMode.CLASSIC) {
-                    (0 until game.columns * game.rows).mapNotNull { cell ->
-                        val top = game.tiles.filter { it.x == cell % 6 && it.y == cell / 6 }.maxOfOrNull { it.z } ?: -1
-                        if (top < 2 && cell !in protected) cell to (top + 1) else null
-                    }
-                } else (0 until game.columns * game.rows).filter { cell ->
+                val slots = (0 until game.columns * game.rows).filter { cell ->
                     game.tiles.none { it.x == cell % 6 && it.y == cell / 6 }
-                }.map { it to 0 }
+                }
                 if (slots.size < 2) return false
                 var a = slots.random(random); var b = slots.random(random)
-                if (game.mode == MahjongMode.CLASSIC) {
-                    val upper = slots.filter { it.second > 0 }
-                    if (upper.isNotEmpty()) {
-                        if (random.nextInt(4) != 0) a = upper.random(random)
-                        if (random.nextInt(4) != 0) b = upper.random(random)
-                    }
-                }
-                if (game.mode == MahjongMode.TEN && cores > 0) {
+                if (cores > 0) {
                     // Cross an existing corridor, then insert its removable key
                     // on the perpendicular axis. The next insertion can cross
                     // this new corridor in turn, building a chain of releases.
@@ -175,77 +107,26 @@ internal object MahjongProceduralGenerator {
                     }
                     if (gates.isEmpty()) continue
                     val gate = gates.random(random)
-                    a = gate.first to 0
-                    val endpoints = slots.filter { (cell, _) ->
-                        if (gate.second) cell % 6 == a.first % 6 && cell / 6 != a.first / 6
-                        else cell / 6 == a.first / 6 && cell % 6 != a.first % 6
+                    a = gate.first
+                    val endpoints = slots.filter { cell ->
+                        if (gate.second) cell % 6 == a % 6 && cell / 6 != a / 6
+                        else cell / 6 == a / 6 && cell % 6 != a % 6
                     }
                     if (endpoints.isEmpty()) continue
                     b = endpoints.random(random)
                 }
-                if (a.first == b.first) continue
-                if (game.mode == MahjongMode.CONNECT && (a.first % 6 == b.first % 6 || a.first / 6 == b.first / 6)) continue
-                if (game.mode == MahjongMode.TEN && a.first % 6 != b.first % 6 && a.first / 6 != b.first / 6) continue
-                val f = if (game.mode == MahjongMode.TEN) random.nextInt(cores, 5) else face
+                if (a == b) continue
+                if (a % 6 != b % 6 && a / 6 != b / 6) continue
+                val f = random.nextInt(cores, 5)
                 val first = game.tiles.size
-                add(game, a.first, a.second, f)
-                add(game, b.first, b.second, if (game.mode == MahjongMode.TEN) 8 - f else f)
+                add(game, a, 0, f)
+                add(game, b, 0, 8 - f)
                 val legal = MahjongPuzzleSolver.legalChoices(game).any { it == listOf(first, first + 1) }
-                if (legal) { inserted = true; face++; break }
+                if (legal) { inserted = true; break }
                 game.tiles.removeAt(game.tiles.lastIndex); game.tiles.removeAt(game.tiles.lastIndex)
             }
             if (!inserted) return false
         }
-        return true
-    }
-
-    /** A generated cycle of covered triples creates unavoidable reserve pressure. */
-    private fun triple(game: MahjongGame, count: Int, random: Random, work: Work): Boolean {
-        val hard = game.stage >= 4
-        val coreSize = 12
-        val coreTowers = if (hard) 3 else 4
-        val cells = (0 until game.columns * game.rows).shuffled(random)
-        if (count < coreSize) {
-            val faces = List(count) { it / 3 }.shuffled(random)
-            faces.forEachIndexed { i, f -> add(game, cells[i % minOf(3, count)], i / minOf(3, count), f) }
-            return true
-        }
-        run {
-            // Search a small dependency graph, before adding unrelated families. No precomputed patterns.
-            var found = false
-            for (trial in 0 until 256) {
-                cancelled()
-                if (work.remaining == 0) return false
-                game.tiles.clear()
-                val faces = List(12) { it / 3 }.shuffled(random)
-                faces.forEachIndexed { i, f -> add(game, cells[i % coreTowers], i / coreTowers, f) }
-                if (game.board.filter(game::isFree).groupingBy { it.face }.eachCount().values.any { it >= 3 }) continue
-                if (work.solve(game, if (hard) 5 else 4).outcome != MahjongPuzzleSolver.Outcome.UNSOLVABLE) continue
-                if (work.solve(game).outcome == MahjongPuzzleSolver.Outcome.SOLVABLE) { found = true; break }
-            }
-            if (!found) return false
-        }
-        val extra = count - coreSize
-        val towers = extra / 3
-        val order = (0 until towers).shuffled(random)
-        if (towers > 0) repeat(3) { z -> repeat(towers) { t ->
-            add(game, cells[coreTowers + t], z, coreSize / 3 + order[(t + z) % towers])
-        } }
-        return true
-    }
-
-    private fun cascade(game: MahjongGame, count: Int, random: Random): Boolean {
-        // Dense rows make the first fall consequential. Width, offset, removal
-        // order and partner assignments are generated afresh.
-        val width = random.nextInt(4, 6)
-        val height = (count + width - 1) / width
-        val dx = random.nextInt(7 - width); val dy = random.nextInt(game.rows - height + 1)
-        val cells = (0 until count).map { (it / width + dy) * 6 + it % width + dx }
-        cells.shuffled(random).forEach { add(game, it, 0, 0) }
-        val pairs = MahjongPuzzleSolver.constructionPairs(game, random) ?: return false
-        val duplicates = 1
-        val labels = List(pairs.size) { if (it < duplicates * 2) it / 2 else it - duplicates }.shuffled(random)
-        pairs.forEachIndexed { i, ids -> ids.forEach { game.tiles[it].face = labels[i] } }
         return true
     }
 
@@ -314,48 +195,20 @@ internal object MahjongProceduralGenerator {
 
     private fun copy(game: MahjongGame) = MahjongGame(game.mode, game.seed, game.stage, initializeBoard = false).apply { restore(game.snapshot()) }
 
-    private fun certify(game: MahjongGame, work: Work, quality: MahjongPuzzleSolver.Quality): List<MahjongSolutionStep>? {
-        val triple = game.mode == MahjongMode.TRIPLE
+    private fun certify(game: MahjongGame, quality: MahjongPuzzleSolver.Quality): List<MahjongSolutionStep>? {
         val opening = MahjongPuzzleSolver.legalChoices(game)
-        if (!triple && opening.size < if (game.stage >= 4) 3 else 2) return null
-        if (game.mode == MahjongMode.CLASSIC && game.tiles.maxOf { it.z } < 2) return null
+        if (opening.size < if (game.stage >= 4) 3 else 2) return null
         val plan = quality.result.steps ?: return null
         if (quality.choices.any { it.outcome == MahjongPuzzleSolver.Outcome.UNKNOWN }) return null
         val winning = quality.choices.filter { it.outcome == MahjongPuzzleSolver.Outcome.SOLVABLE }
-        if (triple) {
-            if (game.board.filter(game::isFree).groupingBy { it.face }.eachCount().values.any { it >= 3 }) return null
-            if (work.solve(game, if (game.stage >= 4) 5 else 4).outcome != MahjongPuzzleSolver.Outcome.UNSOLVABLE) return null
-            val trial = copy(game)
-            for (step in plan.take(8)) {
-                if (work.analyze(trial).choices.any { it.outcome == MahjongPuzzleSolver.Outcome.UNSOLVABLE }) return plan
-                step.ids.forEach(trial::tap)
-            }
-            return null
-        }
-        if (winning.size !in 1..if (game.mode in listOf(MahjongMode.CLASSIC, MahjongMode.TEN)) 5 else 3) return null
+        if (winning.size !in 1..5) return null
         if (quality.choices.count { it.outcome == MahjongPuzzleSolver.Outcome.UNSOLVABLE } < if (game.stage >= 4) 2 else 1) return null
-        if (game.mode == MahjongMode.CONNECT) {
-            if (winning.any { val a = game.tiles[it.ids[0]]; val b = game.tiles[it.ids[1]]; a.x == b.x || a.y == b.y }) return null
-            return plan
-        }
         val before = opening.map { it.toSet() }.toSet()
-        val free = game.board.filter(game::isFree).map { it.id }.toSet()
         for (choice in winning) {
             val trial = copy(game); choice.ids.forEach(trial::tap)
-            when (game.mode) {
-                MahjongMode.CLASSIC -> if (trial.board.any { trial.isFree(it) && it.id !in free }) return plan
-                MahjongMode.CASCADE -> {
-                    val fixed = copy(game); choice.ids.forEach { fixed.tiles[it].removed = true }
-                    val fixedPairs = MahjongPuzzleSolver.legalChoices(fixed).map { it.toSet() }.toSet()
-                    if (MahjongPuzzleSolver.legalChoices(trial).any { it.toSet() !in fixedPairs }) return plan
-                }
-                MahjongMode.TEN -> {
-                    val horizontal = game.tiles[choice.ids[0]].y == game.tiles[choice.ids[1]].y
-                    if (MahjongPuzzleSolver.legalChoices(trial).any { it.toSet() !in before &&
-                        (game.tiles[it[0]].y == game.tiles[it[1]].y) != horizontal }) return plan
-                }
-                else -> Unit
-            }
+            val horizontal = game.tiles[choice.ids[0]].y == game.tiles[choice.ids[1]].y
+            if (MahjongPuzzleSolver.legalChoices(trial).any { it.toSet() !in before &&
+                (game.tiles[it[0]].y == game.tiles[it[1]].y) != horizontal }) return plan
         }
         return null
     }

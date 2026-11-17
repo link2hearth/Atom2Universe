@@ -11,6 +11,4 @@ internal object MahjongCollection {
     fun featuredMode(day: Long) = MahjongMode.entries[Math.floorMod(day, 6L).toInt()]
     fun isWeekend(day: Long) = LocalDate.ofEpochDay(day).dayOfWeek.value >= 6
     fun multiplier(mode: MahjongMode, day: Long) = if (isWeekend(day) || mode == featuredMode(day)) 2 else 1
-    // Score is restored by undo, so replaying a match cannot farm pearls.
-    fun comboBonus(game: MahjongGame) = ((game.score / 100 - game.matches).coerceAtLeast(0) / 2)
 }

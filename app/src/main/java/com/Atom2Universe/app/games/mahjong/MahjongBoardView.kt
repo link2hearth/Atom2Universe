@@ -12,520 +12,671 @@ import com.Atom2Universe.app.R
 import kotlin.math.*
 import kotlin.random.Random
 
+/**
+ * Le plateau : vraies tuiles en relief, empilées en demi-tuiles (Solitaire, Triples) ou posées
+ * sur une grille (autres modes). En haut, la bande de la chaîne : score, multiplicateur et sa
+ * jauge qui se vide, barre des trois étoiles. Les tuiles sont des images mises en cache par face.
+ */
 class MahjongBoardView(context: Context, val game: MahjongGame, private val accent: Int,
                        private val porcelain: Int = 0, private val effects: Boolean = true,
                        private val haptics: Boolean = true, val texture: Int = porcelain) : View(context) {
     var onMove: (MahjongGame.Result) -> Unit = {}
+    var onTurned: (() -> Unit)? = null
+    /** Couché, les grilles tournent d'un quart de tour pour remplir la largeur ; pas les pyramides. */
+    var turned = false
+        private set
     private val art = MahjongArt(context)
+    private val density = resources.displayMetrics.density
     private val p = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
-    private val bounds = mutableMapOf<Int, RectF>()
-    private val from = mutableMapOf<Int, RectF>()
-    private val movingRects = SparseArray<RectF>()
-    private val faces = SparseArray<Bitmap>()
-    private val bitmapRect = RectF()
-    private val selectionRect = RectF()
-    private val ghostRect = RectF()
-    private val footprintRect = RectF()
-    private val arrowPath = Path()
-    private val matchPath = Path()
-    private val numberLabels = Array(9) { context.getString(R.string.mj_number,it+1) }
-    private val iceBounds = RectF()
-    private var iceGradient: LinearGradient? = null
-    private var footprintDashes: DashPathEffect? = null
-    private var gridWidth = -1
-    private var gridHeight = -1
-    private var gridColumns = -1
-    private var gridRows = -1
-    private var gridRects = emptyArray<RectF>()
-    private var occupiedCells = BooleanArray(0)
-    private var reachableCells = BooleanArray(0)
-    private val slideTargets = arrayOfNulls<MahjongSlide>(4)
-    private var slideStopSource: Int? = null
-    private var slideStopsValid = false
-    private var free = emptySet<Int>()
-    private var drawOrder = emptyList<MahjongTile>()
+    private val label = Paint(Paint.ANTI_ALIAS_FLAG).apply { typeface = Typeface.DEFAULT_BOLD }
+    private val numberLabels = Array(10) { context.getString(R.string.mj_number, it) }
+    private val arrows = resources.getStringArray(R.array.mj_gravity_arrows)
+    private val animated get() = effects && ValueAnimator.areAnimatorsEnabled()
+
+    // Géométrie.
     private var tileW = 0f
     private var tileH = 0f
+    private var faceW = 0f
+    private var faceH = 0f
+    private var depth = 0f
+    private var cellW = 0f
+    private var cellH = 0f
     private var left = 0f
     private var top = 0f
+    private var hudH = 0f
+    private var pad = 0f
+    private var traySlot = 0f
     private var trayTop = 0f
+    private var trayLeft = 0f
+    private val bounds = HashMap<Int, RectF>()
+    private var drawOrder = emptyList<MahjongTile>()
+    private var free = emptySet<Int>()
+    private var pairsAvailable = 0
+    private val shownColumns get() = if (turned) game.rows else game.columns
+    private val shownRows get() = if (turned) game.columns else game.rows
+    private fun dispX(x: Int, y: Int) = if (turned) y else x
+    private fun dispY(x: Int, y: Int) = if (turned) game.columns - 1 - x else y
+    /** Un glissé à l'écran (dx, dy) traduit dans le sens du jeu. */
+    private fun gameDirection(dx: Int, dy: Int) = if (turned) -dy to dx else dx to dy
+
+    // Images.
+    private val sprites = SparseArray<Bitmap>()
+    private var spriteKey = 0L
+    private var spriteOffX = 0f
+    private var spriteOffY = 0f
+    private val dst = RectF()
+    private val work = RectF()
+    private val path = Path()
+    private val matchPath = Path()
+
+    // Animations.
+    private val from = HashMap<Int, RectF>()
+    private val moving = SparseArray<RectF>()
     private var motionAt = 0L
     private var entranceAt = SystemClock.uptimeMillis()
+    private var lastFrame = 0L
     private var active = true
     private var hints = emptyList<Int>()
     private var slideHint: MahjongSlide? = null
     private var hintUntil = 0L
-    private var pathUntil = 0L
-    private var overlayExpiryAt = 0L
-    private val expireOverlays = Runnable {
-        overlayExpiryAt = 0L
-        if (active) { invalidate(); scheduleOverlayExpiry() }
-    }
-    private val animated get() = effects && ValueAnimator.areAnimatorsEnabled()
-    private data class Spark(val x: Float, val y: Float, val vx: Float, val vy: Float, val color: Int)
+    private var shakeId = -1
+    private var shakeAt = 0L
+    private var shownScore = game.score.toFloat()
+    private var comboAt = 0L
+    private var shownCombo = game.combo
+    private data class Spark(val x: Float, val y: Float, val vx: Float, val vy: Float, val color: Int, val star: Boolean)
     private data class Ghost(val rect: RectF, val face: Int)
-    private data class Burst(val start: Long, val ghosts: List<Ghost>, val sparks: List<Spark>,
-                             val path: Path?, val x: Float, val y: Float, val scoreLabel: String, val comboLabel: String?)
+    private class Burst(val start: Long, val ghosts: List<Ghost>, val x: Float, val y: Float, val sparks: List<Spark>,
+                        val path: Path?, val gain: String, val combo: Int)
     private val bursts = mutableListOf<Burst>()
+
+    // Toucher.
     private var pressed: Int? = null
     private var downX = 0f
     private var downY = 0f
     private var touchCell: MahjongCell? = null
     private var dragging = false
     private var dragTarget: MahjongSlide? = null
-    private val swipeThreshold get() = max(resources.displayMetrics.density*6f,
-        min(tileW*.24f,resources.displayMetrics.density*12f))
+    private val swipeThreshold get() = max(density * 6f, min(cellW * .24f, density * 12f))
+
+    // Glissières.
+    private var gridRects = emptyArray<RectF>()
+    private var occupiedCells = BooleanArray(0)
+    private var reachableCells = BooleanArray(0)
+    private val slideTargets = arrayOfNulls<MahjongSlide>(4)
+    private var slideStopSource: Int? = null
+    private var slideStopsValid = false
+    private val iceBounds = RectF()
+    private var footprintDashes: DashPathEffect? = null
 
     init {
         isClickable = true; isFocusable = true
         contentDescription = context.getString(R.string.mj_board_description)
     }
 
-    override fun onSizeChanged(w: Int,h: Int,oldw: Int,oldh: Int) {
-        recycleFaces(); from.clear(); movingRects.clear(); layoutTiles()
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        from.clear(); moving.clear(); layoutTiles()
     }
 
-    /**
-     * Couché, le plateau tourne d'un quart de tour avec l'écran pour en remplir la largeur ;
-     * les tuiles, elles, restent droites. Le jeu garde ses coordonnées : seul l'affichage
-     * (et le sens des glissés) passe par [dispX] / [dispY].
-     */
-    var turned = false
-        private set
-    var onTurned: (() -> Unit)? = null
-    private val shownColumns get() = if (turned) game.rows else game.columns
-    private val shownRows get() = if (turned) game.columns else game.rows
-    private fun dispX(x: Int, y: Int) = if (turned) y else x
-    private fun dispY(x: Int, y: Int) = if (turned) game.columns-1-x else y
-    /** Un glissé à l'écran (dx, dy) traduit dans le sens du jeu. */
-    private fun gameDirection(dx: Int, dy: Int) = if (turned) -dy to dx else dx to dy
+    // ---- Mise en place ---------------------------------------------------------------------
 
     private fun layoutTiles() {
         if (width <= 0 || height <= 0) return
         val wasTurned = turned
-        turned = width > height
+        turned = !game.layered && width > height
         if (wasTurned != turned) post { onTurned?.invoke() }
-        val pad = resources.displayMetrics.density * 10f
-        val reserve = if (game.mode == MahjongMode.TRIPLE) min(height * .18f, width * .19f) else pad
-        // Connections may travel around the outside edge, so leave that route visible.
-        val perimeter = game.mode == MahjongMode.CONNECT || game.mode == MahjongMode.CASCADE
-        tileW = min((width-pad*2)/(shownColumns+(if(perimeter) 1.8f else .65f)),
-            (height-reserve-pad*2)/((shownRows+(if(perimeter) 1.8f else .4f))*1.24f)).coerceAtLeast(1f)
-        tileH = tileW*1.24f
-        left = (width-shownColumns*tileW)/2
-        top = (height-reserve-shownRows*tileH)/2 + pad*.3f
-        trayTop = height-reserve+pad*.1f
-        bounds.clear()
-        drawOrder = game.board.sortedWith(compareBy<MahjongTile> { it.z }
-            .thenBy { dispY(it.x,it.y) }.thenBy { dispX(it.x,it.y) })
-        free = drawOrder.filter(game::isFree).map { it.id }.toSet()
-        for (tile in drawOrder) {
-            val x = left+dispX(tile.x,tile.y)*tileW-tile.z*tileW*.045f
-            val y = top+dispY(tile.x,tile.y)*tileH-tile.z*tileH*.07f
-            bounds[tile.id] = RectF(x,y,x+tileW*.94f,y+tileH*.91f)
+        pad = density * 8f
+        hudH = min(62f * density, height * .12f)
+        val reserve = if (game.mode == MahjongMode.TRIPLE) {
+            traySlot = min((width - pad * 2) / 7.7f, 84f * density)
+            traySlot * ASPECT + 26f * density
+        } else 0f
+        val availW = width - pad * 2
+        val availH = height - hudH - reserve - pad * 2
+        if (game.layered) {
+            val cols = game.columns; val rws = game.rows
+            val zMax = game.tiles.maxOfOrNull { it.z } ?: 0
+            val k = .13f
+            tileW = min(availW / (cols / 2f + k * (1 + zMax) + .1f), availH / (rws * ASPECT / 2f + k * (1 + zMax) + .1f))
+                .coerceIn(1f, 124f * density)
+            tileH = tileW * ASPECT; depth = tileW * k
+            cellW = tileW / 2; cellH = tileH / 2
+            faceW = tileW - tileW * .03f; faceH = tileH - tileW * .03f
+            val boardW = cols * cellW + depth * (1 + zMax)
+            val boardH = rws * cellH + depth * (1 + zMax)
+            left = (width - boardW) / 2 + depth
+            top = hudH + pad + (availH - boardH) / 2 + depth * zMax
+        } else {
+            val perimeter = game.grid
+            val margin = if (perimeter) .85f else .2f
+            cellW = min(availW / (shownColumns + margin * 2), availH / ((shownRows + margin * 2) * GRID_ASPECT))
+                .coerceIn(1f, 130f * density)
+            cellH = cellW * GRID_ASPECT; depth = cellW * .09f
+            tileW = cellW; tileH = cellH
+            faceW = cellW - depth - cellW * .04f; faceH = cellH - depth - cellW * .04f
+            left = (width - shownColumns * cellW) / 2
+            top = hudH + pad + (availH - shownRows * cellH) / 2
         }
-        val slot = min(tileW*.90f, (height-trayTop)/1.36f).coerceAtLeast(1f)
-        val start = (width-slot*7.42f)/2
-        for ((i,id) in game.tray.withIndex()) bounds[id] = RectF(start+i*slot*1.06f,trayTop,
-            start+i*slot*1.06f+slot*.94f,trayTop+slot*1.24f)
+        val key = (faceW.toInt().toLong() shl 32) or faceH.toInt().toLong()
+        if (key != spriteKey) { recycleSprites(); spriteKey = key }
+        trayTop = height - reserve + 12f * density
+        trayLeft = (width - traySlot * 7.42f) / 2
+        val live = game.board
+        free = live.filter { game.isFree(it, live) }.mapTo(HashSet()) { it.id }
+        drawOrder = if (game.layered) live.sortedWith(compareBy<MahjongTile> { it.z }.thenBy { it.y - it.x }.thenByDescending { it.x })
+            else live.sortedWith(compareBy<MahjongTile> { dispY(it.x, it.y) }.thenByDescending { dispX(it.x, it.y) })
+        bounds.clear()
+        for (tile in drawOrder) bounds[tile.id] = faceRect(tile)
+        for ((i, id) in game.tray.withIndex()) bounds[id] = traySlotRect(i)
+        pairsAvailable = if (game.mode == MahjongMode.CLASSIC || game.grid) game.availablePairs() else 0
         if (game.mode == MahjongMode.SLIDE) updateSlideGrid()
         matchPath.rewind()
-        game.lastPath.forEachIndexed { index,cell ->
-            val x=left+(dispX(cell.x,cell.y)+.47f)*tileW; val y=top+(dispY(cell.x,cell.y)+.45f)*tileH
-            if(index==0) matchPath.moveTo(x,y) else matchPath.lineTo(x,y)
+        game.lastPath.forEachIndexed { index, cell ->
+            val x = cellCenterX(cell.x, cell.y); val y = cellCenterY(cell.x, cell.y)
+            if (index == 0) matchPath.moveTo(x, y) else matchPath.lineTo(x, y)
         }
     }
 
-    private fun recycleFaces() {
-        for (i in 0 until faces.size()) faces.valueAt(i).recycle()
-        faces.clear()
+    private fun faceRect(tile: MahjongTile): RectF = if (game.layered) {
+        val x = left + tile.x * cellW + tile.z * depth
+        val y = top + tile.y * cellH - tile.z * depth
+        RectF(x, y, x + faceW, y + faceH)
+    } else {
+        val x = left + dispX(tile.x, tile.y) * cellW + depth
+        val y = top + dispY(tile.x, tile.y) * cellH
+        RectF(x, y, x + faceW, y + faceH)
     }
 
-    private fun updateSlideGrid() {
-        if (gridWidth!=width || gridHeight!=height || gridColumns!=game.columns || gridRows!=game.rows) {
-            gridWidth=width; gridHeight=height; gridColumns=game.columns; gridRows=game.rows
-            gridRects=Array(game.columns*game.rows) { index ->
-                val x=dispX(index%game.columns,index/game.columns); val y=dispY(index%game.columns,index/game.columns)
-                RectF(left+x*tileW,top+y*tileH,left+(x+.94f)*tileW,top+(y+.91f)*tileH)
+    private fun traySlotRect(i: Int): RectF {
+        val w = traySlot * .94f
+        val x = trayLeft + i * traySlot * 1.06f
+        return RectF(x, trayTop, x + w, trayTop + w * ASPECT)
+    }
+
+    private fun cellCenterX(x: Int, y: Int) = left + (dispX(x, y) + .5f) * cellW + depth * .5f
+    private fun cellCenterY(x: Int, y: Int) = top + (dispY(x, y) + .5f) * cellH - depth * .5f
+
+    private fun recycleSprites() {
+        for (i in 0 until sprites.size()) sprites.valueAt(i).recycle()
+        sprites.clear()
+    }
+
+    private fun sprite(face: Int): Bitmap {
+        sprites[face]?.let { return it }
+        val extra = 3f * density
+        spriteOffX = depth * 1.7f + extra; spriteOffY = extra
+        val w = ceil(faceW + spriteOffX + extra).toInt().coerceAtLeast(1)
+        val h = ceil(faceH + depth * 2f + extra * 2).toInt().coerceAtLeast(1)
+        return Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888).also {
+            art.tile(Canvas(it), spriteOffX, spriteOffY, faceW, faceH, face, accent, style = porcelain, texture = texture, depth = depth)
+            sprites.put(face, it)
+        }
+    }
+
+    /** Dessine la tuile dont la face occupe [rect] (l'image est mise à l'échelle si besoin). */
+    private fun drawTile(c: Canvas, face: Int, rect: RectF, alpha: Int = 255) {
+        val bitmap = sprite(face)
+        val s = rect.width() / faceW
+        dst.set(rect.left - spriteOffX * s, rect.top - spriteOffY * s,
+            rect.left + (bitmap.width - spriteOffX) * s, rect.top + (bitmap.height - spriteOffY) * s)
+        p.alpha = alpha; c.drawBitmap(bitmap, null, dst, p); p.alpha = 255
+        if (game.mode == MahjongMode.TEN) {
+            // La règle des nombres reste lisible avec toutes les familles.
+            val radius = rect.width() * .2f
+            val cx = rect.right - radius * .95f; val cy = rect.bottom - radius * .95f
+            p.color = 0xff1f3b5c.toInt(); p.alpha = alpha; c.drawCircle(cx, cy, radius, p)
+            label.color = Color.WHITE; label.alpha = alpha; label.textSize = rect.width() * .3f; label.textAlign = Paint.Align.CENTER
+            c.drawText(numberLabels[face % 9 + 1], cx, cy - (label.ascent() + label.descent()) / 2, label)
+            label.alpha = 255; p.alpha = 255
+        }
+    }
+
+    private fun cornerRadius(rect: RectF) = rect.width() * .12f
+
+    // ---- Dessin ----------------------------------------------------------------------------
+
+    override fun onDraw(c: Canvas) {
+        super.onDraw(c)
+        if (bounds.isEmpty() && !game.complete) layoutTiles()
+        val now = SystemClock.uptimeMillis()
+        val dt = if (lastFrame == 0L) 0f else ((now - lastFrame) / 1000f).coerceIn(0f, .1f)
+        lastFrame = now
+        var animating = false
+        if (active && game.tick(dt)) animating = true
+        // Le paysage est le fond de l'écran entier (MahjongTableDrawable) : la vue reste transparente.
+        if (game.mode == MahjongMode.TRIPLE) drawTray(c)
+        if (game.mode == MahjongMode.SLIDE) drawSlideGrid(c, now)
+        if (now - motionAt >= MOTION_MS) from.clear()
+        if (animated && from.isNotEmpty()) animating = true
+        val count = drawOrder.size.coerceAtLeast(1)
+        val hintPulse = if (now < hintUntil) (.55f + .45f * sin((now % 900) / 900f * 2 * PI).toFloat()) else 0f
+        for ((index, tile) in drawOrder.withIndex()) {
+            val base = location(tile.id, now) ?: continue
+            work.set(base)
+            var alpha = 255
+            if (animated) {
+                val delay = index * 520f / count
+                val e = ((now - entranceAt - delay) / 360f).coerceIn(0f, 1f)
+                if (e < 1f) {
+                    animating = true
+                    work.offset(0f, -(1f - e).pow(2) * tileH * .7f); alpha = (255 * e).toInt()
+                }
+                if (tile.id == shakeId && now - shakeAt < 300) {
+                    val t = (now - shakeAt) / 300f
+                    work.offset(sin(t * 34f) * faceW * .06f * (1 - t), 0f); animating = true
+                }
             }
-            occupiedCells=BooleanArray(gridRects.size); reachableCells=BooleanArray(gridRects.size)
-            iceBounds.set(left-tileW*.10f,top-tileH*.08f,left+shownColumns*tileW,top+shownRows*tileH)
-            iceGradient=LinearGradient(iceBounds.left,iceBounds.top,iceBounds.right,iceBounds.bottom,
-                0xb8e2f7ff.toInt(),0xb0b9dfef.toInt(),Shader.TileMode.CLAMP)
-            footprintDashes=DashPathEffect(floatArrayOf(tileW*.11f,tileW*.08f),0f)
+            val selected = tile.id == game.selected || (dragging && tile.id == pressed)
+            if (selected && game.layered) work.offset(depth * .35f, -depth * .35f)
+            drawTile(c, tile.face, work, alpha)
+            val r = cornerRadius(work)
+            if (game.layered && tile.id !in free) { p.color = 0x420c1822; c.drawRoundRect(work, r, r, p) }
+            if (selected) {
+                p.color = 0x50ffd34d; c.drawRoundRect(work, r, r, p)
+                p.style = Paint.Style.STROKE; p.strokeWidth = max(2f, work.width() * .05f); p.color = 0xffffb627.toInt()
+                c.drawRoundRect(work, r, r, p); p.style = Paint.Style.FILL
+            } else if (hintPulse > 0f && tile.id in hints) {
+                p.color = 0x6fe0ff; p.alpha = (110 * hintPulse).toInt()
+                c.drawRoundRect(work, r, r, p)
+                p.style = Paint.Style.STROKE; p.strokeWidth = max(3f, work.width() * .085f)
+                p.color = 0xff6fe0ff.toInt(); p.alpha = (255 * hintPulse).toInt()
+                c.drawRoundRect(work, r, r, p); p.style = Paint.Style.FILL; p.alpha = 255
+                animating = true
+            }
         }
-        occupiedCells.fill(false)
-        for (tile in drawOrder) occupiedCells[tile.y*game.columns+tile.x]=true
-        slideStopsValid=false
-    }
-
-    private fun ensureSlideStops(sourceId: Int?) {
-        if (slideStopsValid && slideStopSource==sourceId) return
-        slideStopsValid=true; slideStopSource=sourceId
-        reachableCells.fill(false)
-        slideTargets.fill(null)
-        if (sourceId==null) return
-        slideTargets[0]=game.iceSlideTarget(sourceId,1,0)
-        slideTargets[1]=game.iceSlideTarget(sourceId,-1,0)
-        slideTargets[2]=game.iceSlideTarget(sourceId,0,1)
-        slideTargets[3]=game.iceSlideTarget(sourceId,0,-1)
-        for (target in slideTargets) if(target!=null) reachableCells[target.y*game.columns+target.x]=true
-    }
-
-    private fun startMotion(before: Map<Int,RectF>,now: Long) {
-        from.clear()
-        for ((id,old) in before) {
-            val target=bounds[id] ?: continue
-            if (old!=target) from[id]=old
+        for (id in game.tray) location(id, now)?.let { drawTile(c, game.tiles[id].face, it) }
+        if (game.mode == MahjongMode.SLIDE) {
+            val arrow = if (dragging) dragTarget else if (now < hintUntil) slideHint else null
+            arrow?.let { drawSlideArrow(c, it, now) }
         }
-        motionAt=now
+        bursts.removeAll { now - it.start > 1300 }
+        if (animated) for (burst in bursts) { drawBurst(c, burst, now); animating = true }
+        if (drawHud(c, now)) animating = true
+        if (active && (animating || game.chaining && game.timed)) postInvalidateOnAnimation()
     }
 
     private fun location(id: Int, now: Long): RectF? {
         val target = bounds[id] ?: return null
         val old = from[id] ?: return target
-        if (!animated || now-motionAt>=340) return target
-        val t = ((now-motionAt)/340f).coerceIn(0f,1f)
-        val ease = if(game.mode==MahjongMode.SLIDE) t else 1f-(1f-t).pow(3)
-        val rect=movingRects[id] ?: RectF().also { movingRects.put(id,it) }
-        rect.set(old.left+(target.left-old.left)*ease,old.top+(target.top-old.top)*ease,
-            old.right+(target.right-old.right)*ease,old.bottom+(target.bottom-old.bottom)*ease)
+        if (!animated || now - motionAt >= MOTION_MS) return target
+        val t = ((now - motionAt) / MOTION_MS.toFloat()).coerceIn(0f, 1f)
+        val ease = if (game.mode == MahjongMode.SLIDE) t else 1f - (1f - t).pow(3)
+        val rect = moving[id] ?: RectF().also { moving.put(id, it) }
+        rect.set(old.left + (target.left - old.left) * ease, old.top + (target.top - old.top) * ease,
+            old.right + (target.right - old.right) * ease, old.bottom + (target.bottom - old.bottom) * ease)
         return rect
     }
 
-    private fun drawTile(c: Canvas, rect: RectF, face: Int, back: Boolean, dim: Boolean, selected: Boolean, alpha: Int = 255) {
-        // Ghosts shrink every frame; cache at board resolution, never at animated sizes.
-        val bw = ceil(tileW*.94f).toInt().coerceIn(1,320)
-        val bh = ceil(bw*1.24f).toInt()
-        val key = ((if(back) -1 else face)+1)*512+bw
-        val bitmap = faces[key] ?: run {
-            Bitmap.createBitmap(bw+2,ceil(bh*1.08f).toInt()+2,Bitmap.Config.ARGB_8888).also {
-                art.tile(Canvas(it),0f,0f,bw.toFloat(),bh.toFloat(),face,accent,back=back,style=porcelain,texture=texture)
-                faces.put(key,it)
+    private fun startMotion(before: Map<Int, RectF>, now: Long) {
+        from.clear()
+        for ((id, old) in before) { val target = bounds[id] ?: continue; if (old != target) from[id] = old }
+        motionAt = now
+    }
+
+    /** Bande du haut : score, multiplicateur et sa jauge, barre des étoiles, paires jouables. */
+    private fun drawHud(c: Canvas, now: Long): Boolean {
+        var animating = false
+        val h = hudH
+        val panelTop = pad * .4f; val panelBottom = h - pad * .1f
+        p.color = 0x4a000000; c.drawRoundRect(pad, panelTop, width - pad, panelBottom, h * .3f, h * .3f, p)
+        val cy = (panelTop + panelBottom) / 2
+        // Score qui défile.
+        val target = game.score.toFloat()
+        if (abs(shownScore - target) > .5f && animated) {
+            shownScore += (target - shownScore) * .22f; animating = true
+        } else shownScore = target
+        label.textAlign = Paint.Align.LEFT; label.color = Color.WHITE; label.textSize = h * .4f
+        val scoreText = context.getString(R.string.mj_number, shownScore.roundToInt())
+        c.drawText(scoreText, pad * 2.4f, cy - (label.ascent() + label.descent()) / 2, label)
+        val scoreW = max(label.measureText(scoreText), label.measureText(context.getString(R.string.mj_number, 8888)))
+        // Multiplicateur : un anneau qui se vide pendant la chaîne.
+        if (game.combo != shownCombo) { if (game.combo > shownCombo) comboAt = now; shownCombo = game.combo }
+        val radius = h * .33f
+        val bx = pad * 2.4f + scoreW + radius + h * .3f
+        val chain = game.chaining
+        val tone = chainColor(game.combo)
+        val pop = if (animated && now - comboAt < 280) { animating = true; 1f + .35f * (1 - (now - comboAt) / 280f) } else 1f
+        p.color = if (chain) darken(tone) else 0x30ffffff
+        c.drawCircle(bx, cy, radius * pop, p)
+        p.style = Paint.Style.STROKE; p.strokeWidth = radius * .2f; p.strokeCap = Paint.Cap.ROUND
+        if (chain) {
+            p.color = tone
+            work.set(bx - radius * pop, cy - radius * pop, bx + radius * pop, cy + radius * pop)
+            c.drawArc(work, -90f, 360f * (if (game.timed) game.chainLeft else 1f), false, p)
+        }
+        p.style = Paint.Style.FILL; p.strokeCap = Paint.Cap.BUTT
+        label.textAlign = Paint.Align.CENTER; label.textSize = radius * .82f * pop
+        label.color = if (chain) Color.WHITE else 0x90ffffff.toInt()
+        c.drawText(context.getString(R.string.mj_multiplier, game.multiplierShown()), bx, cy - (label.ascent() + label.descent()) / 2, label)
+        // Paires jouables, et sens de la prochaine chute en Cascade.
+        var right = width - pad * 2.2f
+        if (game.mode == MahjongMode.CASCADE) {
+            val shown = if (turned) (game.gravityDirection + 3) % 4 else game.gravityDirection
+            label.textSize = h * .5f; label.color = 0xffffe08a.toInt(); label.textAlign = Paint.Align.RIGHT
+            c.drawText(arrows[shown], right, cy - (label.ascent() + label.descent()) / 2, label)
+            right -= label.measureText(arrows[shown]) + h * .25f
+        }
+        if (game.mode == MahjongMode.CLASSIC || game.grid) {
+            label.textSize = h * .34f; label.color = Color.WHITE; label.textAlign = Paint.Align.RIGHT
+            val text = context.getString(R.string.mj_number, pairsAvailable)
+            c.drawText(text, right, cy - (label.ascent() + label.descent()) / 2, label)
+            right -= label.measureText(text) + h * .12f
+            // Deux petites tuiles : « paires possibles ».
+            val iw = h * .22f; val ih = iw * ASPECT
+            for (k in 0..1) {
+                val x = right - iw - (1 - k) * iw * .55f; val y = cy - ih / 2 + (1 - k) * ih * .12f
+                p.color = 0xff2c6e5f.toInt(); c.drawRoundRect(x - iw * .1f, y + iw * .1f, x + iw * .9f, y + ih + iw * .1f, iw * .18f, iw * .18f, p)
+                p.color = 0xfff6efdc.toInt(); c.drawRoundRect(x, y, x + iw, y + ih, iw * .18f, iw * .18f, p)
+            }
+            right -= iw * 1.7f + h * .3f
+        }
+        // Barre des étoiles.
+        val barL = bx + radius + h * .45f; val barR = right
+        if (barR - barL > h) {
+            val t3 = game.starThreshold(3).coerceAtLeast(1).toFloat()
+            val barH = h * .16f
+            p.color = 0x38ffffff; c.drawRoundRect(barL, cy - barH / 2, barR, cy + barH / 2, barH / 2, barH / 2, p)
+            val fill = (shownScore / t3).coerceIn(0f, 1f)
+            if (fill > 0f) {
+                p.shader = LinearGradient(barL, 0f, barR, 0f, 0xffffd66b.toInt(), 0xffffa53a.toInt(), Shader.TileMode.CLAMP)
+                c.drawRoundRect(barL, cy - barH / 2, barL + (barR - barL) * fill, cy + barH / 2, barH / 2, barH / 2, p)
+                p.shader = null
+            }
+            for (star in 1..3) {
+                val x = barL + (barR - barL) * (game.starThreshold(star) / t3)
+                val reached = shownScore >= game.starThreshold(star)
+                art.star(c, x.coerceAtMost(barR - h * .1f), cy, h * .23f, if (reached) 0xff3a2a10.toInt() else 0x66000000)
+                art.star(c, x.coerceAtMost(barR - h * .1f), cy, h * .19f, if (reached) 0xffffd34a.toInt() else 0x60ffffff)
             }
         }
-        p.style = Paint.Style.FILL; p.color = Color.WHITE; p.alpha = alpha
-        bitmapRect.set(rect.left,rect.top,rect.right+rect.width()*2f/bw,rect.top+rect.height()*1.08f)
-        c.drawBitmap(bitmap,null,bitmapRect,p); p.alpha = 255
-        if (game.mode == MahjongMode.TEN && !back) {
-            // The numerical rule stays legible with every collectible tile texture.
-            val radius = rect.width()*.23f
-            val cx = rect.right-radius*.95f; val cy = rect.bottom-radius*1.05f
-            p.color = 0xff344763.toInt(); p.alpha = alpha
-            c.drawCircle(cx,cy,radius,p)
-            p.color = Color.WHITE; p.alpha = alpha
-            p.textSize = rect.width()*.36f; p.textAlign = Paint.Align.CENTER; p.typeface = Typeface.DEFAULT_BOLD
-            c.drawText(numberLabels[face%9],cx,cy-(p.ascent()+p.descent())/2,p)
-            p.alpha = 255
-        }
-        if (dim) {
-            p.color = 0x2633467e
-            c.drawRoundRect(rect,rect.width()*.15f,rect.width()*.15f,p)
-            // A small edge marker distinguishes blocked tiles without hiding their art.
-            p.color=0xff637084.toInt()
-            c.drawRoundRect(rect.centerX()-rect.width()*.08f,rect.bottom-rect.height()*.04f,
-                rect.centerX()+rect.width()*.08f,rect.bottom-rect.height()*.025f,2f,2f,p)
-        }
-        if (selected) {
-            p.style = Paint.Style.STROKE; p.strokeWidth = max(2f,rect.width()*.05f); p.color = 0xffffbd36.toInt()
-            selectionRect.set(rect); selectionRect.inset(-rect.width()*.028f,-rect.height()*.02f)
-            c.drawRoundRect(selectionRect,rect.width()*.17f,rect.width()*.17f,p); p.style = Paint.Style.FILL
-        }
+        return animating
     }
 
-    override fun onDraw(c: Canvas) {
-        super.onDraw(c)
-        if (bounds.isEmpty() && !game.complete) layoutTiles()
-        art.backdrop(c,width.toFloat(),height.toFloat(),accent)
-        val now = SystemClock.uptimeMillis()
-        if (game.mode == MahjongMode.TRIPLE) drawTray(c)
-        if (game.mode == MahjongMode.SLIDE) drawSlideGrid(c,now)
-        if (now-motionAt>=340) from.clear()
-        var moving = animated && from.isNotEmpty()
-        for (tile in drawOrder) {
-            val rect = location(tile.id,now) ?: continue
-            val selected = tile.id==game.selected || (now<hintUntil && tile.id in hints) || (dragging && tile.id==pressed)
-            val save = c.save()
-            val enter = if (animated) ((now-entranceAt-tile.id%12*16)/440f).coerceIn(0f,1f) else 1f
-            if (enter<1) { c.translate(0f,(1-enter).pow(2)*tileH*.4f); moving=true }
-            drawTile(c,rect,tile.face,false,tile.id !in free,selected,(90+165*enter).toInt())
-            c.restoreToCount(save)
-        }
-        for (id in game.tray) location(id,now)?.let { drawTile(c,it,game.tiles[id].face,false,false,false) }
-        if (game.mode == MahjongMode.SLIDE) {
-            val arrow=if(dragging) dragTarget else if(now<hintUntil) slideHint else null
-            arrow?.let { drawSlideArrow(c,it,now) }
-        }
-        if (!animated && now<pathUntil && game.lastPath.size>1) {
-            p.style=Paint.Style.STROKE; p.strokeWidth=max(3f,tileW*.06f); p.color=0xffdb8a1b.toInt()
-            c.drawPath(matchPath,p); p.style=Paint.Style.FILL
-        }
-        bursts.removeAll { now-it.start>1200 }
-        if (animated) for (burst in bursts) { drawBurst(c,burst,now); moving=true }
-        if (active && moving) postInvalidateOnAnimation()
-        scheduleOverlayExpiry(now)
-    }
+    private fun MahjongGame.multiplierShown() = if (chaining) combo else 1
 
-    private fun scheduleOverlayExpiry(now: Long = SystemClock.uptimeMillis()) {
-        var expiry=0L
-        if (active) {
-            if (hintUntil>now) expiry=hintUntil
-            if (!animated && pathUntil>now && (expiry==0L || pathUntil<expiry)) expiry=pathUntil
-        }
-        if (expiry==overlayExpiryAt) return
-        removeCallbacks(expireOverlays)
-        overlayExpiryAt=expiry
-        // Hints and paths are static: redraw once at expiry, not on every display frame.
-        if (expiry!=0L) postDelayed(expireOverlays,(expiry-now).coerceAtLeast(1L))
+    private fun chainColor(combo: Int) = when {
+        combo <= 1 -> 0xfff3f0e6.toInt()
+        combo <= 3 -> 0xffffcf4a.toInt()
+        combo <= 5 -> 0xffff9a3c.toInt()
+        combo <= 7 -> 0xffff5d73.toInt()
+        else -> 0xffc77dff.toInt()
     }
-
-    private fun cellAt(x: Float,y: Float): MahjongCell? {
-        if(tileW<=0f || tileH<=0f) return null
-        val column=floor((x-left)/tileW).toInt(); val row=floor((y-top)/tileH).toInt()
-        if(column !in 0 until shownColumns || row !in 0 until shownRows) return null
-        return if(turned) MahjongCell(game.columns-1-row,column) else MahjongCell(column,row)
-    }
-
-    private fun drawSlideGrid(c: Canvas,now: Long) {
-        val sourceId=if(dragging) pressed else game.selected
-        val source=sourceId?.let { game.tiles.getOrNull(it) }
-        ensureSlideStops(sourceId)
-        p.style=Paint.Style.FILL
-        p.shader=iceGradient
-        c.drawRoundRect(iceBounds,tileW*.18f,tileW*.18f,p); p.shader=null
-        p.style=Paint.Style.STROKE; p.strokeWidth=max(2f,tileW*.045f); p.color=0xff94bdce.toInt()
-        c.drawRoundRect(iceBounds,tileW*.18f,tileW*.18f,p)
-        for(y in 0 until game.rows) for(x in 0 until game.columns) {
-            val index=y*game.columns+x
-            if(occupiedCells[index]) continue
-            val reachable=reachableCells[index]
-            val target=(dragging && dragTarget?.let { it.x==x && it.y==y }==true) ||
-                (now<hintUntil && slideHint?.let { it.x==x && it.y==y }==true)
-            val rect=gridRects[index]
-            p.style=Paint.Style.FILL
-            p.color=when { target -> 0x60ffbd36; reachable -> 0x404f90c7; else -> 0x104f90c7 }
-            c.drawRoundRect(rect,tileW*.13f,tileW*.13f,p)
-            p.style=Paint.Style.STROKE; p.strokeWidth=max(1f,tileW*.025f)
-            p.color=if(reachable || target) 0xff5490b9.toInt() else 0x254f90c7
-            c.drawRoundRect(rect,tileW*.13f,tileW*.13f,p)
-            if(!reachable && !target) {
-                p.color=0x88ffffff.toInt(); p.strokeWidth=max(1f,tileW*.025f)
-                c.drawLine(rect.left+rect.width()*.19f,rect.bottom-rect.height()*.17f,
-                    rect.right-rect.width()*.20f,rect.top+rect.height()*.23f,p)
-                c.drawLine(rect.centerX(),rect.centerY(),rect.right-rect.width()*.16f,rect.centerY(),p)
-            }
-            if(reachable) {
-                p.color=0xff397b9b.toInt(); p.strokeWidth=max(2f,tileW*.06f)
-                if((source?.x==x) != turned) c.drawLine(rect.centerX()-tileW*.14f,rect.centerY(),
-                    rect.centerX()+tileW*.14f,rect.centerY(),p)
-                else c.drawLine(rect.centerX(),rect.centerY()-tileH*.12f,
-                    rect.centerX(),rect.centerY()+tileH*.12f,p)
-            }
-            if(game.focusOrigin?.let { it.x==x && it.y==y }==true) {
-                // This footprint remains while the selected tile tries several slides.
-                // Changing focus brings it back here unless a pair has been completed.
-                p.style=Paint.Style.STROKE; p.strokeWidth=max(2f,tileW*.04f)
-                p.color=0xffb47b21.toInt()
-                p.pathEffect=footprintDashes
-                footprintRect.set(rect); footprintRect.inset(tileW*.06f,tileH*.06f)
-                c.drawRoundRect(footprintRect,tileW*.11f,tileW*.11f,p)
-                p.pathEffect=null
-            }
-        }
-        p.style=Paint.Style.FILL
-    }
-
-    private fun drawSlideArrow(c: Canvas,move: MahjongSlide,now: Long) {
-        val start=location(move.id,now) ?: return
-        val endX=left+(dispX(move.x,move.y)+.47f)*tileW; val endY=top+(dispY(move.x,move.y)+.455f)*tileH
-        val angle=atan2(endY-start.centerY(),endX-start.centerX())
-        val size=tileW*.23f
-        p.style=Paint.Style.STROKE; p.strokeWidth=max(3f,tileW*.075f)
-        p.strokeCap=Paint.Cap.ROUND; p.strokeJoin=Paint.Join.ROUND; p.color=0xffdb8a1b.toInt()
-        arrowPath.rewind()
-        arrowPath.apply {
-            moveTo(start.centerX(),start.centerY()); lineTo(endX,endY)
-            moveTo(endX-cos(angle-.65f)*size,endY-sin(angle-.65f)*size); lineTo(endX,endY)
-            lineTo(endX-cos(angle+.65f)*size,endY-sin(angle+.65f)*size)
-        }
-        c.drawPath(arrowPath,p); p.style=Paint.Style.FILL; p.strokeCap=Paint.Cap.BUTT
-    }
+    private fun darken(color: Int) = MahjongArt.darken(color, .45f)
 
     private fun drawTray(c: Canvas) {
-        val slot = min(tileW*.90f,(height-trayTop)/1.36f).coerceAtLeast(1f)
-        val start = (width-slot*7.42f)/2
-        p.style = Paint.Style.FILL; p.color = 0x95ffffff.toInt()
-        c.drawRoundRect(start-10f,trayTop-10f,width-start+10f,trayTop+slot*1.35f,slot*.2f,slot*.2f,p)
-        for (i in 0..6) {
-            val x = start+i*slot*1.06f
-            p.color = if (game.tray.size>=6) 0x30e5a334 else 0x204f90c7
-            c.drawRoundRect(x,trayTop,x+slot*.94f,trayTop+slot*1.24f,slot*.12f,slot*.12f,p)
+        val w = traySlot * 7.42f
+        val full = game.tray.size
+        p.color = when { full >= 6 -> 0xcc7a2121.toInt(); full >= 5 -> 0xcc7a5521.toInt(); else -> 0xaa0b2420.toInt() }
+        c.drawRoundRect(trayLeft - traySlot * .2f, trayTop - traySlot * .2f, trayLeft + w + traySlot * .1f,
+            trayTop + traySlot * .94f * ASPECT + traySlot * .3f, traySlot * .22f, traySlot * .22f, p)
+        for (i in 0 until MahjongGame.TRAY) {
+            val rect = traySlotRect(i)
+            p.color = 0x22ffffff; c.drawRoundRect(rect, rect.width() * .12f, rect.width() * .12f, p)
         }
     }
 
-    private fun drawBurst(c: Canvas,b: Burst,now: Long) {
-        val t = ((now-b.start)/1000f).coerceIn(0f,1.2f)
-        val fade = (1f-t).coerceIn(0f,1f)
-        for (ghost in b.ghosts) {
-            val gather = (t/.26f).coerceIn(0f,1f)
-            val scale = if(t<.26f) 1f+.12f*sin(gather*PI).toFloat() else (1-(t-.26f)/.34f).coerceIn(0f,1f)
-            if (scale<=0) continue
-            val cx = ghost.rect.centerX()+(b.x-ghost.rect.centerX())*gather*.55f
-            val cy = ghost.rect.centerY()+(b.y-ghost.rect.centerY())*gather*.55f-t*tileH*.28f
-            ghostRect.set(cx-ghost.rect.width()*scale/2,cy-ghost.rect.height()*scale/2,
-                cx+ghost.rect.width()*scale/2,cy+ghost.rect.height()*scale/2)
-            drawTile(c,ghostRect,ghost.face,false,false,true,(fade*255).toInt())
+    private fun drawBurst(c: Canvas, b: Burst, now: Long) {
+        val t = (now - b.start) / 1000f
+        val meet = .16f
+        val gather = (t / meet).coerceIn(0f, 1f).let { it * it }
+        val n = b.ghosts.size
+        // Les tuiles glissent l'une vers l'autre, se touchent, puis s'envolent en éclats.
+        if (t < .5f) b.ghosts.forEachIndexed { i, ghost ->
+            val slot = (i - (n - 1) / 2f) * ghost.rect.width() * 1.02f
+            val tx = b.x + slot; val ty = b.y
+            val cx = ghost.rect.centerX() + (tx - ghost.rect.centerX()) * gather
+            val cy = ghost.rect.centerY() + (ty - ghost.rect.centerY()) * gather
+            val scale = if (t < meet) 1f + .06f * gather else (1.12f - (t - meet) / .34f * 1.12f).coerceAtLeast(0f)
+            if (scale <= 0f) return@forEachIndexed
+            val alpha = if (t < meet) 255 else (255 * (1 - (t - meet) / .34f)).toInt().coerceIn(0, 255)
+            work.set(cx - ghost.rect.width() * scale / 2, cy - ghost.rect.height() * scale / 2,
+                cx + ghost.rect.width() * scale / 2, cy + ghost.rect.height() * scale / 2)
+            drawTile(c, ghost.face, work, alpha)
+            p.color = 0xffffe9a8.toInt(); p.alpha = (alpha * .45f).toInt()
+            c.drawRoundRect(work, cornerRadius(work), cornerRadius(work), p); p.alpha = 255
         }
-        p.style = Paint.Style.STROKE; p.color = 0xffffbf46.toInt(); p.alpha = (fade*180).toInt()
-        p.strokeWidth = tileW*.035f
-        c.drawCircle(b.x,b.y,t*tileW*2.4f,p)
-        if(b.path!=null) {
-            p.strokeWidth = tileW*.07f; c.drawPath(b.path,p)
+        if (b.path != null && t < .45f) {
+            p.style = Paint.Style.STROKE; p.strokeCap = Paint.Cap.ROUND; p.strokeJoin = Paint.Join.ROUND
+            p.color = 0xffffd45a.toInt(); p.alpha = (255 * (1 - t / .45f)).toInt(); p.strokeWidth = cellW * .09f
+            c.drawPath(b.path, p); p.strokeWidth = cellW * .035f; p.color = Color.WHITE; p.alpha = (255 * (1 - t / .45f)).toInt()
+            c.drawPath(b.path, p)
+            p.style = Paint.Style.FILL; p.alpha = 255; p.strokeCap = Paint.Cap.BUTT
         }
-        p.style = Paint.Style.FILL; p.alpha=255
-        for ((index,s) in b.sparks.withIndex()) {
-            val x = s.x+s.vx*t; val y=s.y+s.vy*t+tileW*t*t
-            val a = (fade*255).toInt()
-            val color = (s.color and 0x00ffffff) or (a shl 24)
-            if(index%3==0) art.star(c,x,y,tileW*.07f*fade,color)
-            else { p.color=color; c.drawCircle(x,y,tileW*.035f*fade,p) }
-        }
-        // Pearls arc into the score area instead of floating over the next pair.
-        if(t<.85f) repeat(3) { i ->
-            val u=((t-i*.05f)/.7f).coerceIn(0f,1f)
-            val x=b.x+(width*.12f-b.x)*u
-            val y=b.y+(tileH*.12f-b.y)*u-sin(u*PI).toFloat()*tileH
-            art.pearl(c,x,y,tileW*.08f*(1-u*.55f))
-        }
-        if(t<1f) {
-            p.color=0xff655091.toInt(); p.alpha=(fade*255).toInt(); p.typeface=Typeface.DEFAULT_BOLD
-            p.textAlign=Paint.Align.CENTER; p.textSize=tileW*.42f
-            c.drawText(b.scoreLabel,b.x.coerceIn(tileW,width-tileW),
-                (b.y-tileH*.6f-t*tileH*.6f).coerceAtLeast(tileH*.45f),p)
-            if(b.comboLabel!=null) {
-                p.textSize=tileW*.30f; p.color=0xffc07917.toInt(); p.alpha=(fade*255).toInt()
-                c.drawText(b.comboLabel,b.x.coerceIn(tileW,width-tileW),
-                    (b.y-tileH*.3f-t*tileH*.6f).coerceAtLeast(tileH*.8f),p)
+        if (t >= meet) {
+            val u = t - meet
+            val fade = (1f - u / 1.0f).coerceIn(0f, 1f)
+            val size = faceW
+            p.style = Paint.Style.STROKE; p.color = chainColor(b.combo); p.alpha = (fade * 200).toInt()
+            p.strokeWidth = size * .06f * fade + 1f
+            c.drawCircle(b.x, b.y, size * (.4f + u * 3.2f), p)
+            p.style = Paint.Style.FILL; p.alpha = 255
+            if (u < .12f) { p.color = Color.WHITE; p.alpha = (255 * (1 - u / .12f)).toInt(); c.drawCircle(b.x, b.y, size * .9f, p); p.alpha = 255 }
+            for (s in b.sparks) {
+                val x = s.x + s.vx * u; val y = s.y + s.vy * u + size * 2.4f * u * u
+                val color = (s.color and 0x00ffffff) or ((fade * 255).toInt() shl 24)
+                if (s.star) art.star(c, x, y, size * .1f * fade + 1f, color) else { p.color = color; c.drawCircle(x, y, size * .045f * fade + .5f, p) }
+            }
+            if (u < .9f) {
+                val rise = u * size * 1.4f
+                label.textAlign = Paint.Align.CENTER; label.textSize = size * .42f
+                val textY = (b.y - size * .55f - rise).coerceAtLeast(hudH + label.textSize)
+                val x = b.x.coerceIn(size, width - size)
+                label.color = 0xcc000000.toInt(); label.alpha = (fade * 200).toInt(); c.drawText(b.gain, x + 2f, textY + 2f, label)
+                label.color = Color.WHITE; label.alpha = (fade * 255).toInt(); c.drawText(b.gain, x, textY, label)
+                if (b.combo >= 2) {
+                    label.textSize = size * .34f; label.color = chainColor(b.combo); label.alpha = (fade * 255).toInt()
+                    c.drawText(context.getString(R.string.mj_multiplier, b.combo), x, textY + size * .42f, label)
+                }
+                label.alpha = 255
             }
         }
-        p.alpha=255
     }
 
-    fun showHint() {
-        val ids=game.hint()
-        showHint(ids,if(game.mode==MahjongMode.SLIDE && ids.size<2) game.slideHint() else null)
+    // ---- Glissières ------------------------------------------------------------------------
+
+    private fun updateSlideGrid() {
+        gridRects = Array(game.columns * game.rows) { index ->
+            val x = dispX(index % game.columns, index / game.columns); val y = dispY(index % game.columns, index / game.columns)
+            RectF(left + x * cellW + depth, top + y * cellH, left + x * cellW + depth + faceW, top + y * cellH + faceH)
+        }
+        occupiedCells = BooleanArray(gridRects.size); reachableCells = BooleanArray(gridRects.size)
+        iceBounds.set(left - cellW * .08f, top - cellH * .06f, left + shownColumns * cellW + cellW * .08f, top + shownRows * cellH + cellH * .04f)
+        footprintDashes = DashPathEffect(floatArrayOf(cellW * .11f, cellW * .08f), 0f)
+        for (tile in drawOrder) occupiedCells[tile.y * game.columns + tile.x] = true
+        slideStopsValid = false
     }
 
-    fun showHint(ids: List<Int>,slide: MahjongSlide?) {
-        hints=ids; slideHint=slide
-        hintUntil=SystemClock.uptimeMillis()+2600L
-        scheduleOverlayExpiry(); invalidate()
+    private fun ensureSlideStops(sourceId: Int?) {
+        if (slideStopsValid && slideStopSource == sourceId) return
+        slideStopsValid = true; slideStopSource = sourceId
+        reachableCells.fill(false); slideTargets.fill(null)
+        if (sourceId == null) return
+        slideTargets[0] = game.iceSlideTarget(sourceId, 1, 0)
+        slideTargets[1] = game.iceSlideTarget(sourceId, -1, 0)
+        slideTargets[2] = game.iceSlideTarget(sourceId, 0, 1)
+        slideTargets[3] = game.iceSlideTarget(sourceId, 0, -1)
+        for (target in slideTargets) if (target != null) reachableCells[target.y * game.columns + target.x] = true
     }
 
-    fun refresh() {
-        val now=SystemClock.uptimeMillis()
-        val old=bounds.keys.mapNotNull { id -> location(id,now)?.let { id to RectF(it) } }.toMap()
-        layoutTiles(); startMotion(old,now)
-        hints=emptyList(); slideHint=null; hintUntil=0; pathUntil=0
-        scheduleOverlayExpiry(now); invalidate()
+    private fun drawSlideGrid(c: Canvas, now: Long) {
+        val sourceId = if (dragging) pressed else game.selected
+        val source = sourceId?.let { game.tiles.getOrNull(it) }
+        ensureSlideStops(sourceId)
+        p.style = Paint.Style.FILL
+        p.shader = LinearGradient(iceBounds.left, iceBounds.top, iceBounds.right, iceBounds.bottom, 0x70d9f3ff, 0x5095c8de, Shader.TileMode.CLAMP)
+        c.drawRoundRect(iceBounds, cellW * .18f, cellW * .18f, p); p.shader = null
+        p.style = Paint.Style.STROKE; p.strokeWidth = max(2f, cellW * .03f); p.color = 0x90c7ecff.toInt()
+        c.drawRoundRect(iceBounds, cellW * .18f, cellW * .18f, p)
+        for (y in 0 until game.rows) for (x in 0 until game.columns) {
+            val index = y * game.columns + x
+            if (occupiedCells[index]) continue
+            val reachable = reachableCells[index]
+            val target = (dragging && dragTarget?.let { it.x == x && it.y == y } == true) ||
+                (now < hintUntil && slideHint?.let { it.x == x && it.y == y } == true)
+            val rect = gridRects[index]
+            p.style = Paint.Style.FILL
+            p.color = when { target -> 0x70ffbd36; reachable -> 0x50a8e4ff; else -> 0x14ffffff }
+            c.drawRoundRect(rect, cellW * .12f, cellW * .12f, p)
+            if (reachable) {
+                p.style = Paint.Style.STROKE; p.color = 0xffffffff.toInt(); p.strokeWidth = max(2f, cellW * .05f)
+                if ((source?.x == x) != turned) c.drawLine(rect.centerX() - cellW * .14f, rect.centerY(), rect.centerX() + cellW * .14f, rect.centerY(), p)
+                else c.drawLine(rect.centerX(), rect.centerY() - cellH * .12f, rect.centerX(), rect.centerY() + cellH * .12f, p)
+            }
+            if (game.focusOrigin?.let { it.x == x && it.y == y } == true) {
+                // L'empreinte reste tant que la tuile choisie essaie plusieurs glissades.
+                p.style = Paint.Style.STROKE; p.strokeWidth = max(2f, cellW * .04f); p.color = 0xffffc252.toInt()
+                p.pathEffect = footprintDashes
+                work.set(rect); work.inset(cellW * .06f, cellH * .06f)
+                c.drawRoundRect(work, cellW * .11f, cellW * .11f, p); p.pathEffect = null
+            }
+        }
+        p.style = Paint.Style.FILL
     }
-    override fun onAttachedToWindow() { super.onAttachedToWindow(); active=true }
-    override fun onDetachedFromWindow() { pause(); recycleFaces(); super.onDetachedFromWindow() }
+
+    private fun drawSlideArrow(c: Canvas, move: MahjongSlide, now: Long) {
+        val start = location(move.id, now) ?: return
+        val endX = cellCenterX(move.x, move.y); val endY = cellCenterY(move.x, move.y)
+        val angle = atan2(endY - start.centerY(), endX - start.centerX())
+        val size = cellW * .23f
+        p.style = Paint.Style.STROKE; p.strokeWidth = max(3f, cellW * .075f)
+        p.strokeCap = Paint.Cap.ROUND; p.strokeJoin = Paint.Join.ROUND; p.color = 0xffffb627.toInt()
+        path.rewind()
+        path.moveTo(start.centerX(), start.centerY()); path.lineTo(endX, endY)
+        path.moveTo(endX - cos(angle - .65f) * size, endY - sin(angle - .65f) * size); path.lineTo(endX, endY)
+        path.lineTo(endX - cos(angle + .65f) * size, endY - sin(angle + .65f) * size)
+        c.drawPath(path, p); p.style = Paint.Style.FILL; p.strokeCap = Paint.Cap.BUTT
+    }
+
+    // ---- Commandes ---------------------------------------------------------------------------
+
+    fun showHint(ids: List<Int>, slide: MahjongSlide?) {
+        hints = ids; slideHint = slide
+        hintUntil = SystemClock.uptimeMillis() + 3200L
+        invalidate()
+    }
+
+    /** Après annuler ou mélanger ; un mélange refait tomber les tuiles. */
+    fun refresh(shuffled: Boolean = false) {
+        val now = SystemClock.uptimeMillis()
+        val old = bounds.keys.mapNotNull { id -> location(id, now)?.let { id to RectF(it) } }.toMap()
+        layoutTiles(); startMotion(old, now)
+        if (shuffled) { entranceAt = now; from.clear() }
+        hints = emptyList(); slideHint = null; hintUntil = 0
+        invalidate()
+    }
+    override fun onAttachedToWindow() { super.onAttachedToWindow(); active = true; lastFrame = 0L }
+    override fun onDetachedFromWindow() { pause(); recycleSprites(); super.onDetachedFromWindow() }
+    /** En pause, les mouvements en cours se posent à leur place : rien ne reste figé en plein vol. */
     fun pause() {
-        active=false; pressed=null; dragging=false; dragTarget=null
-        removeCallbacks(expireOverlays); overlayExpiryAt=0L
+        active = false; pressed = null; dragging = false; dragTarget = null
+        from.clear(); bursts.clear(); entranceAt = 0L; invalidate()
     }
-    fun resume() { active=true; invalidate() }
+    fun resume() { active = true; lastFrame = 0L; invalidate() }
+
+    private fun cellAt(x: Float, y: Float): MahjongCell? {
+        if (cellW <= 0f || cellH <= 0f || game.layered) return null
+        val column = floor((x - left) / cellW).toInt(); val row = floor((y - top) / cellH).toInt()
+        if (column !in 0 until shownColumns || row !in 0 until shownRows) return null
+        return if (turned) MahjongCell(game.columns - 1 - row, column) else MahjongCell(column, row)
+    }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (!isEnabled || !active) return false
-        when(event.actionMasked) {
+        when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
-                downX=event.x; downY=event.y; dragging=false; dragTarget=null; touchCell=cellAt(event.x,event.y)
-                val now=SystemClock.uptimeMillis()
-                pressed=drawOrder.asReversed().firstOrNull { location(it.id,now)?.contains(event.x,event.y)==true }?.id
+                downX = event.x; downY = event.y; dragging = false; dragTarget = null; touchCell = cellAt(event.x, event.y)
+                val now = SystemClock.uptimeMillis()
+                pressed = drawOrder.asReversed().firstOrNull { location(it.id, now)?.contains(event.x, event.y) == true }?.id
                 return true
             }
             MotionEvent.ACTION_MOVE -> {
-                if(game.mode==MahjongMode.SLIDE && pressed!=null) {
-                    val wasDragging=dragging; val previousTarget=dragTarget
-                    dragging=hypot(event.x-downX,event.y-downY)>=swipeThreshold
-                    val direction=swipeDirection(event.x-downX,event.y-downY)
-                    if(dragging) {
+                if (game.mode == MahjongMode.SLIDE && pressed != null) {
+                    val wasDragging = dragging; val previousTarget = dragTarget
+                    dragging = hypot(event.x - downX, event.y - downY) >= swipeThreshold
+                    val direction = swipeDirection(event.x - downX, event.y - downY)
+                    if (dragging) {
                         ensureSlideStops(pressed)
-                        val index=when { direction.first>0 -> 0; direction.first<0 -> 1; direction.second>0 -> 2; else -> 3 }
-                        dragTarget=slideTargets[index]
-                    } else dragTarget=null
-                    if (wasDragging!=dragging || previousTarget!=dragTarget) invalidate()
+                        val index = when { direction.first > 0 -> 0; direction.first < 0 -> 1; direction.second > 0 -> 2; else -> 3 }
+                        dragTarget = slideTargets[index]
+                    } else dragTarget = null
+                    if (wasDragging != dragging || previousTarget != dragTarget) invalidate()
                 }
                 return true
             }
             MotionEvent.ACTION_UP -> {
-                touchCell=cellAt(event.x,event.y)
-                val distance=hypot(event.x-downX,event.y-downY)
-                val threshold=if(game.mode==MahjongMode.SLIDE) swipeThreshold else tileW*.55f
-                if(game.mode==MahjongMode.SLIDE && pressed!=null && distance>=threshold) {
-                    val direction=swipeDirection(event.x-downX,event.y-downY)
-                    slideInDirection(pressed!!,direction.first,direction.second)
-                } else if(distance<threshold) performClick()
-                pressed=null; dragging=false; dragTarget=null; invalidate(); return true
+                touchCell = cellAt(event.x, event.y)
+                val distance = hypot(event.x - downX, event.y - downY)
+                val threshold = if (game.mode == MahjongMode.SLIDE) swipeThreshold else cellW * .9f
+                if (game.mode == MahjongMode.SLIDE && pressed != null && distance >= threshold) {
+                    val direction = swipeDirection(event.x - downX, event.y - downY)
+                    slideInDirection(pressed!!, direction.first, direction.second)
+                } else if (distance < threshold) performClick()
+                pressed = null; dragging = false; dragTarget = null; invalidate(); return true
             }
-            MotionEvent.ACTION_CANCEL -> { pressed=null; dragging=false; dragTarget=null; invalidate(); return true }
+            MotionEvent.ACTION_CANCEL -> { pressed = null; dragging = false; dragTarget = null; invalidate(); return true }
         }
         return true
     }
+
     override fun performClick(): Boolean {
         if (!isEnabled || !active) return false
         super.performClick()
-        val id=pressed
-        if(id!=null) chooseTile(id)
-        else if(game.mode==MahjongMode.SLIDE) {
-            val selected=game.selected; val cell=touchCell
-            if(selected!=null && cell!=null) {
-                val tile=game.tiles[selected]
-                if(tile.x==cell.x || tile.y==cell.y)
-                    slideInDirection(selected,(cell.x-tile.x).compareTo(0),(cell.y-tile.y).compareTo(0))
+        val id = pressed
+        if (id != null) chooseTile(id)
+        else if (game.mode == MahjongMode.SLIDE) {
+            val selected = game.selected; val cell = touchCell
+            if (selected != null && cell != null) {
+                val tile = game.tiles[selected]
+                if (tile.x == cell.x || tile.y == cell.y)
+                    slideInDirection(selected, (cell.x - tile.x).compareTo(0), (cell.y - tile.y).compareTo(0))
             }
         }
         return true
     }
 
-    fun chooseTile(id: Int) = applyMove { game.tap(id) }
+    fun chooseTile(id: Int) = applyMove(id) { game.tap(id) }
 
-    fun slideTile(id: Int,x: Int,y: Int) = applyMove { game.slide(id,x,y) }
+    fun slideTile(id: Int, x: Int, y: Int) = applyMove(id) { game.slide(id, x, y) }
 
-    private fun swipeDirection(dx:Float,dy:Float):Pair<Int,Int> =
-        if(abs(dx)>=abs(dy)) gameDirection(dx.compareTo(0f),0) else gameDirection(0,dy.compareTo(0f))
+    private fun swipeDirection(dx: Float, dy: Float): Pair<Int, Int> =
+        if (abs(dx) >= abs(dy)) gameDirection(dx.compareTo(0f), 0) else gameDirection(0, dy.compareTo(0f))
 
-    private fun slideInDirection(id:Int,dx:Int,dy:Int) = applyMove { game.slideDirection(id,dx,dy) }
+    private fun slideInDirection(id: Int, dx: Int, dy: Int) = applyMove(id) { game.slideDirection(id, dx, dy) }
 
-    private fun applyMove(action: () -> MahjongGame.Result) {
-        if(!isEnabled || !active || game.complete) return
-        val now=SystemClock.uptimeMillis()
-        val before=bounds.keys.mapNotNull { key -> location(key,now)?.let { key to RectF(it) } }.toMap()
-        val score=game.score
-        val result=action(); hintUntil=0; slideHint=null
-        pathUntil=if(result in listOf(MahjongGame.Result.MATCHED,MahjongGame.Result.MOVED) && game.lastPath.isNotEmpty()) now+750L else 0L
-        layoutTiles(); startMotion(before,now)
-        if(result==MahjongGame.Result.MATCHED) {
-            val ghosts=game.lastMatched.mapNotNull { key -> before[key]?.let { Ghost(it,game.tiles[key].face) } }
-            if(ghosts.isNotEmpty() && animated) {
-                val cx=ghosts.map { it.rect.centerX() }.average().toFloat()
-                val cy=ghosts.map { it.rect.centerY() }.average().toFloat()
-                val colors=intArrayOf(0xffffbd4f.toInt(),0xffef86ac.toInt(),0xff49bfc3.toInt(),0xff9d8ce4.toInt())
-                val sparks=List((24+game.combo*3).coerceAtMost(60)) { index ->
-                    val a=Random.nextFloat()*PI*2; val speed=tileW*(1f+Random.nextFloat()*2.8f)
-                    Spark(cx,cy,cos(a).toFloat()*speed,sin(a).toFloat()*speed-tileW*.8f,colors[index%4])
+    private fun applyMove(target: Int, action: () -> MahjongGame.Result) {
+        if (!isEnabled || !active || game.complete) return
+        val now = SystemClock.uptimeMillis()
+        val before = bounds.keys.mapNotNull { key -> location(key, now)?.let { key to RectF(it) } }.toMap()
+        val score = game.score
+        val result = action(); hintUntil = 0; slideHint = null
+        layoutTiles(); startMotion(before, now)
+        when (result) {
+            MahjongGame.Result.MATCHED -> {
+                val ghosts = game.lastMatched.mapNotNull { key -> before[key]?.let { Ghost(it, game.tiles[key].face) } }
+                if (ghosts.isNotEmpty() && animated) {
+                    val cx = ghosts.map { it.rect.centerX() }.average().toFloat()
+                    val cy = ghosts.map { it.rect.centerY() }.average().toFloat()
+                    val colors = intArrayOf(0xffffd45a.toInt(), 0xffff8fb1.toInt(), 0xff6fe0ff.toInt(), 0xffb79bff.toInt(), Color.WHITE)
+                    val sparks = List((18 + game.combo * 6).coerceAtMost(70)) { index ->
+                        val a = Random.nextFloat() * PI * 2; val speed = faceW * (1.2f + Random.nextFloat() * (2.2f + game.combo * .35f))
+                        Spark(cx, cy, cos(a).toFloat() * speed, sin(a).toFloat() * speed - faceW * 1.2f, colors[index % colors.size], index % 3 == 0)
+                    }
+                    bursts += Burst(now, ghosts, cx, cy, sparks, if (game.lastPath.size > 1) Path(matchPath) else null,
+                        context.getString(R.string.mj_gain_short, game.score - score), game.combo)
+                    while (bursts.size > 5) bursts.removeAt(0)
                 }
-                val path=if(game.lastPath.size>1) Path(matchPath) else null
-                bursts+=Burst(now,ghosts,sparks,path,cx,cy,
-                    context.getString(R.string.mj_gain_short,game.score-score),
-                    if(game.combo>=2) context.getString(R.string.mj_multiplier,game.combo) else null)
-                while(bursts.size>5) bursts.removeAt(0)
+                if (haptics) performHapticFeedback(if (game.combo >= 4) HapticFeedbackConstants.LONG_PRESS else HapticFeedbackConstants.CLOCK_TICK)
             }
-            if(haptics) performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK)
+            MahjongGame.Result.BLOCKED -> { shakeId = target; shakeAt = now }
+            MahjongGame.Result.MOVED, MahjongGame.Result.SELECTED -> if (haptics) performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK)
+            else -> Unit
         }
-        if(result==MahjongGame.Result.MOVED && haptics) performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK)
-        scheduleOverlayExpiry(now); invalidate(); onMove(result)
+        invalidate(); onMove(result)
+    }
+
+    private companion object {
+        const val ASPECT = 1.33f
+        const val GRID_ASPECT = 1.22f
+        const val MOTION_MS = 300L
     }
 }

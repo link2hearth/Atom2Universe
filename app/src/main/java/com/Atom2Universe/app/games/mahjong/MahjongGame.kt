@@ -1,25 +1,36 @@
 package com.Atom2Universe.app.games.mahjong
 
+import kotlin.math.abs
 import kotlin.random.Random
 
 /** Each mode changes the legal decisions, not just the decoration. */
 enum class MahjongMode { CLASSIC, TRIPLE, CONNECT, CASCADE, SLIDE, TEN }
+
+/**
+ * Solitaire et Triples comptent en demi-tuiles (une tuile couvre 2 × 2 demi-cases, z = étage) ;
+ * les autres modes sur une grille simple.
+ */
 data class MahjongTile(val id: Int, var x: Int, var y: Int, var z: Int, var face: Int, var removed: Boolean = false)
 data class MahjongCell(val x: Int, val y: Int)
 data class MahjongSlide(val id: Int, val x: Int, val y: Int)
 internal data class MahjongSolutionStep(val ids: List<Int> = emptyList(), val slide: MahjongSlide? = null)
 data class MahjongSnapshot(
-    val tiles: List<MahjongTile>, val tray: List<Int>, val revealed: List<Int>,
+    val tiles: List<MahjongTile>, val tray: List<Int>,
     val score: Int, val combo: Int, val matches: Int, val moves: Int, val assists: Int, val peakCombo: Int = 0,
     val focusId: Int? = null, val focusOrigin: MahjongCell? = null
 )
 
 class MahjongGame(val mode: MahjongMode, val seed: Int, val stage: Int = 1, initializeBoard: Boolean = true) {
     enum class Result { SELECTED, MATCHED, MOVED, MISMATCH, BLOCKED, TRAY_FULL, IGNORED }
+    companion object {
+        const val HINTS = 3
+        const val SHUFFLES = 2
+        const val TRAY = 7
+        const val MAX_CHAIN = 8
+        private val starShares = floatArrayOf(.15f, .40f, .70f)
+    }
     val tiles = mutableListOf<MahjongTile>()
     val tray = mutableListOf<Int>()
-    // Empty compatibility field for snapshots written before the puzzle redesign.
-    val revealed = mutableListOf<Int>()
     val history = mutableListOf<MahjongSnapshot>()
     var selected: Int? = null
         private set
@@ -27,6 +38,7 @@ class MahjongGame(val mode: MahjongMode, val seed: Int, val stage: Int = 1, init
         private set
     var score = 0
         private set
+    /** Multiplicateur de la chaîne en cours (0 quand elle est éteinte). */
     var combo = 0
         private set
     var matches = 0
@@ -36,6 +48,14 @@ class MahjongGame(val mode: MahjongMode, val seed: Int, val stage: Int = 1, init
     var assists = 0
         private set
     var peakCombo = 0
+        private set
+    /** Indices et mélanges sont comptés par plateau : annuler ne les rend jamais. */
+    var hintsUsed = 0
+        internal set
+    var shufflesUsed = 0
+        internal set
+    /** Part restante de la fenêtre de chaîne (1 = pleine). Jamais sauvegardée. */
+    var chainLeft = 0f
         private set
     var lastMatched: List<Int> = emptyList()
         private set
@@ -51,131 +71,130 @@ class MahjongGame(val mode: MahjongMode, val seed: Int, val stage: Int = 1, init
     private var puzzleHint: List<Int> = emptyList()
     var hintSearchLimited = false
         private set
-    val columns = 6
-    val rows get() = if (stage < 4) 6 else 8
+    /** La recherche a prouvé qu'aucune fin n'existe depuis ce plateau. */
+    var hintProvedLost = false
+        private set
+
+    val layered get() = mode == MahjongMode.CLASSIC || mode == MahjongMode.TRIPLE
+    val grid get() = mode == MahjongMode.CONNECT || mode == MahjongMode.CASCADE
+    /** En demi-tuiles pour Solitaire et Triples. */
+    val columns: Int get() = when {
+        layered -> (tiles.maxOfOrNull { it.x } ?: 0) + 2
+        grid -> if (stage < 4) 6 else 8
+        else -> 6
+    }
+    val rows: Int get() = when {
+        layered -> (tiles.maxOfOrNull { it.y } ?: 0) + 2
+        grid -> when { stage < 4 -> 8; stage < 7 -> 10; else -> 12 }
+        else -> if (stage < 4) 6 else 8
+    }
     val board get() = tiles.filter { !it.removed && it.id !in tray }
     val remaining get() = tiles.count { !it.removed }
     val complete get() = remaining == 0
     /** Direction of the next fall: down, left, up, right. */
     val gravityDirection get() = matches % 4
+    val groupSize get() = if (mode == MahjongMode.TRIPLE) 3 else 2
+    val hintsLeft get() = (HINTS - hintsUsed).coerceAtLeast(0)
+    val shufflesLeft get() = (SHUFFLES - shufflesUsed).coerceAtLeast(0)
+
+    // ---- Chaîne et étoiles -------------------------------------------------------------
+
+    /** Glissières n'a pas de minuteur : la chaîne n'y casse qu'en annulant ou en mélangeant. */
+    val timed get() = mode != MahjongMode.SLIDE
+    val chainSeconds get() = when (mode) {
+        MahjongMode.TRIPLE -> 5f
+        MahjongMode.CASCADE -> 8f
+        else -> 7f
+    }
+    val basePoints get() = when (mode) {
+        MahjongMode.TRIPLE -> 15
+        MahjongMode.CASCADE -> 12
+        MahjongMode.SLIDE -> 20
+        else -> 10
+    }
+    val chaining get() = combo > 0 && (chainLeft > 0f || !timed)
+    /** Le meilleur score possible : une seule chaîne du premier au dernier coup. */
+    val maxScore get() = (1..tiles.size / groupSize).sumOf { basePoints * it.coerceAtMost(MAX_CHAIN) }
+    fun starThreshold(star: Int) = (maxScore * starShares[(star - 1).coerceIn(0, 2)]).toInt()
+    /** Finir donne toujours au moins une étoile. */
+    val stars get() = (1..3).count { score >= starThreshold(it) }.coerceAtLeast(1)
+
+    /** Fait avancer le temps de jeu ; renvoie vrai si la chaîne a changé. */
+    fun tick(seconds: Float): Boolean {
+        if (chainLeft <= 0f || !timed) return false
+        chainLeft = (chainLeft - seconds / chainSeconds).coerceAtLeast(0f)
+        if (chainLeft == 0f) combo = 0
+        return true
+    }
+    fun breakChain() { chainLeft = 0f; combo = 0 }
 
     init { if (initializeBoard) generate() }
 
     private fun generate() {
-        if (mode == MahjongMode.SLIDE) {
-            repeat(MahjongIceGenerator.tileCount(stage)) { index ->
+        val random = Random(seed)
+        when (mode) {
+            MahjongMode.CLASSIC, MahjongMode.TRIPLE -> MahjongShapes.pick(stage, random).forEachIndexed { i, spot ->
+                tiles += MahjongTile(i, spot.x, spot.y, spot.z, 0)
+            }
+            MahjongMode.CONNECT, MahjongMode.CASCADE -> {
+                val width = columns
+                repeat(width * rows) { tiles += MahjongTile(it, it % width, it / width, 0, 0) }
+            }
+            MahjongMode.SLIDE -> repeat(MahjongIceGenerator.tileCount(stage)) { index ->
                 tiles += MahjongTile(index, index % columns, index / columns, 0, 0)
             }
-            deal(Random(seed))
-            return
+            MahjongMode.TEN -> repeat(MahjongPuzzleGenerator.tileCount(mode, stage)) { index ->
+                tiles += MahjongTile(index, index % columns, index / columns, 0, 0)
+            }
         }
-        repeat(MahjongPuzzleGenerator.tileCount(mode, stage)) { index ->
-            tiles += MahjongTile(index, index % columns, index / columns, 0, 0)
-        }
-        deal(Random(seed))
-    }
-
-    fun isFree(tile: MahjongTile): Boolean {
-        if (tile.removed || tile.id in tray) return false
-        if (mode != MahjongMode.CLASSIC && mode != MahjongMode.TRIPLE) return true
-        val live = board
-        if (live.any { it.x == tile.x && it.y == tile.y && it.z > tile.z }) return false
-        return mode == MahjongMode.TRIPLE ||
-            live.none { it.z == tile.z && it.y == tile.y && it.x == tile.x - 1 } ||
-            live.none { it.z == tile.z && it.y == tile.y && it.x == tile.x + 1 }
+        deal(random)
     }
 
     private fun deal(random: Random) {
         solution.clear(); solutionSteps.clear()
-        if (mode != MahjongMode.SLIDE && MahjongPuzzleGenerator.deal(this, random)) return
         when (mode) {
-            MahjongMode.CLASSIC -> dealClassic(random)
-            MahjongMode.TRIPLE -> dealTriple(random)
-            MahjongMode.SLIDE -> dealSlides(random)
-            else -> dealPaths(random)
+            MahjongMode.SLIDE -> MahjongIceGenerator.deal(this, random)
+            MahjongMode.TEN -> if (!MahjongPuzzleGenerator.deal(this, random)) dealTen(random)
+            else -> MahjongDealer.deal(this, random)
         }
         if (solutionSteps.isEmpty()) solutionSteps += solution.map { MahjongSolutionStep(it) }
     }
 
-    private fun dealClassic(random: Random) {
-        val live = board.toList()
-        while (board.isNotEmpty()) {
-            // Both members must be free before either is removed. Each layer is even.
-            val highest = board.maxOf { it.z }
-            val group = board.filter { it.z == highest && isFree(it) }.shuffled(random).take(2)
-            check(group.size == 2)
-            val face = random.nextInt(if (stage < 3) 18 else 27)
-            group.forEach { it.face = face; it.removed = true }
-            solution += group.map { it.id }
-        }
-        live.forEach { it.removed = false }
-    }
-
-    private fun dealTriple(random: Random) {
-        val live = board.toList()
-        val order = mutableListOf<MahjongTile>()
-        while (board.isNotEmpty()) {
-            val highest = board.maxOf { it.z }
-            val options = board.filter { it.z == highest && isFree(it) }
-            val coveredAtStart = options.filter { candidate ->
-                live.any { it.x == candidate.x && it.y == candidate.y && it.z > candidate.z }
-            }
-            val tile = coveredAtStart.ifEmpty { options }.random(random)
-            order += tile; tile.removed = true
-        }
-        // A B C A B C A B C occupies six slots before the first triple clears.
-        // Six summit tiles hide their thirds in the middle layer.
-        val palette = (0 until 27).shuffled(random)
-        var faceOffset = 0
-        for (block in order.chunked(9)) {
-            val faces = List(block.size / 3) { palette[(faceOffset + it) % palette.size] }
-            faceOffset += faces.size
-            block.forEachIndexed { i, tile -> tile.face = faces[i % faces.size] }
-            solution += block.map { it.id }.chunked(3)
-        }
-        live.forEach { it.removed = false }
-    }
-
-    private fun dealPaths(random: Random) {
-        val live = board.toList()
-        val positions = live.associate { it.id to MahjongCell(it.x, it.y) }
-        if (mode == MahjongMode.TEN) {
-            // Even rows allow a complete witness; removals expose longer corridors.
-            val groups = live.groupBy { it.y }.values.map { it.sortedBy { tile -> tile.x }.toMutableList() }.toMutableList()
-            while (groups.isNotEmpty()) {
-                val row = groups.random(random)
-                val first = random.nextInt(row.size - 1)
-                val pair = listOf(row.removeAt(first), row.removeAt(first))
-                val face = random.nextInt(27)
-                pair[0].face = face; pair[1].face = random.nextInt(3) * 9 + 8 - face % 9
-                solution += pair.map { it.id }
-                if (row.isEmpty()) groups.remove(row)
-            }
-            return
-        }
-        var fall = gravityDirection
-        while (board.isNotEmpty()) {
-            val candidates = board.shuffled(random)
-            var pair: List<MahjongTile>? = null
-            outer@ for ((i, a) in candidates.withIndex()) for (b in candidates.drop(i + 1)) {
-                if (connection(a, b) != null) { pair = listOf(a, b); break@outer }
-            }
-            val group = checkNotNull(pair)
-            val face = random.nextInt(if (stage < 3) 18 else 27)
-            group.forEach { it.face = face; it.removed = true }
-            solution += group.map { it.id }
-            if (mode == MahjongMode.CASCADE) { collapse(fall); fall = (fall + 1) % 4 }
-        }
-        live.forEach { tile ->
-            tile.removed = false
-            val position = positions.getValue(tile.id); tile.x = position.x; tile.y = position.y
+    /** Even rows allow a complete witness; removals expose longer corridors. */
+    private fun dealTen(random: Random) {
+        val groups = board.groupBy { it.y }.values.map { it.sortedBy { tile -> tile.x }.toMutableList() }.toMutableList()
+        while (groups.isNotEmpty()) {
+            val row = groups.random(random)
+            val first = random.nextInt(row.size - 1)
+            val pair = listOf(row.removeAt(first), row.removeAt(first))
+            val face = random.nextInt(27)
+            pair[0].face = face; pair[1].face = random.nextInt(3) * 9 + 8 - face % 9
+            solution += pair.map { it.id }
+            if (row.isEmpty()) groups.remove(row)
         }
     }
 
-    private fun dealSlides(random: Random) = MahjongIceGenerator.deal(this, random)
+    // ---- Règles --------------------------------------------------------------------------
+
+    fun isFree(tile: MahjongTile): Boolean = isFree(tile, board)
+
+    /** Solitaire : rien dessus et un côté libre. Triples : rien dessus. Autres : toujours libre. */
+    internal fun isFree(tile: MahjongTile, live: List<MahjongTile>): Boolean {
+        if (tile.removed || tile.id in tray) return false
+        if (!layered) return true
+        for (other in live) if (other.z > tile.z && abs(other.x - tile.x) < 2 && abs(other.y - tile.y) < 2) return false
+        if (mode == MahjongMode.TRIPLE) return true
+        var left = false; var right = false
+        for (other in live) if (other.z == tile.z && abs(other.y - tile.y) < 2) {
+            if (other.x == tile.x - 2) left = true else if (other.x == tile.x + 2) right = true
+        }
+        return !left || !right
+    }
+
+    fun freeIds(): Set<Int> { val live = board; return live.filter { isFree(it, live) }.mapTo(HashSet()) { it.id } }
 
     fun compatible(a: MahjongTile, b: MahjongTile) = a.id != b.id &&
-        if (mode == MahjongMode.TEN) a.face % 9 + b.face % 9 == 8 else a.face == b.face
+        if (mode == MahjongMode.TEN) a.face % 9 + b.face % 9 == 8 else MahjongFaces.kind(a.face) == MahjongFaces.kind(b.face)
 
     private fun straightPath(a: MahjongTile, x: Int, y: Int, destinationId: Int? = null): List<MahjongCell>? {
         if (a.x != x && a.y != y || a.x == x && a.y == y) return null
@@ -199,13 +218,14 @@ class MahjongGame(val mode: MahjongMode, val seed: Int, val stage: Int = 1, init
         val directions = arrayOf(1 to 0, 0 to 1, -1 to 0, 0 to -1)
         val queue = ArrayDeque<Step>()
         val best = mutableMapOf<Triple<Int, Int, Int>, Int>()
+        val width = columns; val height = rows
         queue.add(Step(a.x, a.y, -1, 0, listOf(MahjongCell(a.x, a.y))))
         while (queue.isNotEmpty()) {
             val step = queue.removeFirst()
             for ((d, delta) in directions.withIndex()) {
                 val x = step.x + delta.first; val y = step.y + delta.second
                 val turns = step.turns + if (step.direction == -1 || step.direction == d) 0 else 1
-                if (turns > 2 || x !in -1..columns || y !in -1..rows) continue
+                if (turns > 2 || x !in -1..width || y !in -1..height) continue
                 val cell = MahjongCell(x, y)
                 if (x == b.x && y == b.y) return step.path + cell
                 if (cell in occupied) continue
@@ -218,11 +238,65 @@ class MahjongGame(val mode: MahjongMode, val seed: Int, val stage: Int = 1, init
         return null
     }
 
+    /** Toutes les tuiles qu'un chemin à deux virages au plus peut atteindre depuis [a]. */
+    internal fun reachable(a: MahjongTile, live: List<MahjongTile> = board): List<Int> {
+        val width = columns + 2; val height = rows + 2
+        val occupant = IntArray(width * height) { -1 }
+        for (t in live) occupant[(t.y + 1) * width + t.x + 1] = t.id
+        val seen = BooleanArray(width * height * 12)
+        val found = LinkedHashSet<Int>()
+        val dx = intArrayOf(1, 0, -1, 0); val dy = intArrayOf(0, 1, 0, -1)
+        fun sweep(x0: Int, y0: Int, d: Int, turns: Int) {
+            var x = x0; var y = y0
+            while (true) {
+                x += dx[d]; y += dy[d]
+                if (x !in 0 until width || y !in 0 until height) return
+                val cell = y * width + x
+                val occ = occupant[cell]
+                if (occ != -1) { if (occ != a.id) found += occ; return }
+                val key = (cell * 4 + d) * 3 + turns
+                if (seen[key]) return
+                seen[key] = true
+                if (turns < 2) for (p in intArrayOf((d + 1) % 4, (d + 3) % 4)) sweep(x, y, p, turns + 1)
+            }
+        }
+        for (d in 0..3) sweep(a.x + 1, a.y + 1, d, 0)
+        return found.toList()
+    }
+
     private fun matchPath(a: MahjongTile, b: MahjongTile): List<MahjongCell>? = when (mode) {
         MahjongMode.CONNECT, MahjongMode.CASCADE -> connection(a, b)
         MahjongMode.TEN, MahjongMode.SLIDE -> straightPath(a, b.x, b.y, b.id)
         else -> emptyList()
     }
+
+    /** Un coup existe-t-il encore ? Glissières : la recherche d'indice en décide. */
+    fun hasMove(): Boolean {
+        if (complete) return false
+        val live = board
+        return when (mode) {
+            MahjongMode.TRIPLE -> tray.size < TRAY && live.any { isFree(it, live) }
+            MahjongMode.CLASSIC -> live.filter { isFree(it, live) }
+                .groupingBy { MahjongFaces.kind(it.face) }.eachCount().values.any { it >= 2 }
+            MahjongMode.CONNECT, MahjongMode.CASCADE -> live.any { a -> reachable(a, live).any { compatible(a, tiles[it]) } }
+            MahjongMode.TEN -> live.any { a -> live.any { b -> b.id > a.id && compatible(a, b) && straightPath(a, b.x, b.y, b.id) != null } }
+            MahjongMode.SLIDE -> true
+        }
+    }
+    val stuck get() = !complete && !hasMove()
+
+    /** Nombre de paires jouables tout de suite (Solitaire, Connexion, Cascade). */
+    fun availablePairs(): Int {
+        val live = board
+        return when (mode) {
+            MahjongMode.CLASSIC -> live.filter { isFree(it, live) }.groupingBy { MahjongFaces.kind(it.face) }
+                .eachCount().values.sumOf { it / 2 }
+            MahjongMode.CONNECT, MahjongMode.CASCADE -> live.sumOf { a -> reachable(a, live).count { it > a.id && compatible(a, tiles[it]) } }
+            else -> 0
+        }
+    }
+
+    // ---- Glissières ------------------------------------------------------------------------
 
     /** The only legal destination in a direction is the last empty cell. */
     fun iceSlideTarget(id: Int, dx: Int, dy: Int): MahjongSlide? {
@@ -320,37 +394,55 @@ class MahjongGame(val mode: MahjongMode, val seed: Int, val stage: Int = 1, init
         return iceHint
     }
 
+    // ---- Indices -------------------------------------------------------------------------
+
+    /**
+     * Le premier coup d'une fin complète. Si la recherche s'épuise, un coup simplement
+     * jouable ([hintSearchLimited]) ; si elle prouve la défaite, rien ([hintProvedLost]).
+     */
     fun hint(): List<Int> {
-        hintSearchLimited = false
+        hintSearchLimited = false; hintProvedLost = false
         if (complete) return emptyList()
         if (mode == MahjongMode.SLIDE) {
-            return iceSuggestion().first
+            val ids = iceSuggestion().first
+            hintProvedLost = ids.isEmpty()
+            return ids
         }
-        if (mode == MahjongMode.TRIPLE && tray.size >= 7) return emptyList()
+        if (mode == MahjongMode.TRIPLE && tray.size >= TRAY) { hintProvedLost = true; return emptyList() }
         val state = snapshot()
-        if (puzzleHintState == state) return puzzleHint
-        val witness = MahjongPuzzleSolver.verifiedContinuation(this, solutionSteps)
-        val result = if (witness != null) MahjongPuzzleSolver.Result(MahjongPuzzleSolver.Outcome.SOLVABLE, witness)
+        if (puzzleHintState == state) return puzzleHint.also { hintProvedLost = it.isEmpty() }
+        val result = if (mode == MahjongMode.TEN) {
+            val witness = MahjongPuzzleSolver.verifiedContinuation(this, solutionSteps)
+            if (witness != null) MahjongPuzzleSolver.Result(MahjongPuzzleSolver.Outcome.SOLVABLE, witness)
             else MahjongPuzzleSolver.solve(this)
+        } else MahjongSolver.solve(this, solutionSteps)
         hintSearchLimited = result.outcome == MahjongPuzzleSolver.Outcome.UNKNOWN
+        hintProvedLost = result.outcome == MahjongPuzzleSolver.Outcome.UNSOLVABLE
         puzzleHint = result.steps?.firstOrNull()?.ids.orEmpty().let { if (mode == MahjongMode.TRIPLE) it.take(1) else it }
-        if (!hintSearchLimited) {
+        if (hintSearchLimited) puzzleHint = MahjongSolver.anyMove(this)
+        else {
             puzzleHintState = state
             result.steps?.let { solutionSteps.clear(); solutionSteps.addAll(it) }
         }
         return puzzleHint
     }
 
+    // ---- Coups -----------------------------------------------------------------------------
+
     fun tap(id: Int): Result {
         lastMatched = emptyList(); lastPath = emptyList()
         val tile = tiles.getOrNull(id) ?: return Result.IGNORED
         if (!isFree(tile)) return Result.BLOCKED
         if (mode == MahjongMode.TRIPLE) {
-            if (tray.size >= 7) return Result.TRAY_FULL
-            remember(); moves++; tray += id
-            val group = tray.filter { tiles[it].face == tile.face }
+            if (tray.size >= TRAY) return Result.TRAY_FULL
+            remember(); moves++
+            val kind = MahjongFaces.kind(tile.face)
+            // Les tuiles de même famille se rangent côte à côte dans la réserve.
+            val at = tray.indexOfLast { MahjongFaces.kind(tiles[it].face) == kind }
+            if (at >= 0) tray.add(at + 1, id) else tray += id
+            val group = tray.filter { MahjongFaces.kind(tiles[it].face) == kind }
             if (group.size == 3) { tray.removeAll(group.toSet()); match(group); return Result.MATCHED }
-            return if (tray.size == 7) Result.TRAY_FULL else Result.SELECTED
+            return if (tray.size >= TRAY) Result.TRAY_FULL else Result.SELECTED
         }
         if (mode == MahjongMode.SLIDE) {
             val focus = selected?.let { tiles[it] }
@@ -369,7 +461,7 @@ class MahjongGame(val mode: MahjongMode, val seed: Int, val stage: Int = 1, init
         val a = selected?.let { tiles[it] }
         if (a == null || a.id == id) { selected = if (a == null) id else null; return Result.SELECTED }
         val path = matchPath(a, tile)
-        if (!compatible(a, tile) || path == null) { selected = id; combo = 0; return Result.MISMATCH }
+        if (!compatible(a, tile) || path == null) { selected = id; return Result.MISMATCH }
         remember(); moves++; selected = null; lastPath = path
         val fall = gravityDirection
         match(listOf(a.id, id))
@@ -379,11 +471,13 @@ class MahjongGame(val mode: MahjongMode, val seed: Int, val stage: Int = 1, init
 
     private fun match(ids: List<Int>) {
         ids.forEach { tiles[it].removed = true }
-        lastMatched = ids; matches++; combo = (combo + 1).coerceAtMost(8)
-        peakCombo = maxOf(peakCombo, combo); score += 100 * combo
+        lastMatched = ids; matches++
+        combo = if (chaining) (combo + 1).coerceAtMost(MAX_CHAIN) else 1
+        chainLeft = 1f
+        peakCombo = maxOf(peakCombo, combo); score += basePoints * combo
     }
 
-    private fun collapse(direction: Int) {
+    internal fun collapse(direction: Int) {
         if (direction % 2 == 0) board.groupBy { it.x }.values.forEach { column ->
             column.sortedBy { it.y }.forEachIndexed { i, tile -> tile.y = if (direction == 0) rows - column.size + i else i }
         } else board.groupBy { it.y }.values.forEach { row ->
@@ -391,13 +485,13 @@ class MahjongGame(val mode: MahjongMode, val seed: Int, val stage: Int = 1, init
         }
     }
 
-    fun snapshot() = MahjongSnapshot(tiles.map { it.copy() }, tray.toList(), emptyList(), score, combo, matches, moves, assists, peakCombo,
+    fun snapshot() = MahjongSnapshot(tiles.map { it.copy() }, tray.toList(), score, combo, matches, moves, assists, peakCombo,
         if (mode == MahjongMode.SLIDE) selected else null, if (mode == MahjongMode.SLIDE) focusOrigin else null)
     fun restore(state: MahjongSnapshot) {
         tiles.clear(); tiles.addAll(state.tiles.map { it.copy() })
-        tray.clear(); tray.addAll(state.tray); revealed.clear()
+        tray.clear(); tray.addAll(state.tray)
         score = state.score; combo = state.combo; matches = state.matches; moves = state.moves; assists = state.assists
-        peakCombo = state.peakCombo
+        peakCombo = state.peakCombo; chainLeft = 0f
         selected = if (mode == MahjongMode.SLIDE) state.focusId else null
         focusOrigin = if (mode == MahjongMode.SLIDE) state.focusOrigin else null
         lastMatched = emptyList(); lastPath = emptyList()
@@ -406,29 +500,36 @@ class MahjongGame(val mode: MahjongMode, val seed: Int, val stage: Int = 1, init
         if (history.size >= 256) history.removeAt(0)
         history += snapshot()
     }
+    /** Annuler casse la chaîne. */
     fun undo(): Boolean {
         if (history.isEmpty()) return false
         val used = assists + 1; val peak = peakCombo
         restore(history.removeAt(history.lastIndex)); assists = used; peakCombo = maxOf(peak, peakCombo)
+        breakChain()
         return true
     }
 
-    /** Reconstruct a legal finish while retaining IDs, points, and undo history. */
-    fun shuffle() {
-        if (complete) return
-        remember(); assists++; selected = null; focusOrigin = null; revealed.clear(); tray.clear()
-        if (mode == MahjongMode.CLASSIC) {
-            board.forEachIndexed { index, tile ->
-                val base = columns * rows
-                when {
-                    index < base -> { tile.x = index % columns; tile.y = index / columns; tile.z = 0 }
-                    index < base + 16 -> { tile.x = 1 + (index - base) % 4; tile.y = 1 + (index - base) / 4; tile.z = 1 }
-                    else -> { tile.x = 2 + (index - base - 16) % 2; tile.y = 2 + (index - base - 16) / 2; tile.z = 2 }
-                }
+    /**
+     * Redistribue les tuiles restantes en gardant une fin possible. Faux si aucune
+     * redistribution n'existe (par exemple deux tuiles empilées) : le plateau reste intact.
+     */
+    fun shuffle(): Boolean {
+        if (complete) return false
+        val before = snapshot()
+        remember(); assists++; shufflesUsed++; selected = null; focusOrigin = null
+        breakChain(); puzzleHintState = null; iceHintState = null
+        val random = Random(seed xor (shufflesUsed * 7919) xor (moves * 31) xor remaining)
+        val done = when (mode) {
+            MahjongMode.SLIDE -> { deal(random); true }
+            MahjongMode.TEN -> {
+                board.forEachIndexed { index, tile -> tile.x = index % columns; tile.y = index / columns; tile.z = 0 }
+                deal(random); true
             }
-        } else if (mode != MahjongMode.TRIPLE && mode != MahjongMode.SLIDE) {
-            board.forEachIndexed { index, tile -> tile.x = index % columns; tile.y = index / columns; tile.z = 0 }
+            else -> { tray.clear(); MahjongDealer.redeal(this, random) }
         }
-        deal(Random(seed xor (assists * 7919) xor moves))
+        if (!done) {
+            restore(before); history.removeAt(history.lastIndex); shufflesUsed--
+        }
+        return done
     }
 }
