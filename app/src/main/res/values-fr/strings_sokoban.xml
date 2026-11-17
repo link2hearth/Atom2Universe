@@ -11,7 +11,14 @@
     <string name="sokoban_pushes">Poussées : %1$d</string>
     <string name="sokoban_best">Record : %1$d</string>
     <string name="sokoban_solved">Résolu en %1$d coups !\nRecord : %2$d</string>
+    <string name="sokoban_solved_perfect">Résolu en %1$d coups, avec le moins de poussées possible !\nRecord : %2$d</string>
     <string name="sokoban_error">Impossible de générer un niveau. Réessaie.</string>
+    <string name="sokoban_levels_title">Sokoban · niveaux</string>
+    <string name="sokoban_mode_levels">Niveaux</string>
+    <string name="sokoban_mode_infinite">Infini · %1$s</string>
+    <string name="sokoban_level">Niveau %1$d</string>
+    <string name="sokoban_chapter">Chapitre %1$d</string>
+    <string name="sokoban_chapter_count">%1$d / %2$d</string>
     <string name="sokoban_undo">Annuler</string>
     <string name="sokoban_reset">Recommencer</string>
     <string name="sokoban_new">Niveau suivant</string>

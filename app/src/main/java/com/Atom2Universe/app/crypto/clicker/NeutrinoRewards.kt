@@ -127,6 +127,11 @@ object NeutrinoRewards {
     private val SOKOBAN_VALUES = intArrayOf(1, 2, 4, 5)
     fun sokoban(difficultyOrdinal: Int) = SOKOBAN_VALUES[difficultyOrdinal]
 
+    // ── Sokoban, les niveaux : à la première réussite de chaque niveau, selon le chapitre ──
+    private val SOKOBAN_LEVEL_VALUES = intArrayOf(2, 3, 5, 7, 10)
+    fun sokobanLevel(chapter: Int) =
+        SOKOBAN_LEVEL_VALUES[(chapter - 1).coerceIn(0, SOKOBAN_LEVEL_VALUES.lastIndex)]
+
     // ── Équilibre : EASY à EXTREME, par niveau réussi ─────────────────────────
     // Chaque test qui n'aboutit pas (raté ou interrompu) retire un neutrino,
     // sans jamais descendre sous 1 : réfléchir avant de relâcher le levier paie.
@@ -329,6 +334,7 @@ object NeutrinoRewards {
             Entry(R.string.balance_menu_pile, "1 / $BIG_PILE_PIECES_PER_NEUTRINO", R.string.neutrino_info_note_score),
             Entry(R.string.the_line_title, list(THELINE_VALUES), R.string.neutrino_info_note_level),
             Entry(R.string.sokoban_title, list(SOKOBAN_VALUES.toList()), R.string.neutrino_info_note_level),
+            Entry(R.string.sokoban_levels_title, list(SOKOBAN_LEVEL_VALUES.toList()), R.string.neutrino_info_note_first_chapter),
             Entry(
                 R.string.link_title,
                 "1 / $LINK_POINTS_PER_NEUTRINO",

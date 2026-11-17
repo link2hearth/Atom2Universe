@@ -1,0 +1,1177 @@
+; Sokoban : niveaux fabriqués sur PC par SokobanForgeBench.fabrique, ne pas retoucher à la main
+
+; level=1 chapter=1 pushes=2 moves=4 changes=0 lines=2 score=2.0
+; solution=DrdL
+####
+# @##
+##$ #
+#.  #
+#####
+
+; level=2 chapter=1 pushes=3 moves=9 changes=0 lines=3 score=3.3
+; solution=LulldRurD
+#####
+#   ##
+#  $@#
+###.##
+  ###
+
+; level=3 chapter=1 pushes=4 moves=6 changes=2 lines=3 score=7.8
+; solution=RdRRuL
+######
+#@*  ##
+## $ .#
+ ######
+
+; level=4 chapter=1 pushes=5 moves=11 changes=2 lines=4 score=9.0
+; solution=RDrdLuuurDD
+ ####
+##  #
+#@$ #
+##$ #
+#. .#
+#####
+
+; level=5 chapter=1 pushes=4 moves=10 changes=3 lines=4 score=10.7
+; solution=dLruulDlDR
+ ####
+##  #
+# $@#
+# $.#
+#.###
+###
+
+; level=6 chapter=1 pushes=9 moves=27 changes=2 lines=7 score=13.7
+; solution=UrruulDrdLLLuRdrruulDrdLulD
+   ####
+ ###  #
+##  $ #
+#. $  #
+###+###
+  ###
+
+; level=7 chapter=1 pushes=8 moves=23 changes=3 lines=6 score=14.2
+; solution=LLUlDurruulDrddlluRdrUU
+ ####
+ # .#
+##  #
+# $ ##
+#  $@#
+#.####
+###
+
+; level=8 chapter=1 pushes=7 moves=33 changes=4 lines=7 score=16.4
+; solution=UluluRurrdLulDlddrrUdlluurDuurrdL
+ #####
+##   #
+# *  #
+#   ##
+# .$#
+###@#
+  ###
+
+; level=9 chapter=1 pushes=9 moves=22 changes=3 lines=8 score=16.7
+; solution=RdRdrruLuLLdRurDldRurD
+######
+#+$  ##
+## $  #
+ ##   #
+  ###.#
+    ###
+
+; level=10 chapter=1 pushes=9 moves=33 changes=5 lines=8 score=20.4
+; solution=RurrDulldRddrruLUUdddlUruulldRurD
+   ###
+ ###.#
+##   #
+#@$ $##
+### . #
+  #   #
+  #####
+
+; level=11 chapter=1 pushes=10 moves=54 changes=6 lines=8 score=22.5
+; solution=DllldddrrUUddrruuLuLDrrddlllluuuRldddrrrruullDurrddlLL
+   ###
+####@#
+#  .$##
+# #   #
+# #$# #
+#.    #
+#######
+
+; level=12 chapter=1 pushes=14 moves=41 changes=5 lines=10 score=24.5
+; solution=RRurDDrddlUruruLLulldRdRluurDrDDuulldRurD
+ #####
+##   ###
+#@$  $ #
+###    #
+  ## .##
+   # .#
+   ####
+
+; level=13 chapter=1 pushes=18 moves=54 changes=3 lines=13 score=25.2
+; solution=UUluurrdLulDrdLLdlluRuRRurrdLdlLulDDurrruulDrdLLulDrdL
+   #####
+ ###   #
+## $   #
+#     ##
+#.  #$#
+##.##@#
+ ######
+
+; level=14 chapter=1 pushes=14 moves=45 changes=6 lines=11 score=27.3
+; solution=UluuRlddrUrUdlluRuRRRlllddrUluurrdLulDDrdLulD
+ #####
+ #   ###
+##    .#
+# $ ####
+#   #
+#.$##
+##@ #
+ ####
+
+; level=15 chapter=1 pushes=16 moves=52 changes=6 lines=10 score=27.3
+; solution=drrDLddrUUUllldRurrddlUluuurrDDLdlUUdrruulLdddrdrUUU
+######
+#.  .#
+##@# #
+#    #
+#  $$#
+###  #
+  #  #
+  ####
+
+; level=16 chapter=1 pushes=15 moves=66 changes=6 lines=11 score=28.1
+; solution=urRDrruLLdllddrrUdlluurRurrdLLddlluuuRldddrruuLulDDurrddlLuurrruLL
+ #######
+ #. $  #
+ #@ $  #
+## # ###
+#.   #
+######
+
+; level=17 chapter=1 pushes=18 moves=45 changes=7 lines=11 score=31.5
+; solution=LuLulDrDDuulldRRdrddlUUUluurDrDDlUruLddddrUUU
+ ####
+##  ##
+# .$.##
+#   $@#
+###  ##
+  #  #
+  #  #
+  ####
+
+; level=18 chapter=1 pushes=11 moves=38 changes=9 lines=11 score=32.1
+; solution=RdrrUruulDlDurrdLdLruulDlDurrdLdLruulD
+   ####
+  ##  #
+###   #
+#@$ $ #
+##   ##
+#.. ##
+#####
+
+; level=19 chapter=1 pushes=19 moves=55 changes=6 lines=15 score=33.7
+; solution=DldRurDDrddlUlURuulldRurDDldRdrruuLDldRRullluurDldRRurD
+ ###
+##@##
+# $ #
+#   ###
+##$   #
+ #    ##
+ ##  ..#
+  ######
+
+; level=20 chapter=1 pushes=18 moves=53 changes=8 lines=14 score=36.0
+; solution=DrddLruulDlDRddlluRdrUUluRurrddLUluRRdlllddrUluRRdrUU
+  #####
+  #@#.##
+ ##$  .#
+ #    ##
+## $  #
+#   ###
+#   #
+#####
+
+; level=21 chapter=2 pushes=14 moves=31 changes=4 lines=8 score=20.3
+; solution=UUruLLruulDllDDrUluRRurDDulldRR
+  ####
+###  #
+#  $ ##
+#$   .#
+#  #. #
+#.##$##
+####@#
+   ###
+
+; level=22 chapter=2 pushes=13 moves=53 changes=4 lines=9 score=20.7
+; solution=lUluurDldRuuluurDDuurrdLullddrUluRRdldlddrUUUddddrruL
+######
+# . .#
+# $$ #
+#  ###
+#  ###
+# *  #
+## @ #
+ #####
+
+; level=23 chapter=2 pushes=13 moves=52 changes=5 lines=9 score=22.8
+; solution=rUruLLLrrddllUllUUddrrdrruululDLdlUrrrrddllUdrruulLL
+###
+#.####
+#.#  ###
+#*     #
+#  $#$ #
+### @ ##
+  #####
+
+; level=24 chapter=2 pushes=17 moves=62 changes=7 lines=11 score=31.0
+; solution=DldddrruRdllluRUddrruLdlluurDrdrrruLdllulldRRRRuLLdlluurDldRRR
+ ###
+##@#
+# *#
+#  #####
+# $ $  #
+#    ..#
+########
+
+; level=25 chapter=2 pushes=19 moves=77 changes=7 lines=13 score=33.8
+; solution=dllluRdllluRUddrruLdlluurDrdrrruLdllulldRRRRuLLdlluurDldRRululuurDDlddrruLdlU
+####
+#  #
+#  #
+#.$#####
+# $ $ @#
+#   . .#
+########
+
+; level=26 chapter=2 pushes=23 moves=106 changes=10 lines=16 score=43.9
+; solution=ulldRullldRDuurrdLullddrUrurrrdLdddlllUUluuRRdLdddrrruuuuLrddddllluuurRurDDDuullldddrrRuuullluurDldRRurDDD
+ ####
+##  ####
+#      #
+#.$ $@ #
+# $## ##
+## ## ##
+ #   ..#
+ #######
+
+; level=27 chapter=2 pushes=29 moves=101 changes=10 lines=19 score=49.5
+; solution=UUUruLLulldldRuurrdLLddrUdlddrUUluuurrdLulDDDrUluurrdLulDDlluRdrruulDrdLrdddlluRdrUUUluurrdLdlDuruulD
+  #####
+###   ###
+#       #
+# .* #  #
+###  # ##
+ # .$#$#
+ #   #@#
+ #######
+
+; level=28 chapter=2 pushes=24 moves=102 changes=13 lines=18 score=53.2
+; solution=uruuuuLrddlDuruulDlluRRdrddlUruLulldRRdrruuLrddldddlUUruruulDDDuulluRdrddlUruLulldRRdrruuLDlluRdddddrU
+#######
+#  $. #
+#  $  #
+### . #
+  #$.##
+  #  #
+  #@ #
+  ####
+
+; level=29 chapter=2 pushes=28 moves=124 changes=12 lines=19 score=53.6
+; solution=LullldDDRdrruLdldlUUUluurrrDDDrdLuuuulllddrdRluluurrrddDlluUddrruuulLdddddrUluuuurrdddrdLuuuulldddRlddrUrUUUruLddddlluRdrUUU
+#######
+#. .. ##
+#  # $@#
+# $# ###
+## $  #
+ #    #
+ #  ###
+ ####
+
+; level=30 chapter=2 pushes=27 moves=76 changes=12 lines=20 score=54.5
+; solution=RRuRDRdrruLLLulldRdRRuLdlUrrrrdLLuluurDldlluRdrUdRdrruLLullddRUrrddlUruLLdlU
+   ####
+ ###. #
+## .* ###
+#@$  $  #
+###     #
+  ###  ##
+    ####
+
+; level=31 chapter=2 pushes=31 moves=121 changes=12 lines=19 score=55.4
+; solution=RddllulURuulDDrddrruuLrddlluUluurDDrrddrruuLLddlllUUrDldRRRRllluuuulDDrddrruuLrddlluUluurDDrrddlllUdrrruullDldRRRuullulDD
+#####
+#   #
+#  #####
+#$$@$  #
+#  # # #
+#.   ..#
+########
+
+; level=32 chapter=2 pushes=28 moves=106 changes=13 lines=19 score=55.6
+; solution=UllUdrrruulDLdlluRRRurrdLdLLuRdrUlllldRRuruuulldDuurrdddrruLdlUUddldlluRRluuurRRlddrddLUUUddlluuurRdddlldR
+ #######
+ #   ..#
+ # # ###
+## #   #
+# $$   #
+#   * ##
+####@##
+   ###
+
+; level=33 chapter=2 pushes=34 moves=135 changes=11 lines=21 score=56.1
+; solution=drrdDLdlluRUUrrddrdLLruuullddRdrUUUUdddllldRRuruuuruulDllDDDurrddldlluRuurrUdlluurRdrUluRddldddrdLLruuullddRdrUUUUdlluurRurDlddddllldRR
+ #######
+ # #  .#
+ #    ##
+ #@# .#
+ #   ##
+##$# ##
+#  $$ #
+#   . #
+#######
+
+; level=34 chapter=2 pushes=32 moves=140 changes=12 lines=20 score=56.9
+; solution=DlluuurRDrruLLdllddrrUdlluurRurrdLLddlluuuRRdddllddrrUUlluuurrdLulDDDDurrddlLuuuurrrruLLdllddrrUdlluurRurrdLLddlluuuRldddrruuLulDDDDuuurrruL
+ #######
+ # .$  #
+ #  $  #
+ # #@###
+ #  $#
+## # #
+#..  #
+######
+
+; level=35 chapter=2 pushes=30 moves=95 changes=12 lines=23 score=58.7
+; solution=ddLLrddlUllUluurDrDRdrUllulldRdRRuLdlUruLdlUUddrrrrruulDrdLLdlluurDrddrUUruulDrdLLLulldRdRUrrdL
+###
+#.######
+#  ## @#
+#  .#  #
+# $  $ #
+## .$ ##
+ ###  #
+   ####
+
+; level=36 chapter=2 pushes=29 moves=143 changes=14 lines=21 score=59.9
+; solution=LLrUUruLdLLrrddldlUUlluurDRRlddrruUlllldRurrrddllUdrruulLdlluururrDulldlddrrdrruuruLdddlluuRldlluururrDrDululldlddrUUdrRurrdLLLddrrUdlluururrdL
+ #####
+##.  ###
+#  #   #
+# . *  #
+#   #$##
+###  $@#
+  #  ###
+  ####
+
+; level=37 chapter=2 pushes=29 moves=109 changes=14 lines=21 score=60.1
+; solution=UUlulUluRddrdrrruuLLDurrddlLulluRRlluurDDrddrruuLLLulldRdRUrrrddlldlUrrruullDulldRdRRlluurDldRuulluurDDldRurD
+ ####
+##  ####
+#   ## #
+# $  $ #
+##   # #
+ ## ...#
+  # $###
+  ##@#
+   ###
+
+; level=38 chapter=2 pushes=30 moves=136 changes=14 lines=24 score=64.0
+; solution=DRDDrruuLLulldRurDrrddlllUdrrruullDldRuuulDrrrddddllUUUdddrruuuulLddRluurrdDuullulldRurDrrddlllUdrrruullDldRddrrUUddlluuRluuulldRurDDldR
+#####
+# @ ###
+# $$  #
+## $#.#
+ #  ..#
+ ## # #
+  #   #
+  #####
+
+; level=39 chapter=2 pushes=32 moves=151 changes=17 lines=25 score=71.1
+; solution=UrUUluLrdrddlUlluluurDrrDulllddrrRurruLLdddrUlllluurDldRRRuuLrddlluUrrrrdLulllddrrdrUllluurrDurrdLdLLrruullldlddrUluurrrDulllddrrRdrUluullDldRuuluurDDD
+####
+#  #
+#  #####
+#  $   #
+#  # . #
+# .. $##
+#  #$  #
+####@###
+   ###
+
+; level=40 chapter=2 pushes=38 moves=139 changes=17 lines=26 score=75.7
+; solution=lldLurrrdLddLdlUUURlddrruUruLullDDulldRRuurrdLLrrdddllUURlddrruUluulDDlluRRdrrddllUdrruulLulldRRuurrDLLdddrruUruLullddRluurrdDDulluRdllluRR
+  #####
+###   ##
+#   ..@#
+#  $ $ #
+### # ##
+  # $.#
+  #  ##
+  ####
+
+; level=41 chapter=3 pushes=25 moves=71 changes=11 lines=15 score=46.2
+; solution=RRRlDDlDRuuulDDrdddlluRdrUUUlDurrrdLLuluurDldRRdlddlluRUUUddddrUluurrdL
+#######
+#@*  .#
+##$$###
+ #   .#
+##*   #
+#   # #
+#   ###
+#####
+
+; level=42 chapter=3 pushes=26 moves=91 changes=12 lines=19 score=52.7
+; solution=rULdrrruLuullDRurDDrddlUUdllURuulldRddrrruLdlluuurrDDuulldddrRurDldRullluuRDldRRulullldRRRR
+ ######
+##    #
+#  $ .##
+#  $$$.#
+###@  .##
+  ###  .#
+    #####
+
+; level=43 chapter=3 pushes=28 moves=90 changes=14 lines=21 score=59.4
+; solution=UruUlURuLrrrDullddddlUUruurrdLulDDldRuuulDlluRRRdddlUruulldRurDrruLLLdddrUluRdddrruUdLdlUU
+########
+# .    #
+#  $..*#
+### $# #
+  #    #
+  #$   #
+  #@####
+  ###
+
+; level=44 chapter=3 pushes=34 moves=134 changes=14 lines=21 score=61.7
+; solution=UlUURlddrUrUUrruulllldDDRdrrUdlluRuUddlluuurRRRRlddLruulllldddrrUUdrruulLddddrUluuurrddLruulldDrddlluluuuRRRlddrddlldlUUUUdddrrruLLdlU
+#########
+#.   . .#
+# # # ###
+#.#   ###
+# $ $## #
+#$      #
+# $######
+##@#
+ ###
+
+; level=45 chapter=3 pushes=36 moves=105 changes=16 lines=24 score=69.8
+; solution=DrddLruulDLLrDRurDulllulldRRRdrddlUUrruulDDuLLulldRdRRuLdlUruLdrrrrdLLddrUUlulldRurDrruLLLdlUdrrrddlUUluR
+ #######
+ # # #@##
+##.. #$ #
+#    $. #
+# # $ $ #
+#####  .#
+  #    ##
+  ######
+
+; level=46 chapter=3 pushes=29 moves=96 changes=18 lines=23 score=70.2
+; solution=DDlDlddRUrUUlDlddrdrUUdlluulldRurrDrddlUlUdrruLuLrurDDldlUlluurDldRRdrUruulDLddrdrUUdlluurDllluR
+    ###
+### #@#
+# ###*#
+#  #  #
+#  .$.#
+# $   #
+### * #
+  ##  #
+   ####
+
+; level=47 chapter=3 pushes=43 moves=177 changes=14 lines=25 score=70.5
+; solution=DlddRluurDrruuuullDDDldRlddrUluuruuurrdddddLLdlUrrruuuuulldddlllddRRRllluurrrDulllddrrUruLLrddlluUUdddrrdrUluuruuurrdddddLLLuurDRdrUUUUdddlllddrUluRRdrUUUddllulllddRRdrUluRRdrUU
+   #####
+####  .#
+#.##$#.#
+# ##@#.#
+#   $# #
+# #    #
+# $ $  #
+###  ###
+  ####
+
+; level=48 chapter=3 pushes=35 moves=124 changes=17 lines=25 score=72.5
+; solution=UUruRldlluRuuRRdrUluRddldLdlUrrurrdLLLrrrddlUUruLdlUdldlluRRRuruulDllDurrrdrddlUlUdrruLuLrddlUdldlluRRRurDuuulDrddllluuRRurD
+   #####
+####  .#
+#  $  ##
+## #.. #
+#   $  #
+#   #* #
+##$##  #
+ #@#####
+ ###
+
+; level=49 chapter=3 pushes=43 moves=136 changes=15 lines=26 score=72.9
+; solution=rRRuuuLdrrruLLdllluurDldRRRuLdlUrrrrdLLLrdddrrULdlUUUluRllldRRurDDDldRuuurruLLdlluluurDDldRRRuLdlUrrrrdLLddrrUdlluuulldRurDDuullluurDldR
+ #######
+##  ## #
+#   ## ##
+##  * $ #
+ #     .#
+ #### # #
+ #@ $. $#
+ ###  . #
+   ######
+
+; level=50 chapter=3 pushes=33 moves=105 changes=19 lines=26 score=76.9
+; solution=RdRDRdrruLuLDDulluRluurDDldRRdrddlUlUUrDldRurDululluurDDrdrruLuLDlluurDldRRurDrddlllUdrrruullDurDuullldRR
+ ####
+##  #
+#@$ ###
+## $  ##
+ # $$. #
+ ##    #
+  # .. #
+  ## .##
+   ####
+
+; level=51 chapter=3 pushes=49 moves=194 changes=17 lines=27 score=80.7
+; solution=RdRRurrrUUddllldlluRUUruLrrrdrddllLrrruululldldDuuurrurrDDullllulldRRRRurrddlUruLdlldlddrrrrUUddlllddrUlulldRuuuurrrdrddlLLrddlUlUUUruLrrrurDDullllulldRRRRRdrUllldldddrrurrUdllLdlUUUruLulldRRRRR
+#########
+#   #. .#
+#      .#
+###  # .#
+###$###$#
+#@$     #
+## $  ###
+ ###  #
+   ####
+
+; level=52 chapter=3 pushes=31 moves=115 changes=22 lines=25 score=80.9
+; solution=RurrDulldRDRddLruuluurDDlDllddrrUUUrurrdLLuulldRDDurruLdldllddrrUrULuRddldlluuRlddrruLrruulDrdLuururrdLLuulldRDrruL
+ #####
+##   ###
+#@$.$  #
+###$   #
+#  . ###
+#..$ #
+#   ##
+#####
+
+; level=53 chapter=3 pushes=38 moves=162 changes=20 lines=29 score=83.8
+; solution=UluRuulLrrdddllUdrrdrruLLulldRuruullDurrdrDDuululldlluRRRurDDrdLrdrddlUlUllUUddrrdrruLuululLdddrRlluuurrdrdDllluulluRRdddrrruulDLdlUUdrrrdrddlUlUdrruLuLLdlUdrRurD
+   ######
+####    #
+#  *. ###
+#  .#  #
+###$   ##
+  #  $$ #
+  ###@. #
+    ##  #
+     ####
+
+; level=54 chapter=3 pushes=50 moves=189 changes=17 lines=30 score=84.2
+; solution=RurDDDDRRdrruulDDldllUUlldRurrrddllUluRRRdrruulDuuuLLulldRdDDrrddllUluRddrruuruuulLulDDDDRRddllUdrruulLuuurrrddrddLUUdlllddrrUdlluurRdrruulDrddLLuulldlluRRRRddrruLruulDllluuurrrDullldddddRR
+ #####
+##   ###
+#@$  $ #
+### ## ##
+### ##. #
+#   $   #
+# $ #.. #
+###   . #
+  #######
+
+; level=55 chapter=3 pushes=48 moves=153 changes=19 lines=28 score=85.8
+; solution=UUUruLLulldRdRluurDrDDDuuulldRuulllldRRurrddlUrrrdLddrddlUUUUruLLLLrdRurDDDlUruulldRurDulllulldRRRdrruLuLLrrddddrUdrddlUUluuurrdLDuululldRdRluurDlllluRRR
+#######
+#    .###
+# $     #
+## # *. #
+#  ##$ ##
+##### * #
+    ##@ #
+     #  #
+     ####
+
+; level=56 chapter=3 pushes=51 moves=160 changes=18 lines=30 score=87.0
+; solution=RRdrUUULrRllDDuuulldRurDrddlUruruLLrdddddlUruuuurrrdLLulDDDDldRuuulDuruulDlluRRRdddlUdrddlUUruuulldRurDDDuurruLdlddlUruLulldRRRRuLdddlddrUUUluRdddrrddlUruLdlUUU
+#########
+#  .    #
+#  $.*. #
+###$ ####
+#@$  ###
+###    #
+  #    #
+  ###  #
+    ####
+
+; level=57 chapter=3 pushes=38 moves=203 changes=22 lines=29 score=87.8
+; solution=UUlUURRllddrUruurruulllldDDRdrrUdlluRuRlddrUllluuurrrrdrddLUruullllldddrruRldlluuurrrrrdddlLulDrrruLruulDDrdLuuulllldddrruRldlluuurrrrdrddlUlldRllddlUUrrrdLullddrUluRdrruurruullllldDDrdrruurUruLLLrrddrdL
+########
+# .    #
+# ###  #
+# #    #
+# $..$ #
+#*   ###
+#  ###
+##$#
+ #@#
+ ###
+
+; level=58 chapter=3 pushes=46 moves=181 changes=23 lines=32 score=97.3
+; solution=UUrrrruuLulLLrrrdrddllllUUrRllddrrUUlllluurDldRRddrruuLuLDrrddrruuLuLDlluRdrrrddllllUUrrDurrddlLuulllluurDldRRRRluLdlluurDrdrrddrruuLuLDllddRRRllluurrDullddrRuullulldRurDDurruLLLulD
+####
+#  #####
+#   $  ##
+#.    $ #
+### #$# #
+  #.  ..#
+  #$#####
+  #@#
+  ###
+
+; level=59 chapter=3 pushes=47 moves=168 changes=25 lines=28 score=98.1
+; solution=RurrRlddRluurDrruLLLddlluRRurrdDLLrddrUUlluurDDuurrdLulldlluRRRlddrruLLdrrddlUUruLulllddRRRurruLLdddrUlllluurDldRRRuuLrdLurrrdLullddrdrUlluurDDllluRdrruurrdLdllluluRRRR
+ ########
+##   $ .#
+#@$ .*  #
+##   $ ##
+ # ##. #
+ ####  #
+    ####
+
+; level=60 chapter=3 pushes=54 moves=217 changes=25 lines=36 score=108.7
+; solution=LddddlluUUULDDuuulldRurDrddddrruuuuLuLDDDuulluRdrddlUruLrrrddddlllUUruululldRRRddlddrrruuuuLuLDlluRdrrrddddllluuUdddrrruuuullLddrDuluurDDuululldRRddddRRdrruLuuuuluLDlluRdddddrRdrUUUddllluurDldRRdrUUdlluuluurDDDldRRdrU
+#######
+#   . ###
+#  $  $@#
+###$ #.##
+  # $#.#
+  #  #.##
+  #     #
+  ###   #
+    #####
+
+; level=61 chapter=4 pushes=44 moves=130 changes=15 lines=29 score=76.1
+; solution=UrULUluurDrDRRurDDDuulllulldRddrrULdlUUluurDrDRRlddlluUruLdlUruLddldRurrrddllUUruLdlUdrrrrurrdLLLLLdlUdrdrUruLLLrrrrrddrddlUUUUruL
+#####
+#.. ######
+##.  #.  #
+#. $ $   #
+#   $$# ##
+###$  #  #
+  #@###  #
+  ### #  #
+      ####
+
+; level=62 chapter=4 pushes=48 moves=146 changes=18 lines=28 score=83.2
+; solution=RRlddRRuUdRRdrUUruulDlDurrdLdLruulDururuulDDrddlluRdddlUdLLuRRdrUUUUdlDrdLuururuulDDDlddrUrUUddlluRdrUdlddllluRRdrUlllullddRRRRulluluurDDDullddrRR
+      ####
+      #  #
+  #####$.#
+###  ## .#
+# #  #   #
+#@$  #$. #
+## # $  ##
+ # $  ..#
+ ########
+
+; level=63 chapter=4 pushes=55 moves=167 changes=18 lines=28 score=85.8
+; solution=DLdRRdrruLuLUUruLLLLulldRRRRRdrruuLrddlldlDrrddlUUUUrruulDLLLLddldRRRuruurrdLullldlddrrurUdldlluuurrRlllulldRurDDurrrddDrddlUUUUrruulDLLLdlUrruRddddlllUdrdRurrddlUUUUU
+##########
+#  .# .* #
+#        #
+###. # . #
+ #  #@$###
+ #  $$$ ##
+ ###     #
+   ###   #
+     #####
+
+; level=64 chapter=4 pushes=39 moves=166 changes=23 lines=26 score=86.7
+; solution=lURUUUruuLLrrdddllluRRdddlUrurrddLLuuulldRRddrruuuLLruulDDrrdddllululuRRlddrUddrruuLUdrddlluluuRDrrddlldlUUdrrruullDldRuuulldRurDuuululDDurrdddrruLLuurDlddlddrUUrrddL
+   ####
+   #  ###
+   #  $ #
+   # #  ##
+  ##.*.. #
+###      #
+#   # $# #
+#####$*  #
+    # @###
+    ####
+
+; level=65 chapter=4 pushes=52 moves=161 changes=19 lines=33 score=92.5
+; solution=DLdRRdrruulDrdLdlLLDurrrdLulldlluRRRRdrUUdllldRllddrUUruLrrrdLLulDlluRRdrrururuulDlDDrdLLLrrurUluRdddllluRdrUUdlllldRRRllddrUUruLrrrdLLulDlddrUluluRRRdrruLdlLdlU
+   ###
+ ###@####
+ #.$$#  #
+ ##  . .#
+#####   #
+# . *  ##
+#  $ $ #
+##  ####
+ #  #
+ ####
+
+; level=66 chapter=4 pushes=55 moves=197 changes=18 lines=36 score=93.7
+; solution=LulLLullDurrdrrruLLdldlUluurDldRRRuLdlluurDrddldlUUdrruurrrdLLrrdddlluRUruLdddrUluuulllDlddrUrURurDDDrdLulDDldRuuuruulldlluRRRurDDDrdLulDDuuruullluulDDrrruLdlluurDldRRRurDDDrdLulDuruulldldlUrurrrrD
+######
+#  # ####
+#    $  #
+#*  $  ##
+#   # $@#
+#  # $.###
+####     #
+### .#####
+#   ..#
+#######
+
+; level=67 chapter=4 pushes=44 moves=168 changes=23 lines=32 score=94.9
+; solution=LLLulDDlddRluurDrDDrrurDllluRdddLUlldRRuruulDrdLuuulldRurDrdrruLLLrddrdrUllldRllluRRdrUruullDRddlluRdrUrrdLulluurrrDDuulllulldRurDDurrrddllLdlluRRuurrrddldLLuuurrDulldR
+ ####
+ #  ####
+##   $@#
+#  #####
+#   ####
+# $ $  #
+###  .$#
+#   .. #
+# .$  .#
+########
+
+; level=68 chapter=4 pushes=49 moves=192 changes=22 lines=33 score=96.9
+; solution=UUrrrUUULDuuurrdLulDllllddRRRUdllluurrRRurrdLddLLuRdrddlUUluuRurrdLDDlluuRlddrruLdddrUUluullllddrRRllluurrrrdDrddlllUdrrruulDrdLuuuuurrdLulDrDDDuuulllllddrRRRlllluurrrrrdDuullDurrddlLLruurDldR
+    #####
+#####   #
+#       #
+# ## $ ##
+# *  $.#
+# # # *#
+# # . .#
+###$####
+  #@#
+  ###
+
+; level=69 chapter=4 pushes=51 moves=180 changes=25 lines=34 score=104.0
+; solution=LLulDDDlddlluRdrRddrrurrddLLulluRRllulluurrDrDLLrddrruLdlUdrrdrruuLLLdldRRuuluululldRdRluurDrDDrddlluRuuulldRDrddlUUUluurDrDDlUruLulldldRRluurrdLrrddlUruLddddrUUrrrddLLUluRRllluurD
+   ####
+   #  ###
+   #  $@#
+ ### #####
+##   ### #
+# *.  ## #
+#   $ ## #
+#### *  .#
+   #   # #
+   # . $ #
+   #######
+
+; level=70 chapter=4 pushes=57 moves=236 changes=24 lines=34 score=105.1
+; solution=DldllluuuRluurDDuurrddLruulldlddddrrUULUluurrrddLdddlluUrrdrrRdrruLLdLLulullddrRRRRlluluuruullldDRluurDDuurrddLdddlluURUdlddrrrrruLrrrddlUruLdlllllluururDDullddrRRRRRurDllluRRdlllluuuruullDDrdddlluuRurDDullddrRRRRurDlllluuululDDDurrdRRR
+######
+#    #####
+# $# ##  #
+# $  ## ##
+#   #@# ##
+# #$ $$..#
+#.       #
+#######..#
+      ####
+
+; level=71 chapter=4 pushes=44 moves=161 changes=28 lines=34 score=107.4
+; solution=LLLuuulllDlddRUrUdDuuRurrdLddLLuuRurDlldlluRuRRdLulDrrrruLLdlddrrUdlluullddRRuLdddrUUluurrurrdLddLLUluuRDldDrrruuuLrdddllluurRurDllluRRdllddrUUruLdrrruLdllddddlU
+ #######
+##. .  #
+# $$$  #
+#.  #.####
+# *    $@#
+##  ######
+ #   ###
+ ###   #
+   #####
+
+; level=72 chapter=4 pushes=62 moves=263 changes=22 lines=40 score=109.0
+; solution=uruRurrDLddLLulDDurrrRUdllluuRurDDrdLLrurrrdLLuluurDldRdrruLLullldlddlddrUrruuRUrrdLuuulldldldDlddrUrrdRdrUUUUruLddddlluuuRRuuulldldldDldRRluuurururrddddddllUdrruuullLulDDldRuurrrrurrdLLLLLulDDlddrUUUrrrrdddlluLrdrruuulllldlddrUrrdrruuuuuulldRurDDDDullDuluurrDrdL
+   #####
+  ##   #
+ ## $ $###
+ #. #    #
+##@ * $  #
+# .# # # #
+#   .#. ##
+#  # $ ##
+## ##  #
+ # #####
+ ###
+
+; level=73 chapter=4 pushes=73 moves=240 changes=22 lines=38 score=113.0
+; solution=lDDrDLLLLDDuurrddrrULuurDlllldlluRRRRRlllluurDDrrrddlUruLLLulDrrrddrrruLLuurDllllllddrrUdlluurRRRRllllDrdLddrUluuurrrrddlUruLLLulDDDDuuurrrddrrruLLdlUruLLLdlUrrrrurDlddrruLulllldlddrUUluRRRlluulDDDurrrddrruuLLLLdlUrrrddrUruLLLLdlluRdrUdddlU
+     #####
+ ##### @ #
+ #  ##$###
+##.*##  #
+#      $##
+# .$# $  #
+#.  #    #
+##  ## ###
+ #. ## #
+ #######
+
+; level=74 chapter=4 pushes=51 moves=235 changes=29 lines=37 score=115.3
+; solution=uRurrDulldRdRDrddlddrrruUUUddlluulDDuuuluurDDDrddrruuLuLDlUluurDldRdrrrddlllUUUdrDldRuurrddddlllUUruuruurDDllluRdrruulDldddlddrrruuUULulDulluurDldRdrrrddddllluuUUUdrruurDDllluRlluurDldRdrrruulDLLdddrUdlddrrruuLrddllluuuuurrrdDuulllddrU
+ #####
+##   ####
+# $ $#  #
+#@#. .  #
+# ##$ * #
+####  # #
+   # . *#
+ ### ## #
+ #      #
+ ########
+
+; level=75 chapter=4 pushes=71 moves=308 changes=24 lines=39 score=116.5
+; solution=UrrruuUULuurDDDDuuuulllDlddrURRurDuulllDldRRluurrdrdRddrddlllllUUUdddrrrrruullDuruuluullldlddrdddrrRRluuruulDDDuuuuullldlddrdddrrRuuurrruLLddrdrddlUUUluurrdLdllddRluurrdrddlUUUddllllluuuluururrdrDDDDuuuuullldlddrdddrrRRlllluuuUrRurDDDDurrdrddlUlLLruuuuuulllDldRRRurDDDDurrDrddlUlLuurrDrdLuulluurrDDDulluRurDD
+ ######
+##    #
+# $#  ####
+#   $ $  #
+#  ##$   #
+## ##   ##
+ # ## #. #
+ #$.. .. #
+ #@####  #
+ ###  ####
+
+; level=76 chapter=4 pushes=71 moves=246 changes=21 lines=45 score=116.8
+; solution=UUruuLLLuLDuruulDllddddRdrruLdlUluuuurrrddlDuruulDulldRRlldddrdrruLuUrULdrrrrddlUruLLLulDuuurDDldRRRdrUUdllluullldRRurDldRRRdrruulDlllullldddRdrruLUUruulldRurDldRRRddrruLruulDlllullldddRdrUUUruulldRurDldRRRRurDDullllulllddRdrUUdlluurRurDldRRRRurD
+  ####
+###  ####
+#  $ ##.##
+#  $ ##  #
+# #   $  #
+#   ##...#
+# $  #  .#
+##   #$###
+ #####@#
+     ###
+
+; level=77 chapter=4 pushes=73 moves=274 changes=21 lines=49 score=122.0
+; solution=LddllUlUdrdrruLULULrdrddlUlUlUUUluurDrrdDrDDrddllululuuUdddrdrdrruuluuluulLulDrdLulDDDDDuuuuurrrrddrddLruulDLrrdrddllulUlUUUdddrdrdrruuluuluulLulDrdLulDDDDuuuurrrrdddLdlUUUddrruuulLulDrdLulDDDuurrdddrdrUruLLdlUUUddrruuulLulDrdLulDDurrdddrrrrdLdlUUruLLdlUUUddrruuulLulDrdLulD
+ ####
+##  ####
+#      #
+#   # ##
+#.# #  #
+#.#  $ ###
+#.# $  $@#
+#.## $$ ##
+#.###   #
+### #####
+
+; level=78 chapter=4 pushes=92 moves=278 changes=23 lines=46 score=131.4
+; solution=LLLDlUruLLLulDDDDDldRuuuuurrdrrrrdLrddlUUruLLulldRRlddRUrrddlUluluurDullllddddddrruuLDldRRRRRRlllulllluRuuuurrdrddrrruuLLrrddllluUruLLLulDDDDDldRdrruuLDldRRRRRllulllluRuuuurrdrddrUdrruulLdlUruLLLulDDDDDldRdrruuLDldRRRRlulllluRuuuurrdrrrrdLLdlUUruLLLulDDDDDldRdrruuLDldRRRulllluR
+#####
+#   ####
+##     ####
+ # #    $@#
+ # ## $$ ##
+## ##  $ #
+#  * ##  #
+#     #####
+##    ....#
+ ##########
+
+; level=79 chapter=4 pushes=84 moves=410 changes=25 lines=47 score=132.9
+; solution=URRululluuuRurDlldddrrdrruruurruulDLLLLDDDlluuuRurDDDuurrrdddldldllURdrdrruLuuruuulllddDDuuuulldddRdrUUdlluuurrrrrdddldLrddlUruuruuurrdLulDDuullllldddrruUddlluuurRRRRdrruulDlllldddlddRRdrruLuuRRRlluuullldddlddrUUUdlluuurrrrrdddldLrddlUruuruuurrdLulDDuullllldddrddrrruuRRllddllluuruUddlluuurRRRRdrruulDrdLulDDuullldddlddrrruuRlddllUUUUddlluuurRRRRdrruulDrdLulDullldddddrruLdlUUUUddlluuurRRRRdrruulDllllddddrrurU
+ #### ####
+##  ###  #
+# $   $$ #
+# # ##.. #
+# # ## ####
+#   #  ...#
+##    #####
+ #$$   #
+ #@#   #
+ #######
+
+; level=80 chapter=4 pushes=92 moves=402 changes=30 lines=60 score=160.5
+; solution=uLDLDllDlddrUrrUrUUlDllDlluuuurrrrDDuullllddddrrurRlldlddrUrrUUllDurrddlLdlUruLdlUUUUluurrdrrrdDDurruLdldlluRdlddrrUrUUdLLulDDurrddlLuurrruLdlldlluuuluurrdrrrDDrruLdddldlluuuRRldlddrruruLLrddllulluuuluurrdrrrDDuulllullddrdddrrdrruruLuuulllulldRRlddddrrddlUruLdlUUUUluurrdLdddddrrrruuullDDuurrdddlLdlUruLdlUUUUUruLdddddrruurruulLrrdddLulDDurrddlLdlUruLdlUUUUUddddrruurrurrdLulDrdLLulDDurrddlLdlUruLdlUUU
+#####
+#.. ####
+#. .   ###
+# .### $ #
+## #  $$@#
+ # #  $ ##
+ #  $#  #
+ #     ##
+ ##  ###
+  ####
+
+; level=81 chapter=5 pushes=57 moves=223 changes=22 lines=30 score=96.2
+; solution=rDuluurDRRRuRURDDurUdldLLLLLrrrrddrUUlllllulldRRRRRurDlllllddrUluRRRRururrdLdddlddllllUUluurrrrRDDDuuulllllddrddrrrRuuuuluRurrdLulDDuuruulDDDuuurrDlddlldllllddrddrrrruuruUUUdlldllllddrUdddrrrruuruuulldllLdlUUUddrrrrurrdLDDD
+      #####
+ ###  #   #
+ #.#  # . #
+## ####$$.#
+#   ## $  #
+#  $$ .  ##
+##@ ###  #
+ # $# #  #
+ ## ### ##
+  #    ..#
+  ########
+
+; level=82 chapter=5 pushes=77 moves=317 changes=16 lines=34 score=98.4
+; solution=rDDLddrddLruullllllldddrrrrrUrruuluuruulDDrDDllllllldddrrrrrurrUUUUlDrdLLLLLrrrruuuurDDlddlluuRlddrruUddlllluRdrrruullDurrddrddlldlllluluuuRRRdlLulDDlddrruLdlUdrrrrrrurruullLLLLulDDDldRRRRlluluurrrrrruullDurrddlLLLLulDDDldRRRluluurrrrrrrddllUdrruulLLLLLulDDDldRuuuurrrrurrruulDDDullddrddrruuLLLLururrrDDDulllullldllDD
+       ####
+       #@ #
+     ###$$#
+ #####  $ #
+## $ $ #  #
+#   .     #
+#  #### # #
+#   ### $.#
+#. . .. ###
+#########
+
+; level=83 chapter=5 pushes=74 moves=215 changes=16 lines=36 score=99.0
+; solution=lUluRRlddrUrUUUddLruulUUruulDLLLLulDlddrUluRdRRlluurDrrrrrdDlUruLLLLLulDrrrrrdddDrddlUUUUddddlluRdrruulDrdLulDuruuuruulDDDDrdLuuurDDDuuuuulllllllddrUluRRRRRRurDDDDDuuuullllddrUluRRRurDDDDuuulllllldRurrddlUluRRRRurDD
+ #### ####
+##  ###  #
+#     $  #
+#  $  #  #
+#  #  #$.#
+#######  #
+    ###$.#
+   ## . .#
+   #  $$.#
+   ###.@##
+     ####
+
+; level=84 chapter=5 pushes=55 moves=214 changes=24 lines=37 score=106.1
+; solution=dLLdldDRDrUllldRurrdddllUUluRddRluuuururrdLDDLDlddrUluluRdddrrruLUUUUdddddlluuuuuRuRldldddddrruuuuUluulDrdrrUUdLdlUdrdddddlluuuRldddrruuUUUluRdrUlllDDurrdddddlluuluRRldddrruuUUUruLdddlldRlddrruUUUdlluurRddddLdlUUUU
+        ###
+  #######.#
+  #    .#+#
+###### .$ #
+# #  #. $.#
+# #### # ##
+#  ## $$ #
+## ##  $ ##
+ #   #$   #
+ ###      #
+   ########
+
+; level=85 chapter=5 pushes=53 moves=225 changes=26 lines=37 score=110.0
+; solution=UUruUruulDullllDurrdRullldRdLuurrrdLurrrdLLulllddrdrRdrrULUUlulllddrdrRlluluurrrdrdDrdLulDDuuruuruLdddllluURRluurDrDDDrdLullluullldRRurrurrdddlllUluuRRdRluurDlllddrdrrrrUdlllluluurrrrDDrdLLruuulldRurDDrdLuuurDDuullllldRRRRurD
+     ####
+   ###  ###
+ ###      #
+##  $$ $  #
+#     ##$.#
+##### .. *#
+   #  #.  #
+   # ##$###
+   # ##+#
+   ######
+
+; level=86 chapter=5 pushes=75 moves=255 changes=22 lines=38 score=112.3
+; solution=LLuLrddlUlULLruuruuLrddrrruLLdlUUddlddrUluRddlldllUdrrurrdrruLdlUlldlluRRRRllluulDDrrrrdrruLLLLdlUrruurDuuuluurDDDDlddllluuuurRRlllddddrrruuruUddlddlddllUUUUrDDDldRuurrRdrruLLLLdlUrruurDldRdrruLLLLLdlUrrruuruuluurDDDDDldRdrruLLLLruururrdLulDDldRRllldlluRR
+   #####
+   #   #
+####  ##
+#   $ ####
+#.###  $ ##
+#  #      #
+#..#  ## ##
+#$  * $.###
+#   #   $@#
+#  .##  ###
+#########
+
+; level=87 chapter=5 pushes=56 moves=245 changes=27 lines=38 score=114.2
+; solution=LLdlUUdrruLUURRRuullluRRdrddlllUdrUllllddrRDrUUdllluurrRdrrruulullDDuurrdrrrddLLuululldRRRRurDulLdllldlllddrrrUrUdldllluurrRuRRRddLLUluRdllllddrrrUdllluurrRdrUdlddddlUUruuulllddrRdrUUruLLruurDlddrrruuuLrdddllluurRurDurrdLulldllddrrrrrUdllllluurD
+   ########
+   # *    #
+####   . .#
+# .  $#.# #
+# ## *    #
+#   $######
+### $ ##
+  #  $@#
+  #  ###
+  ####
+
+; level=88 chapter=5 pushes=47 moves=121 changes=32 lines=35 score=117.9
+; solution=UUUUdLLUlUlUdrdrdrruLuLuLuLLLrdRdRdRluluurDrDrDululldRdRdRldlUUUluurDrDrDrDDuLLUlUdrruLuLrddlUlUdrruLuLrddlUdrdrddlUUUruL
+#######
+#. .. ##
+# # *  ###
+#### $  .#
+   ## $$ #
+  ###  $ #
+  #    # #
+  #### #*#
+     ###@#
+       ###
+
+; level=89 chapter=5 pushes=86 moves=305 changes=25 lines=34 score=119.1
+; solution=RuRDRRurrDulldlluRdrRurrdLLLLuRRdrrddlUruLLrddrdddlddrUUUUUluululldRdRluullldRRurrDrruLLLLdllddrddddrrdRRuuruuulUdrddddldllulluuuuluurDDDDDuuuuururrdLLurrrrdLLLrrddrddddldllulLLLLdlUUUUUddddrrrruuuuuluuRRRRlllDDDDDDuuuuuurrdrrddrddddldllulLLLLrrruuuuuuurrdLulDDDDDDuuuuurrrrrDDDDuuuullldRurrddlUruLLLLulDD
+   #########
+  ## $   . #
+###@$ $  $ #
+#. #  # $  #
+# ## .###  #
+# ### # ## #
+# # # # ## #
+# ### ### .#
+#.   .  # $#
+#  #### $ .#
+####  ######
+
+; level=90 chapter=5 pushes=73 moves=229 changes=23 lines=46 score=122.4
+; solution=UruuLulDLdlUrrrrddlULulldRRRluRlllluuuRurrdLdLDldRRluuruulDDDldRllluRRdrUUruulDlDDrdLuuurrdLulDrdddrrruulDLdlUUUluRdrUdlddrrrddrruuLLLLdlUUUluRdddlUlldRRRuuulDrdLdrdrRuLdlUUUddrrrrrddllUdrruulLLLdlUUluRddllluRdrUdrdrrrdrUruLLLLLL
+   #####
+  ## . #
+  # *. #
+###.$.###
+# $  #  ###
+# .  $ $  #
+## #      #
+ # ####$  #
+ #  ###@###
+ ##  ####
+  ####
+
+; level=91 chapter=5 pushes=71 moves=291 changes=28 lines=43 score=127.9
+; solution=LLuulLLruulDlDRRllldddddrrULdlUdrrrruLLruulUUddDuuururrdddLLdlUdrddlUdlluRdrruuurruuulldlllddDuuurrrurrdddlllULuuRRllddrUluRdddrdddlluRUUUddrDldRurDuluululuurDDDDrddlluRRuurruuLLrrddllluluurDDDDuuuuurDldddrrruulLrrddlldddlluRdrUUluRluluurDDDDrddlluRdrUluuuurrruLLulDDDDDDrdLuuurDDuuluurrrddL
+  ####
+ ##  ###
+## $   ####
+#   $     #
+#. $## ####
+# # .  $@#
+# #  #####
+#.$$$.####
+# . .    #
+#####.####
+    ###
+
+; level=92 chapter=5 pushes=70 moves=243 changes=29 lines=43 score=129.6
+; solution=UUrUdlluRuRRuRRlDururrdLdLUUruLLLLrrrddlldRlllddrUdlddrUUdRRRulUUluRRlddddlluluuRRurDDDrdLLruuuururrdLdLUlldllddrUdlddrUUdrruuUluRRdrUruullDRdrUUddldlluRdrUdlldddlluluuRRlldddrrruuUluRddddrdrruLLLLruuulllddrUluRRurDDurruLuurDlddlllddlddrUUUluR
+       ###
+ #######.#
+ #.      #
+ #####   #
+ ### * . #
+##  . $ ##
+#  $# ###
+#   #. ###
+##$$$    #
+ #@ ##   #
+ #########
+
+; level=93 chapter=5 pushes=75 moves=227 changes=31 lines=42 score=135.5
+; solution=DDDrdRRRurDDDLUruuluuurrdLulDrDDDDlddlluRdrdrruLLrUUUUUUluRdddlUdrddlUdrddlUlldRRuruulDuruulDDrddLdlluRRddrruLUUUddlldRuruulDrdLuuuuruulDDrDDDullllulldRRRRRdrUUUlDrdLLrdddlluRdrUddrruLUUUddlldRuruuluurDuluurDldddDrdLdlluRdrdrUU
+ ### #####
+ #@# #  .#
+ #$# # $ #
+## ### *##
+#   ##  #
+#   *  .#
+######$.#
+   #  * ##
+ ###     #
+ #   #   #
+ #########
+
+; level=94 chapter=5 pushes=95 moves=340 changes=29 lines=45 score=143.3
+; solution=LLdlUUdrruLuLUUrUdrruLuLLLLLrrrrDulldRullldLdlluRuRDrRurrdLLLLulDrrruLrrrrrdLLLrdRlddrddlUUUUruulllldlllddddrrrruRldlllluuuurrrurrrrddldDuururrdLLuulldRRulllldlllddddrrrrurruUruulllldlDDDuuullddddrRRluuuururrdLLLddddlluuuuRuRRlDDDDuuullddddrRuuuurrrurrdLLLLulDDDDuuurrrrdrrruLLLLLLulDDDuLulDDDuuurrrrrrdddrddlUUUUruLLLLLulDrdLulDDuurrrrruLL
+ ##########
+## .      ##
+#  $ $  $$ #
+#   ###    #
+# # ###$####
+#.#.#    ##
+#. ...# $ ##
+#######  $@#
+      #  ###
+      ####
+
+; level=95 chapter=5 pushes=77 moves=347 changes=34 lines=43 score=143.4
+; solution=lDDDDLrRllddrURRRdrrruuLuullDDuurrddLrrddllULLLLLrrrrdrrruuluulldDuurrddrdLuuullddRluurrdDrddlllUUdlluRRdlllluRRdldllluuRRdrrrrdrrruuluullDDuurrddLrrddllULLLLdllluurrDulDrrrrrdrrruuluulldDuurrddrddlluLLLLLrruRdllluRRdrrdrrruuluulldDuurrddrddlluLLLuRdrdrrruuluulldDuurrddrddlluRuuullddRdrUUdllldRRullllldRRRRulllllldRRRRRlllllddrUluRurrddLruulldDuR
+   ####
+   # @#
+   #$######
+   # ##  .#
+#### ##$# ##
+#  $ $   $ #
+#   .$ ..*.#
+#    ##    #
+# .####### #
+####     ###
+
+; level=96 chapter=5 pushes=99 moves=275 changes=29 lines=45 score=145.9
+; solution=LdlUUUluuRlddrURURRRRlllDurrrDrdDlddrUUlUUrUruulDDulDDDDuuullldllluRRRRRRlluullDDrdLurrrrurrdLLLLLruulldDrrrrdddrddlUUUUddrruLUUruulDDDDDuuuLLLuullddRRRRdrUdddlUUruruulDDDuLLLuullddRRRRurDlllllllddrUluRRRRRRllldLullddrUluRdrUrrrrurrdLLLLrrdddrruLUUdddlUUruLLrrruulDlddddddrUU
+  #########
+  #   ##  #
+###.# #   #
+# $ *.  . #
+#  $ ##$ ##
+#  #.## . #
+## #### $ #
+ # $@##  ##
+ #  ###  #
+ #### ####
+
+; level=97 chapter=5 pushes=82 moves=422 changes=35 lines=55 score=159.7
+; solution=RRdrruuRRllddrrUrUUUUddddldlluurRddlllluRdrrruullulDrrrdrruLuuullllDDrdrRlluluurrrrddDuuululuurDDldllddrdrrruuuruLLrddddllluluurrUUruLdddRlllddrdrrruuUruLLdrdddlddllUdlluRUUdddrrruulLulDrrrddllUdrruulLrrrrdLulllddrrUdlluurRdrUUUUddddldlllluRdrrruullulDrrrddllUdlluRdrrruuruuullllDDDRRRddllUdrruulLrrdrruLuuuluulDrdLrrruLdlluurDrdddddldlluurRdrUUUUruLLrdddddldlllluRdrrruullulDrrrddllUdlluRuRRRdrUUUUruLdddddldllUdrruulLulD
+    #####
+    #.  #
+    ## $###
+ #####..  #
+ #   . .  #
+ # #$### ##
+ ###  ## ##
+####$ $   #
+#@$ . #$  #
+###     ###
+  #######
+
+; level=98 chapter=5 pushes=75 moves=409 changes=40 lines=53 score=162.6
+; solution=DDRdddlluluuuuuuuurrrddlDuruulDLrrddlUruulldRullldRddddddddrrruuuluUddrdrruLuLDDrddllluluuuuuuuurrddrdDDulUdrdrddddllluluuuuuuuurrdLurrDDDlUruulldRullldRddddddddrrrruuuulUdrddlUlUUrDldRdrddllluluuuuuuuurrddrDDuuluurDDDuuullldddddddddrrrruululuuUruulLulDrrrddlUruLdddddrdrruLuLrddlUlUUUUddddrruLUluurDDDrddlUlUUrDldRdrddlUUUluurDrDulldRuuuulDDuuruulDDDuuulldRurDDrdddddddlluluuuuuUdddddddrrruuuuuuuuulllldRRurD
+#########
+#       #
+###  $$ ##
+  ## #.  #
+###  #* ##
+#    #+$##
+#### #*$ ##
+ ##  # $. #
+ #   #. . #
+ ###  #  ##
+  #      #
+  ########
+
+; level=99 chapter=5 pushes=97 moves=381 changes=40 lines=54 score=176.7
+; solution=DDDRRRRRDDurUdldlddrUrUUddlluRuullldldlddrUUdRRRuruulllllDurrrrrddldllluUrurrruurrdLulDDllldlddrrrurUrULddlddrUrUUlDrdLLLLrruruuuurrdLulDDDDurUddlldlldlluRuururRRddldlLdlUrrrurrdLLLLrruruuuurrdLulDDDrddlUruUdddlllldlluRRRRurruulllldllDurrurrrrddlldlllUluuRRRRRDrddLLLLdlUrrrrruulDrdLLLLrruruuuurrdLulDDDrddlUruUluurrdLddddlllldllURRRRurruulllllldDuurrdLulDurrrrrrddlUdldlllUdrrrdrU
+###
+#@#  #####
+#$#  #   #
+# ####.  #
+# $   . ##
+# . ##$ #
+#. ## .$##
+#.$$     #
+#   #  ###
+########
+
+; level=100 chapter=5 pushes=107 moves=453 changes=48 lines=63 score=205.8
+; solution=LLLLddlluulldRdrrruuLLrrddlDDRRlluurrDrDDDDuuuLrddlUdrdrdLLLdlluRRRUruuuulullddDDDuuuuurrdrddlUdrddldldlluRuuuuRRdrddldLdlUrruruululluurrDrDLdDrUddrdLLLdlluRRRUruuluuullddddDuuuuurrdddrddlUUdddldlluRuuuuuurrdrDDlUddddLdlluRuuuuRRddddLdlUUUddrrurrdLLLruuurDululluurrDrDDuulullddrRddddldlluRuuUUrrddddLruuuulldddDldRurrrruLdllluuuurrdrDuluurDDulllddddrrUUUruulullDDDDuuuurrdrdLLruulldDDurrddddrruLdlUUUruLLruulldDuuruullDldRRlulluRddrrddrrdrDlddrruLdlUUUU
+###########
+#  .    $@#
+# $ # #####
+##   . ##
+ ###$#* #
+   # $  #
+   #.#$ #
+   #.#  ##
+ ###.#$  #
+ #       #
+ ##  .####
+  #####
+

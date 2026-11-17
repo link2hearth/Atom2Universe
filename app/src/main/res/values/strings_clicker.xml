@@ -276,6 +276,7 @@
     <string name="neutrino_info_note_retry">by difficulty, −1 per failed attempt</string>
     <string name="neutrino_info_note_vs_ai">vs AI, by level</string>
     <string name="neutrino_info_note_level">per level</string>
+    <string name="neutrino_info_note_first_chapter">first solve, by chapter</string>
     <string name="neutrino_info_note_size">by board size</string>
     <string name="neutrino_info_note_pairs">difficulty × pairs</string>
     <string name="neutrino_info_note_perfect">by difficulty, ×2 if perfect</string>

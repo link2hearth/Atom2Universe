@@ -170,6 +170,7 @@ val bancsDeMesure = listOf(
     "*.golf.GardensPuttingBenchmarkTest",
     "*.mycology.FungusPlateApercuTest",
     "*.mercerie.MercerieBalanceTest",
+    "*.sokoban.SokobanForgeBench",
 )
 if (!providers.gradleProperty("bancsMesure").isPresent) {
     tasks.withType<Test>().configureEach {
@@ -178,6 +179,8 @@ if (!providers.gradleProperty("bancsMesure").isPresent) {
 } else {
     // Changing a campaign's seed/sample set must run it again even when the code is unchanged.
     tasks.withType<Test>().configureEach {
+        // Les bancs explorent des millions de positions (fabrique du Sokoban) : plus de mémoire.
+        maxHeapSize = "4g"
         listOf("ATOM_BLOCKS_SIM_TAG", "ATOM_BLOCKS_SIM_SAMPLES", "ATOM_BLOCKS_SIM_SEED_OFFSET").forEach { name ->
             inputs.property(name, providers.environmentVariable(name).orElse(""))
         }

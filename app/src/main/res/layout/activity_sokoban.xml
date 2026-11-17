@@ -91,7 +91,8 @@
         </LinearLayout>
     </com.Atom2Universe.app.util.FitRow>
 
-    <!-- La difficulté : un seul bouton qui déroule les autres ; le nom du dépôt à droite -->
+    <!-- Le mode (niveaux ou infini) : un seul bouton qui déroule les autres ; en niveaux, le
+         bouton du niveau ouvre la grille des niveaux ; le nom du dépôt à droite -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -109,14 +110,32 @@
             android:popupBackground="?attr/a2uPopupBackground"
             android:spinnerMode="dropdown" />
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
         <TextView
+            android:id="@+id/sokoban_level_button"
             android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:layout_marginStart="8dp"
+            android:background="?attr/a2uChipBackground"
+            android:drawableEnd="@drawable/ic_expand_more"
+            android:drawablePadding="4dp"
+            android:drawableTint="?attr/a2uSecondaryTextColor"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:paddingStart="14dp"
+            android:paddingEnd="8dp"
+            android:textColor="?attr/a2uTextColor"
+            android:textSize="16sp"
+            tools:text="Level 12" />
+
+        <!-- Le nom du dépôt prend la place qui reste et s'efface quand il ne tient pas en entier. -->
+        <TextView
+            android:id="@+id/sokoban_identity_label"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            android:ellipsize="end"
+            android:gravity="end"
             android:maxLines="1"
             android:text="@string/sokoban_identity"
             android:textColor="?attr/a2uMusicAccent"

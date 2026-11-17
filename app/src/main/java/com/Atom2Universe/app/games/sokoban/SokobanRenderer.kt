@@ -42,9 +42,16 @@ internal class SokobanRenderer {
         canvas.save()
         canvas.translate(offsetX, offsetY)
         canvas.scale(cellSize, cellSize)
-        rect(canvas, -.08f, -.08f, p.width + .08f, p.height + .08f, 0xFF0B171E, .2f)
+        val shown = shownCells(p)
+        // Le socle sombre, seulement sous le dépôt (le sol et les murs qui le bordent) : dehors, rien.
+        for (idx in shown.indices) if (shown[idx]) {
+            val x = (idx % p.width).toFloat()
+            val y = (idx / p.width).toFloat()
+            rect(canvas, x - .06f, y - .06f, x + 1.06f, y + 1.06f, 0xFF0B171E, .14f)
+        }
         for (y in 0 until p.height) for (x in 0 until p.width) {
             val idx = y * p.width + x
+            if (!shown[idx]) continue
             canvas.save()
             canvas.translate(x.toFloat(), y.toFloat())
             if (p.isWall(idx)) {
@@ -108,6 +115,26 @@ internal class SokobanRenderer {
         line(canvas, .44f, .61f, .56f, .61f, 0xFFB67D48)
         canvas.restore()
         canvas.restore()
+    }
+
+    private var shownFor: SokobanPuzzle? = null
+    private var shown = BooleanArray(0)
+
+    /** Le sol et les murs qui le touchent (même en diagonale) ; les autres murs sont le dehors. */
+    private fun shownCells(p: SokobanPuzzle): BooleanArray {
+        if (shownFor === p) return shown
+        shown = BooleanArray(p.width * p.height) { idx ->
+            val x = idx % p.width
+            val y = idx / p.width
+            var near = false
+            for (dy in -1..1) for (dx in -1..1) {
+                val nx = x + dx; val ny = y + dy
+                if (nx in 0 until p.width && ny in 0 until p.height && !p.isWall(ny * p.width + nx)) near = true
+            }
+            near
+        }
+        shownFor = p
+        return shown
     }
 
     private fun drawCrate(c: Canvas, done: Boolean) {

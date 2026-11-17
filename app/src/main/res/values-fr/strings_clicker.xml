@@ -273,6 +273,7 @@
     <string name="neutrino_info_note_retry">selon la difficulté, −1 par essai raté</string>
     <string name="neutrino_info_note_vs_ai">vs IA, selon le niveau</string>
     <string name="neutrino_info_note_level">par niveau</string>
+    <string name="neutrino_info_note_first_chapter">1re réussite, selon le chapitre</string>
     <string name="neutrino_info_note_size">selon la taille</string>
     <string name="neutrino_info_note_pairs">difficulté × jumelles</string>
     <string name="neutrino_info_note_perfect">selon la difficulté, ×2 si parfait</string>
