@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.ImageButton
-import android.widget.LinearLayout
+import android.widget.Spinner
 import android.widget.TextView
 import androidx.core.content.edit
 import androidx.lifecycle.lifecycleScope
@@ -21,7 +23,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
-import android.content.res.ColorStateList
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -39,8 +40,9 @@ class SokobanActivity : ThemedActivity() {
     private lateinit var tvMoves: TextView
     private lateinit var tvPushes: TextView
     private lateinit var loadingView: View
-    private lateinit var diffRow: LinearLayout
-    private lateinit var btnUndo: MaterialButton
+    private lateinit var diffSpinner: Spinner
+    private lateinit var btnUndo: View
+    private lateinit var btnReset: View
 
     private var generationJob: Job? = null
     private var rewarded = false
@@ -50,8 +52,6 @@ class SokobanActivity : ThemedActivity() {
     private val game = SokobanGame()
     private val handler = Handler(Looper.getMainLooper())
     private var pendingAutoNext: Runnable? = null
-
-    private val diffButtons = mutableMapOf<SokobanDifficulty, MaterialButton>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,27 +65,28 @@ class SokobanActivity : ThemedActivity() {
         tvMoves     = findViewById(R.id.sokoban_moves)
         tvPushes    = findViewById(R.id.sokoban_pushes)
         loadingView = findViewById(R.id.sokoban_loading)
-        diffRow     = findViewById(R.id.sokoban_diff_row)
+        diffSpinner = findViewById(R.id.sokoban_difficulty_spinner)
         btnUndo     = findViewById(R.id.sokoban_btn_undo)
+        btnReset    = findViewById(R.id.sokoban_btn_reset)
 
         findViewById<ImageButton>(R.id.sokoban_back).setOnClickListener { finish() }
         findViewById<ImageButton>(R.id.sokoban_info_button).setOnClickListener {
             showGameRules(R.string.sokoban_title, R.string.sokoban_rules)
         }
-        findViewById<MaterialButton>(R.id.sokoban_btn_new).setOnClickListener {
+        findViewById<View>(R.id.sokoban_btn_new).setOnClickListener {
             cancelAutoNext(); startNewPuzzle()
         }
-        findViewById<MaterialButton>(R.id.sokoban_btn_reset).setOnClickListener {
+        btnReset.setOnClickListener {
             if (generating) return@setOnClickListener
             cancelAutoNext(); game.reset(); board.loadGame(game); onBoardChanged()
-            tvMessage.text = getString(R.string.sokoban_hint)
+            showMessage(null)
         }
         btnUndo.setOnClickListener {
             if (!generating && game.undo()) {
                 cancelAutoNext()
                 board.loadGame(game)
                 onBoardChanged()
-                tvMessage.text = getString(R.string.sokoban_hint)
+                showMessage(null)
             }
         }
 
@@ -97,14 +98,26 @@ class SokobanActivity : ThemedActivity() {
         board.onChanged = { onBoardChanged() }
         board.onSolved = { onSolved() }
 
-        buildDiffButtons()
+        buildDifficultySpinner()
         startNewPuzzle()
     }
 
-    /** Couché : le dépôt sur toute la hauteur et la bulle des commandes ; le niveau ne change pas. */
+    /** Couché : le dépôt au milieu, réglages et flèches de part et d'autre ; le niveau ne change pas. */
     override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
         super.onConfigurationChanged(newConfig)
         Landscape.swapLayout(this, R.layout.activity_sokoban)
+    }
+
+    /** Le message de fin de niveau, par-dessus le dépôt ; rien pendant la partie. */
+    private fun showMessage(text: String?) {
+        tvMessage.text = text
+        tvMessage.visibility = if (text.isNullOrEmpty()) View.GONE else View.VISIBLE
+    }
+
+    /** Une icône inactive s'estompe (une icône seule ne change pas d'allure quand on la désactive). */
+    private fun setActive(view: View, active: Boolean) {
+        view.isEnabled = active
+        view.alpha = if (active) 1f else 0.35f
     }
 
     override fun onDestroy() {
@@ -112,31 +125,26 @@ class SokobanActivity : ThemedActivity() {
         super.onDestroy()
     }
 
-    private fun buildDiffButtons() {
-        for (diff in SokobanDifficulty.entries) {
-            val label = when (diff) {
+    /** La difficulté : un seul bouton qui montre la valeur choisie et déroule les autres sous le doigt. */
+    private fun buildDifficultySpinner() {
+        val labels = SokobanDifficulty.entries.map { diff ->
+            when (diff) {
                 SokobanDifficulty.EASY   -> getString(R.string.sokoban_diff_easy)
                 SokobanDifficulty.MEDIUM -> getString(R.string.sokoban_diff_medium)
                 SokobanDifficulty.HARD   -> getString(R.string.sokoban_diff_hard)
                 SokobanDifficulty.EXPERT -> getString(R.string.sokoban_diff_expert)
             }
-            val btn = MaterialButton(this, null, com.google.android.material.R.attr.materialButtonOutlinedStyle).apply {
-                text = label
-                textSize = 12f
-                isAllCaps = false
-                setPadding(0, 0, 0, 0)
-                minWidth = 0
-                cornerRadius = (14 * resources.displayMetrics.density).toInt()
-                setTextColor(0xFFE3EEE5.toInt())
-                val dp = (4 * resources.displayMetrics.density).toInt()
-                layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
-                    .also { it.setMargins(dp, 0, dp, 0) }
-                setOnClickListener { setDifficulty(diff) }
-            }
-            diffRow.addView(btn)
-            diffButtons[diff] = btn
         }
-        updateDiffButtons()
+        val adapter = ArrayAdapter(this, R.layout.item_spinner_selected, labels)
+        adapter.setDropDownViewResource(R.layout.item_spinner_dropdown)
+        diffSpinner.adapter = adapter
+        diffSpinner.setSelection(game.difficulty.ordinal, false)
+        diffSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
+                setDifficulty(SokobanDifficulty.entries[pos])
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
     }
 
     private fun setDifficulty(diff: SokobanDifficulty) {
@@ -148,7 +156,7 @@ class SokobanActivity : ThemedActivity() {
     }
 
     private fun updateDiffButtons() {
-        for ((diff, btn) in diffButtons) com.Atom2Universe.app.games.kit.GameControlStyle.choice(btn, diff == game.difficulty)
+        if (diffSpinner.selectedItemPosition != game.difficulty.ordinal) diffSpinner.setSelection(game.difficulty.ordinal)
     }
 
     private fun startNewPuzzle() {
@@ -156,9 +164,9 @@ class SokobanActivity : ThemedActivity() {
         generationJob?.cancel()
         generating = true
         board.isEnabled = false
-        btnUndo.isEnabled = false
-        findViewById<View>(R.id.sokoban_btn_reset).isEnabled = false
-        tvMessage.text = getString(R.string.sokoban_loading_label)
+        setActive(btnUndo, false)
+        setActive(btnReset, false)
+        showMessage(null)
         loadingView.visibility = View.VISIBLE
         board.visibility = View.INVISIBLE
         val diff = game.difficulty
@@ -169,7 +177,7 @@ class SokobanActivity : ThemedActivity() {
             }
             generating = false
             board.isEnabled = true
-            findViewById<View>(R.id.sokoban_btn_reset).isEnabled = true
+            setActive(btnReset, true)
             loadingView.visibility = View.GONE
             board.visibility = View.VISIBLE
             if (puzzle == null) {
@@ -179,14 +187,13 @@ class SokobanActivity : ThemedActivity() {
                     updateBest()
                 }
                 onBoardChanged()
-                tvMessage.text = getString(R.string.sokoban_error)
+                showMessage(getString(R.string.sokoban_error))
                 return@launch
             }
             rewarded = false
             loadedDifficulty = diff
             game.load(puzzle)
             board.loadGame(game)
-            tvMessage.text = getString(R.string.sokoban_hint)
             onBoardChanged()
             updateBest()
         }
@@ -195,7 +202,7 @@ class SokobanActivity : ThemedActivity() {
     private fun onBoardChanged() {
         tvMoves.text = getString(R.string.sokoban_moves, game.moves)
         tvPushes.text = getString(R.string.sokoban_pushes, game.pushes)
-        btnUndo.isEnabled = game.canUndo && !generating
+        setActive(btnUndo, game.canUndo && !generating)
         val puzzle = game.puzzle
         findViewById<TextView>(R.id.sokoban_delivery).text = if (puzzle == null) "" else
             getString(R.string.sokoban_delivery, game.boxes.count { it in puzzle.goals }, puzzle.goals.size)
@@ -207,7 +214,7 @@ class SokobanActivity : ThemedActivity() {
         val diff = game.difficulty
         val best = saveBest(diff, game.moves)
         updateBest()
-        tvMessage.text = getString(R.string.sokoban_solved, game.moves, best)
+        showMessage(getString(R.string.sokoban_solved, game.moves, best))
 
         val reward = NeutrinoRewards.sokoban(diff.ordinal)
         if (!rewarded) {

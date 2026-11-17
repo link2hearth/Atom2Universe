@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Sokoban couché : la bande du titre en haut, le dépôt sur toute la hauteur restante, et la bulle
-     (difficulté, livraisons, coups, flèches, actions) qu'on déplace à volonté. -->
+<!-- Sokoban couché : la même bannière qu'en portrait (actions en icônes), le dépôt au milieu de
+     l'écran, la difficulté et les livraisons à sa gauche, les compteurs et les flèches à sa droite.
+     Plus de bulle : rien à faire défiler, rien de caché. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -8,264 +9,281 @@
     android:orientation="vertical"
     android:background="?attr/a2uBackgroundColor">
 
-    <!-- Top bar -->
-    <LinearLayout
+    <com.Atom2Universe.app.util.FitRow
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:paddingHorizontal="8dp"
-        android:paddingVertical="4dp">
+        android:layout_height="wrap_content">
 
-        <ImageButton
-            android:id="@+id/sokoban_back"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/ic_app_back"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/sokoban_back"
-            app:tint="?attr/a2uSecondaryTextColor" />
-
-        <TextView
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/sokoban_title"
-            android:textColor="?attr/a2uTextColor"
-            android:textSize="18sp"
-            android:fontFamily="sans-serif-medium"
-            android:gravity="center" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="2dp">
 
-        <TextView
-            android:id="@+id/sokoban_best"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="?attr/a2uMusicAccent"
-            android:textSize="13sp"
-            android:paddingHorizontal="8dp" />
+            <ImageButton
+                android:id="@+id/sokoban_back"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:src="@drawable/ic_app_back"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/sokoban_back"
+                app:tint="?attr/a2uSecondaryTextColor" />
 
-        <ImageButton
-            android:id="@+id/sokoban_info_button"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/kit_rules"
-            android:padding="10dp"
-            android:src="@drawable/ic_info"
-        android:tint="?attr/a2uMusicAccent" />
-    </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:maxLines="1"
+                android:text="@string/sokoban_title"
+                android:textColor="?attr/a2uTextColor"
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-medium" />
 
-    <LinearLayout
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:maxLines="1"
+                android:text="@string/sokoban_identity"
+                android:textColor="?attr/a2uMusicAccent"
+                android:textSize="11sp"
+                android:letterSpacing="0.22" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <ImageButton
+                android:id="@+id/sokoban_btn_undo"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:padding="10dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_undo"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/sokoban_undo"
+                app:tint="?attr/a2uTextColor" />
+
+            <ImageButton
+                android:id="@+id/sokoban_btn_reset"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:padding="10dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_restart"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/sokoban_reset"
+                app:tint="?attr/a2uTextColor" />
+
+            <ImageButton
+                android:id="@+id/sokoban_btn_new"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:padding="10dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_skip_next"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/sokoban_new"
+                app:tint="?attr/a2uTextColor" />
+
+            <ImageButton
+                android:id="@+id/sokoban_info_button"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/kit_rules"
+                android:padding="10dp"
+                android:src="@drawable/ic_info"
+                android:tint="?attr/a2uMusicAccent" />
+        </LinearLayout>
+    </com.Atom2Universe.app.util.FitRow>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="horizontal">
+        android:padding="8dp">
 
-        <FrameLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-
-            <com.Atom2Universe.app.games.sokoban.SokobanBoardView
-                android:id="@+id/sokoban_board"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="8dp" />
-
-            <ProgressBar
-                android:id="@+id/sokoban_loading"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:visibility="gone" />
-        </FrameLayout>
-
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent">
-
+        <!-- À gauche : la difficulté (un seul bouton qui déroule les autres) et les livraisons -->
         <LinearLayout
-            android:id="@+id/side_panel"
-            android:layout_width="300dp"
+            android:id="@+id/sokoban_left_column"
+            android:layout_width="168dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
 
-            <LinearLayout
-                android:id="@+id/sokoban_diff_row"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingBottom="6dp" />
+            <com.Atom2Universe.app.util.ImmersiveSpinner
+                android:id="@+id/sokoban_difficulty_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="44dp"
+                android:background="?attr/a2uChipBackground"
+                android:paddingHorizontal="6dp"
+                android:popupBackground="?attr/a2uPopupBackground"
+                android:spinnerMode="dropdown" />
 
             <TextView
                 android:id="@+id/sokoban_delivery"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingTop="6dp"
+                android:layout_marginTop="10dp"
+                android:maxLines="1"
                 android:textColor="?attr/a2uTextColor"
-                android:textSize="22sp"
+                android:textSize="15sp"
                 android:fontFamily="sans-serif-medium" />
 
             <TextView
                 android:id="@+id/sokoban_target"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
+                android:maxLines="1"
                 android:textColor="?attr/a2uMusicAccent"
-                android:textSize="14sp" />
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <!-- À droite : compteurs et flèches -->
+        <LinearLayout
+            android:id="@+id/sokoban_right_column"
+            android:layout_width="168dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
 
             <TextView
-                android:id="@+id/sokoban_message"
-                android:layout_width="match_parent"
+                android:id="@+id/sokoban_moves"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingHorizontal="8dp"
-                android:paddingVertical="8dp"
+                android:maxLines="1"
                 android:textColor="?attr/a2uSecondaryTextColor"
                 android:textSize="14sp" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/sokoban_pushes"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingHorizontal="10dp">
+                android:maxLines="1"
+                android:textColor="?attr/a2uSecondaryTextColor"
+                android:textSize="14sp" />
 
-                <TextView
-                    android:id="@+id/sokoban_moves"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textColor="?attr/a2uSecondaryTextColor"
-                    android:textSize="14sp" />
+            <TextView
+                android:id="@+id/sokoban_best"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:textColor="?attr/a2uMusicAccent"
+                android:textSize="14sp" />
 
-                <TextView
-                    android:id="@+id/sokoban_pushes"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="?attr/a2uSecondaryTextColor"
-                    android:textSize="14sp" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/sokoban_up"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="52dp"
+                android:layout_height="46dp"
+                android:layout_marginTop="10dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:text="@string/sokoban_arrow_up"
+                android:contentDescription="@string/sokoban_up_label"
+                app:cornerRadius="?attr/a2uCorner16"
+                app:strokeColor="?attr/a2uOutlineColor"
+                app:backgroundTint="?attr/a2uRaisedColor"
+                android:textColor="?attr/a2uTextColor" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/sokoban_left"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="52dp"
+                    android:layout_height="46dp"
+                    android:layout_marginEnd="6dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:text="@string/sokoban_arrow_left"
+                    android:contentDescription="@string/sokoban_left_label"
+                    app:cornerRadius="?attr/a2uCorner16"
+                    app:strokeColor="?attr/a2uOutlineColor"
+                    app:backgroundTint="?attr/a2uRaisedColor"
+                    android:textColor="?attr/a2uTextColor" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/sokoban_down"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="52dp"
+                    android:layout_height="46dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:text="@string/sokoban_arrow_down"
+                    android:contentDescription="@string/sokoban_down_label"
+                    app:cornerRadius="?attr/a2uCorner16"
+                    app:strokeColor="?attr/a2uOutlineColor"
+                    app:backgroundTint="?attr/a2uRaisedColor"
+                    android:textColor="?attr/a2uTextColor" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/sokoban_right"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="52dp"
+                    android:layout_height="46dp"
+                    android:layout_marginStart="6dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:text="@string/sokoban_arrow_right"
+                    android:contentDescription="@string/sokoban_right_label"
+                    app:cornerRadius="?attr/a2uCorner16"
+                    app:strokeColor="?attr/a2uOutlineColor"
+                    app:backgroundTint="?attr/a2uRaisedColor"
+                    android:textColor="?attr/a2uTextColor" />
             </LinearLayout>
-
-                <!-- D-pad -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center_horizontal"
-                    android:paddingTop="10dp">
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/sokoban_up"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        android:layout_width="60dp"
-                        android:layout_height="52dp"
-                        android:insetTop="0dp"
-                        android:insetBottom="0dp"
-                        android:text="@string/sokoban_arrow_up"
-                        android:contentDescription="@string/sokoban_up_label"
-                        app:cornerRadius="?attr/a2uCorner16"
-                        app:strokeColor="?attr/a2uOutlineColor"
-                        app:backgroundTint="?attr/a2uRaisedColor"
-                        android:textColor="?attr/a2uTextColor" />
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/sokoban_left"
-                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                            android:layout_width="60dp"
-                            android:layout_height="52dp"
-                            android:layout_marginEnd="6dp"
-                            android:insetTop="0dp"
-                            android:insetBottom="0dp"
-                            android:text="@string/sokoban_arrow_left"
-                        android:contentDescription="@string/sokoban_left_label"
-                        app:cornerRadius="?attr/a2uCorner16"
-                        app:strokeColor="?attr/a2uOutlineColor"
-                        app:backgroundTint="?attr/a2uRaisedColor"
-                            android:textColor="?attr/a2uTextColor" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/sokoban_down"
-                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                            android:layout_width="60dp"
-                            android:layout_height="52dp"
-                            android:insetTop="0dp"
-                            android:insetBottom="0dp"
-                            android:text="@string/sokoban_arrow_down"
-                        android:contentDescription="@string/sokoban_down_label"
-                        app:cornerRadius="?attr/a2uCorner16"
-                        app:strokeColor="?attr/a2uOutlineColor"
-                        app:backgroundTint="?attr/a2uRaisedColor"
-                            android:textColor="?attr/a2uTextColor" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/sokoban_right"
-                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                            android:layout_width="60dp"
-                            android:layout_height="52dp"
-                            android:layout_marginStart="6dp"
-                            android:insetTop="0dp"
-                            android:insetBottom="0dp"
-                            android:text="@string/sokoban_arrow_right"
-                        android:contentDescription="@string/sokoban_right_label"
-                        app:cornerRadius="?attr/a2uCorner16"
-                        app:strokeColor="?attr/a2uOutlineColor"
-                        app:backgroundTint="?attr/a2uRaisedColor"
-                            android:textColor="?attr/a2uTextColor" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <!-- Actions -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center"
-                    android:paddingHorizontal="12dp"
-                    android:paddingVertical="8dp">
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/sokoban_btn_undo"
-                        style="@style/Widget.MaterialComponents.Button.TextButton"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:paddingHorizontal="2dp"
-                        android:textSize="14sp"
-                        android:textAllCaps="false"
-                        android:layout_height="wrap_content"
-                        android:text="@string/sokoban_undo"
-                        android:textColor="?attr/a2uMusicAccent" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/sokoban_btn_reset"
-                        style="@style/Widget.MaterialComponents.Button.TextButton"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:paddingHorizontal="2dp"
-                        android:textSize="14sp"
-                        android:textAllCaps="false"
-                        android:layout_height="wrap_content"
-                        android:text="@string/sokoban_reset"
-                        android:textColor="?attr/a2uMusicAccent" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/sokoban_btn_new"
-                        style="@style/Widget.MaterialComponents.Button.TextButton"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:paddingHorizontal="2dp"
-                        android:textSize="14sp"
-                        android:textAllCaps="false"
-                        android:layout_height="wrap_content"
-                        android:text="@string/sokoban_new"
-                        android:textColor="?attr/a2uMusicAccent" />
-                </LinearLayout>
         </LinearLayout>
-        </FrameLayout>
-    </LinearLayout>
+
+        <!-- Le dépôt au milieu -->
+        <com.Atom2Universe.app.games.sokoban.SokobanBoardView
+            android:id="@+id/sokoban_board"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="8dp"
+            app:layout_constraintStart_toEndOf="@id/sokoban_left_column"
+            app:layout_constraintEnd_toStartOf="@id/sokoban_right_column"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <ProgressBar
+            android:id="@+id/sokoban_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@id/sokoban_board"
+            app:layout_constraintEnd_toEndOf="@id/sokoban_board"
+            app:layout_constraintTop_toTopOf="@id/sokoban_board"
+            app:layout_constraintBottom_toBottomOf="@id/sokoban_board" />
+
+        <!-- Fin de niveau, par-dessus le dépôt -->
+        <TextView
+            android:id="@+id/sokoban_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="12dp"
+            android:background="?attr/a2uPopupBackground"
+            android:gravity="center"
+            android:paddingHorizontal="18dp"
+            android:paddingVertical="12dp"
+            android:textColor="?attr/a2uTextColor"
+            android:textSize="17sp"
+            android:visibility="gone"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintStart_toStartOf="@id/sokoban_board"
+            app:layout_constraintEnd_toEndOf="@id/sokoban_board"
+            app:layout_constraintTop_toTopOf="@id/sokoban_board"
+            app:layout_constraintBottom_toBottomOf="@id/sokoban_board" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>
