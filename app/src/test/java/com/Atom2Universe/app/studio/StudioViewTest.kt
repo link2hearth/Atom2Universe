@@ -148,17 +148,17 @@ class StudioViewTest {
     @Test
     fun changingTheKeyMovesTheNotesOfEveryPattern() {
         val s = session().apply { coalesceMs = 0 }
-        val key = s.project.keyPc
+        val key = s.project.track(Inst.SYNTH).keyPc
         s.addNote(0, 60, 1)
         s.selectPattern(1)
         s.addNote(0, 64, 1)
         s.selectPattern(0)
-        s.setKey(key + 2)
+        s.setKey(Inst.SYNTH, key + 2)
         assertEquals(62, s.project.patterns[0].notes.single().pitch)
         assertEquals(66, s.project.patterns[1].notes.single().pitch)
         // Un seul pas en arrière rend les deux motifs
         s.undo()
-        assertEquals(key, s.project.keyPc)
+        assertEquals(key, s.project.track(Inst.SYNTH).keyPc)
         assertEquals(60, s.project.patterns[0].notes.single().pitch)
         assertEquals(64, s.project.patterns[1].notes.single().pitch)
     }

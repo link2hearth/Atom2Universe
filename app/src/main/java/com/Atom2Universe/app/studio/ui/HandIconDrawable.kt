@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.studio.ui
 
+import android.content.res.ColorStateList
 import android.graphics.Canvas
 import android.graphics.ColorFilter
 import android.graphics.Paint
@@ -46,9 +47,32 @@ class HandIconDrawable : Drawable() {
         canvas.drawRoundRect(rect, 4f * u, 4f * u, fill)
     }
 
+    // La teinte que pose le bouton (MaterialButton passe par setTintList) : sans elle, la main restait blanche sur fond clair
+    private var tint: ColorStateList? = null
+    private var alphaValue = 255
+
+    override fun setTintList(tint: ColorStateList?) {
+        this.tint = tint
+        applyTint(state)
+    }
+
+    override fun isStateful(): Boolean = tint?.isStateful == true
+
+    override fun onStateChange(state: IntArray): Boolean = applyTint(state)
+
+    private fun applyTint(state: IntArray): Boolean {
+        val color = tint?.getColorForState(state, tint!!.defaultColor) ?: 0xFFFFFFFF.toInt()
+        val withAlpha = (color and 0x00FFFFFF) or (((color ushr 24) * alphaValue / 255) shl 24)
+        if (stroke.color == withAlpha) return false
+        stroke.color = withAlpha
+        fill.color = withAlpha
+        invalidateSelf()
+        return true
+    }
+
     override fun setAlpha(alpha: Int) {
-        stroke.alpha = alpha
-        fill.alpha = alpha
+        alphaValue = alpha
+        applyTint(state)
     }
 
     override fun setColorFilter(colorFilter: ColorFilter?) {

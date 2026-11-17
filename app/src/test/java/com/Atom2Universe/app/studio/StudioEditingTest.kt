@@ -23,7 +23,7 @@ class StudioEditingTest {
         assertEquals(60, register.low)
         for (key in listOf(0, 6, 9)) {
             val s = session()
-            s.setKey(key)
+            s.setKey(Inst.SYNTH, key)
             val rhythm = s.rhythmEntryPitch(Inst.SYNTH)
             assertEquals(60 + key, rhythm)
             assertEquals(rhythm, s.padPitches(Inst.SYNTH).first())
@@ -60,8 +60,10 @@ class StudioEditingTest {
         val s = session()
         val synth = Inst.SYNTH
         val second = s.addTrack(TrackKind.SF2)
-        s.setKey(9)
-        s.setScale(Scales.MAJOR.id)
+        for (t in listOf(synth, second)) {
+            s.setKey(t, 9)
+            s.setScale(t, Scales.MAJOR.id)
+        }
         s.addNote(0, 45, 1)
         s.setSynthBank(synth, SynthBank.FAMICOM)
         s.setChipProgram(synth, 32)
@@ -71,12 +73,50 @@ class StudioEditingTest {
         s.selectPattern(1)
         assertArrayEquals(major.map { it - 12 }.toIntArray(), s.padPitches(synth))
         assertArrayEquals(major, s.padPitches(second))
-        s.setKey(7)
+        s.setKey(synth, 7)
         s.setRhythmOctave(synth, 9)
         assertArrayEquals(intArrayOf(127), s.padPitches(synth))
-        s.setKey(0)
+        s.setKey(synth, 0)
         s.setRhythmOctave(synth, -1)
         assertEquals(0, s.padPitches(synth).first())
+    }
+
+    /** Signalé le 17/11 : changer la tonique ou la gamme d'une case des pads changeait celles de tous les claviers. */
+    @Test fun keyAndScaleBelongToEachTrack() {
+        val s = session().apply { coalesceMs = 0 }
+        val synth = Inst.SYNTH
+        val second = s.addTrack(TrackKind.SF2)
+        s.addNote(0, 60, 1, track = second)
+        s.setKey(second, 2)
+        s.setScale(second, Scales.MAJOR.id)
+        s.setScaleLocked(second, true)
+        val first = s.project.track(synth)
+        assertEquals(StudioProject.blank().keyPc, first.keyPc)
+        assertEquals(StudioProject.blank().scaleId, first.scaleId)
+        assertFalse(first.scaleLocked)
+        assertEquals(2, s.project.track(second).keyPc)
+        assertEquals(Scales.MAJOR.id, s.project.track(second).scaleId)
+        assertTrue(s.project.track(second).scaleLocked)
+        // Seules les notes de la piste changée se transposent
+        assertEquals(60 + (2 - StudioProject.blank().keyPc).let { if (it > 6) it - 12 else if (it < -5) it + 12 else it },
+            s.notesOf(second).single().pitch)
+        // Une nouvelle piste part de la dernière tonalité et de la dernière gamme choisies
+        val third = s.addTrack(TrackKind.SYNTH)
+        assertEquals(2, s.project.track(third).keyPc)
+        assertEquals(Scales.MAJOR.id, s.project.track(third).scaleId)
+        // Sauvegarde et annulation
+        val back = com.Atom2Universe.app.studio.data.StudioProjectCodec.decode(
+            com.Atom2Universe.app.studio.data.StudioProjectCodec.encode(s.project))!!
+        assertEquals(2, back.track(second).keyPc)
+        assertEquals(Scales.MAJOR.id, back.track(second).scaleId)
+        assertTrue(back.track(second).scaleLocked)
+        assertEquals(first.keyPc, back.track(synth).keyPc)
+        s.undo() // la nouvelle piste
+        s.undo() // la gamme
+        assertEquals(StudioProject.blank().scaleId, s.project.track(second).scaleId)
+        s.undo() // la tonique
+        assertEquals(StudioProject.blank().keyPc, s.project.track(second).keyPc)
+        assertEquals(60, s.notesOf(second).single().pitch)
     }
 
     @Test fun scrollAndRevealCoverEveryMidiPitchOnPhoneAndTablet() {

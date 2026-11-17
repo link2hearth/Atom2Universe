@@ -230,7 +230,6 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         }
     }
     private var building = true
-    private var scaleLocked = false
     private var requestedOctaves: Int? = null
     private lateinit var register: StudioRegister
     private var onNotesTab = false
@@ -340,6 +339,8 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         recorder = LiveRecorder(session, { engine.playing }, { engine.playPosition }, { selectedTrack })
         ensureSelected()
         register = newRegister()
+        // Le clavier s'ouvre là où joue la piste choisie
+        if (selectedTrack >= 0) session.rhythmEntryPitch(selectedTrack).let { if (it !in register.low..register.high) register.setLow(it / 12 * 12) }
 
         setContentView(buildContent())
         building = false
@@ -409,10 +410,7 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         theremin.finish()
         padExpressionResets.keys.toList().forEach(::clearPendingPadEffects)
         stopSoundAudition()
-        for (release in presetReleases.values.toList()) {
-            handler.removeCallbacks(release)
-            release.run()
-        }
+        for (track in (presetReleases.keys + previewReleases.keys).toList()) endPreviews(track)
         setPadsRecording(false)
         stopLive()
         handler.removeCallbacks(saveRunnable)
@@ -420,6 +418,8 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         engine.stop()
         playing = false
         refreshTransport()
+        // L'enregistrement des Notes s'est arrêté : son bouton ne doit plus dire « en cours » au retour
+        refreshNotesControls()
         output.stop()
         super.onPause()
     }
@@ -929,6 +929,7 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
     private fun padNoteDown(track: Int, pitch: Int) {
         if (session.isMuted(track)) return
         stopSoundAudition()
+        endPreviews(track)
         clearPendingPadEffects(track)
         val fingers = padFingers[track] ?: 0
         padFingers[track] = fingers + 1
@@ -950,10 +951,9 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
     /** Les cases : une par piste visible (batterie ou notes), dans l'ordre des pistes. */
     private fun refreshPads() {
         if (!::pads.isInitialized) return
-        pads.keyPc = session.project.keyPc
         pads.tiles = session.padTracks().filterNot { it.hidden }.map { t ->
             PadsView.Tile(t.id, trackColor(t), InstrumentIcons.of(t), if (t.melodic) session.padPitches(t.id) else null,
-                t.padSize, trackName(t), t.padPlayMode, soundName = if (t.melodic) instrumentName(t) else "")
+                t.padSize, trackName(t), t.padPlayMode, soundName = if (t.melodic) instrumentName(t) else "", keyPc = t.keyPc)
         }
     }
 
@@ -1218,7 +1218,8 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
                 textSize = 12f
                 gravity = Gravity.CENTER
                 maxLines = 2
-                setTextColor(0xFFFFFFFF.toInt())
+                // Noir sur les couleurs claires (charleston jaune, clap orange…), blanc sur les foncées
+                setTextColor(if (ColorUtils.calculateLuminance(color) > 0.179) android.graphics.Color.BLACK else android.graphics.Color.WHITE)
                 setTypeface(typeface, Typeface.BOLD)
                 setPadding(dp(4), dp(6), dp(4), dp(6))
                 background = android.graphics.drawable.GradientDrawable().apply {
@@ -1397,39 +1398,40 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         }
         tonicRow.addView(octaveButton, wrap())
         tuning.addView(tonicRow)
+        // Tonique, gamme et verrou : ceux de cette piste seulement (chaque piste à notes a les siens)
         val tonicKeyboard = StudioTonicKeyboard(this).apply {
             onKeySelected = { pitchClass ->
-                session.setKey(pitchClass)
+                session.setKey(trackId, pitchClass)
                 changed()
             }
         }
         tuning.addView(tonicKeyboard, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(6) })
         val choices = FlowRow(this).apply { hGap = dp(8); vGap = dp(2) }
         tuning.addView(choices)
-        val prefs = getSharedPreferences(PREFS, MODE_PRIVATE)
-        val scaleButton = outlined(null).also { it.setOnClickListener { v -> pickScale(v) } }
+        val scaleButton = outlined(null).also { it.setOnClickListener { v -> pickScale(v, trackId) } }
         choices.addView(scaleButton, wrap(end = dp(8)))
         val lockSwitch = SwitchCompat(this).apply {
             setText(R.string.studio_lock)
             textSize = 14f
-            isChecked = scaleLocked
+            isChecked = session.project.trackOrNull(trackId)?.scaleLocked == true
             setOnCheckedChangeListener { _, checked ->
-                if (checked == scaleLocked) return@setOnCheckedChangeListener
-                scaleLocked = checked
-                prefs.edit().putBoolean("lock_note_scale", checked).apply()
+                if (checked == session.project.trackOrNull(trackId)?.scaleLocked) return@setOnCheckedChangeListener
+                session.setScaleLocked(trackId, checked)
                 refreshRoll()
                 panels.refreshContents()
+                scheduleSave()
             }
         }
         choices.addView(lockSwitch, wrap(end = dp(8)))
         fun refresh(): String {
-            val project = session.project
-            keyLabel.text = getString(R.string.studio_key_label, resources.getStringArray(R.array.studio_key_names)[project.keyPc])
-            tonicKeyboard.keyPc = project.keyPc
+            // La bulle se ferme d'elle-même quand la piste disparaît (valid ci-dessous)
+            val t = session.project.trackOrNull(trackId) ?: return ""
+            keyLabel.text = getString(R.string.studio_key_label, resources.getStringArray(R.array.studio_key_names)[t.keyPc])
+            tonicKeyboard.keyPc = t.keyPc
             octaveButton.text = getString(R.string.studio_track_octave, pitchName(session.rhythmEntryPitch(trackId)))
-            scaleButton.text = getString(R.string.studio_scale_label, getString(scaleName(project.scaleId)))
-            lockSwitch.isChecked = scaleLocked
-            return getString(R.string.studio_panel_track, getString(R.string.studio_tab_notes), trackName(project.track(trackId)))
+            scaleButton.text = getString(R.string.studio_scale_label, getString(scaleName(t.scaleId)))
+            lockSwitch.isChecked = t.scaleLocked
+            return getString(R.string.studio_panel_track, getString(R.string.studio_tab_notes), trackName(t))
         }
         panels.show(key, refresh(), tuning, 350, anchor, accent = trackColor(track), refreshContent = ::refresh) {
             session.project.trackOrNull(trackId)?.let { it.melodic && !it.hidden } == true
@@ -1452,8 +1454,6 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
 
         val header = flowRow(topMargin = dp(6))
         notesHeader = header
-        val prefs = getSharedPreferences(PREFS, MODE_PRIVATE)
-        scaleLocked = prefs.getBoolean("lock_note_scale", false)
         val tuningButton = outlined(R.string.studio_tab_notes).apply {
             setIconResource(R.drawable.ic_px_tune)
             setOnLongClickListener { showRegisterMenu(it); true }
@@ -1535,7 +1535,7 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         pane.addView(roll, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(8) })
 
         keyboard = KeyboardView(this).apply {
-            dynamicTouch = prefs.getBoolean(PREF_DYNAMIC_TOUCH, dynamicTouch)
+            dynamicTouch = getSharedPreferences(PREFS, MODE_PRIVATE).getBoolean(PREF_DYNAMIC_TOUCH, dynamicTouch)
             accent = LANE_COLORS[Inst.SYNTH]
             noteNames = resources.getStringArray(R.array.studio_key_names).toList()
             listener = object : KeyboardView.Listener {
@@ -1959,7 +1959,7 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         fun chooseProgram(program: Int) {
             personalPad?.finishTouch(false)
             if (fmSynth) session.setFmProgram(t.id, program) else session.setChipProgram(t.id, program)
-            if (orchestral) orchestralLast[orchestralTab(program)] = program
+            if (orchestral) orchestralLast(t.id)[orchestralTab(program)] = program
             scheduleSave()
             refreshPick()
             refreshChipKeyboard(t.id)
@@ -1991,6 +1991,8 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
                 withSf2 { bridge ->
                     pickProgram(bridge) { bank, program ->
                         session.setSf2Program(t.id, bank, program)
+                        // Le nom de l'instrument change partout (tranche du mixeur, grille, case des pads)
+                        refreshTracks()
                         scheduleSave()
                         refreshPick()
                         previewTrack(t.id)
@@ -2005,12 +2007,12 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
                 isSingleSelection = true
                 isSelectionRequired = true
                 for (i in 0..1) addView(outlined(labels[i]).apply { id = tabIds[i]; minWidth = dp(96) })
-                orchestralLast[orchestralTab(t.program)] = t.program
+                orchestralLast(t.id)[orchestralTab(t.program)] = t.program
                 check(tabIds[orchestralTab(t.program)])
                 addOnButtonCheckedListener { _, id, checked ->
                     val now = session.project.trackOrNull(t.id) ?: return@addOnButtonCheckedListener
                     val tab = tabIds.indexOf(id)
-                    if (checked && tab != orchestralTab(now.program)) chooseProgram(orchestralLast[tab])
+                    if (checked && tab != orchestralTab(now.program)) chooseProgram(orchestralLast(t.id)[tab])
                 }
             }, LinearLayout.LayoutParams(-2, -2).apply { topMargin = dp(8) })
         }
@@ -2216,7 +2218,7 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
             if (firstPosition) {
                 firstPosition = false
                 heldPreview = isTouching
-                auditionHeldNote(track.id, 60 + session.project.keyPc, 0.9f, if (heldPreview) 0L else 450L, this)
+                auditionHeldNote(track.id, 60 + keyOf(track.id), 0.9f, if (heldPreview) 0L else 450L, this)
             }
         }
         onRelease = { completed ->
@@ -2250,7 +2252,7 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
     private fun auditionNote(track: Int, octave: Int, durationMs: Long) {
         if (session.isMuted(track)) return
         presetReleases.remove(track)?.let { handler.removeCallbacks(it); it.run() }
-        val pitch = octave + session.project.keyPc
+        val pitch = octave + keyOf(track)
         if (session.project.trackOrNull(track)?.synthBank == SynthBank.FM) {
             auditionHeldNote(track, pitch, 0.9f, durationMs)
             return
@@ -2504,21 +2506,47 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         }
         stopSoundAudition()
         engine.trigger(track, pitch, velocity)
-        handler.postDelayed({ engine.release(track, pitch) }, holdMs)
+        lateinit var release: Runnable
+        release = Runnable {
+            engine.release(track, pitch)
+            previewReleases[track]?.remove(release)
+        }
+        previewReleases.getOrPut(track) { ArrayList() } += release
+        handler.postDelayed(release, holdMs)
+    }
+
+    /** Les fins des notes d'essai pas encore jouées, piste par piste. */
+    private val previewReleases = HashMap<Int, MutableList<Runnable>>()
+
+    /**
+     * Une note jouée en direct sur [track] : les notes d'essai de la piste s'arrêtent d'abord. Sinon leur fin, prévue un peu plus
+     * tard, coupait la note que le doigt tient (même hauteur).
+     */
+    private fun endPreviews(track: Int) {
+        presetReleases.remove(track)?.let { handler.removeCallbacks(it); it.run() }
+        // La liste est d'abord retirée : chaque fin, jouée tout de suite, ne la modifie pas pendant qu'on la parcourt
+        previewReleases.remove(track)?.forEach { release ->
+            handler.removeCallbacks(release)
+            release.run()
+        }
     }
 
     /** Une note d'essai après un réglage du son : la tonique, dans l'octave du piano roll. */
-    private fun previewKeyNote() = previewPitch((register.low + (session.project.keyPc - register.low % 12 + 12) % 12), 0.9f, 450)
+    private fun previewKeyNote() = previewPitch((register.low + (keyOf(selectedTrack) - register.low % 12 + 12) % 12), 0.9f, 450)
 
-    /** Une note d'essai sur la piste [id] (une frappe pour la batterie). */
+    /** La tonalité de la piste [id] (celle des nouvelles pistes si elle n'en a pas). */
+    private fun keyOf(id: Int): Int = session.project.trackOrNull(id)?.takeIf { it.melodic }?.keyPc ?: session.project.keyPc
+
+    /** Une note d'essai sur la piste [id] (une frappe pour la batterie) : sa tonique, dans son octave à elle. */
     private fun previewTrack(id: Int) {
         val t = session.project.trackOrNull(id) ?: return
-        if (t.melodic) previewPitch((register.low + (session.project.keyPc - register.low % 12 + 12) % 12), 0.9f, 450, track = id) else engine.trigger(id, 60, 1f, recordHit = false)
+        if (t.melodic) previewPitch(session.rhythmEntryPitch(id), 0.9f, 450, track = id) else engine.trigger(id, 60, 1f, recordHit = false)
     }
 
-    private fun pickScale(anchor: View) {
+    /** La gamme de la piste [trackId] seulement. */
+    private fun pickScale(anchor: View, trackId: Int) {
         dropdown(anchor, Scales.ALL.map { getString(scaleName(it.id)) }) { which ->
-            session.setScale(Scales.ALL[which].id)
+            session.setScale(trackId, Scales.ALL[which].id)
             changed()
         }
     }
@@ -2580,8 +2608,8 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         val targets = (0 until StudioProject.SLOTS).filter { it != from }
         dropdown(anchor, targets.map { names[it] }) { which ->
             session.copyPattern(from, targets[which])
-            refreshPatterns()
-            scheduleSave()
+            // La copie peut tomber dans un motif affiché (vue A+B) : la grille et le piano roll se redessinent
+            changed()
         }
     }
 
@@ -2618,6 +2646,7 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
     private fun liveNoteOn(pitch: Int, velocity: Float, position: Double) {
         if (selectedTrack < 0 || session.isMuted(selectedTrack)) return
         stopSoundAudition()
+        endPreviews(selectedTrack)
         clearPendingPadEffects(selectedTrack)
         engine.trigger(selectedTrack, pitch, velocity)
         recorder.press(pitch, position, selectedTrack, velocity)
@@ -2742,7 +2771,7 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
     }
 
     private fun showRhythmOctaves(anchor: View, trackId: Int) {
-        val key = session.project.keyPc
+        val key = keyOf(trackId)
         val current = session.rhythmEntryPitch(trackId) / 12 - 1
         val menu = ImmersiveSupportPopupMenu(this, anchor)
         for (octave in -1..Track.maxRhythmOctave(key)) {
@@ -2756,6 +2785,9 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
             if (trackId == selectedTrack) {
                 register.setLow((octave + 1) * 12)
                 refreshRoll()
+            } else {
+                // Une autre piste : son clavier s'ouvrira sur la nouvelle octave quand on la choisira
+                registerLows.remove(trackId)
             }
             panels.refreshContents()
             if (padsPane.visibility == View.VISIBLE) refreshPads()
@@ -3005,7 +3037,7 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         selectPadLoop(slot)
         if (track.melodic) {
             editedDrum = -1
-            selectedTrack = track.id
+            selectMelodic(track.id)
             tabsGroup.check(tabNotesId)
         } else {
             tabsGroup.check(tabRhythmId)
@@ -3117,7 +3149,9 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         roll.sectionLabels = labels
         songButton.isSelected = p.songMode
         songButton.alpha = 1f
-        songButton.setTextColor(if (p.songMode) 0xFFFFC857.toInt() else songDefaultColor)
+        // Ambre clair sur fond sombre, ambre foncé sur fond clair : lisible avec les deux thèmes de l'appli
+        val songOn = if (com.Atom2Universe.app.AppearanceStyle.isLight(this)) 0xFF9A5B00.toInt() else 0xFFFFC857.toInt()
+        songButton.setTextColor(if (p.songMode) songOn else songDefaultColor)
     }
 
     /** Le morceau : la suite des motifs ; on l'écrit avec des boutons « + A » … et on le lance avec un interrupteur. */
@@ -3172,7 +3206,14 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         }
         box.addView(playSwitch, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(12) })
         refresh()
-        panels.show(R.string.studio_song_title, getString(R.string.studio_song_title), box, 420, anchor, onHistory = { showSongPanel(anchor) })
+        // Lancer une boucle aux pads coupe le morceau : l'interrupteur de la bulle ouverte suit
+        fun title(): String {
+            if (playSwitch.isChecked != session.project.songMode) playSwitch.isChecked = session.project.songMode
+            playSwitch.isEnabled = session.project.chain.isNotEmpty()
+            return getString(R.string.studio_song_title)
+        }
+        panels.show(R.string.studio_song_title, getString(R.string.studio_song_title), box, 420, anchor,
+            onHistory = { showSongPanel(anchor) }, refreshContent = ::title)
     }
 
     private fun refreshTransport() {
@@ -3203,22 +3244,25 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
 
     private fun refreshRoll() {
         displayMidiLights()
-        val p = session.project
-        val scale = Scales.byId(p.scaleId)
-        roll.keyPc = p.keyPc
+        // Le piano roll, le clavier et le thérémine montrent la piste choisie : sa tonalité, sa gamme et son verrou
+        val t = curTrack()
+        val key = t?.keyPc ?: session.project.keyPc
+        val scale = Scales.byId(t?.scaleId ?: session.project.scaleId)
+        val locked = t?.scaleLocked == true
+        roll.keyPc = key
         roll.scale = scale
-        roll.scaleLocked = scaleLocked
+        roll.scaleLocked = locked
         roll.rows = (register.low..register.high).toList().toIntArray()
         refreshRhythmPitch()
         if (roll.pasteArmed) updatePasteTarget()
         roll.invalidate()
-        keyboard.keyPc = p.keyPc
+        keyboard.keyPc = key
         keyboard.scale = scale
         keyboard.low = register.low
         keyboard.high = register.high
-        keyboard.locked = scaleLocked
-        theremin.keyPc = p.keyPc
-        theremin.pitches = if (scaleLocked) roll.rows.filter { Scales.contains(scale, p.keyPc, it) }.toIntArray() else roll.rows
+        keyboard.locked = locked
+        theremin.keyPc = key
+        theremin.pitches = if (locked) roll.rows.filter { Scales.contains(scale, key, it) }.toIntArray() else roll.rows
     }
 
     /** Le clavier ou le thérémine, sous le piano roll. */
@@ -3297,8 +3341,9 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         com.Atom2Universe.app.studio.dsp.PolySynth.ORCHESTRAL_SIMULATED,
     )
     private fun orchestralTab(program: Int) = if (program in orchestralTabs[0]) 0 else 1
-    // Le dernier instrument choisi dans chaque onglet : on le retrouve en y revenant.
-    private val orchestralLast = intArrayOf(0, 4)
+    // Le dernier instrument choisi dans chaque onglet, piste par piste : on le retrouve en y revenant.
+    private val orchestralLasts = HashMap<Int, IntArray>()
+    private fun orchestralLast(track: Int) = orchestralLasts.getOrPut(track) { intArrayOf(0, 4) }
     private val fmProgramNames by lazy { resources.getStringArray(R.array.studio_fm_programs) }
 
     private fun instrumentName(t: Track): String = when {
@@ -3789,15 +3834,42 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         val p = session.project
         val t = p.trackOrNull(selectedTrack)
         if (t == null || !t.melodic || t.hidden) {
-            selectedTrack = p.tracks.firstOrNull { it.melodic && !it.hidden }?.id ?: -1
+            selectMelodic(p.tracks.firstOrNull { it.melodic && !it.hidden }?.id ?: -1)
         }
         // Une piste de batterie ouverte qui a disparu (ou qu'on a cachée) : retour aux notes
         if (editedDrum >= 0 && p.trackOrNull(editedDrum)?.let { it.kind == TrackKind.DRUM && !it.hidden } != true) editedDrum = -1
     }
 
+    /** Là où le clavier et le piano roll de chaque piste à notes étaient la dernière fois (la note la plus grave montrée). */
+    private val registerLows = HashMap<Int, Int>()
+
+    /**
+     * L'onglet Notes passe à la piste [id] : le clavier et le piano roll reprennent l'endroit où ils étaient pour elle, ou à défaut
+     * se placent sur son octave (une basse en do2 ne se joue pas sur le clavier resté en do5 d'une autre piste).
+     */
+    private fun selectMelodic(id: Int) {
+        if (id == selectedTrack) return
+        if (!::register.isInitialized) {
+            selectedTrack = id
+            return
+        }
+        if (selectedTrack >= 0) registerLows[selectedTrack] = register.low
+        selectedTrack = id
+        if (id < 0 || session.project.trackOrNull(id)?.melodic != true) return
+        val saved = registerLows[id]
+        val tonic = session.rhythmEntryPitch(id)
+        if (saved != null) register.setLow(saved)
+        else if (tonic !in register.low..register.high) register.setLow(tonic / 12 * 12)
+    }
+
     /** Redessine la grille et le mixeur seulement si la liste des pistes a changé. */
     private fun refreshTracks() {
         ensureSelected()
+        // Ce qu'on retenait pour une piste retirée ne doit pas passer à la prochaine qui reprendra son numéro
+        val existing = session.project.tracks.mapTo(HashSet()) { it.id }
+        pens.keys.retainAll(existing)
+        orchestralLasts.keys.retainAll(existing)
+        registerLows.keys.retainAll(existing)
         val sig = session.project.tracks.joinToString(",") {
             val sound = when (it.kind) {
                 TrackKind.SYNTH -> it.synthBank.name
@@ -3839,7 +3911,7 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
                 roll.clearSelection()
                 if (t.melodic) {
                     editedDrum = -1
-                    selectedTrack = t.id
+                    selectMelodic(t.id)
                 } else {
                     editedDrum = t.id
                 }
@@ -3919,7 +3991,8 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
             pickProgram(bridge) { bank, program ->
                 session.setSf2Program(trackId, bank, program)
                 changed()
-                previewKeyNote()
+                // La piste qu'on vient de changer (pas forcément celle de l'onglet Notes)
+                previewTrack(trackId)
             }
         }
     }
@@ -3929,7 +4002,9 @@ class StudioActivity : AudioThemedActivity(), SystemBarsPreferenceOwner {
         val id = session.addTrack(kind, voice, bank, program)
         if (id < 0) return
         if (kind != TrackKind.DRUM) {
-            selectedTrack = id
+            // L'onglet Notes montre la nouvelle piste, pas le son de batterie qu'il montrait peut-être
+            editedDrum = -1
+            selectMelodic(id)
         }
         changed()
     }

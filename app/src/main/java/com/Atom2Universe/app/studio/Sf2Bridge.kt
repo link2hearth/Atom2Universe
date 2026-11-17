@@ -50,8 +50,13 @@ class Sf2Bridge private constructor(private val file: Sf2File) {
         override fun allOff() = synth.allNotesOff()
 
         override fun setProgram(bank: Int, program: Int) {
-            // Le canal des percussions est déjà sur la banque 128 : seul le numéro du kit change
-            if (channel != Sf2Synthesizer.PERCUSSION_CHANNEL) synth.controlChange(channel, Sf2Synthesizer.CC_BANK_SELECT_MSB, bank and 0x7F)
+            // Le canal des percussions est déjà sur la banque 128 : seul le numéro du kit change.
+            // Le lecteur compose la banque sur 14 bits (contrôleur 0 = poids fort, 32 = poids faible) : envoyer la banque 8 au
+            // seul contrôleur 0 donnait la banque 1024, introuvable, et une variante jouait l'instrument de la banque 0.
+            if (channel != Sf2Synthesizer.PERCUSSION_CHANNEL) {
+                synth.controlChange(channel, Sf2Synthesizer.CC_BANK_SELECT_MSB, (bank shr 7) and 0x7F)
+                synth.controlChange(channel, Sf2Synthesizer.CC_BANK_SELECT_LSB, bank and 0x7F)
+            }
             synth.programChange(channel, program)
         }
 

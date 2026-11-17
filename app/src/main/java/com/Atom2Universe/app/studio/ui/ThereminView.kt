@@ -1,7 +1,7 @@
 package com.Atom2Universe.app.studio.ui
 
+import com.Atom2Universe.app.AppearanceStyle
 import android.content.Context
-import android.content.res.Configuration
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.LinearGradient
@@ -42,7 +42,7 @@ class ThereminView(context: Context) : View(context) {
     private var fx = 0f
     private var fy = 0f
 
-    private val dark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+    private val dark = !AppearanceStyle.isLight(context)
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val text = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         textSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 13f, resources.displayMetrics)
@@ -74,6 +74,8 @@ class ThereminView(context: Context) : View(context) {
             val bottom = if (dark) 0xFF111116.toInt() else 0xFFB4B4C4.toInt()
             paint.shader = LinearGradient(0f, 0f, 0f, height.toFloat(), top, bottom, Shader.TileMode.CLAMP)
         }
+        // Opaque : sinon le dégradé prenait la transparence de la dernière couleur du dessin précédent (et pâlissait)
+        paint.color = Color.BLACK
         canvas.drawRoundRect(rect, dp(16f), dp(16f), paint)
         val shader = paint.shader
         paint.shader = null

@@ -46,7 +46,7 @@ object StudioHistory {
     private fun coreOf(t: Track): String = StudioProjectCodec.encodeTrack(
         t.copy(
             mix = NEUTRAL_MIX, hidden = false, muted = false, solo = false, synth = SynthPresets.BASS,
-            arpMode = 0, arpRate = 1, arpOctaves = 1,
+            arpMode = 0, arpRate = 1, arpOctaves = 1, scaleLocked = false,
         ),
     ).toString()
 
@@ -133,17 +133,13 @@ object StudioHistory {
                     tracks = tracks.filter { it.id != id }
                     continue
                 }
-                val core = StudioProjectCodec.decodeTrack(JSONObject(v)) ?: continue
+                val core = StudioProjectCodec.decodeTrack(JSONObject(v), project.keyPc, project.scaleId) ?: continue
+                // L'autre côté de la pièce : seuls les champs qui diffèrent entre les deux sont rendus. Sinon, annuler un
+                // déplacement de pad (qui touche toutes les pistes) rendait aussi l'ancien instrument choisi depuis.
+                val from = (if (forward) c.before else c.after)
+                    ?.let { StudioProjectCodec.decodeTrack(JSONObject(it), project.keyPc, project.scaleId) }
                 tracks = if (tracks.none { it.id == id }) tracks + core else tracks.map {
-                    if (it.id != id) it else it.copy(
-                        kind = core.kind, voice = core.voice, bank = core.bank, program = core.program,
-                        synthBank = core.synthBank,
-                        rhythmOctave = core.rhythmOctave,
-                        chipProgramAssigned = core.chipProgramAssigned, chipSmoothBass = core.chipSmoothBass,
-                        fmProgram = core.fmProgram, fmBrightness = core.fmBrightness, fmAttack = core.fmAttack,
-                        kit = core.kit, tune = core.tune, length = core.length, sfKit = core.sfKit,
-                        padOrder = core.padOrder, padSize = core.padSize, padPlayMode = core.padPlayMode,
-                    )
+                    if (it.id != id) it else patchCore(it, from, core)
                 }
             }
             for (c in changes) if (c.key.startsWith("x")) {
@@ -154,6 +150,7 @@ object StudioHistory {
                         mix = ext.mix, hidden = ext.hidden, muted = ext.muted, solo = ext.solo,
                         synth = if (it.kind == TrackKind.SYNTH) ext.synth else it.synth,
                         arpMode = ext.arpMode, arpRate = ext.arpRate, arpOctaves = ext.arpOctaves,
+                        scaleLocked = ext.scaleLocked,
                     )
                 }
             }
@@ -175,6 +172,23 @@ object StudioHistory {
             return p
         }
         return project
+    }
+
+    /**
+     * Le caractère de [current] devient celui de [to], champ par champ, mais seulement là où [from] (l'autre côté de la pièce)
+     * diffère de [to] : ce qui a changé depuis sans passer par cette action reste. Sans [from], tout est repris de [to].
+     */
+    private fun patchCore(current: Track, from: Track?, to: Track): Track {
+        fun <T> pick(get: (Track) -> T): T = if (from == null || get(from) != get(to)) get(to) else get(current)
+        return current.copy(
+            kind = pick { it.kind }, voice = pick { it.voice }, bank = pick { it.bank }, program = pick { it.program },
+            synthBank = pick { it.synthBank },
+            rhythmOctave = pick { it.rhythmOctave }, keyPc = pick { it.keyPc }, scaleId = pick { it.scaleId },
+            chipProgramAssigned = pick { it.chipProgramAssigned }, chipSmoothBass = pick { it.chipSmoothBass },
+            fmProgram = pick { it.fmProgram }, fmBrightness = pick { it.fmBrightness }, fmAttack = pick { it.fmAttack },
+            kit = pick { it.kit }, tune = pick { it.tune }, length = pick { it.length }, sfKit = pick { it.sfKit },
+            padOrder = pick { it.padOrder }, padSize = pick { it.padSize }, padPlayMode = pick { it.padPlayMode },
+        )
     }
 
     // ---- Les lignes du journal --------------------------------------------------------------------------------------

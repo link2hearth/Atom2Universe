@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.studio.ui
 
+import com.Atom2Universe.app.AppearanceStyle
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -257,9 +258,9 @@ class StepGridView(context: Context) : View(context) {
         canvas.save()
         canvas.clipRect(gridLeft - dp(2f), 0f, width.toFloat(), height.toFloat() + scrollY)
         rect.set(left, top, right, bottom)
-        fill.color = Color.argb(46, 255, 255, 255)
+        fill.color = overlay(46)
         canvas.drawRoundRect(rect, dp(10f), dp(10f), fill)
-        ring.color = Color.WHITE
+        ring.color = overlay(255)
         ring.strokeWidth = dp(2f)
         canvas.drawRoundRect(rect, dp(10f), dp(10f), ring)
         canvas.restore()
@@ -275,8 +276,7 @@ class StepGridView(context: Context) : View(context) {
             }
         }
 
-    private val dark = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
-        android.content.res.Configuration.UI_MODE_NIGHT_YES
+    private val dark = !AppearanceStyle.isLight(context)
     private val padOffA = if (dark) 0xFF3B3B42.toInt() else 0xFFD8D8DE.toInt()
     private val padOffB = if (dark) 0xFF4A4A52.toInt() else 0xFFC8C8D0.toInt()
     private val numberColor = if (dark) 0xFF9A9AA4.toInt() else 0xFF6A6A74.toInt()
@@ -473,7 +473,7 @@ class StepGridView(context: Context) : View(context) {
                 canvas.drawText(if (letter != null) "$letter ${local + 1}" else (local + 1).toString(), left + stride / 2f, topBar - dp(12f), numberPaint)
             }
             if (s == playhead) {
-                fill.color = 0xFFFFC857.toInt()
+                fill.color = if (dark) 0xFFFFC857.toInt() else 0xFFB7791F.toInt()
                 rect.set(left + dp(4f), topBar - dp(7f), left + stride - dp(4f), topBar - dp(3f))
                 canvas.drawRoundRect(rect, dp(2f), dp(2f), fill)
             }
@@ -539,12 +539,15 @@ class StepGridView(context: Context) : View(context) {
                 }
             }
             if (step == playhead) {
-                fill.color = Color.argb(if (v > 0f) 90 else 55, 255, 255, 255)
+                fill.color = overlay(if (v > 0f) 90 else 55)
                 canvas.drawRoundRect(rect, dp(8f), dp(8f), fill)
             }
         }
         canvas.restore()
     }
+
+    /** Éclaircit sur le thème sombre, assombrit sur le clair : la sélection et la tête de lecture se voient sur les deux. */
+    private fun overlay(alpha: Int): Int = if (dark) Color.argb(alpha, 255, 255, 255) else Color.argb(alpha * 3 / 4, 20, 20, 32)
 
     private fun withAlpha(c: Int, a: Float): Int = if (a >= 1f) c else Color.argb((255 * a).toInt(), Color.red(c), Color.green(c), Color.blue(c))
 
@@ -629,6 +632,8 @@ class StepGridView(context: Context) : View(context) {
         if (zone == Zone.HEADER && headerLane >= 0 && !scrollingY && laneNames.size > 1) {
             dragFrom = headerLane
             dragTarget = headerLane
+            // Le doigt (ou la souris) n'a peut-être pas encore bougé : la piste soulevée part de là où il s'est posé
+            dragY = downY
             performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
             handler.post(autoScroll)
             invalidate()
@@ -683,7 +688,29 @@ class StepGridView(context: Context) : View(context) {
         scrollingY = false
     }
 
+    /** Le doigt du geste s'est levé alors qu'un autre restait posé : le reste du geste est ignoré jusqu'au prochain appui. */
+    private var gestureEnded = false
+
+    /**
+     * Un seul doigt mène le geste (peindre, poser une note, glisser le pad) : le premier posé. Un deuxième doigt ne fait rien ;
+     * si le premier se lève avant lui, le geste finit là, comme un lever normal. Sans cela, le geste sautait sous l'autre doigt.
+     */
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        when (event.actionMasked) {
+            MotionEvent.ACTION_DOWN -> gestureEnded = false
+            MotionEvent.ACTION_POINTER_DOWN -> return true
+            MotionEvent.ACTION_POINTER_UP -> {
+                if (gestureEnded || event.actionIndex != 0) return true
+                gestureEnded = true
+                val up = MotionEvent.obtain(event).apply { action = MotionEvent.ACTION_UP }
+                try { return handleTouch(up) } finally { up.recycle() }
+            }
+        }
+        if (gestureEnded) return true
+        return handleTouch(event)
+    }
+
+    private fun handleTouch(event: MotionEvent): Boolean {
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
                 measures()

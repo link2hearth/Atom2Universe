@@ -79,7 +79,7 @@ class StudioGxIntegrationTest {
     @Test fun emptyRhythmCellPreviewsTheSamePitchItAddsForBothBanks() {
         for (bank in listOf(SynthBank.SCC, SynthBank.FAMICOM)) {
             val session = StudioSession(StudioEngine(rate), StudioProject.blank())
-            session.setKey(4)
+            session.setKey(track, 4)
             session.setSynthBank(track, bank)
             val pitch = 64
             for (program in listOf(0, 32)) {

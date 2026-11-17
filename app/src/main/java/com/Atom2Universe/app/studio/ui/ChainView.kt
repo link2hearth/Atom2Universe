@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.studio.ui
 
+import com.Atom2Universe.app.AppearanceStyle
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Canvas
@@ -41,7 +42,7 @@ class ChainView(context: Context) : View(context) {
     var onMove: ((from: Int, to: Int) -> Unit)? = null
     var onRemove: ((index: Int) -> Unit)? = null
 
-    private val dark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+    private val dark = !AppearanceStyle.isLight(context)
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val label = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         textSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 20f, resources.displayMetrics)
@@ -122,8 +123,11 @@ class ChainView(context: Context) : View(context) {
         val slot = chain[i]
         val color = colors.getOrElse(slot) { 0xFF7C8CFF.toInt() }
         val base = if (dark) 0xFF202027.toInt() else 0xFFE4E4EA.toInt()
-        paint.color = blend(base, color, light)
+        val face = blend(base, color, light)
+        paint.color = face
         canvas.drawRoundRect(rect, dp(12f), dp(12f), paint)
+        // Lettre foncée sur un bloc clair (thème clair), blanche sinon
+        label.color = if (androidx.core.graphics.ColorUtils.calculateLuminance(face) > 0.5) Color.rgb(28, 28, 36) else Color.WHITE
         canvas.drawText(names.getOrElse(slot) { "" }, rect.centerX(), rect.centerY() + label.textSize / 3f, label)
     }
 

@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.studio.ui
 
+import com.Atom2Universe.app.AppearanceStyle
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Canvas
@@ -37,11 +38,14 @@ import com.Atom2Universe.app.studio.StudioNames
  */
 class PadsView(context: Context) : View(context) {
 
-    /** Une case : la piste, sa couleur, son dessin, et pour une piste à notes ses niveaux (hauteurs MIDI, du grave à l'aigu). */
+    /**
+     * Une case : la piste, sa couleur, son dessin, et pour une piste à notes ses niveaux (hauteurs MIDI, du grave à l'aigu) et
+     * sa tonique [keyPc] (0 = do), dont les touches portent le nom.
+     */
     class Tile(
         val track: Int, val color: Int, val icon: Int, val levels: IntArray? = null,
         val padSize: PadSize = PadSize.NORMAL, val name: String = "", val mode: PadPlayMode = PadPlayMode.DRIVE,
-        val soundName: String = "",
+        val soundName: String = "", val keyPc: Int = 0,
     ) {
         internal val piano = if (mode != PadPlayMode.THEREMIN && levels != null && levels.isNotEmpty()) PadPiano(levels) else null
     }
@@ -86,8 +90,7 @@ class PadsView(context: Context) : View(context) {
     var onResize: ((track: Int) -> Unit)? = null
     var onToggleHalf: ((track: Int) -> Unit)? = null
 
-    /** La tonique (0 = do) et les noms des notes : les niveaux de la tonique portent leur nom. */
-    var keyPc: Int = 0
+    /** Les noms des notes : les niveaux de la tonique de chaque case portent leur nom. */
     var noteNames: List<String> = emptyList()
 
     var onDown: ((track: Int) -> Unit)? = null
@@ -115,7 +118,7 @@ class PadsView(context: Context) : View(context) {
     /** Éclat de chaque case (1 juste après un coup, puis s'éteint). */
     private val glow = HashMap<Int, Float>()
 
-    private val dark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+    private val dark = !AppearanceStyle.isLight(context)
     private val pianoColors = StudioKeyColors(dark)
     private val base = if (dark) 0xFF202027.toInt() else 0xFFE4E4EA.toInt()
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -394,6 +397,10 @@ class PadsView(context: Context) : View(context) {
         val n = areas.size
         if (n == 0) return
         var animating = false
+        // L'éclat s'éteint en 200 ms, quelle que soit la cadence de l'écran (60 ou 120 images par seconde)
+        val now = android.os.SystemClock.uptimeMillis()
+        val fade = if (lastGlowFrame == 0L) 0.08f else (now - lastGlowFrame).coerceIn(0L, 100L) / 200f
+        lastGlowFrame = now
         for (i in 0 until n) {
             val t = tiles[i]
             tileRect(i, rect)
@@ -402,24 +409,31 @@ class PadsView(context: Context) : View(context) {
             if (levels == null) {
                 val pressed = held.values.any { it.tile == i }
                 // Au repos, la couleur un peu éteinte ; frappée, elle s'allume puis retombe
-                paint.color = blend(base, t.color, if (pressed) 1f else 0.55f + 0.45f * g)
+                val face = blend(base, t.color, if (pressed) 1f else 0.55f + 0.45f * g)
+                paint.color = face
                 canvas.drawRoundRect(rect, dp(16f), dp(16f), paint)
-                InstrumentIcons.draw(canvas, t.icon, rect.centerX(), rect.centerY(), minOf(rect.width(), rect.height()) * 0.38f, Color.WHITE)
+                // Dessin et nom foncés sur une case claire (charleston jaune sur le thème clair), blancs sinon
+                val ink = inkOn(face)
+                InstrumentIcons.draw(canvas, t.icon, rect.centerX(), rect.centerY(), minOf(rect.width(), rect.height()) * 0.38f, ink)
+                if (rect.height() >= dp(58f)) {
+                    label.color = ink
+                    drawTileName(canvas, t, rect.left + dp(9f), rect.bottom - dp(8f), rect.right - dp(6f))
+                    label.color = Color.WHITE
+                }
             } else {
                 drawMelodic(canvas, i, t, levels)
             }
-            if (levels == null && rect.height() >= dp(58f)) {
-                drawTileName(canvas, t, rect.left + dp(9f), rect.bottom - dp(8f), rect.right - dp(6f))
-            }
             if (editing) drawEditControls(canvas, i, t)
             if (g > 0f) {
-                glow[i] = (g - 0.08f).coerceAtLeast(0f)
+                glow[i] = (g - fade).coerceAtLeast(0f)
                 animating = true
             }
         }
         if (dragging) drawDragIcon(canvas)
-        if (animating) postInvalidateOnAnimation()
+        if (animating) postInvalidateOnAnimation() else lastGlowFrame = 0L
     }
+
+    private var lastGlowFrame = 0L
 
     /** La poignée montre le sens du prochain changement de largeur. Le contour marque la place du pad déplacé. */
     private fun drawEditControls(canvas: Canvas, i: Int, tile: Tile) {
@@ -531,7 +545,7 @@ class PadsView(context: Context) : View(context) {
         val gap = minOf(dp(1f), rect.width() / (count * 5f))
         for (key in piano.keys) {
             val p = key.pitch
-            val tonic = p % 12 == keyPc
+            val tonic = p % 12 == t.keyPc
             val finger = held.values.firstOrNull { it.tile == i && it.pitch == p }
             band.set(rect.left + key.left * rect.width() + gap, top + gap,
                 rect.left + key.right * rect.width() - gap, top + h * key.depth - gap)
@@ -557,6 +571,13 @@ class PadsView(context: Context) : View(context) {
     private fun drawSoundButton(canvas: Canvas, name: String, left: Float, right: Float, bottom: Float) {
         val width = right - left
         val cy = (rect.top + bottom) / 2f
+        // Une bande sombre, comme sous le titre et le mode : le nom du son, blanc, reste lisible sur une case claire
+        if (width > dp(8f)) {
+            val radius = minOf(dp(12f), (bottom - rect.top) * 0.44f)
+            band.set(left + dp(2f), cy - radius, right - dp(2f), cy + radius)
+            paint.color = Color.argb(85, 20, 20, 28)
+            canvas.drawRoundRect(band, radius, radius, paint)
+        }
         val size = minOf(dp(16f), (bottom - rect.top) * 0.7f, width * 0.65f)
         val textX = left + dp(5f) + size + dp(4f)
         val available = right - dp(4f) - textX
@@ -605,7 +626,7 @@ class PadsView(context: Context) : View(context) {
         for (k in levels.indices) {
             val x = rect.left + k * w
             val p = levels[k]
-            val tonic = p % 12 == keyPc
+            val tonic = p % 12 == tile.keyPc
             if (k > 0) {
                 paint.color = if (tonic) 0x77FFFFFF else 0x33FFFFFF
                 paint.strokeWidth = dp(1f)
@@ -613,7 +634,7 @@ class PadsView(context: Context) : View(context) {
             }
             if (tonic && noteNames.size == 12 && w > label.textSize * 1.6f && h > label.textSize * 2) {
                 label.textAlign = Paint.Align.CENTER
-                canvas.drawText(noteNames[keyPc] + (p / 12 - 1), x + w / 2f, rect.bottom - dp(10f), label)
+                canvas.drawText(noteNames[tile.keyPc] + (p / 12 - 1), x + w / 2f, rect.bottom - dp(10f), label)
             }
         }
         val finger = held.values.firstOrNull { it.tile == i } ?: return
@@ -661,7 +682,10 @@ class PadsView(context: Context) : View(context) {
     private fun lift(pointer: Int) {
         val h = held.remove(pointer) ?: return
         val t = tiles.getOrNull(h.tile) ?: return
-        if (h.pitch < 0) onUp?.invoke(t.track) else onNoteUp?.invoke(t.track, h.pitch)
+        if (h.pitch < 0) {
+            // Le roulement d'une case ne s'arrête qu'au dernier doigt levé (deux doigts qui alternent sur la même case)
+            if (held.values.none { it.tile == h.tile && it.pitch < 0 }) onUp?.invoke(t.track)
+        } else onNoteUp?.invoke(t.track, h.pitch)
     }
 
     private fun sizeHandleAt(i: Int, x: Float, y: Float): PadSize? {
@@ -862,6 +886,10 @@ class PadsView(context: Context) : View(context) {
         releaseAll()
         super.onDetachedFromWindow()
     }
+
+    /** L'encre lisible sur [face] : presque noire sur une couleur claire, blanche sur une foncée. */
+    private fun inkOn(face: Int): Int =
+        if (androidx.core.graphics.ColorUtils.calculateLuminance(face) > 0.5) Color.rgb(28, 28, 36) else Color.WHITE
 
     private fun blend(a: Int, b: Int, t: Float): Int {
         val k = t.coerceIn(0f, 1f)

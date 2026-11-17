@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.studio.ui
 
+import com.Atom2Universe.app.AppearanceStyle
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Canvas
@@ -100,7 +101,7 @@ class PianoRollView(context: Context) : View(context) {
             }
         }
 
-    private val dark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+    private val dark = !AppearanceStyle.isLight(context)
     private val keyColors = StudioKeyColors(dark)
     private val rowIn = if (dark) 0xFF3B3B42.toInt() else 0xFFD8D8DE.toInt()
     private val rowInAlt = if (dark) 0xFF44444B.toInt() else 0xFFCFCFD6.toInt()
@@ -288,9 +289,10 @@ class PianoRollView(context: Context) : View(context) {
         val top = topBar + (rows.size - 1 - hi) * rh
         val bottom = topBar + (rows.size - lo) * rh
         rect.set(left, top, right, bottom)
-        fill.color = Color.argb(46, 255, 255, 255)
+        fill.color = overlay(46)
         canvas.drawRoundRect(rect, dp(5f), dp(5f), fill)
         selStroke.strokeWidth = dp(2f)
+        selStroke.color = overlay(255)
         canvas.drawRoundRect(rect, dp(5f), dp(5f), selStroke)
     }
 
@@ -298,6 +300,9 @@ class PianoRollView(context: Context) : View(context) {
         style = Paint.Style.STROKE
         color = Color.WHITE
     }
+
+    /** Éclaircit sur le thème sombre, assombrit sur le clair : la sélection et la tête de lecture se voient sur les deux. */
+    private fun overlay(alpha: Int): Int = if (dark) Color.argb(alpha, 255, 255, 255) else Color.argb(alpha * 3 / 4, 20, 20, 32)
 
     private var scrollX = 0f
     private val scroller = OverScroller(context)
@@ -445,7 +450,7 @@ class PianoRollView(context: Context) : View(context) {
 
         if (playhead in 0 until stepCount) {
             val x = cellLeft(playhead)
-            fill.color = Color.argb(70, 255, 255, 255)
+            fill.color = overlay(70)
             canvas.drawRect(x, topBar, x + cw, height.toFloat(), fill)
         }
         if (!pasteArmed) drawSelection(canvas)
@@ -605,7 +610,29 @@ class PianoRollView(context: Context) : View(context) {
     private var keyStripDragged = false
     private var keyStripY = 0f
 
+    /** Le doigt du geste s'est levé alors qu'un autre restait posé : le reste du geste est ignoré jusqu'au prochain appui. */
+    private var gestureEnded = false
+
+    /**
+     * Un seul doigt mène le geste (peindre, poser une note, glisser le pad) : le premier posé. Un deuxième doigt ne fait rien ;
+     * si le premier se lève avant lui, le geste finit là, comme un lever normal. Sans cela, le geste sautait sous l'autre doigt.
+     */
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        when (event.actionMasked) {
+            MotionEvent.ACTION_DOWN -> gestureEnded = false
+            MotionEvent.ACTION_POINTER_DOWN -> return true
+            MotionEvent.ACTION_POINTER_UP -> {
+                if (gestureEnded || event.actionIndex != 0) return true
+                gestureEnded = true
+                val up = MotionEvent.obtain(event).apply { action = MotionEvent.ACTION_UP }
+                try { return handleTouch(up) } finally { up.recycle() }
+            }
+        }
+        if (gestureEnded) return true
+        return handleTouch(event)
+    }
+
+    private fun handleTouch(event: MotionEvent): Boolean {
         if (keyStripGesture && event.actionMasked != MotionEvent.ACTION_DOWN) {
             when (event.actionMasked) {
                 MotionEvent.ACTION_MOVE -> {

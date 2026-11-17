@@ -47,6 +47,12 @@ class StudioAudioOutput(
     private var track: AudioTrack? = null
     private var thread: Thread? = null
     @Volatile private var running = false
+
+    /**
+     * Le numéro de la boucle audio en cours. Si l'arrêt n'a pas pu attendre l'ancienne (écriture bloquée lors d'un changement
+     * de sortie), elle s'en va d'elle-même au lieu de tourner à côté de la nouvelle ou de l'arrêter en échouant.
+     */
+    @Volatile private var generation = 0
     @Volatile private var bufferBlocks = 2
 
     fun start(context: Context): Boolean {
@@ -68,7 +74,8 @@ class StudioAudioOutput(
         }
 
         running = true
-        thread = Thread({ loop(t) }, "StudioAudio").also { it.start() }
+        val gen = ++generation
+        thread = Thread({ loop(t, gen) }, "StudioAudio").also { it.start() }
         return true
     }
 
@@ -148,8 +155,8 @@ class StudioAudioOutput(
     }
 
     /** La sortie [dead] ne prend plus de son : on la remplace. `null` si on arrête, ou si le système n'en donne pas d'autre. */
-    private fun reopen(dead: AudioTrack): AudioTrack? = synchronized(trackLock) {
-        if (!running || track !== dead) return null
+    private fun reopen(dead: AudioTrack, gen: Int): AudioTrack? = synchronized(trackLock) {
+        if (!running || gen != generation || track !== dead) return null
         close(dead)
         val next = open()
         track = next
@@ -157,7 +164,7 @@ class StudioAudioOutput(
         next
     }
 
-    private fun loop(first: AudioTrack) {
+    private fun loop(first: AudioTrack, gen: Int) {
         Process.setThreadPriority(Process.THREAD_PRIORITY_URGENT_AUDIO)
         var t = first
         val left = FloatArray(blockFrames)
@@ -168,7 +175,7 @@ class StudioAudioOutput(
         var blocks = 0
         var refused = 0
 
-        while (running) {
+        while (running && gen == generation) {
             val t0 = System.nanoTime()
             engine.render(left, right, blockFrames)
             val spent = System.nanoTime() - t0
@@ -180,14 +187,17 @@ class StudioAudioOutput(
             val written = t.write(inter, 0, blockFrames * 2, AudioTrack.WRITE_BLOCKING)
             if (written < 0) {
                 // À l'arrêt, l'écran a pu fermer la sortie pendant l'écriture : ce n'est pas une panne
-                if (!running) break
+                if (!running || gen != generation) break
                 Log.w(TAG, "Écriture refusée : $written")
                 // La sortie a changé sous nos pieds (casque, Bluetooth) : on en rouvre une. Si la nouvelle refuse aussi
                 // plusieurs fois de suite, c'est une vraie panne et on s'arrête là.
-                val next = if (++refused <= MAX_REOPENS) reopen(t) else null
+                val next = if (++refused <= MAX_REOPENS) reopen(t, gen) else null
                 if (next == null) {
-                    if (running) stats.failed = true
-                    running = false
+                    // Une ancienne boucle qui échoue ne doit pas arrêter la nouvelle
+                    if (gen == generation) {
+                        if (running) stats.failed = true
+                        running = false
+                    }
                     break
                 }
                 t = next

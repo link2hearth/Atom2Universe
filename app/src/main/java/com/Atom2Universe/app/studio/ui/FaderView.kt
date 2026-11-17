@@ -1,7 +1,7 @@
 package com.Atom2Universe.app.studio.ui
 
+import com.Atom2Universe.app.AppearanceStyle
 import android.content.Context
-import android.content.res.Configuration
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.RectF
@@ -32,7 +32,7 @@ class FaderView(context: Context, private val vertical: Boolean) : View(context)
     /** Appelé quand le doigt se lève. */
     var onRelease: (() -> Unit)? = null
 
-    private val dark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+    private val dark = !AppearanceStyle.isLight(context)
     private val grooveColor = if (dark) 0xFF3B3B42.toInt() else 0xFFCFCFD6.toInt()
     private val tickColor = if (dark) 0xFF9A9AA4.toInt() else 0xFF6A6A74.toInt()
     private val thumbColor = if (dark) 0xFFE8E8F0.toInt() else 0xFF2A2A30.toInt()

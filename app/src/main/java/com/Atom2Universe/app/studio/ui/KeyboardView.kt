@@ -1,7 +1,7 @@
 package com.Atom2Universe.app.studio.ui
 
+import com.Atom2Universe.app.AppearanceStyle
 import android.content.Context
-import android.content.res.Configuration
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.RectF
@@ -61,7 +61,7 @@ class KeyboardView(context: Context) : View(context) {
         }
     var noteNames: List<String> = listOf("C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B")
 
-    private val dark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+    private val dark = !AppearanceStyle.isLight(context)
     private val colors = StudioKeyColors(dark)
     private val edge = if (dark) 0xFF14141A.toInt() else 0xFF8C8C96.toInt()
 
@@ -234,7 +234,15 @@ class KeyboardView(context: Context) : View(context) {
         invalidate()
     }
 
+    /**
+     * Vrai après un [releaseAll] venu de l'écran (onglet changé, thérémine…) : les doigts encore posés ne rejouent rien jusqu'à
+     * ce qu'ils soient tous levés. Sans cela, le doigt resté sur un clavier caché relançait sa note au moindre mouvement.
+     */
+    private var interrupted = false
+
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (event.actionMasked == MotionEvent.ACTION_DOWN) interrupted = false
+        if (interrupted) return true
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN, MotionEvent.ACTION_POINTER_DOWN -> {
                 parent?.requestDisallowInterceptTouchEvent(true)
@@ -255,6 +263,7 @@ class KeyboardView(context: Context) : View(context) {
                 val idx = event.actionIndex
                 if (event.actionMasked == MotionEvent.ACTION_CANCEL) {
                     releaseAll()
+                    interrupted = false
                 } else {
                     setFinger(event.getPointerId(idx), -1)
                 }
@@ -266,6 +275,7 @@ class KeyboardView(context: Context) : View(context) {
     /** Relâche tout (écran quitté, annulation du geste). */
     fun releaseAll() {
         val held = down.values.toSet()
+        if (held.isNotEmpty()) interrupted = true
         down.clear()
         for (p in held) listener?.onKeyUp(p)
         invalidate()

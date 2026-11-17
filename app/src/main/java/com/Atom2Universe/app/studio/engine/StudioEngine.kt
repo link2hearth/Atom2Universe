@@ -180,8 +180,15 @@ class StepPattern(
     /** Réverbération en plus enregistrée à la position [pos] (en pas), ou rien. */
     fun spaceAt(pos: Double): Float? = sample(autoSpace, pos)
 
-    private fun sample(a: FloatArray?, pos: Double): Float? {
-        if (a == null || a.size != stepCount * AUTO_RES) return null
+    /** Comme [filterAt] et [spaceAt], sans objet créé (fil audio) : [fallback] quand rien n'est enregistré. */
+    fun filterAtOr(pos: Double, fallback: Float): Float = sampleOr(autoFilter, pos, fallback)
+    fun spaceAtOr(pos: Double, fallback: Float): Float = sampleOr(autoSpace, pos, fallback)
+
+    private fun sample(a: FloatArray?, pos: Double): Float? =
+        if (a == null || a.size != stepCount * AUTO_RES) null else sampleOr(a, pos, 0f)
+
+    private fun sampleOr(a: FloatArray?, pos: Double, fallback: Float): Float {
+        if (a == null || a.size != stepCount * AUTO_RES) return fallback
         val p = ((pos % stepCount) + stepCount) % stepCount * AUTO_RES
         val i0 = p.toInt().coerceIn(0, a.size - 1)
         val f = (p - i0).toFloat()
@@ -866,18 +873,21 @@ class StudioEngine(val sampleRate: Int) : AutoCloseable {
                 boostTarget = fixed.space
             } else if (running) {
                 val pat = activePattern()
-                pat.filterAt(playPosition)?.let { filterTarget = it }
-                pat.spaceAt(playPosition)?.let { boostTarget = it }
+                filterTarget = pat.filterAtOr(playPosition, filterTarget)
+                boostTarget = pat.spaceAtOr(playPosition, boostTarget)
             }
         }
-        spaceBoostNow += (boostTarget.coerceIn(0f, 1f) - spaceBoostNow) * 0.2f
+        // Lissage d'environ 24 ms quelle que soit la taille du bloc (256 à l'écoute, 1024 à l'export) : le geste du pad
+        // sonne pareil dans le fichier exporté qu'en direct
+        val smooth = 1f - kotlin.math.exp(-n / (sampleRate * 0.024f))
+        spaceBoostNow += (boostTarget.coerceIn(0f, 1f) - spaceBoostNow) * smooth
         val space = (spaceAmount.coerceIn(0f, 1f) + spaceBoostNow * 0.8f).coerceAtMost(1f)
         reverb.process(reverbBus, left, right, 0, n, space * REVERB_RETURN)
         delay.delaySeconds = 60f / max(bpm, 20f) * 0.75f
         delay.process(delayBus, left, right, 0, n, echoAmount.coerceIn(0f, 1f) * DELAY_RETURN)
 
         // Filtre maître (geste du pad XY) : passe-bas qui se ferme, lissé d'un bloc à l'autre
-        masterFilterNow += (filterTarget.coerceIn(0f, 1f) - masterFilterNow) * 0.2f
+        masterFilterNow += (filterTarget.coerceIn(0f, 1f) - masterFilterNow) * smooth
         if (masterFilterNow > 0.004f) {
             val cutoff = (18000.0 * Math.pow(150.0 / 18000.0, masterFilterNow.toDouble())).toFloat()
             masterL.set(cutoff, 1.1f)
@@ -1291,8 +1301,8 @@ class StudioEngine(val sampleRate: Int) : AutoCloseable {
     private fun fire(slot: Slot, note: Int, velocity: Float) {
         // Une grosse caisse qu'on entend fait pomper les pistes qui le demandent
         if (slot.spec.voice == Inst.KICK && !slot.instrument.muted) duckRising = true
-        // Un charleston fermé coupe les charlestons ouverts.
-        if (slot.spec.voice == Inst.HAT) {
+        // Un charleston fermé qu'on entend coupe les charlestons ouverts (muet, caché ou hors solo, il ne coupe rien).
+        if (slot.spec.voice == Inst.HAT && !slot.instrument.muted) {
             val t = table
             for (i in 0 until t.size) {
                 val o = t[i] ?: continue
@@ -1385,8 +1395,19 @@ class StudioEngine(val sampleRate: Int) : AutoCloseable {
                 return
             }
             for (i in 0 until heldCount) if (held[i] == from) {
-                held[i] = to
-                heldVel[i] = velocity
+                // [to] déjà tenue (par le motif) : on retire [from] au lieu de la renommer, sinon [to] serait tenue deux
+                // fois et un seul relâchement ne l'enlèverait pas (l'arpège ne s'arrêtait plus)
+                var already = -1
+                for (k in 0 until heldCount) if (k != i && held[k] == to) already = k
+                if (already >= 0) {
+                    if (velocity > heldVel[already]) heldVel[already] = velocity
+                    heldCount--
+                    held[i] = held[heldCount]
+                    heldVel[i] = heldVel[heldCount]
+                } else {
+                    held[i] = to
+                    heldVel[i] = velocity
+                }
                 return
             }
         }
@@ -1451,7 +1472,13 @@ class StudioEngine(val sampleRate: Int) : AutoCloseable {
             }
             val octaves = arpOctaves.coerceIn(1, 3)
             var n = 0
-            for (o in 0 until octaves) for (i in 0 until heldCount) arpBase[n++] = held[i] + 12 * o
+            // Au-delà de sol9 (127), une note ne se joue pas : les synthés la ramenaient à 127 en l'attaquant mais pas en la
+            // relâchant, et elle restait tenue. Les octaves trop hautes sont laissées de côté.
+            for (o in 0 until octaves) for (i in 0 until heldCount) if (held[i] + 12 * o <= 127) arpBase[n++] = held[i] + 12 * o
+            if (n == 0) {
+                arpNextTime += arpFrames()
+                return
+            }
             val cycle = when (arpMode) {
                 Arp.UP_DOWN -> if (n <= 1) n else 2 * n - 2
                 else -> n

@@ -186,10 +186,15 @@ object StudioExporter {
                 else -> track.program
             }
             if (track.kind == TrackKind.SF2) {
+                // Comme à l'écoute (Sf2Bridge) : la banque sur 14 bits, poids fort au contrôleur 0, poids faible au 32
                 melodies[index] += Ev(0, -3, byteArrayOf((0xB0 or ch).toByte(), 0, ((track.bank shr 7) and 0x7F).toByte()))
                 melodies[index] += Ev(0, -2, byteArrayOf((0xB0 or ch).toByte(), 32, (track.bank and 0x7F).toByte()))
             }
             melodies[index] += Ev(0, -1, byteArrayOf((0xC0 or ch).toByte(), program.coerceIn(0, 127).toByte()))
+        }
+        // Une batterie jouée par un kit du soundfont : ce kit sur le canal des percussions (un seul canal, donc le premier kit)
+        project.tracks.firstOrNull { it.kind == TrackKind.DRUM && it.sfKit >= 0 && audible(project, it) }?.let { kit ->
+            drums += Ev(0, -1, byteArrayOf((0xC9).toByte(), kit.sfKit.coerceIn(0, 127).toByte()))
         }
 
         val tempoMicros = (60_000_000.0 / project.bpm).roundToInt()

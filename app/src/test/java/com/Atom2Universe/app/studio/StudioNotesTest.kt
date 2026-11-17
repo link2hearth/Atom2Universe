@@ -325,10 +325,10 @@ class StudioNotesTest {
     fun changingKeyTransposesTheNotesByTheShortestWay() {
         val s = session()
         s.addNote(0, 45, 1) // la, tonalité de départ : la (9)
-        s.setKey(0) // do : -9 ou +3 -> +3
+        s.setKey(Inst.SYNTH, 0) // do : -9 ou +3 -> +3
         assertEquals(48, s.project.pattern.notes[0].pitch)
-        assertEquals(0, s.project.keyPc)
-        s.setKey(7) // sol : -5
+        assertEquals(0, s.project.track(Inst.SYNTH).keyPc)
+        s.setKey(Inst.SYNTH, 7) // sol : -5
         assertEquals(43, s.project.pattern.notes[0].pitch)
     }
 

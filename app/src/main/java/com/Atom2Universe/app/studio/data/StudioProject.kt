@@ -24,8 +24,8 @@ import kotlin.math.abs
  * Le morceau en cours d'édition. **Immuable** : chaque modification fabrique un nouveau projet (comme le
  * modèle de l'éditeur audio), ce qui rend l'annulation et la sauvegarde triviales plus tard.
  * [tracks] est la liste libre des pistes, dans l'ordre d'affichage ; chaque motif a une ligne par piste rythmique
- * (même cachée), et ses notes portent le numéro de leur piste mélodique. Les notes se jouent dans la tonalité [keyPc]
- * et la gamme [scaleId].
+ * (même cachée), et ses notes portent le numéro de leur piste mélodique. Chaque piste à notes a sa tonalité et sa gamme
+ * ([Track.keyPc], [Track.scaleId]) ; [keyPc] et [scaleId] sont celles que reçoit une nouvelle piste (les dernières choisies).
  */
 class StudioProject(
     val styleId: String,
@@ -142,7 +142,7 @@ class StudioProject(
                 styleId = base.id,
                 bpm = 120,
                 swing = 0f,
-                tracks = Track.defaults(SynthPresets.byId(base.patchId), 0.25f),
+                tracks = Track.defaults(SynthPresets.byId(base.patchId), 0.25f, base.keyPc, base.scaleId),
                 space = base.space,
                 echo = base.echo,
                 keyPc = base.keyPc,
@@ -155,7 +155,7 @@ class StudioProject(
             styleId = style.id,
             bpm = style.bpm,
             swing = style.swing,
-            tracks = Track.defaults(SynthPresets.byId(style.patchId), style.space.coerceIn(0.1f, 0.6f)),
+            tracks = Track.defaults(SynthPresets.byId(style.patchId), style.space.coerceIn(0.1f, 0.6f), style.keyPc, style.scaleId),
             space = style.space,
             echo = style.echo,
             keyPc = style.keyPc,
@@ -294,6 +294,8 @@ object StudioProjectCodec {
                 if (t.fmBrightness != Track.DEFAULT_FM_BRIGHTNESS) o.put("fmBrightness", t.fmBrightness.toDouble())
                 if (t.fmAttack != Track.DEFAULT_FM_ATTACK) o.put("fmAttack", t.fmAttack.toDouble())
                 if (t.melodic && t.rhythmOctave != Track.DEFAULT_RHYTHM_OCTAVE) o.put("rhythmOctave", t.rhythmOctave)
+                if (t.melodic) o.put("key", t.keyPc).put("scale", t.scaleId)
+                if (t.melodic && t.scaleLocked) o.put("scaleLocked", true)
                 if (t.padOrder != Int.MAX_VALUE) o.put("padOrder", t.padOrder)
                 if (t.melodic && t.padPlayMode != PadPlayMode.DRIVE) o.put("padPlayMode", t.padPlayMode.key)
                 when (t.padSize) {
@@ -318,7 +320,8 @@ object StudioProjectCodec {
             .also { o -> if (t.kind == TrackKind.SYNTH) o.put("synth", encodeSynth(t.synth)) }
     }
 
-    internal fun decodeTrack(o: JSONObject): Track? {
+    /** [keyPc] et [scaleId] : la tonalité et la gamme d'une piste à notes enregistrée sans les siennes. */
+    internal fun decodeTrack(o: JSONObject, keyPc: Int = 0, scaleId: String = Scales.MINOR_PENT.id): Track? {
         val id = o.getInt("id")
         if (id !in 0 until StudioEngine.MAX_TRACKS) return null
         val kind = o.getInt("kind")
@@ -346,6 +349,10 @@ object StudioProjectCodec {
                 pump = a.optDouble(7, 0.0).toFloat().coerceIn(0f, 1f),
             ),
             rhythmOctave = o.optInt("rhythmOctave", Track.DEFAULT_RHYTHM_OCTAVE).coerceIn(-1, 9),
+            keyPc = if (kind == TrackKind.DRUM) 0 else o.optInt("key", keyPc).coerceIn(0, 11),
+            scaleId = if (kind == TrackKind.DRUM) Scales.MINOR_PENT.id
+                else Scales.byId(o.optString("scale", scaleId)).id,
+            scaleLocked = kind != TrackKind.DRUM && o.optBoolean("scaleLocked", false),
             padOrder = o.optInt("padOrder", Int.MAX_VALUE).coerceAtLeast(0),
             padPlayMode = if (kind == TrackKind.DRUM) PadPlayMode.DRIVE else PadPlayMode.fromKey(o.optString("padPlayMode")),
             padSize = when {
@@ -426,8 +433,10 @@ object StudioProjectCodec {
             val tracks = ArrayList<Track>()
             val ta = o.getJSONArray("tracks")
             if (ta.length() > StudioEngine.MAX_TRACKS) return null
+            val keyPc = o.getInt("key").coerceIn(0, 11)
+            val scaleId = Scales.byId(o.getString("scale")).id
             for (k in 0 until ta.length()) {
-                val t = decodeTrack(ta.getJSONObject(k)) ?: return null
+                val t = decodeTrack(ta.getJSONObject(k), keyPc, scaleId) ?: return null
                 if (tracks.any { it.id == t.id }) return null
                 tracks += t
             }
@@ -455,8 +464,8 @@ object StudioProjectCodec {
                 tracks = tracks,
                 space = o.getDouble("space").toFloat().coerceIn(0f, 1f),
                 echo = o.getDouble("echo").toFloat().coerceIn(0f, 1f),
-                keyPc = o.getInt("key").coerceIn(0, 11),
-                scaleId = o.getString("scale"),
+                keyPc = keyPc,
+                scaleId = scaleId,
                 patterns = patterns,
                 current = current,
                 chain = chain,
@@ -587,6 +596,10 @@ class StudioSession(
         for (a in past) lines += StudioHistory.line(a, true)
         for (a in future.reversed()) lines += StudioHistory.line(a, true)
         repeat(future.size) { lines += StudioHistory.UNDO_LINE }
+        // Rejouer les actions rend une piste ajoutée avec le son et le mixage qu'elle avait alors : ce qui a changé depuis
+        // sans s'annuler (mixage, son, arpège…) suit, en une dernière ligne.
+        val rest = StudioHistory.diff(StudioHistory.replay(base, lines).project, project, undoableOnly = false)
+        if (rest.isNotEmpty()) lines += StudioHistory.line(Action(rest), false)
         sink.compact(base, lines)
         journalLines = lines.size
         persisted = project
@@ -662,7 +675,7 @@ class StudioSession(
             TrackKind.DRUM -> Track.drum(id, voice.coerceIn(0, Inst.DRUM_COUNT - 1))
             TrackKind.SYNTH -> Track.synth(id, space = 0.25f)
             else -> Track.sf2(id, bank, program)
-        }
+        }.let { if (it.melodic) it.copy(keyPc = project.keyPc, scaleId = project.scaleId) else it }
         remember()
         // Une piste rythmique reçoit une ligne vide dans chacun des motifs
         val patterns = if (t.melodic) project.patterns
@@ -734,7 +747,7 @@ class StudioSession(
 
     fun setRhythmOctave(track: Int, octave: Int) {
         val t = project.trackOrNull(track) ?: return
-        val next = octave.coerceIn(-1, Track.maxRhythmOctave(project.keyPc))
+        val next = octave.coerceIn(-1, Track.maxRhythmOctave(t.keyPc))
         if (t.melodic && next != t.rhythmOctave) applyTrackSetting(t.copy(rhythmOctave = next))
     }
 
@@ -747,9 +760,17 @@ class StudioSession(
 
     /** Choisit l'instrument d'une piste soundfont. */
     fun setSf2Program(id: Int, bank: Int, program: Int) {
-        if (project.trackOrNull(id)?.kind != TrackKind.SF2) return
-        changeTrack(id) { it.copy(bank = bank.coerceIn(0, 16383), program = program.coerceIn(0, 127)) }
+        val before = project.trackOrNull(id)?.takeIf { it.kind == TrackKind.SF2 } ?: return
+        val after = before.copy(bank = bank.coerceIn(0, 16383), program = program.coerceIn(0, 127))
+        if (after == before) return
+        // Une action à elle seule : sinon elle se mêlait à la précédente, et l'annuler rendait aussi l'ancien instrument
+        closeOpen()
+        remember()
+        project = project.withTrack(after)
         engine.setTracks(project.tracks.map { it.spec })
+        pushTrack(after)
+        pushMute()
+        closeOpen()
     }
 
     fun setSynthBank(id: Int, bank: SynthBank) {
@@ -831,6 +852,8 @@ class StudioSession(
         changeTrack(id) { it.copy(sfKit = program.coerceIn(-1, 127)) }
         engine.setTracks(project.tracks.map { it.spec })
         pushTrack(project.track(id))
+        // Le nouvel instrument naît sonore : une piste muette, cachée ou hors solo doit le rester
+        pushMute()
     }
 
     // ---- Arpégiateur d'une piste ---------------------------------------------------------------------------------
@@ -1075,6 +1098,8 @@ class StudioSession(
         val s = takeSpace ?: return
         val n = f.size
         val steps = project.stepCount
+        // La vue ou la longueur a changé pendant la prise : ce geste ne correspond plus au motif (endGesture l'oublie)
+        if (n != steps * StepPattern.AUTO_RES) return
         val idx = ((((position % steps) + steps) % steps) * StepPattern.AUTO_RES).toInt().coerceIn(0, n - 1)
         // Les points sautés entre deux appels reprennent la valeur courante (le doigt reste là où il est).
         var i = if (takeLast < 0) idx else (takeLast + 1) % n
@@ -1094,6 +1119,8 @@ class StudioSession(
         val s = takeSpace ?: return
         takeFilter = null
         takeSpace = null
+        // Une prise commencée sur une autre vue (ou une autre longueur) planterait au découpage des motifs : on l'oublie
+        if (f.size != project.stepCount * StepPattern.AUTO_RES) return
         remember()
         setPattern(project.pattern.copy(autoFilter = f.takeIf { a -> a.any { it > 0.001f } }, autoSpace = s.takeIf { a -> a.any { it > 0.001f } }))
     }
@@ -1372,13 +1399,16 @@ class StudioSession(
 
     /** Tonique de la piste commune aux nouveaux pas de Rythme, au repère de Notes et au bord gauche du pad. */
     internal fun rhythmEntryPitch(track: Int): Int {
-        val key = project.keyPc
-        val octave = project.track(track).rhythmOctave.coerceIn(-1, Track.maxRhythmOctave(key))
+        val t = project.track(track)
+        val key = t.keyPc
+        val octave = t.rhythmOctave.coerceIn(-1, Track.maxRhythmOctave(key))
         return (octave + 1) * 12 + key
     }
 
-    internal fun padPitches(track: Int): IntArray =
-        Scales.rows(Scales.byId(project.scaleId), project.keyPc, rhythmEntryPitch(track), octaves = 1, locked = true)
+    internal fun padPitches(track: Int): IntArray {
+        val t = project.track(track)
+        return Scales.rows(Scales.byId(t.scaleId), t.keyPc, rhythmEntryPitch(track), octaves = 1, locked = true)
+    }
 
     // ---- Notes d'une piste mélodique ---------------------------------------------------------------------------
 
@@ -1416,26 +1446,42 @@ class StudioSession(
         withNotes(kept + Note(step, pitch, len, velocity, note.track))
     }
 
-    /** Change de tonalité : les notes se transposent par le plus court chemin (de −5 à +6 demi-tons). */
-    fun setKey(keyPc: Int) {
+    /**
+     * Change la tonalité de la piste à notes [track] : ses notes se transposent par le plus court chemin (de −5 à +6 demi-tons),
+     * dans les quatre motifs. Les autres pistes ne bougent pas ; une nouvelle piste prendra cette tonalité.
+     */
+    fun setKey(track: Int, keyPc: Int) {
+        val t = project.trackOrNull(track)?.takeIf { it.melodic } ?: return
         val k = ((keyPc % 12) + 12) % 12
-        var delta = k - project.keyPc
+        var delta = k - t.keyPc
         if (delta == 0) return
         if (delta > 6) delta -= 12
         if (delta < -5) delta += 12
         remember()
-        // La tonalité vaut pour tout le morceau : les quatre motifs suivent, pas seulement celui qu'on regarde
         val moved = project.patterns.map { p ->
-            if (p.notes.isEmpty()) p
-            else p.copy(notes = p.notes.map { Note(it.step, (it.pitch + delta).coerceIn(0, 127), it.length, it.velocity, it.track) })
+            if (p.notes.none { it.track == track }) p
+            else p.copy(notes = p.notes.map {
+                if (it.track != track) it else Note(it.step, (it.pitch + delta).coerceIn(0, 127), it.length, it.velocity, it.track)
+            })
         }
-        project = project.copy(keyPc = k, patterns = moved)
+        project = project.copy(keyPc = k, patterns = moved).withTrack(t.copy(keyPc = k))
         engine.pattern = project.pattern
         pushSong()
     }
 
-    fun setScale(id: String) {
-        project = project.copy(scaleId = id)
+    /** Change la gamme de la piste à notes [track] seulement ; une nouvelle piste prendra cette gamme. */
+    fun setScale(track: Int, id: String) {
+        val t = project.trackOrNull(track)?.takeIf { it.melodic } ?: return
+        val scale = Scales.byId(id).id
+        if (t.scaleId == scale) return
+        remember()
+        project = project.copy(scaleId = scale).withTrack(t.copy(scaleId = scale))
+    }
+
+    /** Garde (ou non) le piano roll et le clavier de la piste [track] dans sa gamme : un réglage d'affichage, pas annulable. */
+    fun setScaleLocked(track: Int, locked: Boolean) {
+        val t = project.trackOrNull(track)?.takeIf { it.melodic } ?: return
+        if (t.scaleLocked != locked) project = project.withTrack(t.copy(scaleLocked = locked))
     }
 
     // ---- Son d'une piste de synthé ---------------------------------------------------------------------------
@@ -1495,11 +1541,14 @@ class StudioSession(
      */
     private fun adapt(generated: StepPattern, base: StepPattern, steps: Int = project.stepCount): StepPattern {
         val tracks = project.tracks
-        val firstOfVoice = HashSet<Int>()
+        // Pour chaque son de batterie, la piste qui reçoit les coups du style : la première visible (une piste cachée se tait)
+        val receiver = HashMap<Int, Int>()
+        for (t in tracks) if (!t.melodic && !t.hidden) receiver.putIfAbsent(t.voice, t.id)
+        for (t in tracks) if (!t.melodic) receiver.putIfAbsent(t.voice, t.id)
         val lanes = ArrayList<Lane>()
         for (t in tracks) {
             if (t.melodic) continue
-            val fresh = if (firstOfVoice.add(t.voice)) generated.lane(t.voice) else null
+            val fresh = if (receiver[t.voice] == t.id) generated.lane(t.voice) else null
             lanes += if (fresh != null) Lane(t.id, fresh.velocity, fresh.note, fresh.gate)
             else base.lane(t.id) ?: Lane(t.id, FloatArray(steps))
         }
@@ -1517,14 +1566,22 @@ class StudioSession(
         val target = project.firstMelodic
         // Le style remplace seulement le motif en cours et le son du premier synthé : les autres motifs, le morceau, le
         // mixage et le jeu (arpège, solo) sont à l'utilisateur, pas au style.
+        // Les notes du style vont au premier synthé : il prend aussi sa tonalité et sa gamme (les autres pistes gardent les leurs).
         val tracks = project.tracks.map { t ->
-            if (t.id == target?.id && t.kind == TrackKind.SYNTH) t.copy(synth = SynthPresets.byId(style.patchId)) else t
+            if (t.id != target?.id) t
+            else t.copy(
+                synth = if (t.kind == TrackKind.SYNTH) SynthPresets.byId(style.patchId) else t.synth,
+                keyPc = style.keyPc, scaleId = style.scaleId,
+            )
         }
+        // Comme Hasard : le geste enregistré du motif reste, et la vue (plusieurs motifs à la suite) aussi
+        val slot = project.patterns[project.current]
+        val styled = adapt(fresh.pattern, slot, project.baseSteps).copy(autoFilter = slot.autoFilter, autoSpace = slot.autoSpace)
         project = fresh.copy(
             heldPad = project.heldPad,
             tracks = tracks,
-            patterns = project.patterns.toMutableList().also { it[project.current] = adapt(fresh.pattern, project.patterns[project.current], project.baseSteps) },
-            current = project.current, chain = project.chain, songMode = project.songMode,
+            patterns = project.patterns.toMutableList().also { it[project.current] = styled },
+            current = project.current, chain = project.chain, songMode = project.songMode, view = project.view,
         )
         pushAll()
     }
@@ -1533,9 +1590,10 @@ class StudioSession(
     fun randomize(seed: Long) {
         val style = Styles.byId(project.styleId)
         remember()
-        // Les notes suivent la tonalité et la gamme choisies, pas celles du style d'origine.
+        // Les notes vont au premier synthé et suivent sa tonalité et sa gamme, pas celles du style d'origine.
+        val target = project.firstMelodic
         val generated = Styles.generate(
-            style.inKey(24 + project.keyPc + (style.synthRoot / 12 * 12 - 24), project.scaleId),
+            style.inKey(24 + (target?.keyPc ?: project.keyPc) + (style.synthRoot / 12 * 12 - 24), target?.scaleId ?: project.scaleId),
             project.stepCount, seed,
         )
         // Le geste enregistré reste : c'est un réglage de jeu, comme le mixage.

@@ -9,6 +9,7 @@ import com.Atom2Universe.app.studio.engine.SynthBank
 import com.Atom2Universe.app.studio.engine.TrackKind
 import com.Atom2Universe.app.studio.engine.TrackMix
 import com.Atom2Universe.app.studio.engine.TrackSpec
+import com.Atom2Universe.app.studio.music.Scales
 
 enum class PadSize { NORMAL, WIDE, HALF }
 
@@ -64,6 +65,13 @@ data class Track(
     val fmAttack: Float = DEFAULT_FM_ATTACK,
     /** Octave de la tonique des nouveaux pas de Rythme et du début de la tuile mélodique dans Pads (do central = do4). */
     val rhythmOctave: Int = DEFAULT_RHYTHM_OCTAVE,
+    /**
+     * La tonique (0 = do … 11 = si) et la gamme des notes de cette piste : chaque piste à notes a les siennes (sa case des
+     * pads, son clavier et son piano roll). [scaleLocked] garde le piano roll et le clavier de la piste dans sa gamme.
+     */
+    val keyPc: Int = 0,
+    val scaleId: String = Scales.MINOR_PENT.id,
+    val scaleLocked: Boolean = false,
 ) {
     val melodic: Boolean get() = kind != TrackKind.DRUM
 
@@ -97,9 +105,10 @@ data class Track(
 
         fun sf2(id: Int, bank: Int, program: Int) = Track(id, TrackKind.SF2, mix = SF2_MIX, bank = bank, program = program)
 
-        /** Les huit pistes d'un projet neuf : les sept sons de batterie, puis le synthé. */
-        fun defaults(patch: SynthPatch = SynthPresets.BASS, synthSpace: Float = 0.25f): List<Track> =
-            List(Inst.DRUM_COUNT) { drum(it, it) } + synth(Inst.SYNTH, patch, synthSpace)
+        /** Les huit pistes d'un projet neuf : les sept sons de batterie, puis le synthé (dans la tonalité [keyPc] et la gamme [scaleId]). */
+        fun defaults(patch: SynthPatch = SynthPresets.BASS, synthSpace: Float = 0.25f, keyPc: Int = 0,
+                     scaleId: String = Scales.MINOR_PENT.id): List<Track> =
+            List(Inst.DRUM_COUNT) { drum(it, it) } + synth(Inst.SYNTH, patch, synthSpace).copy(keyPc = keyPc, scaleId = scaleId)
 
         /** Le plus petit numéro de piste libre, ou -1 si le moteur n'a plus de place. */
         fun freeId(used: Collection<Int>): Int {

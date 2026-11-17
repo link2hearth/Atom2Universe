@@ -1,7 +1,6 @@
 package com.Atom2Universe.app.studio.ui
 
 import android.content.Context
-import android.content.res.Configuration
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.text.TextUtils
@@ -14,7 +13,9 @@ import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.Atom2Universe.app.R
+import com.Atom2Universe.app.audio.AudioStyle
 import kotlin.math.roundToInt
 
 /** Les zones vides laissent le clavier, les pads et le transport recevoir leurs propres doigts. */
@@ -23,8 +24,10 @@ internal class StudioPanelHost(context: Context) : FrameLayout(context) {
     init { isMotionEventSplittingEnabled = true }
     private val panelCount get() = childCount - 1
     var onCountChanged: (Int) -> Unit = {}
-    private val dark = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
-    private val ink = if (dark) 0xFFF1F1F6.toInt() else 0xFF262630.toInt()
+    // Les couleurs du thème de l'appli (pas celui du téléphone) : le texte des boutons posés dans la bulle reste lisible.
+    private val ink = AudioStyle.primaryText(context)
+    private val surface = AudioStyle.surface(context)
+    private val outline = ContextCompat.getColor(context, R.color.audio_outline)
     private val margin = dp(6)
 
     fun show(key: Any, title: String, content: View, widthDp: Int, anchor: View,
@@ -42,8 +45,8 @@ internal class StudioPanelHost(context: Context) : FrameLayout(context) {
             isClickable = true
             background = GradientDrawable().apply {
                 cornerRadius = dp(12).toFloat()
-                setColor(if (dark) 0xFF2B2B33.toInt() else 0xFFFFFFFF.toInt())
-                setStroke(dp(1), if (dark) 0xFF52525E.toInt() else 0xFFD2D2DB.toInt())
+                setColor(surface)
+                setStroke(dp(1), outline)
             }
             clipToOutline = true
         }

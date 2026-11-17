@@ -1,7 +1,7 @@
 package com.Atom2Universe.app.studio.ui
 
+import com.Atom2Universe.app.AppearanceStyle
 import android.content.Context
-import android.content.res.Configuration
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.RectF
@@ -56,7 +56,7 @@ open class XyPadView(
         invalidate()
     }
 
-    private val dark = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+    private val dark = !AppearanceStyle.isLight(context)
     private val bg = if (dark) 0xFF2A2A31.toInt() else 0xFFDADAE2.toInt()
     private val lineColor = if (dark) 0xFF4A4A54.toInt() else 0xFFB8B8C4.toInt()
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -109,7 +109,29 @@ open class XyPadView(
         invalidate()
     }
 
+    /** Le doigt du geste s'est levé alors qu'un autre restait posé : le reste du geste est ignoré jusqu'au prochain appui. */
+    private var gestureEnded = false
+
+    /**
+     * Un seul doigt mène le geste (peindre, poser une note, glisser le pad) : le premier posé. Un deuxième doigt ne fait rien ;
+     * si le premier se lève avant lui, le geste finit là, comme un lever normal. Sans cela, le geste sautait sous l'autre doigt.
+     */
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        when (event.actionMasked) {
+            MotionEvent.ACTION_DOWN -> gestureEnded = false
+            MotionEvent.ACTION_POINTER_DOWN -> return true
+            MotionEvent.ACTION_POINTER_UP -> {
+                if (gestureEnded || event.actionIndex != 0) return true
+                gestureEnded = true
+                val up = MotionEvent.obtain(event).apply { action = MotionEvent.ACTION_UP }
+                try { return handleTouch(up) } finally { up.recycle() }
+            }
+        }
+        if (gestureEnded) return true
+        return handleTouch(event)
+    }
+
+    private fun handleTouch(event: MotionEvent): Boolean {
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
                 parent?.requestDisallowInterceptTouchEvent(true)

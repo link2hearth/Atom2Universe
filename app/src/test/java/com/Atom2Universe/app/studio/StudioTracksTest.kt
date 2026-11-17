@@ -306,7 +306,7 @@ class StudioTracksTest {
     fun rhythmEntryUsesTheChosenOctaveDespiteExistingBassNotes() {
         val s = StudioSession(quiet(), StudioProject.blank())
         val synth = Inst.SYNTH
-        s.setKey(5)
+        s.setKey(synth, 5)
         s.addNote(0, 29, 2)
         s.addNote(2, 29, 1)
         val sf = s.addTrack(TrackKind.SF2)
@@ -323,10 +323,10 @@ class StudioTracksTest {
         s.setSynthBank(synth, SynthBank.SCC)
         s.setChipProgram(synth, 32)
         assertEquals(41, s.rhythmEntryPitch(synth))
-        s.setKey(7)
+        s.setKey(sf, 7)
         s.setRhythmOctave(sf, 12)
         assertEquals(127, s.rhythmEntryPitch(sf))
-        s.setKey(8)
+        s.setKey(sf, 8)
         assertEquals(116, s.rhythmEntryPitch(sf))
         s.setRhythmOctave(sf, -5)
         assertEquals(8, s.rhythmEntryPitch(sf))

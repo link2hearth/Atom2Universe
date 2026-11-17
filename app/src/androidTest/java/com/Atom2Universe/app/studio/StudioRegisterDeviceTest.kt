@@ -45,7 +45,7 @@ class StudioRegisterDeviceTest {
     @Test fun middleCOpensByDefaultAndRhythmCanBeLocatedAfterChangingKey() {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
         val project = StudioEngine(48_000).use { engine ->
-            val session = StudioSession(engine, StudioProject.blank().copy(keyPc = 0))
+            val session = StudioSession(engine, StudioProject.blank().let { p -> p.copy(keyPc = 0, tracks = p.tracks.map { it.copy(keyPc = 0) }) })
             session.addNote(0, 24, 1)
             session.setPadPlayMode(Inst.SYNTH, PadPlayMode.THEREMIN)
             session.project
@@ -94,7 +94,7 @@ class StudioRegisterDeviceTest {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
         val library = StudioLibrary(File(context.filesDir, "studio/songs"))
         val project = StudioEngine(48_000).use { engine ->
-            val session = StudioSession(engine, StudioProject.blank().copy(keyPc = 0))
+            val session = StudioSession(engine, StudioProject.blank().let { p -> p.copy(keyPc = 0, tracks = p.tracks.map { it.copy(keyPc = 0) }) })
             session.setSynthBank(Inst.SYNTH, SynthBank.SCC)
             val secondId = session.addTrack(TrackKind.SYNTH)
             session.setSynthBank(secondId, SynthBank.FAMICOM)
@@ -139,12 +139,13 @@ class StudioRegisterDeviceTest {
                 onView(allOf(withText(octave(0, 4)), panel(2))).perform(click())
                 onView(withText(keys[0] + "6")).perform(click())
                 onView(allOf(withText(keys[5]), panel(2))).perform(click())
-                onView(allOf(withText(octave(5, 4)), panel(1))).check(matches(isDisplayed()))
+                // La tonique choisie dans la bulle de la piste 2 ne change que la piste 2
+                onView(allOf(withText(octave(0, 4)), panel(1))).check(matches(isDisplayed()))
                 onView(allOf(withText(octave(5, 6)), panel(2))).check(matches(isDisplayed()))
                 pads.check { view, error ->
                     if (error != null) throw error
                     val tiles = (view as PadsView).tiles
-                    assertEquals(65, tiles.single { it.track == first.id }.levels!!.first())
+                    assertEquals(60, tiles.single { it.track == first.id }.levels!!.first())
                     assertEquals(89, tiles.single { it.track == second.id }.levels!!.first())
                 }
                 onView(withContentDescription(context.getString(R.string.studio_close_panel, title(2)))).perform(click())
