@@ -11,11 +11,13 @@ import android.os.SystemClock
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.FrameLayout
-import android.widget.HorizontalScrollView
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.ProgressBar
+import android.widget.Spinner
 import android.widget.TextView
 import androidx.core.content.edit
 import androidx.lifecycle.lifecycleScope
@@ -24,6 +26,7 @@ import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
+import com.Atom2Universe.app.util.ImmersiveSpinner
 import com.Atom2Universe.app.util.Landscape
 import com.Atom2Universe.app.util.SidePanel
 import com.Atom2Universe.app.util.showGameRules
@@ -40,8 +43,9 @@ import kotlin.random.Random
 
 /**
  * L'écran commun des jeux du kit (puzzles de la collection de Simon Tatham et jeux solo
- * d'OpenSpiel) : une barre de titre, les préréglages en pastilles, le plateau, d'éventuelles
- * commandes propres au jeu, puis annuler / rétablir / recommencer / nouvelle partie.
+ * d'OpenSpiel) : une barre de titre, les préréglages en un seul bouton déroulant, le plateau,
+ * d'éventuelles commandes propres au jeu, puis annuler / rétablir / recommencer / nouvelle partie
+ * en icônes sans texte.
  *
  * Chaque jeu ne fournit que ce qui lui est propre : générer une partie, l'encoder pour la
  * sauvegarde, dire si elle est résolue, et sa vue. L'historique est une simple pile d'états :
@@ -156,7 +160,7 @@ abstract class PuzzleActivity<S : Any> : ThemedActivity() {
     private lateinit var redoButton: MaterialButton
     private lateinit var restartButton: MaterialButton
     private var hintButton: MaterialButton? = null
-    private val presetChips = ArrayList<TextView>()
+    private var presetSpinner: Spinner? = null
 
     private val handler = Handler(Looper.getMainLooper())
     private val ticker = object : Runnable {
@@ -302,7 +306,7 @@ abstract class PuzzleActivity<S : Any> : ThemedActivity() {
         demoSteps = null
         handler.removeCallbacks(demoRunner)
         onDemoStep(null)
-        hintButton?.text = getString(R.string.kit_hint, NeutrinoRewards.HINT_COST)
+        hintButton?.let { showHintLook(it, demo = false) }
         board.inputEnabled = !solved && !lost
         updateButtons()
     }
@@ -356,8 +360,7 @@ abstract class PuzzleActivity<S : Any> : ThemedActivity() {
             demoSteps = steps
             demoIndex = 0
             board.inputEnabled = false
-            hintButton?.setText(R.string.kit_demo_stop)
-            hintButton?.let { setEnabled(it, true) }
+            hintButton?.let { showHintLook(it, demo = true); setEnabled(it, true) }
             handler.post(demoRunner)
             return
         }
@@ -480,7 +483,8 @@ abstract class PuzzleActivity<S : Any> : ThemedActivity() {
                 if (best > 0L) parts.add(getString(R.string.kit_best, formatTime(best)))
             }
         }
-        val text = parts.joinToString(getString(R.string.kit_separator))
+        // Couché, la bulle est étroite : une information par ligne plutôt qu'une phrase coupée n'importe où.
+        val text = parts.joinToString(if (landscapeLayout) "\n" else getString(R.string.kit_separator))
         if (statusView.text.toString() != text) statusView.text = text
         statusView.setTextColor(if (solved) palette.ink else palette.secondary)
     }
@@ -561,19 +565,8 @@ abstract class PuzzleActivity<S : Any> : ThemedActivity() {
         topBar.addView(iconButton(R.drawable.ic_info, R.string.kit_rules, palette.accent) { showRules() },
             LinearLayout.LayoutParams((44 * dp).toInt(), (44 * dp).toInt()))
 
-        // Préréglages.
-        if (presets.size > 1) {
-            presets.forEachIndexed { index, p ->
-                presetChips.add(TextView(this).apply {
-                    text = getString(p.labelRes, *p.args)
-                    textSize = 13f
-                    gravity = Gravity.CENTER
-                    minWidth = (56 * dp).toInt()
-                    setPadding((14 * dp).toInt(), (7 * dp).toInt(), (14 * dp).toInt(), (7 * dp).toInt())
-                    setOnClickListener { if (generation?.isActive != true) newGame(index) }
-                })
-            }
-        }
+        // Préréglages : un seul bouton qui déroule les autres.
+        if (presets.size > 1) presetSpinner = buildPresetSpinner()
 
         statusView = TextView(this).apply {
             gravity = Gravity.CENTER
@@ -593,15 +586,15 @@ abstract class PuzzleActivity<S : Any> : ThemedActivity() {
 
         controlsView = createControls()
 
-        undoButton = actionButton(R.string.kit_undo, R.drawable.ic_px_undo, primary = false) { stopDemo(); undo() }
-        redoButton = actionButton(R.string.kit_redo, R.drawable.ic_px_redo, primary = false) { stopDemo(); redo() }
-        restartButton = actionButton(R.string.kit_restart, R.drawable.ic_restart, primary = false) { stopDemo(); restart() }
-        val newButton = actionButton(R.string.kit_new, R.drawable.ic_refresh, primary = true) {
+        undoButton = iconAction(R.drawable.ic_px_undo, getString(R.string.kit_undo), primary = false) { stopDemo(); undo() }
+        redoButton = iconAction(R.drawable.ic_px_redo, getString(R.string.kit_redo), primary = false) { stopDemo(); redo() }
+        restartButton = iconAction(R.drawable.ic_restart, getString(R.string.kit_restart), primary = false) { stopDemo(); restart() }
+        val newButton = iconAction(R.drawable.ic_refresh, getString(R.string.kit_new), primary = true) {
             if (generation?.isActive != true) newGame()
         }
         if (hasHints) {
-            hintButton = actionButton(R.string.kit_hint, R.drawable.ic_hint, primary = false) { useHint() }.apply {
-                text = getString(R.string.kit_hint, NeutrinoRewards.HINT_COST)
+            hintButton = iconAction(R.drawable.ic_hint, "", primary = false) { useHint() }.also {
+                showHintLook(it, demo = false)
             }
         }
         actionButtons = listOfNotNull(undoButton, redoButton, restartButton, hintButton, newButton)
@@ -610,21 +603,22 @@ abstract class PuzzleActivity<S : Any> : ThemedActivity() {
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        if (::boardFrame.isInitialized && arrangedLandscape != Landscape.isLandscape(this)) setContentView(arrange())
+        if (::boardFrame.isInitialized && arrangedLandscape != Landscape.isLandscape(this)) {
+            setContentView(arrange())
+            updateStatus()
+        }
     }
 
     /**
-     * Dispose les vues selon l'orientation. Debout : titre, pastilles, chrono, plateau, commandes,
-     * actions, les uns sous les autres. Couché : le plateau prend toute la hauteur à droite ; à
-     * gauche, une colonne porte le titre, les pastilles et un grand chrono, puis en bas les
-     * commandes du jeu et les actions, à portée de pouce.
+     * Dispose les vues selon l'orientation. Debout : titre, préréglage et chrono sur une ligne,
+     * plateau, commandes, actions, les uns sous les autres. Couché : le plateau sur toute la place
+     * restante, et une petite bulle à côté (préréglage, chrono, commandes du jeu, actions).
      */
     private fun arrange(): View {
         val landscape = Landscape.isLandscape(this)
         arrangedLandscape = landscape
         landscapeLayout = landscape
-        listOfNotNull(topBar, statusView, boardFrame, controlsView).forEach { Landscape.detach(it) }
-        presetChips.forEach { Landscape.detach(it) }
+        listOfNotNull(topBar, statusView, boardFrame, controlsView, presetSpinner).forEach { Landscape.detach(it) }
         actionButtons.forEach { Landscape.detach(it) }
         val screen = AppearanceStyle.screen(this@PuzzleActivity) ?: GradientDrawable().apply {
             setColor(palette.background)
@@ -632,7 +626,7 @@ abstract class PuzzleActivity<S : Any> : ThemedActivity() {
         return if (landscape) arrangeLandscape(screen) else arrangePortrait(screen)
     }
 
-    /** Debout : titre, pastilles, chrono, plateau, commandes, actions, les uns sous les autres. */
+    /** Debout : titre ; préréglage et chrono sur une ligne ; plateau, commandes, actions. */
     private fun arrangePortrait(screen: android.graphics.drawable.Drawable): View {
         val root = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
@@ -641,23 +635,22 @@ abstract class PuzzleActivity<S : Any> : ThemedActivity() {
         }
         topBar.setPadding((8 * dp).toInt(), (6 * dp).toInt(), (8 * dp).toInt(), (2 * dp).toInt())
         root.addView(topBar)
-        if (presetChips.isNotEmpty()) {
-            val chips = LinearLayout(this).apply {
-                orientation = LinearLayout.HORIZONTAL
-                setPadding((12 * dp).toInt(), (2 * dp).toInt(), (12 * dp).toInt(), (2 * dp).toInt())
-            }
-            presetChips.forEach { chip ->
-                chips.addView(chip, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT).apply { marginEnd = (6 * dp).toInt() })
-            }
-            root.addView(HorizontalScrollView(this).apply {
-                isHorizontalScrollBarEnabled = false
-                addView(chips)
-            })
+        val line = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+            setPadding((16 * dp).toInt(), (2 * dp).toInt(), (16 * dp).toInt(), (2 * dp).toInt())
+        }
+        presetSpinner?.let {
+            line.addView(it, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, (40 * dp).toInt()))
         }
         statusView.textSize = 14f
-        statusView.setPadding(0, (6 * dp).toInt(), 0, (2 * dp).toInt())
-        root.addView(statusView)
+        statusView.maxLines = 2
+        statusView.gravity = if (presetSpinner != null) Gravity.END or Gravity.CENTER_VERTICAL else Gravity.CENTER
+        statusView.setPadding(0, (6 * dp).toInt(), 0, (6 * dp).toInt())
+        line.addView(statusView, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f).apply {
+            marginStart = (12 * dp).toInt()
+        })
+        root.addView(line)
         board.setPadding((12 * dp).toInt(), (8 * dp).toInt(), (12 * dp).toInt(), (8 * dp).toInt())
         root.addView(boardFrame, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f))
         onArranged(false)
@@ -667,25 +660,16 @@ abstract class PuzzleActivity<S : Any> : ThemedActivity() {
                 setMargins((12 * dp).toInt(), (4 * dp).toInt(), (12 * dp).toInt(), 0)
             })
         }
-        val actions = LinearLayout(this).apply {
-            orientation = LinearLayout.HORIZONTAL
-            gravity = Gravity.CENTER
-            setPadding((10 * dp).toInt(), (8 * dp).toInt(), (10 * dp).toInt(), (10 * dp).toInt())
-        }
-        for (b in actionButtons) {
-            styleAction(b, column = false)
-            actions.addView(b, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f).apply {
-                marginStart = (3 * dp).toInt()
-                marginEnd = (3 * dp).toInt()
-            })
-        }
-        root.addView(actions)
+        root.addView(actionFlow(sizeDp = 48, gapDp = 4).apply {
+            setPadding((10 * dp).toInt(), (6 * dp).toInt(), (10 * dp).toInt(), (10 * dp).toInt())
+        })
         return root
     }
 
     /**
-     * Couché : le plateau prend toute la hauteur ; tout le reste tient dans une bulle en colonne
-     * (titre, pastilles, grand chrono, commandes du jeu, actions), qu'on glisse à gauche ou à droite.
+     * Couché : le plateau sur toute la place, et une petite bulle à côté (préréglage, chrono,
+     * commandes du jeu, actions en icônes qui passent à la ligne selon la place), qu'on glisse
+     * à gauche ou à droite. Un jeu à commandes (pavé de chiffres…) garde une bulle large.
      */
     private fun arrangeLandscape(screen: android.graphics.drawable.Drawable): View {
         val panel = sidePanel ?: SidePanel(this).also {
@@ -694,60 +678,138 @@ abstract class PuzzleActivity<S : Any> : ThemedActivity() {
         val col = panel.content
         col.removeAllViews()
         topBar.setPadding((8 * dp).toInt(), (6 * dp).toInt(), (8 * dp).toInt(), 0)
-        if (presetChips.isNotEmpty()) {
-            val flow = FlexboxLayout(this).apply {
-                flexWrap = FlexWrap.WRAP
-                justifyContent = JustifyContent.CENTER
-                setPadding((4 * dp).toInt(), 0, (4 * dp).toInt(), 0)
-            }
-            presetChips.forEach { chip ->
-                flow.addView(chip, FlexboxLayout.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
-                    marginStart = (3 * dp).toInt(); marginEnd = (3 * dp).toInt(); bottomMargin = (6 * dp).toInt()
-                })
-            }
-            col.addView(flow)
+        presetSpinner?.let {
+            col.addView(it, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, (40 * dp).toInt()).apply {
+                gravity = Gravity.CENTER_HORIZONTAL
+            })
         }
-        statusView.textSize = 28f
-        statusView.setPadding(0, (8 * dp).toInt(), 0, (12 * dp).toInt())
-        col.addView(statusView)
+        statusView.textSize = 17f
+        statusView.maxLines = 4
+        statusView.gravity = Gravity.CENTER
+        statusView.setPadding(0, (6 * dp).toInt(), 0, (8 * dp).toInt())
+        col.addView(statusView, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT))
         onArranged(true)
         controlsView?.let { controls ->
             col.addView(controls, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT).apply {
-                setMargins((4 * dp).toInt(), 0, (4 * dp).toInt(), (10 * dp).toInt())
+                setMargins((4 * dp).toInt(), 0, (4 * dp).toInt(), (8 * dp).toInt())
             })
         }
+        col.addView(actionFlow(sizeDp = 44, gapDp = 3), LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+        board.setPadding((8 * dp).toInt(), (8 * dp).toInt(), (8 * dp).toInt(), (8 * dp).toInt())
+        return panel.compose(boardFrame, screen, topBar, bubbleWidth())
+    }
+
+    /**
+     * La largeur de la bulle couchée. Sans commandes propres au jeu, elle reste étroite (entre 128
+     * et 200 dp) et le plateau prend tout le reste ; avec, elle garde la largeur d'avant. Le plateau
+     * n'est pas centré de force : une marge vide en face de la bulle le rétrécissait.
+     */
+    private fun bubbleWidth(): Int {
+        if (controlsView != null) return SidePanel.defaultWidth(this)
+        val c = resources.configuration
+        val side = (c.screenWidthDp - (c.screenHeightDp - 56)) / 2 - 24
+        return (side.coerceIn(128, 200) * dp).toInt()
+    }
+
+    /** Les actions en icônes, serrées, qui passent à la ligne quand la place manque. */
+    private fun actionFlow(sizeDp: Int, gapDp: Int): FlexboxLayout {
+        val flow = FlexboxLayout(this).apply {
+            flexWrap = FlexWrap.WRAP
+            justifyContent = JustifyContent.CENTER
+        }
+        val size = (sizeDp * dp).toInt()
+        val gap = (gapDp * dp).toInt()
         for (b in actionButtons) {
-            styleAction(b, column = true)
-            col.addView(b, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT).apply {
-                setMargins((4 * dp).toInt(), (3 * dp).toInt(), (4 * dp).toInt(), (3 * dp).toInt())
-            })
+            flow.addView(b, FlexboxLayout.LayoutParams(size, size).apply { setMargins(gap, gap, gap, gap) })
         }
-        board.setPadding((16 * dp).toInt(), (12 * dp).toInt(), (16 * dp).toInt(), (12 * dp).toInt())
-        return panel.compose(boardFrame, screen, topBar)
+        return flow
     }
 
     private var sidePanel: SidePanel? = null
 
-    /** Rangés en ligne, icône au-dessus du mot ; en colonne, icône devant le mot, aligné à gauche. */
-    private fun styleAction(b: MaterialButton, column: Boolean) {
-        if (column) {
-            b.iconGravity = MaterialButton.ICON_GRAVITY_START
-            b.iconPadding = (12 * dp).toInt()
-            b.gravity = Gravity.START or Gravity.CENTER_VERTICAL
-            b.textSize = 15f
-            b.minHeight = (48 * dp).toInt()
-            b.setPadding((16 * dp).toInt(), (6 * dp).toInt(), (12 * dp).toInt(), (6 * dp).toInt())
-        } else {
-            b.iconGravity = MaterialButton.ICON_GRAVITY_TOP
-            b.iconPadding = (2 * dp).toInt()
-            b.gravity = Gravity.CENTER
-            b.textSize = 12f
-            b.minHeight = (52 * dp).toInt()
-            b.setPadding((4 * dp).toInt(), (6 * dp).toInt(), (4 * dp).toInt(), (6 * dp).toInt())
+    /** Un bouton d'action réduit à son icône ; son nom reste lu par l'accessibilité et en appui long. */
+    private fun iconAction(icon: Int, description: String, primary: Boolean, onClick: () -> Unit): MaterialButton =
+        MaterialButton(this).apply {
+            text = null
+            setIconResource(icon)
+            iconSize = (22 * dp).toInt()
+            iconGravity = MaterialButton.ICON_GRAVITY_TEXT_START
+            iconPadding = 0
+            insetTop = 0
+            insetBottom = 0
+            minWidth = 0
+            minimumWidth = 0
+            minHeight = 0
+            minimumHeight = 0
+            setPadding(0, 0, 0, 0)
+            cornerRadius = AppearanceStyle.corner(this@PuzzleActivity, 14f).toInt()
+            val bg = if (primary) palette.accent else palette.raised
+            val fg = if (primary) palette.onAccent else palette.text
+            backgroundTintList = ColorStateList.valueOf(bg)
+            iconTint = ColorStateList.valueOf(fg)
+            strokeColor = ColorStateList.valueOf(if (primary) palette.accent else palette.outline)
+            strokeWidth = if (primary) 0 else dp.toInt().coerceAtLeast(1)
+            elevation = 0f
+            stateListAnimator = null
+            contentDescription = description
+            tooltipText = description
+            setOnClickListener { onClick() }
         }
+
+    /** L'astuce : une ampoule (avec son prix au toucher long), un carré d'arrêt pendant la démonstration. */
+    private fun showHintLook(button: MaterialButton, demo: Boolean) {
+        button.setIconResource(if (demo) R.drawable.ic_stop else R.drawable.ic_hint)
+        val description = if (demo) getString(R.string.kit_demo_stop)
+            else getString(R.string.kit_hint, NeutrinoRewards.HINT_COST)
+        button.contentDescription = description
+        button.tooltipText = description
+    }
+
+    /** Les préréglages : un seul bouton qui montre le choix et déroule les autres sous le doigt. */
+    private fun buildPresetSpinner(): Spinner {
+        val labels = presets.map { getString(it.labelRes, *it.args) }
+        val spinner = ImmersiveSpinner(this)
+        spinner.background = GradientDrawable().apply {
+            cornerRadius = AppearanceStyle.corner(this@PuzzleActivity, 16f)
+            setColor(palette.raised)
+            setStroke(dp.toInt().coerceAtLeast(1), palette.outline)
+        }
+        spinner.setPopupBackgroundDrawable(GradientDrawable().apply {
+            cornerRadius = AppearanceStyle.corner(this@PuzzleActivity, 16f)
+            setColor(palette.surface)
+            setStroke(dp.toInt().coerceAtLeast(1), palette.outline)
+        })
+        spinner.setPadding(0, 0, 0, 0)
+        spinner.adapter = object : ArrayAdapter<String>(this, 0, labels) {
+            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View =
+                label(position, convertView, dropDown = false)
+            override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View =
+                label(position, convertView, dropDown = true)
+            private fun label(position: Int, convertView: View?, dropDown: Boolean): View =
+                ((convertView as? TextView) ?: TextView(context)).apply {
+                    text = getItem(position)
+                    textSize = if (dropDown) 15f else 14f
+                    maxLines = 1
+                    gravity = Gravity.CENTER_VERTICAL
+                    setTextColor(if (dropDown && position == preset) palette.ink else palette.text)
+                    val h = ((if (dropDown) 20 else 14) * dp).toInt()
+                    val v = ((if (dropDown) 12 else 6) * dp).toInt()
+                    setPadding(h, v, h, v)
+                }
+        }
+        spinner.setSelection(preset, false)
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                if (position == preset) return
+                if (generation?.isActive == true) { spinner.setSelection(preset, false); return }
+                newGame(position)
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+        return spinner
     }
 
     /** Vrai quand l'écran est disposé couché (bulle de côté). */
@@ -810,7 +872,7 @@ abstract class PuzzleActivity<S : Any> : ThemedActivity() {
     }
 
     private fun updateChips() {
-        presetChips.forEachIndexed { i, chip -> styleChip(chip, i == preset) }
+        presetSpinner?.let { if (it.selectedItemPosition != preset) it.setSelection(preset, false) }
     }
 
     private fun updateButtons() {
