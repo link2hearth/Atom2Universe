@@ -36,7 +36,7 @@ class ChessActivity : ThemedActivity(),
     private lateinit var timerText: TextView
     private lateinit var statusText: TextView
     private lateinit var difficultySpinner: Spinner
-    private lateinit var newGameButton: Button
+    private lateinit var newGameButton: View
     private lateinit var capturedPiecesContainer: LinearLayout
 
     // Logique du jeu

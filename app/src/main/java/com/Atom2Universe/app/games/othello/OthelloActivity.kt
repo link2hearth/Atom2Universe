@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
-import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
@@ -22,10 +22,10 @@ class OthelloActivity : ThemedActivity(), OthelloBoardView.OnCellClickListener {
 
     private val game = OthelloGame()
     private lateinit var boardView: OthelloBoardView
-    private lateinit var scoreText: TextView
+    private lateinit var scoreView: OthelloScoreView
     private lateinit var statusText: TextView
-    private lateinit var modeButton: Button
-    private lateinit var newGameButton: Button
+    private lateinit var titleText: TextView
+    private lateinit var modeButton: ImageButton
 
     private var isSoloMode = true
     private val aiHandler = Handler(Looper.getMainLooper())
@@ -33,9 +33,12 @@ class OthelloActivity : ThemedActivity(), OthelloBoardView.OnCellClickListener {
 
     companion object {
         private const val AI_DELAY_MS = 500L
+        /** L'IA attend que les pions du coup précédent aient fini de se retourner. */
+        private const val AI_AFTER_FLIPS_MS = 180L
         private const val PREFS = "othello_prefs"
         private const val KEY_STATE = "state"
         private const val KEY_SOLO = "solo"
+        private const val KEY_LAST = "last"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,25 +48,51 @@ class OthelloActivity : ThemedActivity(), OthelloBoardView.OnCellClickListener {
         enableImmersiveMode()
 
         boardView = findViewById(R.id.othello_board)
-        scoreText = findViewById(R.id.othello_score)
+        scoreView = findViewById(R.id.othello_score)
         statusText = findViewById(R.id.othello_status)
+        titleText = findViewById(R.id.othello_title_text)
         modeButton = findViewById(R.id.othello_mode_button)
-        newGameButton = findViewById(R.id.othello_new_button)
 
         boardView.cellClickListener = this
+        boardView.onCountsShown = { black, white -> scoreView.setCounts(black, white) }
         findViewById<View>(R.id.back_button).setOnClickListener { finish() }
         findViewById<View>(R.id.othello_info_button).setOnClickListener {
             showGameRules(R.string.othello_title, R.string.othello_rules)
         }
         modeButton.setOnClickListener { toggleMode() }
-        newGameButton.setOnClickListener { startNewGame() }
+        findViewById<View>(R.id.othello_new_button).setOnClickListener { startNewGame() }
 
+        arrange()
         loadSave()
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         Landscape.swapLayout(this, R.layout.activity_othello)
+        arrange()
+    }
+
+    /**
+     * Ce que la mise en page ne dit pas : couché, les plaquettes du score s'empilent et le message
+     * passe à la ligne sous elles ; au-delà de 600 dp, les textes grandissent.
+     */
+    private fun arrange() {
+        val land = Landscape.isLandscape(this)
+        scoreView.vertical = land
+        statusText.maxWidth = if (land) scoreView.chipWidth else Int.MAX_VALUE
+        statusText.maxLines = if (land) 3 else 2
+        if (resources.configuration.smallestScreenWidthDp >= 600) {
+            titleText.textSize = 22f
+            statusText.textSize = 19f
+        }
+        showStatus(statusText.text)
+    }
+
+    /** Le message du moment (un joueur passe, la fin de partie) ; couché, la ligne vide disparaît. */
+    private fun showStatus(text: CharSequence) {
+        statusText.text = text
+        statusText.visibility =
+            if (text.isEmpty() && Landscape.isLandscape(this)) View.GONE else View.VISIBLE
     }
 
     private fun toggleMode() {
@@ -73,19 +102,19 @@ class OthelloActivity : ThemedActivity(), OthelloBoardView.OnCellClickListener {
     }
 
     private fun updateModeButton() {
-        modeButton.text = if (isSoloMode)
-            getString(R.string.othello_mode_solo)
-        else
-            getString(R.string.othello_mode_duo)
+        modeButton.setImageResource(if (isSoloMode) R.drawable.othello_ic_vs_ai else R.drawable.othello_ic_duo)
+        modeButton.contentDescription =
+            getString(if (isSoloMode) R.string.othello_mode_solo else R.string.othello_mode_duo)
+        scoreView.solo = isSoloMode
     }
 
     private fun startNewGame() {
         cancelAI()
         game.resetBoard()
-        boardView.game = game
-        boardView.showValidMoves = true
-        boardView.invalidate()
-        updateScore()
+        boardView.lastMove = -1
+        boardView.bind(game)
+        scoreView.winner = null
+        showStatus("")
         beginTurn()
         saveCurrent()
     }
@@ -93,62 +122,63 @@ class OthelloActivity : ThemedActivity(), OthelloBoardView.OnCellClickListener {
     override fun onCellClick(row: Int, col: Int) {
         if (game.gameOver) return
         if (isSoloMode && game.currentPlayer == OthelloGame.BLACK) return
-        val placed = game.placeDisc(row, col)
-        if (!placed) {
-            statusText.text = getString(R.string.othello_status_invalid)
+        val mover = game.currentPlayer
+        // Une case injouable ne fait rien.
+        if (!game.placeDisc(row, col)) return
+        afterMove(mover)
+    }
+
+    /** Après le coup de [mover] : animation, fin de partie ou tour suivant (qui peut lui revenir). */
+    private fun afterMove(mover: Int) {
+        boardView.sync(animate = true)
+        if (game.gameOver) {
+            showGameOver(awardReward = true)
+            saveCurrent()
             return
         }
-        boardView.invalidate()
-        updateScore()
-        if (game.gameOver) { showGameOver(awardReward = true); saveCurrent(); return }
+        showStatus(if (game.currentPlayer == mover) passText(-mover) else "")
         beginTurn()
         saveCurrent()
     }
 
+    private fun passText(player: Int): String = getString(when {
+        isSoloMode && player == OthelloGame.WHITE -> R.string.othello_pass_you
+        isSoloMode -> R.string.othello_pass_ai
+        player == OthelloGame.BLACK -> R.string.othello_pass_black
+        else -> R.string.othello_pass_white
+    })
+
     private fun beginTurn() {
         cancelAI()
+        scoreView.current = game.currentPlayer
         if (isSoloMode && game.currentPlayer == OthelloGame.BLACK && !game.gameOver) {
-            statusText.text = getString(R.string.othello_status_ai_thinking)
             boardView.showValidMoves = false
-            boardView.invalidate()
+            scoreView.thinking = true
             val r = Runnable {
                 aiRunnable = null
+                scoreView.thinking = false
                 if (game.gameOver) return@Runnable
                 val move = game.chooseAIMove()
-                if (move != null) {
-                    game.placeDisc(move.first, move.second)
+                if (move == null) {
+                    boardView.showValidMoves = true
+                    return@Runnable
                 }
-                boardView.showValidMoves = true
-                boardView.game = game
-                boardView.invalidate()
-                updateScore()
-                if (game.gameOver) {
-                    showGameOver(awardReward = true)
-                } else {
-                    statusText.text = getTurnText()
-                    // If AI has to play again (human passed), recurse
-                    if (isSoloMode && game.currentPlayer == OthelloGame.BLACK) beginTurn()
-                }
-                saveCurrent()
+                val mover = game.currentPlayer
+                game.placeDisc(move.first, move.second)
+                afterMove(mover)
             }
             aiRunnable = r
-            aiHandler.postDelayed(r, AI_DELAY_MS)
+            aiHandler.postDelayed(r, maxOf(AI_DELAY_MS, boardView.animationRemainingMs() + AI_AFTER_FLIPS_MS))
         } else {
+            scoreView.thinking = false
             boardView.showValidMoves = true
-            boardView.invalidate()
-            statusText.text = getTurnText()
         }
-    }
-
-    private fun getTurnText(): String = when {
-        isSoloMode && game.currentPlayer == OthelloGame.WHITE -> getString(R.string.othello_status_your_turn)
-        game.currentPlayer == OthelloGame.BLACK -> getString(R.string.othello_status_black_turn)
-        else -> getString(R.string.othello_status_white_turn)
     }
 
     private fun showGameOver(awardReward: Boolean = false) {
         cancelAI()
-        val (black, white) = game.getScore()
+        scoreView.thinking = false
+        boardView.showValidMoves = false
         val winner = game.getWinner()
         // 15 neutrinos en solo quand le joueur humain (blanc) gagne contre l'IA
         if (awardReward && isSoloMode && winner == OthelloGame.WHITE) {
@@ -159,17 +189,14 @@ class OthelloActivity : ThemedActivity(), OthelloBoardView.OnCellClickListener {
             statsRepo.recordOthelloPlayed()
             if (winner == OthelloGame.WHITE) statsRepo.recordOthelloWon()
         }
-        val result = when (winner) {
-            OthelloGame.BLACK -> getString(R.string.othello_result_black)
-            OthelloGame.WHITE -> getString(R.string.othello_result_white)
-            else -> getString(R.string.othello_result_draw)
-        }
-        statusText.text = getString(R.string.othello_status_game_over, black, white, result)
-    }
-
-    private fun updateScore() {
-        val (black, white) = game.getScore()
-        scoreText.text = getString(R.string.othello_score, black, white)
+        scoreView.winner = winner
+        showStatus(getString(when {
+            winner == OthelloGame.EMPTY -> R.string.othello_result_draw
+            isSoloMode && winner == OthelloGame.WHITE -> R.string.othello_result_you_win
+            isSoloMode -> R.string.othello_result_ai_wins
+            winner == OthelloGame.BLACK -> R.string.othello_result_black
+            else -> R.string.othello_result_white
+        }))
     }
 
     private fun cancelAI() {
@@ -189,10 +216,14 @@ class OthelloActivity : ThemedActivity(), OthelloBoardView.OnCellClickListener {
             try { restored = game.deserialize(jsonToMap(JSONObject(json))) } catch (e: Exception) { /* ignore */ }
         }
         if (!restored) game.resetBoard()
-        boardView.game = game
-        boardView.invalidate()
-        updateScore()
-        if (game.gameOver) showGameOver() else beginTurn()
+        boardView.bind(game)
+        val last = prefs.getInt(KEY_LAST, -1)
+        boardView.lastMove = if (restored && last in 0 until OthelloGame.BOARD_SIZE * OthelloGame.BOARD_SIZE) last else -1
+        showStatus("")
+        if (game.gameOver) showGameOver() else {
+            scoreView.winner = null
+            beginTurn()
+        }
     }
 
     private fun saveCurrent() {
@@ -200,6 +231,7 @@ class OthelloActivity : ThemedActivity(), OthelloBoardView.OnCellClickListener {
             getSharedPreferences(PREFS, MODE_PRIVATE).edit()
                 .putString(KEY_STATE, mapToJson(game.serialize()).toString())
                 .putBoolean(KEY_SOLO, isSoloMode)
+                .putInt(KEY_LAST, boardView.lastMove)
                 .apply()
         } catch (e: Exception) { /* ignore */ }
     }

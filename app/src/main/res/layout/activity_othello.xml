@@ -1,110 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Reversi debout : la bande du haut (retour, nom, mode, nouvelle partie, règles), puis le score,
+     la ligne des messages (passe, fin de partie) et le plateau, groupés au milieu de l'écran. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="?attr/a2uScreenBackground">
 
-    <!-- Header -->
+    <com.Atom2Universe.app.util.FitRow
+        android:id="@+id/othello_header_fit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/othello_header"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="4dp">
+
+            <ImageButton
+                android:id="@+id/back_button"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:padding="10dp"
+                android:src="@drawable/ic_app_back"
+                android:tint="?attr/a2uTextColor"
+                android:background="?selectableItemBackgroundBorderless"
+                android:contentDescription="@string/back_button_desc" />
+
+            <TextView
+                android:id="@+id/othello_title_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="4dp"
+                android:letterSpacing="0.18"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:text="@string/othello_title"
+                android:textAllCaps="true"
+                android:textColor="?attr/a2uTextColor"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+            <!-- Le mode : la tête de robot (contre l'IA) ou deux silhouettes (à deux) ; un appui change. -->
+            <ImageButton
+                android:id="@+id/othello_mode_button"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:padding="10dp"
+                android:src="@drawable/othello_ic_vs_ai"
+                android:tint="?attr/a2uTextColor"
+                android:background="?selectableItemBackgroundBorderless"
+                android:contentDescription="@string/othello_mode_solo" />
+
+            <ImageButton
+                android:id="@+id/othello_new_button"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:padding="10dp"
+                android:src="@drawable/ic_restart"
+                android:tint="?attr/a2uTextColor"
+                android:background="?selectableItemBackgroundBorderless"
+                android:contentDescription="@string/othello_new_game" />
+
+            <ImageButton
+                android:id="@+id/othello_info_button"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:padding="10dp"
+                android:src="@drawable/ic_info"
+                android:tint="?attr/a2uMusicAccent"
+                android:background="?selectableItemBackgroundBorderless"
+                android:contentDescription="@string/kit_rules" />
+        </LinearLayout>
+    </com.Atom2Universe.app.util.FitRow>
+
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="12dp"
-        android:gravity="center_vertical">
-
-        <ImageButton
-            android:id="@+id/back_button"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:src="@drawable/ic_app_back"
-            android:tint="@color/audio_text_primary"
-            android:background="?selectableItemBackgroundBorderless"
-            android:contentDescription="@string/back_button_desc" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/othello_title"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:textColor="@color/startup_text_primary"
-            android:layout_marginStart="8dp" />
-
-        <ImageButton
-            android:id="@+id/othello_info_button"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:src="@drawable/ic_info"
-            android:padding="10dp"
-            android:background="?selectableItemBackgroundBorderless"
-            android:contentDescription="@string/kit_rules"
-        android:tint="?attr/a2uMusicAccent" />
-    </LinearLayout>
-
-    <!-- Score -->
-    <TextView
-        android:id="@+id/othello_score"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:paddingBottom="4dp"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:textColor="@color/startup_text_primary" />
-
-    <!-- Status -->
-    <TextView
-        android:id="@+id/othello_status"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:paddingBottom="8dp"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:textSize="13sp"
-        android:textColor="@color/startup_text_secondary" />
-
-    <!-- Board -->
-    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:padding="8dp">
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingHorizontal="10dp"
+        android:paddingBottom="14dp">
+
+        <com.Atom2Universe.app.games.othello.OthelloScoreView
+            android:id="@+id/othello_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/othello_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:minHeight="36dp"
+            android:paddingHorizontal="12dp"
+            android:maxLines="2"
+            android:textColor="?attr/a2uSecondaryTextColor"
+            android:textSize="15sp"
+            android:textStyle="bold" />
 
         <com.Atom2Universe.app.games.othello.OthelloBoardView
             android:id="@+id/othello_board"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center" />
-    </FrameLayout>
-
-    <!-- Controls -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="12dp"
-        android:gravity="center">
-
-        <Button
-            android:id="@+id/othello_mode_button"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:layout_marginEnd="8dp"
-            android:textSize="13sp"
-            android:textColor="@color/audio_on_accent" android:backgroundTint="?attr/a2uMusicAccent" />
-
-        <Button
-            android:id="@+id/othello_new_button"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:text="@string/othello_new_game"
-            android:textSize="13sp"
-            android:textColor="@color/audio_on_accent" android:backgroundTint="?attr/a2uMusicAccent" />
+            android:layout_height="wrap_content" />
     </LinearLayout>
-
 </LinearLayout>

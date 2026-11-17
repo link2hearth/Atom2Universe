@@ -35,9 +35,11 @@ class SolitaireActivity : ThemedActivity(), SolitaireView.OnGameActionListener {
     private lateinit var timerText: TextView
     private lateinit var movesText: TextView
     private lateinit var statusText: TextView
-    private lateinit var newGameButton: Button
+    /** Le titre de la bannière : le message de victoire prend sa place. */
+    private lateinit var titleText: TextView
+    private lateinit var newGameButton: View
     private lateinit var autoFinishButton: Button
-    private lateinit var undoButton: Button
+    private lateinit var undoButton: View
 
     /** Les coups annulables : la photo des piles avant le coup et le compteur d'alors. */
     private val history = ArrayDeque<Pair<SolitaireGame.Snapshot, Int>>()
@@ -109,6 +111,7 @@ class SolitaireActivity : ThemedActivity(), SolitaireView.OnGameActionListener {
         timerText = findViewById(R.id.timer_text)
         movesText = findViewById(R.id.moves_text)
         statusText = findViewById(R.id.status_text)
+        titleText = findViewById(R.id.solitaire_title_text)
         newGameButton = findViewById(R.id.new_game_button)
         autoFinishButton = findViewById(R.id.auto_finish_button)
         undoButton = findViewById(R.id.undo_button)
@@ -119,7 +122,7 @@ class SolitaireActivity : ThemedActivity(), SolitaireView.OnGameActionListener {
         styleButtons()
     }
 
-    /** Les boutons aux couleurs du thème, comme ceux des autres jeux : pleins pour l'action principale, en relief sinon. */
+    /** « Finir », seul bouton texte de la bannière : plein, à la couleur du thème. Annuler et nouvelle partie sont des icônes. */
     private fun styleButtons() {
         fun style(button: Button, primary: Boolean) {
             val b = button as com.google.android.material.button.MaterialButton
@@ -129,8 +132,6 @@ class SolitaireActivity : ThemedActivity(), SolitaireView.OnGameActionListener {
             b.strokeColor = ColorStateList.valueOf(if (primary) palette.accent else palette.outline)
             b.strokeWidth = if (primary) 0 else resources.displayMetrics.density.toInt().coerceAtLeast(1)
         }
-        style(newGameButton, false)
-        style(undoButton, false)
         style(autoFinishButton, true)
     }
 
@@ -252,7 +253,7 @@ class SolitaireActivity : ThemedActivity(), SolitaireView.OnGameActionListener {
         gameView.loadNewCardBack() // New random card back design
         gameView.refresh()
         startTimer()
-        setStatus(getString(R.string.solitaire_status_new_game))
+        clearStatus()
         saveGame()
         autoFinishButton.visibility = View.GONE
     }
@@ -283,7 +284,14 @@ class SolitaireActivity : ThemedActivity(), SolitaireView.OnGameActionListener {
     private fun setStatus(message: String, isSuccess: Boolean = false) {
         statusText.text = message
         statusText.visibility = View.VISIBLE
+        titleText.visibility = View.GONE
         statusText.setTextColor(if (isSuccess) palette.success else palette.secondary)
+    }
+
+    /** Une nouvelle partie : la bannière retrouve son titre. */
+    private fun clearStatus() {
+        statusText.visibility = View.GONE
+        titleText.visibility = View.VISIBLE
     }
 
     // Game action callbacks

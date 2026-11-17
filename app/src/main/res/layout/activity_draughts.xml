@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Dames debout : la bannière porte tout (retour, titre, chrono, difficulté, nouvelle partie en
+     icône, règles), une ligne dit à qui de jouer, et le damier prend le reste. Plus de barre de
+     boutons en bas. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -6,53 +9,85 @@
     android:background="?attr/a2uScreenBackground">
     <tag android:id="@id/app_effects_scene" android:value="true" />
 
-    <LinearLayout
+    <com.Atom2Universe.app.util.FitRow
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:padding="8dp"
-        android:background="?attr/a2uPanelBackground">
+        android:layout_height="wrap_content">
 
-        <ImageButton
-            android:id="@+id/draughts_back_button"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/ic_app_back"
-            android:tint="@color/audio_text_primary"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/back" />
-
-        <TextView
-            android:layout_width="0dp"
+        <LinearLayout
+            android:id="@+id/draughts_header"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/draughts_title"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:textColor="?android:attr/textColorPrimary" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:background="?attr/a2uPanelBackground">
 
-        <TextView
-            android:id="@+id/draughts_timer_text"
-            android:layout_width="60dp"
-            android:layout_height="wrap_content"
-            android:text="00:00"
-            android:textSize="14sp"
-            android:gravity="center"
-            android:fontFamily="monospace"
-            android:textColor="?android:attr/textColorSecondary" />
+            <ImageButton
+                android:id="@+id/draughts_back_button"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:src="@drawable/ic_app_back"
+                android:tint="@color/audio_text_primary"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/back" />
 
-        <ImageButton
-            android:id="@+id/draughts_info_button"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:src="@drawable/ic_info"
-            android:padding="10dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/kit_rules"
-        android:tint="?attr/a2uMusicAccent" />
-    </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:maxLines="1"
+                android:text="@string/draughts_title"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="?android:attr/textColorPrimary" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/draughts_timer_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="8dp"
+                android:text="00:00"
+                android:textSize="16sp"
+                android:fontFamily="monospace"
+                android:textColor="?android:attr/textColorSecondary" />
+
+            <com.Atom2Universe.app.util.ImmersiveSpinner
+                android:id="@+id/draughts_difficulty_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="44dp"
+                android:background="?attr/a2uChipBackground"
+                android:paddingHorizontal="6dp"
+                android:popupBackground="?attr/a2uPopupBackground"
+                android:spinnerMode="dropdown" />
+
+            <ImageButton
+                android:id="@+id/draughts_new_game_button"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_marginStart="4dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/draughts_new_game"
+                android:padding="10dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_refresh"
+                android:tint="@color/audio_text_primary" />
+
+            <ImageButton
+                android:id="@+id/draughts_info_button"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/ic_info"
+                android:padding="10dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/kit_rules"
+                android:tint="?attr/a2uMusicAccent" />
+        </LinearLayout>
+    </com.Atom2Universe.app.util.FitRow>
 
     <TextView
         android:id="@+id/draughts_status_text"
@@ -60,7 +95,7 @@
         android:layout_height="wrap_content"
         android:padding="6dp"
         android:gravity="center"
-        android:textSize="14sp"
+        android:textSize="15sp"
         android:textColor="?android:attr/textColorPrimary" />
 
     <FrameLayout
@@ -73,26 +108,4 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </FrameLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:padding="8dp"
-        android:background="?attr/a2uPanelBackground">
-
-        <com.Atom2Universe.app.util.ImmersiveSpinner
-            android:id="@+id/draughts_difficulty_spinner"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-        <Button
-            android:id="@+id/draughts_new_game_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/draughts_new_game"
-            android:layout_marginStart="8dp" />
-    </LinearLayout>
 </LinearLayout>

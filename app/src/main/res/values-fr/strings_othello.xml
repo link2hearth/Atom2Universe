@@ -3,16 +3,16 @@
     <string name="othello_title">Reversi</string>
     <string name="othello_hub_desc">Jeu de plateau stratégique reversi</string>
     <string name="othello_score">Noirs : %1$d · Blancs : %2$d</string>
-    <string name="othello_status_your_turn">À vous de jouer (Blancs)</string>
-    <string name="othello_status_black_turn">Au tour des Noirs</string>
-    <string name="othello_status_white_turn">Au tour des Blancs</string>
-    <string name="othello_status_ai_thinking">L\'IA réfléchit…</string>
-    <string name="othello_status_invalid">Coup invalide. Choisissez une case surlignée.</string>
-    <string name="othello_status_game_over">Partie terminée — Noirs %1$d · Blancs %2$d. %3$s</string>
     <string name="othello_result_black">Victoire des Noirs !</string>
     <string name="othello_result_white">Victoire des Blancs !</string>
     <string name="othello_result_draw">Égalité !</string>
-    <string name="othello_mode_solo">Solo vs IA</string>
-    <string name="othello_mode_duo">2 Joueurs</string>
+    <string name="othello_result_you_win">Victoire !</string>
+    <string name="othello_result_ai_wins">L\'IA gagne</string>
+    <string name="othello_pass_black">Les Noirs passent</string>
+    <string name="othello_pass_white">Les Blancs passent</string>
+    <string name="othello_pass_you">Tu passes</string>
+    <string name="othello_pass_ai">L\'IA passe</string>
+    <string name="othello_mode_solo">Contre l\'IA</string>
+    <string name="othello_mode_duo">À deux</string>
     <string name="othello_new_game">Nouvelle partie</string>
 </resources>

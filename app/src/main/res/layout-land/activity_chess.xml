@@ -1,140 +1,142 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Échecs couchés : la bande du titre en haut, l'échiquier sur toute la hauteur, et la bulle
-     (pendule, tour de jeu, prises, niveau et nouvelle partie) qu'on déplace à volonté. -->
+<!-- Échecs couché : la même bannière qu'en portrait (chrono, difficulté, nouvelle partie en icône),
+     le plateau carré sur toute la hauteur au milieu de l'écran, où en est la partie à sa gauche
+     et les pièces prises à sa droite. Plus de bulle : rien à déplacer, rien de rogné. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="?attr/a2uScreenBackground">
     <tag android:id="@id/app_effects_scene" android:value="true" />
 
-    <LinearLayout
+    <com.Atom2Universe.app.util.FitRow
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="6dp"
-        android:gravity="center_vertical">
+        android:layout_height="wrap_content">
 
-        <ImageButton
-            android:id="@+id/back_button"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:src="@drawable/ic_app_back"
-            android:tint="@color/audio_text_primary"
-            android:background="?selectableItemBackgroundBorderless"
-            android:contentDescription="@string/back" />
-
-        <TextView
-            android:layout_width="0dp"
+        <LinearLayout
+            android:id="@+id/chess_header"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/chess_title"
-            android:textSize="24sp"
-            android:textColor="@color/startup_text_primary"
-            android:layout_marginStart="16dp" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="2dp">
 
-        <ImageButton
-            android:id="@+id/info_button"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="?selectableItemBackgroundBorderless"
-            android:contentDescription="@string/kit_rules"
-            android:padding="10dp"
-            android:src="@drawable/ic_info"
-            android:tint="?attr/a2uMusicAccent" />
-    </LinearLayout>
+            <ImageButton
+                android:id="@+id/back_button"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:src="@drawable/ic_app_back"
+                android:tint="@color/audio_text_primary"
+                android:background="?selectableItemBackgroundBorderless"
+                android:contentDescription="@string/back" />
 
-    <LinearLayout
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:maxLines="1"
+                android:text="@string/chess_title"
+                android:textSize="20sp"
+                android:textColor="@color/startup_text_primary" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/timer_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="12dp"
+                android:fontFamily="monospace"
+                android:textSize="18sp"
+                android:textColor="@color/startup_text_secondary" />
+
+            <com.Atom2Universe.app.util.ImmersiveSpinner
+                android:id="@+id/difficulty_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="44dp"
+                android:background="?attr/a2uChipBackground"
+                android:paddingHorizontal="6dp"
+                android:popupBackground="?attr/a2uPopupBackground"
+                android:spinnerMode="dropdown" />
+
+            <ImageButton
+                android:id="@+id/new_game_button"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_marginStart="8dp"
+                android:background="?selectableItemBackgroundBorderless"
+                android:contentDescription="@string/chess_new_game"
+                android:padding="10dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_refresh"
+                android:tint="@color/audio_text_primary" />
+
+            <ImageButton
+                android:id="@+id/info_button"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?selectableItemBackgroundBorderless"
+                android:contentDescription="@string/kit_rules"
+                android:padding="10dp"
+                android:src="@drawable/ic_info"
+                android:tint="?attr/a2uMusicAccent" />
+        </LinearLayout>
+    </com.Atom2Universe.app.util.FitRow>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="horizontal">
+        android:padding="8dp">
 
-        <FrameLayout
+        <!-- Le plateau au milieu de l'écran -->
+        <com.Atom2Universe.app.games.chess.ChessView
+            android:id="@+id/chess_view"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:padding="12dp">
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="W,1:1"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-            <com.Atom2Universe.app.games.chess.ChessView
-                android:id="@+id/chess_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center" />
-        </FrameLayout>
+        <!-- À sa gauche : où en est la partie -->
+        <TextView
+            android:id="@+id/status_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:gravity="center"
+            android:textColor="@color/startup_text_secondary"
+            android:textSize="16sp"
+            android:text="@string/chess_status_your_turn"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/chess_view"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent">
+        <!-- À sa droite : les pièces prises -->
+        <HorizontalScrollView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:scrollbars="none"
+            app:layout_constraintStart_toEndOf="@id/chess_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
 
             <LinearLayout
-                android:id="@+id/side_panel"
-                android:layout_width="320dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/timer_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textSize="30sp"
-                    android:textColor="@color/startup_text_secondary" />
-
-                <TextView
-                    android:id="@+id/status_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingHorizontal="8dp"
-                    android:paddingVertical="8dp"
-                    android:gravity="center"
-                    android:textColor="@color/startup_text_primary"
-                    android:textSize="18sp"
-                    android:text="@string/chess_status_your_turn" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:paddingHorizontal="8dp"
-                    android:text="@string/chess_captured_label"
-                    android:textColor="@color/startup_text_secondary"
-                    android:textSize="13sp" />
-
-                <HorizontalScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingHorizontal="8dp"
-                    android:scrollbars="none">
-
-                    <LinearLayout
-                        android:id="@+id/captured_pieces_container"
-                        android:layout_width="wrap_content"
-                        android:layout_height="40dp"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical" />
-                </HorizontalScrollView>
-
-                <com.Atom2Universe.app.util.ImmersiveSpinner
-                    android:id="@+id/difficulty_spinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginHorizontal="4dp"
-                    android:spinnerMode="dropdown" />
-
-                <Button
-                    android:id="@+id/new_game_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:layout_marginTop="6dp"
-                    android:layout_marginEnd="4dp"
-                    android:text="@string/chess_new_game"
-                    android:textColor="@color/audio_on_accent"
-                    android:backgroundTint="?attr/a2uMusicAccent" />
-            </LinearLayout>
-        </FrameLayout>
-    </LinearLayout>
+                android:id="@+id/captured_pieces_container"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical" />
+        </HorizontalScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

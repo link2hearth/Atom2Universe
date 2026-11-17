@@ -9,7 +9,6 @@ import android.os.Looper
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Button
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
@@ -39,7 +38,7 @@ class DraughtsActivity : ThemedActivity(),
     private lateinit var statusText: TextView
     private lateinit var timerText: TextView
     private lateinit var difficultySpinner: Spinner
-    private lateinit var newGameButton: Button
+    private lateinit var newGameButton: View
 
     private var elapsedTimeMs = 0L
     private var startTimeMs = 0L

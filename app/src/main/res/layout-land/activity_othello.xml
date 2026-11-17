@@ -1,49 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Othello couché : la bande du titre en haut, le plateau sur toute la hauteur, et la bulle
-     (score, tour de jeu, mode et nouvelle partie) qu'on déplace à volonté. -->
+<!-- Reversi couché : la bande du haut, le plateau sur toute la hauteur, et la bulle du score
+     (les deux plaquettes l'une sous l'autre, les messages dessous) qu'on déplace à volonté. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="?attr/a2uScreenBackground">
 
-    <LinearLayout
+    <com.Atom2Universe.app.util.FitRow
+        android:id="@+id/othello_header_fit"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingHorizontal="12dp"
-        android:paddingVertical="6dp"
-        android:gravity="center_vertical">
+        android:layout_height="wrap_content">
 
-        <ImageButton
-            android:id="@+id/back_button"
-            android:layout_width="48dp"
+        <LinearLayout
+            android:id="@+id/othello_header"
+            android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:src="@drawable/ic_app_back"
-            android:tint="@color/audio_text_primary"
-            android:background="?selectableItemBackgroundBorderless"
-            android:contentDescription="@string/back_button_desc" />
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="8dp">
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/othello_title"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:textColor="@color/startup_text_primary"
-            android:layout_marginStart="8dp" />
+            <ImageButton
+                android:id="@+id/back_button"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:padding="10dp"
+                android:src="@drawable/ic_app_back"
+                android:tint="?attr/a2uTextColor"
+                android:background="?selectableItemBackgroundBorderless"
+                android:contentDescription="@string/back_button_desc" />
 
-        <ImageButton
-            android:id="@+id/othello_info_button"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:src="@drawable/ic_info"
-            android:padding="10dp"
-            android:background="?selectableItemBackgroundBorderless"
-            android:contentDescription="@string/kit_rules"
-            android:tint="?attr/a2uMusicAccent" />
-    </LinearLayout>
+            <TextView
+                android:id="@+id/othello_title_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="4dp"
+                android:letterSpacing="0.18"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:text="@string/othello_title"
+                android:textAllCaps="true"
+                android:textColor="?attr/a2uTextColor"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+            <ImageButton
+                android:id="@+id/othello_mode_button"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:padding="10dp"
+                android:src="@drawable/othello_ic_vs_ai"
+                android:tint="?attr/a2uTextColor"
+                android:background="?selectableItemBackgroundBorderless"
+                android:contentDescription="@string/othello_mode_solo" />
+
+            <ImageButton
+                android:id="@+id/othello_new_button"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:padding="10dp"
+                android:src="@drawable/ic_restart"
+                android:tint="?attr/a2uTextColor"
+                android:background="?selectableItemBackgroundBorderless"
+                android:contentDescription="@string/othello_new_game" />
+
+            <ImageButton
+                android:id="@+id/othello_info_button"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:padding="10dp"
+                android:src="@drawable/ic_info"
+                android:tint="?attr/a2uMusicAccent"
+                android:background="?selectableItemBackgroundBorderless"
+                android:contentDescription="@string/kit_rules" />
+        </LinearLayout>
+    </com.Atom2Universe.app.util.FitRow>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -55,7 +87,9 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:padding="12dp">
+            android:paddingHorizontal="12dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="10dp">
 
             <com.Atom2Universe.app.games.othello.OthelloBoardView
                 android:id="@+id/othello_board"
@@ -70,47 +104,29 @@
 
             <LinearLayout
                 android:id="@+id/side_panel"
-                android:layout_width="300dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
                 android:orientation="vertical">
 
-                <TextView
+                <com.Atom2Universe.app.games.othello.OthelloScoreView
                     android:id="@+id/othello_score"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textSize="26sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/startup_text_primary" />
+                    android:paddingHorizontal="6dp" />
 
                 <TextView
                     android:id="@+id/othello_status"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
                     android:gravity="center"
-                    android:paddingHorizontal="8dp"
-                    android:paddingVertical="10dp"
-                    android:textSize="16sp"
-                    android:textColor="@color/startup_text_secondary" />
-
-                <Button
-                    android:id="@+id/othello_mode_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="52dp"
-                    android:layout_marginHorizontal="4dp"
-                    android:textSize="14sp"
-                    android:textColor="@color/audio_on_accent"
-                    android:backgroundTint="?attr/a2uMusicAccent" />
-
-                <Button
-                    android:id="@+id/othello_new_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="52dp"
-                    android:layout_marginHorizontal="4dp"
-                    android:text="@string/othello_new_game"
-                    android:textSize="14sp"
-                    android:textColor="@color/audio_on_accent"
-                    android:backgroundTint="?attr/a2uMusicAccent" />
+                    android:minHeight="0dp"
+                    android:paddingHorizontal="6dp"
+                    android:maxLines="3"
+                    android:textColor="?attr/a2uSecondaryTextColor"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
             </LinearLayout>
         </FrameLayout>
     </LinearLayout>

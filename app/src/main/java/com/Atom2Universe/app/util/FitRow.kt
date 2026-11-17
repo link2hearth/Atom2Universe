@@ -40,7 +40,7 @@ class FitRow @JvmOverloads constructor(context: Context, attrs: AttributeSet? = 
         }
         val lp = child.layoutParams as MarginLayoutParams
         val w = MeasureSpec.getSize(widthMeasureSpec) - paddingLeft - paddingRight - lp.leftMargin - lp.rightMargin
-        val need = needed(child)
+        val need = needed(child, w)
         k = if (need > w && need > 0) w.toFloat() / need else 1f
         val height = if (lp.height >= 0) MeasureSpec.makeMeasureSpec(lp.height, MeasureSpec.EXACTLY)
         else MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
@@ -56,10 +56,14 @@ class FitRow @JvmOverloads constructor(context: Context, attrs: AttributeSet? = 
         setMeasuredDimension(resolveSize(ownWidth, widthMeasureSpec), resolveSize(ownHeight, heightMeasureSpec))
     }
 
-    /** La largeur dont la rangée a besoin : ses vues fixes en entier, ses vues à poids un peu. */
-    private fun needed(row: View): Int {
+    /**
+     * La largeur dont la rangée a besoin : ses vues fixes en entier, ses vues à poids un peu.
+     * Chaque vue est mesurée avec la place [room] pour plafond, comme dans la rangée : une liste
+     * déroulante prend alors la largeur de son option la plus longue, pas seulement de celle affichée.
+     */
+    private fun needed(row: View, room: Int): Int {
         if (row !is LinearLayout || row.orientation != LinearLayout.HORIZONTAL) return 0
-        val free = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
+        val free = MeasureSpec.makeMeasureSpec(room.coerceAtLeast(0), MeasureSpec.AT_MOST)
         val flex = (flexDp * resources.displayMetrics.density).toInt()
         var sum = row.paddingLeft + row.paddingRight
         for (i in 0 until row.childCount) {
@@ -69,7 +73,8 @@ class FitRow @JvmOverloads constructor(context: Context, attrs: AttributeSet? = 
             val width = when {
                 p.width >= 0 && p.weight == 0f -> p.width
                 else -> {
-                    val hSpec = if (p.height >= 0) MeasureSpec.makeMeasureSpec(p.height, MeasureSpec.EXACTLY) else free
+                    val hSpec = if (p.height >= 0) MeasureSpec.makeMeasureSpec(p.height, MeasureSpec.EXACTLY)
+                    else MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
                     c.measure(free, hSpec)
                     if (p.weight > 0f) minOf(c.measuredWidth, flex) else c.measuredWidth
                 }

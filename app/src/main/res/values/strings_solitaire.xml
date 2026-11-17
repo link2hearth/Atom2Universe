@@ -4,11 +4,10 @@
     <string name="solitaire_description">The classic Klondike card game</string>
     <string name="solitaire_new_game">New game</string>
     <string name="solitaire_moves">Moves: %1$d</string>
-    <string name="solitaire_status_new_game">New game started</string>
     <string name="solitaire_status_won">Congratulations! You won!</string>
     <string name="solitaire_dialog_new_title">New game</string>
     <string name="solitaire_dialog_new_message">Do you want to abandon the current game?</string>
-    <string name="solitaire_auto_finish">Auto finish</string>
+    <string name="solitaire_auto_finish">Finish</string>
     <string name="solitaire_status_won_short">Well done!\nVictory!</string>
     <string name="solitaire_new_game_confirm">New game?</string>
     <string name="solitaire_confirm">✓ Confirm</string>
