@@ -41,13 +41,13 @@ class CirclesActivity : ThemedActivity() {
     private lateinit var tvReward:    TextView
     private lateinit var winOverlay:  FrameLayout
     private lateinit var tvWinMsg:    TextView
-    private lateinit var btnRestart:  MaterialButton
+    private lateinit var btnRestart:  ImageButton
     private lateinit var prefs:       SharedPreferences
 
     private val game = CirclesGame()
     private var solutionMap: Map<String, CirclesGame.SolutionEntry>? = null
     private var solutionJob: Job? = null
-    private val diffChips = mutableMapOf<CirclesDifficulty, MaterialButton>()
+    private lateinit var diffButton: MaterialButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,10 +72,10 @@ class CirclesActivity : ThemedActivity() {
             .setOnClickListener { finish() }
         findViewById<ImageButton>(R.id.circles_info_button)
             .setOnClickListener { showGameRules(R.string.circles_title, R.string.circles_rules) }
-        findViewById<MaterialButton>(R.id.circles_btn_new)
+        findViewById<ImageButton>(R.id.circles_btn_new)
             .setOnClickListener { startNewGame(game.difficulty) }
         btnRestart.setOnClickListener { restartGame() }
-        findViewById<MaterialButton>(R.id.circles_btn_hint)
+        findViewById<ImageButton>(R.id.circles_btn_hint)
             .setOnClickListener { applyHint() }
         findViewById<MaterialButton>(R.id.circles_btn_again).setOnClickListener {
             startNewGame(game.difficulty)
@@ -105,28 +105,17 @@ class CirclesActivity : ThemedActivity() {
 
     // ── Difficulty chips ──────────────────────────────────────────────────────────
 
+    /** Un seul bouton : il dit la difficulté, et un appui lance une partie de la suivante. */
     private fun buildDiffChips() {
-        val row = findViewById<LinearLayout>(R.id.circles_diff_row)
-        val dp4 = (4 * resources.displayMetrics.density).toInt()
-        for (diff in CirclesDifficulty.entries) {
-            val chip = MaterialButton(this, null, android.R.attr.borderlessButtonStyle).apply {
-                text = diffLabel(diff)
-                textSize = 12f
-                cornerRadius = (20 * resources.displayMetrics.density).toInt()
-                strokeWidth = (1 * resources.displayMetrics.density).toInt()
-                layoutParams = LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-                ).also { lp -> lp.setMargins(dp4, 0, dp4, 0) }
-                setOnClickListener { startNewGame(diff) }
-            }
-            row.addView(chip)
-            diffChips[diff] = chip
+        diffButton = findViewById(R.id.circles_diff_button)
+        diffButton.setOnClickListener {
+            val diffs = CirclesDifficulty.entries
+            startNewGame(diffs[(game.difficulty.ordinal + 1) % diffs.size])
         }
     }
 
     private fun updateDiffChips() {
-        for ((diff, chip) in diffChips) com.Atom2Universe.app.games.kit.GameControlStyle.choice(chip, diff == game.difficulty)
+        diffButton.text = diffLabel(game.difficulty)
     }
 
     private fun diffLabel(diff: CirclesDifficulty) = when (diff) {
@@ -215,6 +204,7 @@ class CirclesActivity : ThemedActivity() {
         tvMoves.text  = game.moves.toString()
         tvReward.text = rewardText()
         btnRestart.isEnabled = game.initialRotations.isNotEmpty()
+        btnRestart.alpha = if (btnRestart.isEnabled) 1f else .35f
     }
 
     private fun rewardText(): String {
