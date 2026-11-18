@@ -19,9 +19,9 @@ android {
         applicationId = "com.Atom2Universe.app"
         minSdk = 26
         targetSdk = 36
-        versionCode = 17
+        versionCode = 18
 
-        versionName = "0.2.7"
+        versionName = "0.2.8"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
